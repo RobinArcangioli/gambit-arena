@@ -1,6 +1,6 @@
 # Architecture
 
-## Réalité à STEP-003 — laboratoire de projection
+## Réalité à STEP-004 — laboratoire Android (validée, commit en attente)
 
 | Fichier | Rôle |
 |---|---|
@@ -44,14 +44,15 @@ VRAM ; il ne définit pas les réglages individuels des futurs sprites.
 - Architecture activée : arm64-v8a uniquement.
 - Identifiant : org.gambitarena.prototype.
 - Nom affiché : Gambit Arena.
-- Version : 0.1.0 ; code 1.
+- Version : 0.1.0-step004 ; code 2.
 - Signature : activée ; chemin de sortie encore vide.
 - Aucune permission activée dans l'extrait transmis.
 
-La validation globale de STEP-002 a été reçue le 21 octobre 2026. Aucun résultat
-de contrôle UI distinct n'a été transmis pour Runnable ou les messages du preset. Le nom du preset ne garantit pas un export de
-débogage : Export With Debug devra être vérifié lors de la génération.
-Aucun APK n'a été généré, installé ou lancé.
+Le fichier reçu contient [runnable_presets] avec Android="Android Debug".
+Le nom du preset ne garantit pas le mode de génération : Export With Debug
+doit être coché lors de l’export. L’utilisateur a confirmé le premier export,
+l’installation ADB réussie et les tests Godot/téléphone le 22 octobre 2026.
+Voir docs/steps/STEP-004.md pour l’empreinte de l’APK testé.
 
 Les chemins SDK/JDK sont des paramètres locaux de l'éditeur, distincts de
 la configuration versionnée. Voir [l'environnement Android](docs/android.md).
@@ -85,3 +86,22 @@ La logique de diagnostic sera remplacée dans les étapes de gameplay prévues.
 - Aucun système de gameplay anticipé n'est implémenté à ce stade.
 
 Ces principes sont des décisions de conception, pas des composants existants.
+
+## Ajouts STEP-004
+
+HUD/SafeFrame regroupe les quatre labels et les quatre boutons. Le script
+convertit le rectangle natif DisplayServer.get_display_safe_area() dans les
+coordonnées du viewport via l'inverse de get_screen_transform(), puis le borne
+au viewport. Si la zone obtenue est vide, il utilise le viewport entier.
+Le placement est recalculé au redimensionnement et au retour Android.
+
+Les boutons Pause, Taille, Repartir et Silhouette appellent les mêmes fonctions
+que Espace, S, R et T. L'émulation de souris depuis le toucher est activée.
+Seuls les Sprite2D des acteurs changent d'échelle ; les racines et marqueurs
+aux pieds restent inchangés. Le pilier conserve sa taille.
+
+La perte de focus ou la notification de pause suspend l'horloge locale ;
+le retour ne la relance pas. Reprendre reste une action explicite.
+Il n'existe pas encore de sauvegarde d'état après destruction du processus,
+ni de pause globale de combat. La robustesse complète appartient à STEP-027.
+Les FPS affichés sont un indicateur instantané, pas une mesure de STEP-028.

@@ -73,12 +73,14 @@ qui dépend de la validation de la roadmap.
 - STEP-001 : validée et anciennement commitée — 6583515 (historique perdu).
 - STEP-002 : validée et anciennement commitée — 5b9baac (historique perdu).
 - STEP-003 : validée après correctif ; aucun commit confirmé avant suppression.
-- RECOVERY-001 : Validée, commit en attente — restauration fonctionnelle confirmée
-  par l’utilisateur le 22 octobre 2026.
-- STEP-004 à STEP-030 : À faire.
+- RECOVERY-001 : validée et commitée — 6282d81 ; sauvegarde avec bundle reçue et vérifiée.
+- STEP-004 : Validée, commit en attente — tests Godot et Galaxy A16 confirmés
+  par l’utilisateur le 22 octobre 2026 ; installation APK réussie.
+- STEP-005 à STEP-030 : À faire.
 
-Les hashes ci-dessus attestent les anciens retours utilisateur ; ils ne sont
-pas disponibles dans un dépôt reconstruit. Aucun historique n'est simulé.
+Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
+sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
+STEP-003 validée est incluse dans ce commit de reprise.
 Voir [la reprise](docs/recovery.md) et [les sauvegardes](docs/backup.md).
 
 ## Chemin critique et jalons Android
@@ -129,11 +131,9 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Initialiser le nouveau dépôt, vérifier les fichiers préparés et créer le commit
-de reprise RECOVERY-001, dont la restauration est validée. Produire ensuite la
-sauvegarde complète avec history.bundle et transmettre son archive. STEP-004 attend
-cette clôture et un nouveau feu vert. Les validations fonctionnelles antérieures
-restent consignées ; elles ne remplacent pas le contrôle de la copie restaurée.
+Commiter STEP-004 validée avec sa documentation, confirmer le hash et créer
+la sauvegarde complète. La taille préférée confirmée est de 48 px de référence.
+STEP-005 attend un nouveau feu vert.
 
 ## État de l'annexe
 

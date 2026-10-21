@@ -20,31 +20,52 @@ y_sort_enabled = true
 [node name="HUD" type="CanvasLayer" parent="."]
 layer = 1
 
-[node name="Title" type="Label" parent="HUD"]
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 516.0
-offset_bottom = 96.0
+[node name="SafeFrame" type="Control" parent="HUD"]
+layout_mode = 0
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="HUD/SafeFrame"]
+layout_mode = 0
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 24
-text = "STEP-003\nLaboratoire de projection"
+text = "STEP-004 / ANDROID
+Comparaison de tailles"
 
-[node name="CrossingTitle" type="Label" parent="HUD"]
-offset_left = 24.0
-offset_top = 142.0
+[node name="CrossingTitle" type="Label" parent="HUD/SafeFrame"]
+layout_mode = 0
 theme_override_font_sizes/font_size = 18
 text = "01  Croisement : cyan A / orange B"
 
-[node name="DecorTitle" type="Label" parent="HUD"]
-offset_left = 24.0
-offset_top = 390.0
+[node name="DecorTitle" type="Label" parent="HUD/SafeFrame"]
+layout_mode = 0
 theme_override_font_sizes/font_size = 18
 text = "02  Violet C : devant / derriere le pilier"
 
-[node name="Diagnostics" type="Label" parent="HUD"]
-offset_left = 24.0
-offset_top = 676.0
-offset_right = 516.0
-offset_bottom = 900.0
+[node name="Diagnostics" type="Label" parent="HUD/SafeFrame"]
+layout_mode = 0
 theme_override_colors/font_color = Color(0.85, 0.91, 0.97, 1)
 theme_override_font_sizes/font_size = 18
+
+[node name="PauseButton" type="Button" parent="HUD/SafeFrame"]
+layout_mode = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 21
+text = "Pause"
+
+[node name="SizeButton" type="Button" parent="HUD/SafeFrame"]
+layout_mode = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 21
+text = "Taille : 48 px"
+
+[node name="RestartButton" type="Button" parent="HUD/SafeFrame"]
+layout_mode = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 21
+text = "Repartir"
+
+[node name="SilhouetteButton" type="Button" parent="HUD/SafeFrame"]
+layout_mode = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 21
+text = "Silhouette : non"

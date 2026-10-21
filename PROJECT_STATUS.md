@@ -1,50 +1,53 @@
 # État du projet
 
-## RECOVERY-001 — reconstruction au 22 octobre 2026
+## Référence confirmée
 
-- Statut : Validée, commit en attente.
-- Restauration confirmée par l’utilisateur le 22 octobre 2026 : projet fonctionnel.
-- Dernière fonctionnalité validée : STEP-003, après correctif GroundProjection.
-- Validation utilisateur : croisements confirmés sans ambiguïté avant suppression.
-- Aucun commit STEP-003 n'a été confirmé.
-- Historique Git perdu : les commits 6583515 et 5b9baac sont des références
-  historiques observées, mais leurs objets ne sont plus disponibles.
-- Dépôt reconstruit : aucun .git, aucune branche actuelle, aucun HEAD actuel.
-- Dernière base source reçue : archive STEP-002 correspondant à 5b9baac.
-- Archive complète de référence : gambit-arena-complet-recovery-001-validation.tar.gz.
-- Contenu : STEP-002 + STEP-003 corrigée et validée + documents de reprise.
+- RECOVERY-001 : restaurée, testée et commitée par l'utilisateur.
+- HEAD de référence : 6282d81d18b8b013046821ee8bcafe459553c8b0, branche main.
+- Message : chore: [RECOVERY-001] restaurer le projet valide jusqu'a STEP-003.
+- Dépôt propre confirmé après commit.
+- Sauvegarde reçue : gambit-arena-20261022-004333-6282d81d18b8.tar.gz.
+- Son history.bundle a été cloné ; HEAD confirmé ; les 32 fichiers suivis
+  correspondent exactement aux sources de la sauvegarde.
+- Les anciens commits 6583515 et 5b9baac restent des références historiques
+  perdues. La récupération ne recrée pas leurs objets Git.
 
-## Fonctionnement attendu
+## STEP-004 — Validée, commit en attente
 
-Godot 4.7.2 standard, Compatibility, portrait 540 × 960.
-Main instance le laboratoire : trois acteurs, un pilier, tri aux pieds,
-projection/inverse et commandes Espace/R/T. Pas de combat ni de gambits.
-Android : SDK et templates préparés auparavant, ADB autorisé ; aucun APK généré.
+Feu vert utilisateur reçu. Livraison de validation : gambit-arena-complet-step-004-validation.tar.gz.
+Base : 6282d81. Aucun commit STEP-004 à ce stade.
 
-## Vérifications
+Ajouts : quatre boutons tactiles, tailles de référence 48/64/80,
+placement dans la zone sûre Android, pause locale au passage en arrière-plan,
+reprise explicite et indicateur FPS. Version Android 0.1.0-step004, code 2.
+Le laboratoire reste un diagnostic à trajets automatiques, sans combat.
 
-- Avant suppression : recette STEP-003 validée par l'utilisateur.
-- Reconstruction : fichiers de base comparés à l'archive utilisateur ; correctif
-  GroundProjection présent ; références locales et archive contrôlées.
-- Godot absent chez l'assistant : pas de nouveau test d'import ou de rendu.
-- Import et lancement du projet restauré : confirmés réussis par l’utilisateur.
-- Reprise Git : nouveau dépôt, commit et sauvegarde encore à créer/vérifier.
-- Annexe détaillée ROADMAP.md vide dans la source reçue ; registre des 30 étapes intact.
+## Validation réelle
+
+- STEP-003 corrigée et projet restauré : validés par l'utilisateur sous Linux.
+- STEP-004 : contrôles statiques des références et calculs effectués par l'assistant.
+- Godot indisponible chez l'assistant : import, compilation GDScript, rendu et
+  interactions STEP-004 non exécutés ici.
+- Le 22 octobre 2026, l’utilisateur confirme tous les tests manuels réussis
+  sous Godot et sur son Galaxy A16 et valide explicitement STEP-004.
+- Export effectué ; installation ADB : Success. APK lancé et testé.
+- Taille préférée confirmée par l’utilisateur : 48 px de référence.
+- Capture et mesures détaillées non transmises ; validation globale utilisateur consignée.
+- SHA-256 APK : c554729004c142a67223176b5c24dd86a28accb6cb6606001339aeeed2f3475b.
+- Aucun résultat de performance soutenue établi.
 
 ## Prochaine action exacte
 
-Appliquer la livraison complète de validation, initialiser le nouveau dépôt,
-vérifier le contenu préparé et créer le commit RECOVERY-001. Exécuter ensuite
-bash tools/create_backup.sh et transmettre l’archive produite avec le hash et
-le statut Git. Ne pas démarrer STEP-004 avant cette clôture et le feu vert utilisateur.
+Appliquer l'archive complète de validation, vérifier le diff préparé et créer
+le commit STEP-004. Confirmer son hash réel et le statut propre, puis exécuter
+bash tools/create_backup.sh et transmettre la sauvegarde produite.
+Message : feat: [STEP-004] valider le prototype visuel sur Android.
+Ne pas commencer STEP-005 avant clôture, sauvegarde et nouveau feu vert.
 
-Fiches : docs/recovery.md et docs/backup.md.
-Message de commit proposé :
-chore: [RECOVERY-001] restaurer le projet valide jusqu'a STEP-003
+## Conservation
 
-## Suivi permanent des archives
-
-Chaque prochaine livraison principale est complète, nommée et versionnée.
-Après chaque commit : bash tools/create_backup.sh, puis transmettre l'archive
-pour conserver également l'historique Git exact. Aucune modification locale
-non transmise ne peut être incluse dans une sauvegarde de l'assistant.
+Chaque livraison/correction reste une archive complète distincte.
+Cette livraison inclut aussi le bundle du commit de base, séparé des sources
+STEP-004 non commitées. Après le prochain commit : bash tools/create_backup.sh,
+puis transmettre l'archive. Les changements locaux non transmis ne sont pas
+automatiquement sauvegardés par l'assistant.

@@ -26,7 +26,8 @@ SDK de compilation et la version Android du téléphone sont distinctes.
 
 La documentation Godot 4.7 recommande JDK 17 et accepte les versions
 supérieures. JDK 21 est conservé pour réutiliser l'installation existante.
-Son fonctionnement dans cette chaîne n'est pas encore confirmé par un export.
+Le premier export STEP-004 et l'installation ont depuis été confirmés réussis
+par l'utilisateur, sans changement de JDK signalé.
 
 Source :
 https://docs.godotengine.org/en/4.7/tutorials/export/exporting_for_android.html
@@ -78,17 +79,58 @@ Le numéro de série n'est pas conservé dans les documents.
 - Fichier : export_presets.cfg ; preset Android Debug ; plateforme Android.
 - Ressources : all_resources ; Gradle désactivé ; arm64-v8a uniquement.
 - Paquet : org.gambitarena.prototype ; nom : Gambit Arena.
-- Version : 0.1.0 ; code 1 ; signature activée ; chemin de sortie vide.
+- STEP-004 : version 0.1.0-step004 ; code 2 ; signature activée ; sortie vide.
 - Aucune permission activée dans l'extrait inspecté.
 
 Le nom Android Debug ne sélectionne pas à lui seul le mode de génération :
 la case Export With Debug devra être vérifiée au premier export.
-La validation globale de l'étape a été reçue ; aucun résultat UI distinct
-n'a été transmis pour Runnable et les messages de la fenêtre d'export.
+Le fichier reçu confirme [runnable_presets] avec Android="Android Debug".
+Les éventuels messages de la fenêtre d’export restent à contrôler sur le poste.
 
 ## Limites de validation
 
-Aucun APK généré, installé ou lancé. Le fonctionnement de l'export,
-de la signature et du JDK dans cette chaîne reste à vérifier.
-F5/F8 ont été testés uniquement sous Linux.
-Le premier prototype visuel sur téléphone est prévu en STEP-004.
+Le 22 octobre 2026, l'utilisateur confirme tous les tests manuels réussis
+sous Godot et sur le Galaxy A16. L'export a produit un APK ; ADB retourne
+Success à l'installation. La validation matérielle de STEP-004 est reçue.
+Taille préférée confirmée : 48 px de référence.
+Aucune mesure de performance soutenue n’a été transmise.
+APK testé : step-004-debug.apk. SHA-256 :
+
+```text
+c554729004c142a67223176b5c24dd86a28accb6cb6606001339aeeed2f3475b
+```
+
+L'assistant n'a pas exécuté cet APK ; ces résultats proviennent de l'utilisateur.
+
+## Export et installation STEP-004
+
+1. Vérifier d'abord F5/F8 et les quatre boutons sous Linux, sans erreur Godot.
+2. Créer le dossier de sortie hors du dépôt :
+
+```bash
+mkdir -p ~/gambit-arena-builds
+```
+
+3. Dans Projet > Exporter, choisir Android Debug puis Exporter le projet.
+4. Choisir le fichier step-004-debug.apk dans le dossier gambit-arena-builds
+   de son dossier personnel. Garder Export With Debug / Exporter avec débogage coché.
+5. Attendre la fin, sans erreur. Exporter PCK/ZIP n'est pas la génération d'un APK.
+6. Brancher le téléphone déverrouillé, puis :
+
+```bash
+~/Android/Sdk/platform-tools/adb devices -l
+~/Android/Sdk/platform-tools/adb -d install -r ~/gambit-arena-builds/step-004-debug.apk
+sha256sum ~/gambit-arena-builds/step-004-debug.apk
+```
+
+Résultat attendu : device, puis Success. Ouvrir Gambit Arena depuis le téléphone.
+Le SHA-256 permet d'identifier exactement l'APK testé ; le transmettre avec
+les résultats. Aucun APK ne doit être ajouté au dépôt.
+
+En cas d'erreur d'export ou d'installation, transmettre le texte exact et
+s'arrêter à ce point. Ne pas désinstaller aveuglément ni modifier le SDK,
+le JDK ou la signature. Les paramètres de signature restent locaux et aucun
+mot de passe ni clé ne doit être transmis.
+
+Le protocole tactile, visuel et arrière-plan se trouve dans
+[STEP-004](steps/STEP-004.md). Les tests PC ne remplacent pas ces essais.

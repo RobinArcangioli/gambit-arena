@@ -80,3 +80,14 @@ bash tools/create_backup.sh
 Transmettre le hash, le statut Git et l'archive produite. Le hash réel du commit
 de reprise sera enregistré dans la livraison suivante, sans commit documentaire
 supplémentaire ni amendement uniquement pour inscrire ce hash.
+
+## Clôture confirmée — RECOVERY-001
+
+La restauration a ensuite été commitée sur main :
+6282d81d18b8b013046821ee8bcafe459553c8b0.
+L'utilisateur a confirmé un dépôt propre et créé la sauvegarde
+gambit-arena-20261022-004333-6282d81d18b8.tar.gz.
+L'archive reçue a été extraite et son bundle cloné par l'assistant : HEAD
+exact confirmé et 32 fichiers suivis identiques aux sources archivées.
+Les mentions de commit « à créer » plus haut décrivent la procédure initiale.
+STEP-004 repart de cette nouvelle base réelle ; l'ancien historique reste perdu.

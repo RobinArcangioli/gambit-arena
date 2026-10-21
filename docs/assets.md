@@ -19,3 +19,13 @@ Le contrat d'animations directionnelles et la compression individuelle seront
 À l'import, conserver dans Git les fichiers .svg.import générés (réglages),
 ainsi que les .gd.uid générés pour les scripts ; exclure le cache .godot/.
 Les fichiers .gd.uid ne sont pas fabriqués à la main dans cette livraison.
+
+## Comparaison STEP-004
+
+Taille fait varier uniquement les trois visuels : échelles 1, 4/3 et 5/3.
+Les cadres normaux mesurent ainsi 48, 64 ou 80 pixels de référence, avec une
+même trajectoire et un même ancrage. Les marges transparentes de la texture
+font partie du cadre ; la hauteur du corps visible est légèrement inférieure.
+Le pilier reste à son échelle initiale. Après les essais sur téléphone,
+l’utilisateur retient 48 px de référence pour la suite (22 octobre 2026).
+Cette préférence guidera STEP-005 ; elle reste ajustable avec les vrais assets.

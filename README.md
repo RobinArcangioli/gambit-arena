@@ -1,105 +1,75 @@
 # Gambit Arena
 
-Arena RPG en temps réel, développé sous Linux pour Android portrait.
-Le héros se déplace automatiquement selon des règles prioritaires
-configurables, appelées gambits.
-
-## Environnement retenu
-
-- Godot 4.7.2, édition standard, GDScript.
-- Rendu Compatibility sur ordinateur et mobile.
-- Git 2.43.0 utilisé pour l'initialisation.
-- Poste observé : Ubuntu 24.04.5 LTS, x86_64.
-- Téléphone : Samsung Galaxy A16 SM-A165F/DSB, Android 16.
-- ADB retourne SM-A165F et l'état device.
-- SDK Android et templates Godot préparés ; JDK 21 conservé pour le premier essai.
-- Aucun export réel n'a encore confirmé le fonctionnement de cette chaîne.
-
-## Reconstruction et sauvegardes
-
-Cette archive contient le projet complet jusqu'à STEP-003 corrigée et validée.
-Le dossier Git ayant été supprimé, aucun ancien historique n'est inclus.
-La copie restaurée a été testée et validée par l’utilisateur le 22 octobre 2026.
-Le nouveau commit de reprise reste à créer et à vérifier.
-Voir [la reprise](docs/recovery.md) et [la politique de sauvegarde](docs/backup.md).
-Après chaque commit propre : `bash tools/create_backup.sh`.
+Arena RPG en temps réel sous Godot 4.7.2 standard, pour Android portrait.
+Le héros utilisera des règles prioritaires configurables, appelées gambits.
+À ce stade, le projet est un laboratoire visuel à déplacements scriptés.
 
 ## État actuel
 
-STEP-003 livre un laboratoire de projection : trois acteurs temporaires mobiles,
-un pilier non bloquant, un tri aux pieds, des coordonnées et un contrôle numérique.
-Cette scène de diagnostic ne constitue pas encore le gameplay du héros.
-Aucun APK n'a été généré ou testé.
+STEP-001 à STEP-003 validées ; restauration validée et commitée dans 6282d81.
+STEP-004 validée par l’utilisateur le 22 octobre 2026 sous Godot et sur Galaxy A16.
+APK exporté, installé avec succès et testé. Commit STEP-004 en attente.
+Taille préférée confirmée : 48 px de référence, retenus pour la suite.
 
-## Ouvrir et lancer sous Linux
+Environnement : Ubuntu 24.04.5, Git 2.43.0, Godot Compatibility, référence
+540 × 960, Samsung Galaxy A16 SM-A165F/DSB sous Android 16. SDK et modèles
+installés, ADB autorisé, Java 21 conservé pour le premier export réel.
 
-1. Ouvrir le gestionnaire de projets Godot 4.7.2.
-2. Importer le fichier project.godot de ce dossier si nécessaire.
-3. Ouvrir le projet.
-4. Appuyer sur F5.
-5. Vérifier que le laboratoire STEP-003 apparaît, sans erreur dans le débogueur.
-6. Appuyer sur F8 pour arrêter.
+## Ouvrir et tester
 
-La scène principale est scenes/main.tscn. Elle est référencée par UID
-dans project.godot. Cet UID est également enregistré dans la scène.
+Ouvrir project.godot dans Godot 4.7.2, attendre l'import, puis F5.
+La scène principale conserve son UID et lance le laboratoire STEP-004.
+F8 arrête le projet depuis l'éditeur. Vérifier le débogueur.
 
-## Recette du laboratoire
+| Bouton | Clavier | Résultat |
+|---|---|---|
+| Pause / Reprendre | Espace | Suspend ou relance le cycle local |
+| Taille | S | 48 → 64 → 80 → 48 pixels de référence |
+| Repartir | R | Temps à zéro, conserve pause/marche |
+| Silhouette | T | Active l'alternance normale/haute |
 
-- Espace : pause/reprise locale.
-- R : retour au début du cycle, sans changer l'état pause/marche.
-- T : alternance de la silhouette normale/haute.
-- Observer un cycle complet de huit secondes et le texte Projection/inverse.
+Trois acteurs, un pilier non bloquant et deux zones de croisement permettent
+de vérifier le tri aux pieds. Le cycle dure huit secondes. Le changement de
+taille touche les visuels, pas leurs positions logiques. La silhouette haute
+est désactivée au lancement. La perte de focus suspend le laboratoire ;
+la reprise est explicite. Les FPS affichés ne sont pas un benchmark.
 
-Procédure et résultats attendus : [STEP-003](docs/steps/STEP-003.md).
-Le lancement corrigé et la recette ont été validés par l'utilisateur le
-22 octobre 2026, avec croisements confirmés sans ambiguïté. Godot n'était
-pas disponible dans l'environnement de préparation de l'assistant.
+## Premier APK
 
-## Vérifications Git
+Suivre [Android](docs/android.md) pour exporter un APK Debug ARM64 standard,
+sans Gradle personnalisé, dans ~/gambit-arena-builds/. L'APK STEP-004 porte
+la version 0.1.0-step004, code 2, paquet org.gambitarena.prototype.
+Les paramètres locaux SDK/JDK et de signature ne sont pas dans l'archive.
+La recette complète figure dans [STEP-004](docs/steps/STEP-004.md).
 
-Depuis la racine du projet :
+## Sauvegardes
 
-- git status --short --branch : état de la branche et des fichiers.
-- git diff : modifications des fichiers déjà suivis.
-- git diff --cached : contenu préparé pour le prochain commit.
-- git log --oneline : historique après le premier commit.
+La livraison contient le projet complet et, à côté, le bundle Git du commit
+de base 6282d81. Ce bundle ne contient pas les modifications STEP-004 encore
+non commitées. Le dépôt Git existant est conservé lors de l'extraction.
+Après chaque étape validée et commitée, avec un dépôt propre :
 
-Attention : git diff ne montre pas le contenu des fichiers non suivis.
+```bash
+bash tools/create_backup.sh
+```
 
-## Android
-
-L'environnement Android, les templates et le preset sont préparés.
-La connexion USB est vérifiée sur le téléphone de référence.
-Voir [la procédure Android](docs/android.md).
-
-Le projet est configuré en portrait, avec une référence initiale de 540 × 960.
-Le preset Android Debug cible ARM64 et utilise les templates APK standards,
-sans compilation Gradle personnalisée.
-
-Aucun APK n'a été généré, installé ou testé. La compatibilité de Java 21 dans
-cette chaîne, la signature et l'export restent à éprouver.
-Le premier APK avec sprite mobile et tri visuel est prévu en STEP-004.
+Transmettre l'archive produite pour conserver aussi le nouvel historique.
+Voir [Sauvegarde](docs/backup.md) et [Reprise](docs/recovery.md).
 
 ## Documents
 
+- [État exact et prochaine action](PROJECT_STATUS.md)
 - [Roadmap](ROADMAP.md)
 - [Architecture réelle](ARCHITECTURE.md)
-- [État de reprise](PROJECT_STATUS.md)
-- [Livraison STEP-001](docs/steps/STEP-001.md)
-- [Préparation STEP-002](docs/steps/STEP-002.md)
-- [Environnement Android](docs/android.md)
-- [Livraison STEP-003](docs/steps/STEP-003.md)
 - [Coordonnées et profondeur](docs/coordinates.md)
 - [Assets temporaires](docs/assets.md)
+- [STEP-001](docs/steps/STEP-001.md), [STEP-002](docs/steps/STEP-002.md),
+  [STEP-003](docs/steps/STEP-003.md), [STEP-004](docs/steps/STEP-004.md)
 
 ## Méthode
 
-Une étape = un résultat observable, des tests, une validation utilisateur,
-puis un commit comprenant sa documentation.
-
-Les vérifications exécutées par le développeur sont identifiées comme
-telles. Aucune validation matérielle n'est déduite d'un test sur PC.
-
-Les mises à jour documentaires sont livrées sous forme de fichiers complets
-à remplacer, puis à relire avec le diff Git. Le développeur n'a pas à reporter
-manuellement les modifications dans chaque document.
+Une étape = livraison complète, tests, validation utilisateur, documents de
+validation complets, commit puis sauvegarde. Aucun résultat matériel n'est
+inféré d'un test PC. Godot est indisponible chez l'assistant pour cette livraison :
+les contrôles statiques ne remplacent pas l'import et l'exécution sur le poste.
+La prochaine étape attend la clôture de celle-ci et un nouveau feu vert.

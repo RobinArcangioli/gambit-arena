@@ -52,3 +52,20 @@ bundle : l'ancien .git est perdu. Les sauvegardes ultérieures en contiendront u
 Le script a été testé par l'assistant dans un dépôt temporaire : archive créée,
 source récupérée, bundle cloné au même commit, dépôt modifié refusé. Ce test
 ne constitue ni un test Godot ni une sauvegarde de l'ancien historique perdu.
+
+## Livraison STEP-004 avant commit
+
+L'archive complète contient gambit-arena/ (sources modifiées), ainsi que
+ gambit-arena-history-6282d81.bundle et gambit-arena-step-004-ARCHIVE.txt
+à côté de ce dossier. Le bundle est une copie exacte de la sauvegarde reçue :
+il contient le commit de base 6282d81, pas les modifications STEP-004.
+Aucun dossier .git n'est livré par-dessus le dépôt local.
+
+Pour appliquer cette livraison à un dépôt sain, extraire dans le dossier
+parent du projet existant : son .git est conservé et Git expose les changements.
+Pour une restauration après perte du dépôt, extraire dans un dossier séparé,
+cloner le bundle vers un nouveau dossier vide, puis y copier les sources
+STEP-004. Elles apparaîtront comme modifications non commitées de la base.
+Ne jamais relancer git init sur le projet sain pour appliquer cette livraison.
+Après validation et commit STEP-004, créer une nouvelle sauvegarde afin que
+le bundle inclue réellement le nouveau commit.
