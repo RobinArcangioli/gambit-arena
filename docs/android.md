@@ -289,3 +289,14 @@ Les essais spécifiques accueil/verrouillage ne sont pas détaillés séparémen
 dans ce retour ; la validation globale est reçue sans inventer un relevé par test.
 
 La mention « validation en attente » dans la procédure précédente est historique.
+
+## STEP-008 — validation reçue
+
+Version 0.1.0-step008, code 7, export Android Debug avec débogage vers
+~/gambit-arena-builds/step-008-debug.apk. Installation Success confirmée.
+Tests manuels OK, aucune saccade ; verrouillage et réduction/retour OK.
+SHA-256 : 214b055b0f4af6c095c0827018d0f1a2108bffa603dd97a43a18c80dbfe50f3c. Aucune mesure FPS chiffrée reçue.
+Voir docs/steps/STEP-008.md pour installation ADB, SHA-256 et critères : côtés,
+poursuite, plafond 20, pause, reprise Android et réinitialisation.
+L’APK STEP-007 reste validé : fa80fcb980db86072b1c8237540b7170d845fd266324ea287f4c4b9f90ade610.
+Ne jamais exporter dans le dépôt ; ne pas commiter APK/idsig.

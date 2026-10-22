@@ -2,60 +2,48 @@
 
 ## Base confirmée
 
-STEP-006 clôturée : 1cc7f05947322fb34049f2fc12a8de37756d872b, main propre.
-Sauvegarde reçue : gambit-arena-20261022-160117-1cc7f0594732.tar.gz.
-Bundle cloné, HEAD confirmé ; 68 fichiers identiques aux sources archivées.
-Arène, cinq placements, taille 48 px, réservations et boutons validés par l’utilisateur.
-APK STEP-006 : 133d5096305e9278d9262c55dd5bc4ea8f067a571e618017fc4976866833c125.
+STEP-007 clôturée : 9b3240c16632e89afa6354cda2eecbe5077e57ba, main propre.
+Sauvegarde reçue : gambit-arena-20261022-203734-9b3240c16632.tar.gz.
+Bundle cloné et vérifié ; 78 fichiers versionnés identiques aux sources archivées.
+Tests manuels Godot et Galaxy A16 validés, banc F6 OK sans échec.
+APK STEP-007 : fa80fcb980db86072b1c8237540b7170d845fd266324ea287f4c4b9f90ade610.
 
-## STEP-007 — Validée, commit en attente
+## STEP-008 — Validée, commit en attente
 
-Livraison testée : gambit-arena-complet-step-007-v1.tar.gz.
-Livraison de validation : gambit-arena-complet-step-007-validation.tar.gz.
-Déplacement automatique au sol, vitesse 1,2 unité/s, arrêt à 0,8 unité de la cible.
-Le contrôleur reçoit une cible ; la source temporaire de diagnostic la choisit.
-Scénarios : A puis B puis aucune, axes, cible hors arène, disparition de cible.
-Boutons de sélection de cible réservés au diagnostic, pas de déplacement manuel.
-Arène et mannequins 48 px réutilisés ; les six cases de compétences restent inactives.
-Version Android 0.1.0-step007, code 6. APK exporté et installé avec succès
-par l’utilisateur ; empreinte consignée ci-dessous.
+Livraison : gambit-arena-complet-step-008-v1.tar.gz.
+Apparitions déterministes aux quatre côtés, cadence une seconde de simulation,
+poursuite directe du héros et arrêt à 0,8 unité. Vitesse ennemie 0,9 u/s ; héros
+mobile 1,2 u/s. Trois scénarios : fixe (4), mobile (4), plafond (20).
+Contrôleur GroundMover de STEP-007 réutilisé sans modification, un par acteur.
+Retrait/rétablissement de cible, pause, arrêt des apparitions et réinitialisation.
+Version Android 0.1.0-step008, code 7. APK installé et validé ; empreinte ci-dessous.
 
 ## Vérifications et limites
 
-Références, contrat numérique et géométrie du portrait contrôlés par l’assistant.
-Le banc F6 exécutant le vrai GroundMover est confirmé OK, zéro échec par l’utilisateur.
-Godot indisponible ici : aucun test GDScript, lancement, rendu ni export exécuté.
-Le succès des précédents APK ne remplace pas les tests de cette nouvelle logique.
-Pas de dégâts, physique de collision, évitement, séparation ou poursuite ennemie.
-Les cibles sont des mannequins de diagnostic. Le réglage 0,8 n’est pas encore
-une portée de combat. Modèles/animations 3D définitifs toujours hors livraison.
+Contrôles statiques des références, fichiers antérieurs et archive effectués
+chez l’assistant. Banc Godot F6 fourni, à exécuter par l’utilisateur.
+Godot absent ici : aucune exécution GDScript, mesure de rendu ou export réalisé.
+Les ennemis peuvent se chevaucher ; séparation et encerclement sont STEP-009.
+Pas de combat, dégâts, vagues, collision physique ou animation 3D définitive.
+Le plafond de 20 est une limite technique, pas un résultat de performance mesuré.
+Les données de performance TRANSITION-001 ne valident pas cette nouvelle scène.
 
 ## Prochaine action
 
-Appliquer la livraison de validation, vérifier le diff préparé et commiter
-STEP-007, y compris les métadonnées Godot générées. Confirmer le hash et le
-statut propre puis créer et transmettre la sauvegarde complète.
-STEP-008 attend la clôture et un nouveau GO.
+Appliquer l’archive complète de validation, commiter les fichiers et les UID
+générés par Godot, confirmer le hash et le statut propre, puis créer et transmettre
+la sauvegarde complète. STEP-009 attend cette clôture et un nouveau GO.
 
-## Résultats reçus
+## Validation reçue le 22 octobre 2026
 
-Validation explicite utilisateur reçue le 22 octobre 2026.
-- Banc de tests Godot F6 : OK, zéro échec, confirmé par l’utilisateur.
-- Approche A puis B puis arrêt sans cible : OK.
-- Changement de cible en mouvement sans téléportation et annulation : OK.
-- Vitesse nominale proche de 1,20 u/s, hors dernier pas et bordure : OK.
-- Respect de la limite avec une cible extérieure : OK.
-- Disparition de A après 0,75 s, arrêt sans erreur : OK.
-- Pause : position et pose figées, reprise sans saut : OK.
-- ADB : téléphone en état device, installation Success sur Galaxy A16.
+Validation explicite de STEP-008 par l’utilisateur : tous les tests manuels OK,
+aucune saccade observée, verrouillage et réduction/retour OK. Installation ADB
+Success sur Samsung Galaxy A16 SM-A165F, Android 16.
+APK testé : step-008-debug.apk ; version 0.1.0-step008, code 7.
+SHA-256 : 214b055b0f4af6c095c0827018d0f1a2108bffa603dd97a43a18c80dbfe50f3c.
 
-APK testé : step-007-debug.apk. SHA-256 :
-
-```text
-fa80fcb980db86072b1c8237540b7170d845fd266324ea287f4c4b9f90ade610
-```
-
-Ces résultats proviennent de l’utilisateur ; l’assistant n’a pas exécuté Godot.
-Aucune mesure de performance ni capture n’a été transmise pour cette étape.
-Les essais spécifiques accueil/verrouillage ne sont pas détaillés séparément
-dans ce retour ; la validation globale est reçue sans inventer un relevé par test.
+Aucun chiffre FPS ou temps d’image fourni. Le résultat du banc automatisé F6
+n’est pas mentionné séparément dans ce retour ; aucun résultat chiffré ni
+« zéro échec » n’est ajouté par déduction. Validation globale utilisateur reçue.
+Code testé conservé à l’identique dans cette livraison documentaire.
+Statut : Validée, commit en attente.

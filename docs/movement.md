@@ -74,3 +74,10 @@ Ils ne couvrent pas les événements Android ni le rendu, qui restent manuels.
 L’utilisateur confirme aussi les six scénarios d’acceptation : A puis B,
 changement/annulation, vitesse, bordure, disparition et pause/reprise sans saut.
 Voir docs/steps/STEP-007.md pour le détail du retour et l’APK identifié.
+
+## Réutilisation STEP-008
+
+GroundMover reste inchangé. Chaque EnemyUnit en possède une instance propre
+avec vitesse 0,9 et arrêt 0,8 ; la cible est le héros fourni au directeur.
+Le héros mobile du diagnostic utilise une autre instance, vitesse 1,2 et arrêt 0
+pour ses points de route. Voir docs/enemies.md. La séparation reste STEP-009.

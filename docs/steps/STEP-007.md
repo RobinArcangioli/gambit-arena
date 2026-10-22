@@ -132,3 +132,10 @@ Archive : gambit-arena-complet-step-007-validation.tar.gz.
 Seule la documentation évolue depuis la v1 testée. Le bundle fourni contient
 la base 1cc7f05, pas encore STEP-007. Les nouveaux .gd.uid générés localement
 sont conservés à l’extraction et doivent être inclus dans le prochain commit.
+
+## Clôture confirmée
+
+Commit 9b3240c16632e89afa6354cda2eecbe5077e57ba, main propre. Sauvegarde
+reçue gambit-arena-20261022-203734-9b3240c16632.tar.gz : bundle complet
+cloné, HEAD confirmé, 78 fichiers identiques. STEP-008 autorisée par GO.
+Les mentions « commit en attente » ci-dessus décrivent la livraison de validation.

@@ -81,9 +81,9 @@ qui dépend de la validation de la roadmap.
 - STEP-005 : validée et commitée — 44f81d5 ; sauvegarde reçue et vérifiée.
 - TRANSITION-001 : validée et commitée — 056a464 ; sauvegarde reçue et vérifiée.
 - STEP-006 : validée et commitée — 1cc7f05 ; sauvegarde reçue et vérifiée.
-- STEP-007 : Validée, commit en attente — banc F6 sans échec, déplacement
-  et scénarios confirmés par l’utilisateur le 22 octobre 2026.
-- STEP-008 à STEP-030 : À faire.
+- STEP-007 : validée et commitée — 9b3240c ; sauvegarde reçue et vérifiée.
+- STEP-008 : Validée, commit en attente — tests manuels OK, aucune saccade observée.
+- STEP-009 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -138,8 +138,8 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Clôturer STEP-007 validée : commit, confirmation du hash et sauvegarde complète.
-STEP-008 (apparition des ennemis et poursuite du héros) attend ensuite un GO.
+Clôturer STEP-008 validée : commit, confirmation du hash et sauvegarde complète.
+STEP-009 (séparation bornée et encerclement) attend cette clôture et un nouveau GO.
 Les mannequins sont réutilisés ; modèles riggés et animations 3D restent à produire
 et qualifier. Ils ne sont pas considérés comme acquis par les étapes historiques 2D.
 

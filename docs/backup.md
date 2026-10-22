@@ -106,3 +106,12 @@ gambit-arena-20261022-160117-1cc7f0594732.tar.gz, 68 fichiers suivis.
 La livraison contient le projet complet et séparément le bundle de cette base.
 Les nouveaux .gd.uid de scripts/tests seront générés par Godot et inclus dans
 le commit puis la prochaine sauvegarde. Le bundle livré ne contient pas STEP-007.
+
+## Point de reprise STEP-007 et livraison STEP-008
+
+Sauvegarde reçue gambit-arena-20261022-203734-9b3240c16632.tar.gz,
+commit 9b3240c16632e89afa6354cda2eecbe5077e57ba, historique complet et
+78 fichiers versionnés vérifiés par restauration. L’archive STEP-008 conserve
+l’intégralité du projet et joint ce bundle séparément. Les ajouts STEP-008 ne
+sont pas dans ce bundle de base ; ils entreront dans la sauvegarde après validation
+et commit propre. Conserver les deux archives hors du dossier du projet.

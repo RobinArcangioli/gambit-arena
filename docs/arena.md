@@ -73,3 +73,10 @@ scène et réutilise ses limites, sa caméra et son layout. GroundMover applique
 clamp_ground à chaque pas de déplacement ; les placements de recette STEP-006
 ne sont donc plus le seul utilisateur du bornage. Les boutons de cible sont
 ajoutés au-dessus du terrain, sans activer les six réservations de compétences.
+
+## Scène principale STEP-008
+
+Main utilise maintenant scenes/enemies/pursuit_lab.tscn, dérivée de cette arène.
+La caméra, les limites et la présentation restent inchangées. Les ennemis sont
+créés aux quatre côtés intérieurs ±2,65, pour rester dans la zone lisible.
+La scène statique reste testable via F6 ; les six cases restent inactives.
