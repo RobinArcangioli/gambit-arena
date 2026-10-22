@@ -137,3 +137,10 @@ Archive : gambit-arena-complet-step-006-validation.tar.gz.
 Seule la documentation évolue depuis la v1 testée. Le bundle fourni contient
 la base 056a464, pas encore le prochain commit STEP-006. Les .gd.uid générés
 localement sont conservés à l’extraction et devront figurer dans la sauvegarde.
+
+## Clôture effective
+
+Commit : 1cc7f05947322fb34049f2fc12a8de37756d872b, main propre.
+Sauvegarde : gambit-arena-20261022-160117-1cc7f0594732.tar.gz.
+Bundle cloné et 68 fichiers suivis identiques aux sources archivées.
+Ces confirmations remplacent les mentions historiques « commit en attente ».

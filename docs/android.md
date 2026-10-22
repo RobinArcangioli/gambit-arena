@@ -247,3 +247,45 @@ Le retour d’arrière-plan/verrouillage n’a pas été détaillé séparément
 retour ; la validation globale de l’étape est reçue sans inventer de résultat par test.
 
 La mention « en attente de validation » de la procédure d’export ci-dessus est historique.
+
+## Export STEP-007 — validation en attente
+
+Après les tests F6 et la recette F5, exporter Android Debug avec débogage vers
+~/gambit-arena-builds/step-007-debug.apk. Version 0.1.0-step007, code 6.
+Conserver le SDK/JDK, le renderer et la signature qui fonctionnent.
+
+```bash
+mkdir -p ~/gambit-arena-builds
+~/Android/Sdk/platform-tools/adb devices -l
+~/Android/Sdk/platform-tools/adb -d install -r ~/gambit-arena-builds/step-007-debug.apk
+sha256sum ~/gambit-arena-builds/step-007-debug.apk
+```
+
+Installer seulement après export réussi. Attendu : Success, en-tête STEP-007.
+Suivre docs/steps/STEP-007.md, notamment perte de cible et pause en déplacement.
+Aucun APK ni test matériel de cette étape réalisé chez l’assistant.
+
+## Résultat STEP-007 reçu — 22 octobre 2026
+
+Validation explicite utilisateur reçue le 22 octobre 2026.
+- Banc de tests Godot F6 : OK, zéro échec, confirmé par l’utilisateur.
+- Approche A puis B puis arrêt sans cible : OK.
+- Changement de cible en mouvement sans téléportation et annulation : OK.
+- Vitesse nominale proche de 1,20 u/s, hors dernier pas et bordure : OK.
+- Respect de la limite avec une cible extérieure : OK.
+- Disparition de A après 0,75 s, arrêt sans erreur : OK.
+- Pause : position et pose figées, reprise sans saut : OK.
+- ADB : téléphone en état device, installation Success sur Galaxy A16.
+
+APK testé : step-007-debug.apk. SHA-256 :
+
+```text
+fa80fcb980db86072b1c8237540b7170d845fd266324ea287f4c4b9f90ade610
+```
+
+Ces résultats proviennent de l’utilisateur ; l’assistant n’a pas exécuté Godot.
+Aucune mesure de performance ni capture n’a été transmise pour cette étape.
+Les essais spécifiques accueil/verrouillage ne sont pas détaillés séparément
+dans ce retour ; la validation globale est reçue sans inventer un relevé par test.
+
+La mention « validation en attente » dans la procédure précédente est historique.

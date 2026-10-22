@@ -98,3 +98,11 @@ La livraison STEP-006 contient les sources complètes et le bundle de cette base
 séparés. Le bundle ne contient pas encore les changements STEP-006.
 Exporter les APK hors du dépôt, puis inclure les métadonnées Godot générées dans
 le commit validé avant de lancer la prochaine sauvegarde.
+
+## Base STEP-007
+
+Base 1cc7f05947322fb34049f2fc12a8de37756d872b ; sauvegarde reçue et vérifiée :
+gambit-arena-20261022-160117-1cc7f0594732.tar.gz, 68 fichiers suivis.
+La livraison contient le projet complet et séparément le bundle de cette base.
+Les nouveaux .gd.uid de scripts/tests seront générés par Godot et inclus dans
+le commit puis la prochaine sauvegarde. Le bundle livré ne contient pas STEP-007.

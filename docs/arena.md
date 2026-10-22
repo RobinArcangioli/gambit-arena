@@ -65,3 +65,11 @@ Arène et bordure entièrement visibles, mannequins lisibles à 48 px, cinq
 placements dans les limites sans coupure ni chevauchement avec l’interface.
 Pause/Position/Repères et les six cases inactives conformes ; F8 sans erreur.
 STEP-006 validée. Voir la fiche d’étape pour l’empreinte de l’APK testé.
+
+## Utilisation dans STEP-007
+
+L’arène statique reste accessible avec F6. Le nouveau laboratoire dérive de sa
+scène et réutilise ses limites, sa caméra et son layout. GroundMover applique
+clamp_ground à chaque pas de déplacement ; les placements de recette STEP-006
+ne sont donc plus le seul utilisateur du bornage. Les boutons de cible sont
+ajoutés au-dessus du terrain, sans activer les six réservations de compétences.

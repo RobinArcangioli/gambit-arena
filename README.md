@@ -1,61 +1,61 @@
 # Gambit Arena
 
-Jeu Android portrait sous Godot 4.7.2 standard, Compatibility : personnages 3D
-sur fond 2D dimétrique. Le gameplay visé est automatique et piloté par gambits.
+Godot 4.7.2 standard, Compatibility, Android portrait. Personnages 3D sur fond
+2D dimétrique, déplacement automatique et futurs gambits.
 
-## État actuel
+## État
 
-TRANSITION-001 validée et sauvegardée dans 056a464. STEP-006 est validée
-par l’utilisateur le 22 octobre 2026, commit en attente : arène fixe et
-réservations pour l’interface. Installation Android réussie.
-Deux mannequins 3D immobiles, à la taille de référence 48 px retenue sur A16.
-Aucun combat, ciblage ou déplacement automatique n’est encore implémenté.
+STEP-006 validée et sauvegardée dans 1cc7f05. STEP-007 validée par l’utilisateur
+le 22 octobre 2026, commit en attente. Banc F6 : OK, zéro échec ; scénarios
+de déplacement confirmés et APK installé avec succès.
+Un héros cyan approche une cible orange automatiquement. La logique d’approche
+est séparée de la source de cibles de diagnostic. Pas de combat ni d’IA ennemie.
 
-## Lancer
+## Lancer et tester
 
-Ouvrir project.godot, attendre l’import puis F5. En-tête : STEP-006 / ARENE.
-L’arène est entièrement visible entre les panneaux supérieur et inférieur.
-F8 arrête depuis l’éditeur. Les anciens diagnostics peuvent être ouverts avec F6 :
-scenes/hybrid/hybrid_lab.tscn et scenes/debug/animation_lab.tscn.
+Ouvrir project.godot et attendre l’import. Ouvrir d’abord
+scenes/tests/ground_mover_tests.tscn puis F6 : résultat attendu OK, zéro échec.
+F8 arrête ce test ; F5 lance le laboratoire STEP-007 / APPROCHE.
+Le scénario initial fait approcher A, attendre 0,5 s, approcher B, attendre
+0,5 s puis supprimer l’intention de cible. Rejouer recommence.
 
-| Commande | Clavier | Effet |
+| Commande | Touche | Fonction de diagnostic |
 |---|---|---|
-| Position : 1/5 à 5/5 | P | Centre puis quatre coins, placements bornés |
-| Repères | G | Affiche la limite intérieure, les axes et les croix au sol |
-| Pause / Reprendre | Espace | Suspend les changements de position |
+| Scénario 1/4 à 4/4 | P | A puis B, Axes, Bordure, Disparition |
+| Cible A / Cible B | A / B | Remplace l’intention, y compris en mouvement |
+| Aucune | N | Annule l’intention et arrête le héros |
+| Rejouer | R | Réinitialise le scénario et réactive sa séquence automatique |
+| Pause / Reprendre | Espace | Suspend mouvement, séquence et pose |
+| Repères | G | Limites, axes et ancrages |
 
-Pause désactive Position ; Repères reste utilisable. La perte de focus ou
-l’arrière-plan Android impose une reprise explicite. Il n’y a pas de temps de
-combat à suspendre dans cette arène statique.
-Les six cases « À venir » sont volontairement inactives. Les textes du HUD
-annoncent des zones réservées, pas des statistiques ou gambits fonctionnels.
+Le choix explicite A/B/Aucune désactive la séquence automatique jusqu’à Rejouer.
+Ce sont des commandes de recette, pas un contrôle manuel du déplacement futur.
+Toucher le sol ne déplace rien. Les six cases À venir restent inactives.
+Rejouer reste possible en pause et conserve cet état ; les choix de cible et le
+changement de scénario sont bloqués en pause. Retour d’arrière-plan : reprise explicite.
 
-## Tests et Android
+Vitesse nominale : 1,2 unité de sol/s ; distance d’arrêt : 0,8 unité.
+La vitesse affichée est la distance réellement parcourue par seconde de simulation ;
+elle peut diminuer sur le dernier pas ou contre une limite. Le déplacement affiché
+en pixels dépend de la direction dimétrique, pas la vitesse au sol.
 
-Procédure complète : docs/steps/STEP-006.md. APK Android Debug avec débogage,
-version 0.1.0-step006 code 5, même paquet et signature locale.
-Exporter impérativement dans ~/gambit-arena-builds/step-006-debug.apk,
-pas à la racine du dépôt. Voir docs/android.md.
+## Android
 
-Godot n’est pas disponible chez l’assistant : les contrôles statiques ne
-remplacent pas l’import, le lancement et les essais sur téléphone.
-Conserver les nouveaux .gd.uid générés par l’import pour le futur commit.
+Recette complète : docs/steps/STEP-007.md. Exporter Android Debug avec débogage
+vers ~/gambit-arena-builds/step-007-debug.apk, jamais dans le dépôt.
+Version 0.1.0-step007, code 6 ; paquet et signature conservés. Voir docs/android.md.
+Godot absent chez l’assistant : tests fournis mais non exécutés ici.
 
 ## Sources et sauvegardes
 
-Les anciennes scènes, assets et métadonnées reçus sont conservés.
-Le fond de l’arène est un dessin 2D produit par code ; les mannequins sont ceux
-du prototype hybride. Aucun modèle ou pack externe n’est nécessaire.
-L’archive complète contient, séparément, le bundle Git de la base 056a464.
-Il ne contient pas les changements STEP-006 avant leur commit.
-Après validation et commit, dépôt propre : bash tools/create_backup.sh,
-puis transmettre la sauvegarde. Ne jamais réinitialiser le dépôt pour une livraison.
+Les anciens diagnostics restent disponibles via F6, dont scenes/arena/arena.tscn
+pour l’arène statique STEP-006. F5 utilise la scène dérivée de déplacement.
+Conserver les nouveaux .gd.uid générés par Godot pour le commit validé.
+L’archive complète contient le bundle de base 1cc7f05, sans les modifications
+STEP-007 non commitées. Après validation et commit propre :
+bash tools/create_backup.sh, puis transmettre la sauvegarde.
 
 ## Documents
 
-- PROJECT_STATUS.md : état exact et prochaine action.
-- ROADMAP.md et ARCHITECTURE.md : plan et composants existants.
-- docs/arena.md : dimensions, limites et réservations.
-- docs/hybrid-rendering.md : contrat de composition 3D/2D.
-- docs/steps/STEP-006.md : recette et critères de validation.
-- docs/assets.md, docs/android.md, docs/backup.md : sources, export et sauvegarde.
+PROJECT_STATUS.md, ROADMAP.md, ARCHITECTURE.md, docs/movement.md,
+docs/arena.md, docs/hybrid-rendering.md, docs/android.md et docs/steps/STEP-007.md.
