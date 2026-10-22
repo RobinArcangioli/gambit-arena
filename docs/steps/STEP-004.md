@@ -156,3 +156,10 @@ STEP-005 attend ensuite un nouveau feu vert.
 - https://docs.godotengine.org/en/4.7/classes/class_viewport.html#class-viewport-method-get-screen-transform
 - https://docs.godotengine.org/en/4.7/classes/class_node.html
 - https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html
+
+## Clôture effective
+
+Commit confirmé : 491cde8ecc276dac6728e06a579e3788ab423dda, branche main propre.
+Sauvegarde reçue : gambit-arena-20261022-011216-491cde8ecc27.tar.gz.
+Restauration du bundle vérifiée par l'assistant ; 33 fichiers identiques.
+Cette clôture remplace le statut historique « commit en attente » ci-dessus.

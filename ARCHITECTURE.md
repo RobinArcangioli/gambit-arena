@@ -1,107 +1,80 @@
-# Architecture
+# Architecture réelle — STEP-005 validée, commit en attente
 
-## Réalité à STEP-004 — laboratoire Android (validée, commit en attente)
+Cible décidée le 22 octobre 2026 : personnages 3D sur fond 2D isométrique.
+Le présent document décrit encore le laboratoire 2D effectivement livré.
+La transition est cadrée dans docs/decisions/DEC-001-personnages-3d.md.
 
-| Fichier | Rôle |
+## Structure réelle
+
+Main conserve son UID uid://do6vxhog253vu et instance maintenant AnimationLab.
+L'ancien ProjectionLab reste disponible comme scène de diagnostic via F6.
+
+| Fichier | Responsabilité |
 |---|---|
-| project.godot | Configuration du projet et référence de la scène principale |
-| export_presets.cfg | Preset Android Debug : APK standard, sans Gradle personnalisé, ARM64 |
-| scenes/main.tscn | Main conserve son UID et instance ProjectionLab |
-| scenes/debug/projection_lab.tscn | Monde trié et HUD indépendant |
-| scripts/world/ground_projection.gd | Conversion pure entre sol et écran |
-| scripts/debug/projection_lab.gd | Trajets, contrôle numérique et présentation du laboratoire |
-| assets/debug/*.svg | Deux silhouettes de diagnostic et un pilier |
-| icon.svg | Icône initiale du projet |
-| icon.svg.import | Réglages d'import de l'icône |
-| .gitignore | Exclusion du cache Godot et du dossier Android généré |
-| .gitattributes | Attributs Git générés à la création du projet |
-| .editorconfig | Conventions d'édition générées à la création du projet |
+| scenes/main.tscn | Point d'entrée |
+| scenes/debug/animation_lab.tscn | Monde trié, héros, ennemi et HUD tactile |
+| scripts/debug/animation_lab.gd | Sélection des animations, pause, parcours de test |
+| scenes/actors/hero_visual.tscn | Présentation du héros, atlas assigné |
+| scenes/actors/enemy_visual.tscn | Présentation de l'ennemi, atlas assigné |
+| scripts/actors/actor_visual.gd | Construction des SpriteFrames et lecture visuelle |
+| assets/actors/*_atlas.svg | Deux planches vectorielles sources |
+| tools/generate_actor_atlases.py | Génération déterministe des planches, Python standard |
+| scripts/world/ground_projection.gd | Conversion pure sol/écran, inchangée |
+| scenes/debug/projection_lab.tscn et script associé | Ancien laboratoire STEP-004 conservé |
 
-Les documents de suivi sont placés à la racine et dans docs/steps/.
+## Présentation réutilisable
 
-## Réglages observés
+Chaque scène d'acteur est une racine Node2D au sol. Son script crée un enfant
+AnimatedSprite2D et une bibliothèque SpriteFrames de vingt animations : cinq
+états × quatre directions, quatre images chacune. Les racines ont z_index=0 ;
+World active y_sort_enabled. Le changement de texture ne modifie pas la racine.
+Le laboratoire ajoute les croix de diagnostic ; elles ne font pas partie de
+l'acteur réutilisable et ne sont ni une collision ni une portée.
 
-- Nom : Gambit Arena.
-- Godot retenu : 4.7.2.
-- Scène principale : uid://do6vxhog253vu.
-- Même UID dans scenes/main.tscn.
-- renderer/rendering_method : gl_compatibility.
-- renderer/rendering_method.mobile : gl_compatibility.
-- Métadonnée de rendu : GL Compatibility, correction confirmée par l'utilisateur.
-- Étirement existant : canvas_items, aspect expand.
-- Résolution de référence initiale : 540 × 960, à valider visuellement en STEP-004.
-- Orientation Android : Portrait (window/handheld/orientation=1).
-- Import ETC2/ASTC : textures/vram_compression/import_etc2_astc=true.
+Le contrat public est play_pose(state, direction, restart=false), puis
+set_visual_paused(paused). Une demande répétée de la même pose sans restart
+ne remet pas l'animation à zéro. Un changement d'état ou de direction recommence
+à la première image. Aucune sélection automatique de direction n'est implémentée.
+Chaque instance possède sa lecture et sa bibliothèque ; elle partage seulement
+la texture importée. Aucune animation ne déclenche un dégât, une mort logique
+ou un déplacement. Le signal de fin visuelle n'est pas une horloge de combat.
 
-Ce dernier réglage prépare ces formats pour les textures utilisant la compression
-VRAM ; il ne définit pas les réglages individuels des futurs sprites.
+## Laboratoire
 
-## Preset Android observé
+Deux acteurs à 48 px de corps, côte à côte au départ. Les six boutons pilotent
+les deux présentations ensemble. Image suivante suspend la lecture puis avance
+le frame modulo quatre. Rejouer réinitialise aussi le temps des croisements.
+Le croisement optionnel projette deux trajets logiques opposés ±45 unités,
+cycle de huit secondes. La direction visuelle choisie reste indépendante : ce
+mode teste le tri même sur Attack, Hit ou Death, sans simuler une action de jeu.
 
-- Nom : Android Debug ; plateforme Android.
-- Ressources : all_resources.
-- Compilation Gradle : désactivée.
-- Architecture activée : arm64-v8a uniquement.
-- Identifiant : org.gambitarena.prototype.
-- Nom affiché : Gambit Arena.
-- Version : 0.1.0-step004 ; code 2.
-- Signature : activée ; chemin de sortie encore vide.
-- Aucune permission activée dans l'extrait transmis.
+La pause met speed_scale à zéro et suspend uniquement le temps de diagnostic.
+Elle conserve les poses de fin des animations non bouclées. La perte de focus
+ou la pause Android déclenche cette pause locale, sans reprise automatique.
+Le HUD reste dans un CanvasLayer séparé. Le rectangle natif de zone sûre est
+converti par l'inverse de get_screen_transform(), borné au viewport, puis
+utilisé au placement. Si le rectangle est vide, le viewport est utilisé.
+Portrait de référence 540 × 960 ; autres formes non qualifiées à cette étape.
 
-Le fichier reçu contient [runnable_presets] avec Android="Android Debug".
-Le nom du preset ne garantit pas le mode de génération : Export With Debug
-doit être coché lors de l’export. L’utilisateur a confirmé le premier export,
-l’installation ADB réussie et les tests Godot/téléphone le 22 octobre 2026.
-Voir docs/steps/STEP-004.md pour l’empreinte de l’APK testé.
+## Configuration et limites
 
-Les chemins SDK/JDK sont des paramètres locaux de l'éditeur, distincts de
-la configuration versionnée. Voir [l'environnement Android](docs/android.md).
+Godot 4.7.2 standard, Compatibility desktop/mobile, canvas_items et expand,
+portrait, ETC2/ASTC import activé, émulation souris depuis le toucher activée.
+Preset Android Debug : ARM64, APK standard, Gradle désactivé, all_resources,
+org.gambitarena.prototype, version 0.1.0-step005 code 3, signature activée.
+Les chemins SDK/JDK et clés de signature restent locaux.
+Les réglages hérités Jolt/Windows sont présents ; aucune 3D n'est utilisée.
 
-Le réglage de physique 3D Jolt et le réglage de pilote Windows sont présents,
-mais aucun système 3D n'est utilisé.
+La chaîne Android et le laboratoire STEP-005 ont été validés par l’utilisateur.
+Installation ADB réussie ; empreinte APK consignée dans la fiche STEP-005. Filtrage linéaire, sans mipmaps ni compression VRAM demandée
+pour ces atlas de diagnostic (import SVG par défaut à contrôler sur le poste).
+Le coût brut des deux textures à échelle d'import 1 est décrit dans docs/assets.md.
+Aucun autoload, collision, combat, ciblage, gambit ou contrôleur de héros.
 
-## Responsabilités actuelles
+## Principes pour la suite
 
-Main reste le point d'entrée et instance ProjectionLab. Le script du laboratoire
-possède une horloge locale et les positions logiques de ses trois acteurs.
-Il projette ces positions vers les racines Node2D ; les Sprite2D enfants sont
-ancrés aux pieds. World active y_sort_enabled et conserve tous les acteurs
-au même z_index. Le HUD appartient à un CanvasLayer distinct.
-
-Le script construit les Sprite2D et repères Line2D au démarrage. La hiérarchie
-complète, les conversions et les seuils sont décrits dans docs/coordinates.md.
-Aucun autoload, combat, gambit, collision ou contrôleur de héros n'est livré.
-La pause locale n'est pas encore la pause globale du jeu.
-La logique de diagnostic sera remplacée dans les étapes de gameplay prévues.
-
-## Principes approuvés pour les étapes futures
-
-- Séparer données, décisions, exécution des actions et présentation.
-- Utiliser un plan logique au sol et une projection centralisée.
-- Le déplacement exécute une intention ; il ne choisit pas sa cible.
-- Un seul décideur automatique pilote le héros après STEP-017.
-- Les animations ne possèdent pas l'horloge des dégâts.
-- Une compétence partage son exécuteur entre gambit et commande manuelle.
-- Les états mutables appartiennent à chaque acteur.
-- Aucun système de gameplay anticipé n'est implémenté à ce stade.
-
-Ces principes sont des décisions de conception, pas des composants existants.
-
-## Ajouts STEP-004
-
-HUD/SafeFrame regroupe les quatre labels et les quatre boutons. Le script
-convertit le rectangle natif DisplayServer.get_display_safe_area() dans les
-coordonnées du viewport via l'inverse de get_screen_transform(), puis le borne
-au viewport. Si la zone obtenue est vide, il utilise le viewport entier.
-Le placement est recalculé au redimensionnement et au retour Android.
-
-Les boutons Pause, Taille, Repartir et Silhouette appellent les mêmes fonctions
-que Espace, S, R et T. L'émulation de souris depuis le toucher est activée.
-Seuls les Sprite2D des acteurs changent d'échelle ; les racines et marqueurs
-aux pieds restent inchangés. Le pilier conserve sa taille.
-
-La perte de focus ou la notification de pause suspend l'horloge locale ;
-le retour ne la relance pas. Reprendre reste une action explicite.
-Il n'existe pas encore de sauvegarde d'état après destruction du processus,
-ni de pause globale de combat. La robustesse complète appartient à STEP-027.
-Les FPS affichés sont un indicateur instantané, pas une mesure de STEP-028.
+Données, décisions, exécution et présentation resteront séparées. Les positions,
+portées et vitesses seront calculées au sol. Le déplacement exécutera une
+intention ; les animations ne posséderont pas l'horloge des dégâts. Les états
+mutables resteront propres à chaque acteur. Un décideur automatique unique et
+un exécuteur partagé pour gambits/commandes manuelles viendront aux étapes prévues.

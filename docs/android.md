@@ -134,3 +134,35 @@ mot de passe ni clé ne doit être transmis.
 
 Le protocole tactile, visuel et arrière-plan se trouve dans
 [STEP-004](steps/STEP-004.md). Les tests PC ne remplacent pas ces essais.
+
+## Export STEP-005 — validation en attente
+
+La chaîne installée et les tests STEP-004 restent les références validées.
+Après import et recette Linux STEP-005, exporter le projet Android Debug avec
+Exporter avec débogage coché, vers ~/gambit-arena-builds/step-005-debug.apk.
+Le preset livré porte la version 0.1.0-step005, code 3 ; paquet et signature
+restent identiques. Aucun APK STEP-005 n'est généré par l'assistant.
+
+```bash
+mkdir -p ~/gambit-arena-builds
+~/Android/Sdk/platform-tools/adb devices -l
+~/Android/Sdk/platform-tools/adb -d install -r ~/gambit-arena-builds/step-005-debug.apk
+sha256sum ~/gambit-arena-builds/step-005-debug.apk
+```
+
+Exécuter l'installation seulement après la fin de l'export. Résultat attendu :
+Success ; ouvrir l'application et vérifier l'en-tête STEP-005. Suivre la recette
+docs/steps/STEP-005.md. Transmettre l'erreur exacte si l'une des étapes échoue.
+
+## Résultat STEP-005 reçu — 22 octobre 2026
+
+L’utilisateur confirme croisements, actions et boutons fonctionnels et valide
+l’étape. ADB : device, puis installation Success. APK step-005-debug.apk :
+
+```text
+86459ba2a752ecd83e7d179d637a40f9c950b14293ebad88914b94fbdfe8d652
+```
+
+Les passages « validation en attente » de la procédure de livraison ci-dessus
+sont désormais historiques. Le prochain prototype 3D/2D nécessitera son propre
+APK et ses propres essais ; aucune performance 3D n’est déduite de ce résultat.

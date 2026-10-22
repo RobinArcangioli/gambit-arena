@@ -5,7 +5,7 @@ de lancement. Ce fichier en constitue le registre opérationnel initial.
 
 ## Périmètre MVP
 
-Android portrait, arène fixe en sprites 2D dimétriques non pixel art,
+Android portrait, arène fixe avec personnages 3D sur fond 2D isométrique,
 un héros automatiquement mobile, un type d'ennemi, combat et vagues,
 trois gambits configurables, six emplacements manuels dont trois actifs,
 pause, défaite et redémarrage.
@@ -17,9 +17,12 @@ complexe, décor bloquant, progression persistante et publication en boutique.
 
 - Godot 4.7.2 standard ; rendu Compatibility.
 - Référence proposée : 540 × 960.
-- Taille apparente des acteurs à comparer : 48, 64 et 80 pixels.
+- Taille apparente retenue après STEP-004 : 48 pixels de référence.
+  Comparaison 48/64/80 effectuée ; ajustement possible avec les vrais assets.
 - Vue dimétrique 2:1 ; coordonnées logiques au sol.
-- Quatre directions temporaires ; Idle, Move, Attack, Hit et Death.
+- Idle, Move, Attack, Hit et Death restent les états visuels cibles.
+- Les quatre directions en sprites de STEP-005 décrivent le prototype historique ;
+  elles ne contraignent pas la future orientation des personnages 3D.
 - Évaluation initiale des gambits à 10 Hz.
 - Plafond initial : 20 ennemis vivants.
 - Objectif provisoire : 30 images/s soutenues sur le téléphone de référence.
@@ -74,9 +77,11 @@ qui dépend de la validation de la roadmap.
 - STEP-002 : validée et anciennement commitée — 5b9baac (historique perdu).
 - STEP-003 : validée après correctif ; aucun commit confirmé avant suppression.
 - RECOVERY-001 : validée et commitée — 6282d81 ; sauvegarde avec bundle reçue et vérifiée.
-- STEP-004 : Validée, commit en attente — tests Godot et Galaxy A16 confirmés
-  par l’utilisateur le 22 octobre 2026 ; installation APK réussie.
-- STEP-005 à STEP-030 : À faire.
+- STEP-004 : validée et commitée — 491cde8 ; sauvegarde reçue et vérifiée.
+- STEP-005 : Validée, commit en attente — croisements, actions et boutons
+  confirmés fonctionnels par l’utilisateur le 22 octobre 2026.
+- TRANSITION-001 : À faire — prototype personnages 3D sur fond 2D avant STEP-006.
+- STEP-006 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -131,9 +136,10 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Commiter STEP-004 validée avec sa documentation, confirmer le hash et créer
-la sauvegarde complète. La taille préférée confirmée est de 48 px de référence.
-STEP-005 attend un nouveau feu vert.
+Clôturer STEP-005 : commit et sauvegarde. Au prochain GO, réaliser
+TRANSITION-001 avant l’arène STEP-006. Ce jalon vérifie la nouvelle présentation
+sur Galaxy A16 ; les étapes historiques ne sont pas renumérotées.
+Voir docs/decisions/DEC-001-personnages-3d.md pour le périmètre et les critères.
 
 ## État de l'annexe
 
@@ -144,3 +150,13 @@ son contenu n'est pas encore archivé dans ce fichier. Cette lacune documentaire
 est distincte de l'avancement technique de STEP-002.
 
 ## Proposition détaillée validée
+
+## Révision de présentation — décision du 22 octobre 2026
+
+Le choix utilisateur remplace les personnages en sprites par des personnages 3D
+sur fond 2D isométrique. STEP-005 reste une validation historique du laboratoire.
+TRANSITION-001 est insérée comme dépendance supplémentaire de STEP-006.
+Le gameplay MVP, le déplacement automatique et les gambits restent dans le périmètre.
+Les parties des futures étapes concernant assets, projection, occultation et
+performance seront précisées après le prototype hybride. La production d’assets
+3D animés sera cadrée à son issue, sans présumer de modèles déjà disponibles.

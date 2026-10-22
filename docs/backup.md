@@ -69,3 +69,13 @@ STEP-004. Elles apparaîtront comme modifications non commitées de la base.
 Ne jamais relancer git init sur le projet sain pour appliquer cette livraison.
 Après validation et commit STEP-004, créer une nouvelle sauvegarde afin que
 le bundle inclue réellement le nouveau commit.
+
+## Référence STEP-005
+
+Base confirmée et sauvegardée : 491cde8ecc276dac6728e06a579e3788ab423dda.
+Archive reçue : gambit-arena-20261022-011216-491cde8ecc27.tar.gz.
+Le bundle a été cloné et les 33 fichiers suivis comparés avec succès.
+La livraison STEP-005 contient les sources complètes non commitées dans
+gambit-arena/, le bundle de base dans gambit-arena-history-491cde8.bundle et
+une notice externe gambit-arena-step-005-ARCHIVE.txt. Aucun .git n'est écrasé.
+Le bundle ne contiendra STEP-005 qu'après son commit et une nouvelle sauvegarde.

@@ -1,53 +1,57 @@
 # État du projet
 
-## Référence confirmée
+## Base confirmée
 
-- RECOVERY-001 : restaurée, testée et commitée par l'utilisateur.
-- HEAD de référence : 6282d81d18b8b013046821ee8bcafe459553c8b0, branche main.
-- Message : chore: [RECOVERY-001] restaurer le projet valide jusqu'a STEP-003.
+- Branche main ; STEP-004 clôturée : 491cde8ecc276dac6728e06a579e3788ab423dda.
+- Message : feat: [STEP-004] valider le prototype visuel sur Android.
 - Dépôt propre confirmé après commit.
-- Sauvegarde reçue : gambit-arena-20261022-004333-6282d81d18b8.tar.gz.
-- Son history.bundle a été cloné ; HEAD confirmé ; les 32 fichiers suivis
-  correspondent exactement aux sources de la sauvegarde.
-- Les anciens commits 6583515 et 5b9baac restent des références historiques
-  perdues. La récupération ne recrée pas leurs objets Git.
+- Sauvegarde reçue : gambit-arena-20261022-011216-491cde8ecc27.tar.gz.
+- Bundle cloné et vérifié : 33 fichiers identiques aux sources archivées.
+- Historique disponible : RECOVERY-001 (6282d81) puis STEP-004 (491cde8).
+- STEP-004 validée par l'utilisateur sous Godot et sur Galaxy A16 Android 16.
+- Taille préférée : 48 px de référence.
+- APK STEP-004 testé, SHA-256 :
+  c554729004c142a67223176b5c24dd86a28accb6cb6606001339aeeed2f3475b.
 
-## STEP-004 — Validée, commit en attente
+## STEP-005 — Validée, commit en attente
 
-Feu vert utilisateur reçu. Livraison de validation : gambit-arena-complet-step-004-validation.tar.gz.
-Base : 6282d81. Aucun commit STEP-004 à ce stade.
+Livraison testée : gambit-arena-complet-step-005-v1.tar.gz.
+Livraison de validation : gambit-arena-complet-step-005-validation.tar.gz.
+Deux acteurs temporaires vectoriels, cinq animations et quatre directions.
+Laboratoire tactile : état, direction, pause, rejouer, croisement, image suivante.
+Corps debout proche de 48 px ; cellules plus grandes pour contenir les armes.
+Aucun gameplay anticipé, aucun dégât ni contrôleur de déplacement.
+Version d’export : 0.1.0-step005, code 3. APK exporté et installé par
+l’utilisateur : ADB Success. SHA-256 :
+86459ba2a752ecd83e7d179d637a40f9c950b14293ebad88914b94fbdfe8d652.
 
-Ajouts : quatre boutons tactiles, tailles de référence 48/64/80,
-placement dans la zone sûre Android, pause locale au passage en arrière-plan,
-reprise explicite et indicateur FPS. Version Android 0.1.0-step004, code 2.
-Le laboratoire reste un diagnostic à trajets automatiques, sans combat.
+## Vérifications et limites
 
-## Validation réelle
+Génération déterministe des SVG, découpes et références contrôlées ; rendu
+vectoriel inspecté hors Godot. Code STEP-004 conservé comme ancien laboratoire.
+Le 22 octobre 2026, l’utilisateur confirme les tests réussis, notamment
+croisements, actions et boutons, et valide explicitement STEP-005.
+Godot absent chez l’assistant : les essais d’exécution proviennent de l’utilisateur.
+Aucun résultat de performance soutenue n'est déduit des FPS de diagnostic.
 
-- STEP-003 corrigée et projet restauré : validés par l'utilisateur sous Linux.
-- STEP-004 : contrôles statiques des références et calculs effectués par l'assistant.
-- Godot indisponible chez l'assistant : import, compilation GDScript, rendu et
-  interactions STEP-004 non exécutés ici.
-- Le 22 octobre 2026, l’utilisateur confirme tous les tests manuels réussis
-  sous Godot et sur son Galaxy A16 et valide explicitement STEP-004.
-- Export effectué ; installation ADB : Success. APK lancé et testé.
-- Taille préférée confirmée par l’utilisateur : 48 px de référence.
-- Capture et mesures détaillées non transmises ; validation globale utilisateur consignée.
-- SHA-256 APK : c554729004c142a67223176b5c24dd86a28accb6cb6606001339aeeed2f3475b.
-- Aucun résultat de performance soutenue établi.
+## Prochaine action
 
-## Prochaine action exacte
+Appliquer la livraison de validation, vérifier le diff, commiter STEP-005,
+confirmer le hash et le statut propre puis transmettre la sauvegarde complète.
+Le prochain travail sera un prototype de transition 3D/2D (TRANSITION-001),
+avant STEP-006. Il attend la clôture de cette étape et le prochain GO.
 
-Appliquer l'archive complète de validation, vérifier le diff préparé et créer
-le commit STEP-004. Confirmer son hash réel et le statut propre, puis exécuter
-bash tools/create_backup.sh et transmettre la sauvegarde produite.
-Message : feat: [STEP-004] valider le prototype visuel sur Android.
-Ne pas commencer STEP-005 avant clôture, sauvegarde et nouveau feu vert.
+## Archives
 
-## Conservation
+Livraison complète comprenant les sources non commitées et, séparément, le
+bundle de base 491cde8. Après commit validé : bash tools/create_backup.sh,
+puis transmettre l'archive pour conserver le nouvel historique exact.
+Les changements locaux non transmis ne sont pas automatiquement récupérés.
 
-Chaque livraison/correction reste une archive complète distincte.
-Cette livraison inclut aussi le bundle du commit de base, séparé des sources
-STEP-004 non commitées. Après le prochain commit : bash tools/create_backup.sh,
-puis transmettre l'archive. Les changements locaux non transmis ne sont pas
-automatiquement sauvegardés par l'assistant.
+## Nouvelle direction décidée le 22 octobre 2026
+
+Personnages 3D se déplaçant sur un fond 2D isométrique. La production de sprites
+comme représentation finale des personnages est abandonnée. Le code livré
+reste celui du laboratoire 2D validé ; aucune migration 3D n'est encore réalisée.
+Le repère de 48 px reste une préférence de taille apparente, à réévaluer en 3D.
+Décision et critères du prototype : docs/decisions/DEC-001-personnages-3d.md.

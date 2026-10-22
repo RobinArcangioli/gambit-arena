@@ -1,4 +1,9 @@
-# Coordonnées et profondeur — STEP-004
+# Coordonnées et profondeur — laboratoire de projection STEP-004
+
+Ce document décrit la scène conservée scenes/debug/projection_lab.tscn (F6).
+Depuis STEP-005, F5 ouvre le laboratoire d’animations ; son contrat d’ancrage
+et ses directions sont décrits dans docs/assets.md et ARCHITECTURE.md.
+La conversion sol/écran ci-dessous est partagée et inchangée.
 
 ## Deux espaces, une conversion
 

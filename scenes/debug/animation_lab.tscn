@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/debug/animation_lab.gd" id="1_lab"]
+[ext_resource type="PackedScene" path="res://scenes/actors/hero_visual.tscn" id="2_hero"]
+[ext_resource type="PackedScene" path="res://scenes/actors/enemy_visual.tscn" id="3_enemy"]
+
+[node name="AnimationLab" type="Node2D"]
+script = ExtResource("1_lab")
+
+[node name="World" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Hero" parent="World" instance=ExtResource("2_hero")]
+
+[node name="Enemy" parent="World" instance=ExtResource("3_enemy")]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="SafeFrame" type="Control" parent="HUD"]
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="HUD/SafeFrame"]
+theme_override_font_sizes/font_size = 24
+text = "STEP-005 / ANIMATIONS"
+
+[node name="Description" type="Label" parent="HUD/SafeFrame"]
+theme_override_font_sizes/font_size = 18
+text = "Heros cyan / ennemi rouge\nCorps : 48 px de reference\nCroix : ancrage au sol"
+
+[node name="Status" type="Label" parent="HUD/SafeFrame"]
+theme_override_font_sizes/font_size = 18
+
+[node name="StateButton" type="Button" parent="HUD/SafeFrame"]
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+
+[node name="DirectionButton" type="Button" parent="HUD/SafeFrame"]
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+
+[node name="PauseButton" type="Button" parent="HUD/SafeFrame"]
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+
+[node name="ReplayButton" type="Button" parent="HUD/SafeFrame"]
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Rejouer"
+
+[node name="CrossButton" type="Button" parent="HUD/SafeFrame"]
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+
+[node name="FrameButton" type="Button" parent="HUD/SafeFrame"]
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Image suivante"
