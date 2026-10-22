@@ -1,69 +1,82 @@
-# Architecture réelle — STEP-008 validée, commit en attente
+# Architecture réelle — STEP-009 validée, commit en attente
 
 ## Composition
 
-Main conserve son UID et instance scenes/enemies/pursuit_lab.tscn, dérivée de
-l’arène STEP-006. Le laboratoire STEP-007 reste disponible en F6 sans modification.
-Le parent d’arène conserve caméra orthographique 2:1, éclairage, fond 2D,
-SubViewport 3D transparent, zone sûre, six cases inactives et commandes de pause.
-Le mannequin orange statique hérité est retiré au démarrage du nouveau laboratoire.
+Main conserve son UID et instance scenes/crowd/crowd_lab.tscn, dérivée de l’arène
+STEP-006. Tous les scripts des étapes précédentes restent inchangés. Leur usage
+historique via F6 est conservé ; le nouveau coordinateur réutilise GroundMover,
+EnemyUnit et les positions déterministes d’EnemyDirector sans leur déléguer le tick.
 
 | Source | Responsabilité |
 |---|---|
-| scripts/enemies/enemy_unit.gd | Mannequin ennemi, GroundMover indépendant et pose |
-| scripts/enemies/enemy_director.gd | Cadence, côtés déterministes, budget, liste et nettoyage |
-| scripts/enemies/pursuit_lab.gd | Scénarios, route automatique du héros, commandes de diagnostic |
-| scenes/enemies/pursuit_lab.tscn | Scène dérivée d’arène utilisée par Main |
-| tests/test_enemy_director.gd | Tests du vrai directeur et des vrais movers dans SceneTree |
-| scenes/tests/enemy_director_tests.tscn | Entrée F6 du banc STEP-008 |
-| scripts/movement/ground_mover.gd | Contrôleur de déplacement validé STEP-007, inchangé |
-| scripts/arena/arena_bounds.gd | Limites ±2,65 pour les pieds, inchangées |
-| scripts/hybrid/proxy_actor.gd | Mannequin procédural original, inchangé |
+| scripts/crowd/ground_crowd.gd | Disques, séparation bornée, contrôle du segment de déplacement |
+| scripts/crowd/crowd_simulation.gd | Tick commun, intentions, résolution, application, apparitions |
+| scripts/crowd/crowd_lab.gd | Scénarios, intentions du héros, commandes et présentation |
+| scripts/crowd/crowd_marks.gd | Empreintes 2D projetées sous les modèles 3D |
+| scenes/crowd/crowd_lab.tscn | Scène utilisée par Main |
+| tests/test_ground_crowd.gd | Tests des vrais solveur et coordinateur dans SceneTree |
+| scenes/tests/ground_crowd_tests.tscn | Entrée F6 du banc |
 
-## Simulation
+## Tick commun et responsabilités
 
-Le laboratoire appelle les déplacements uniquement dans _physics_process, hors
-pause locale. Le héros mobile suit quatre points via GroundMover (1,2 u/s,
-arrêt 0 pour les points de diagnostic). Sa position est appliquée avant de faire
-avancer le directeur. Chaque ennemi relit cette position avec son propre mover
-(0,9 u/s, arrêt 0,8). Tous les acteurs partagent le repère local World à l’identité.
-EnemyUnit ne traite rien de façon autonome ; advance(delta) pilote son mover
-puis son temps de marche et sa pose. Les états restent NO_TARGET, MOVING,
-ARRIVED, BLOCKED. La cible est fournie, aucun moteur de décision/gambit ajouté.
+CrowdSimulation.advance est appelé une fois par pas physique depuis le laboratoire.
+Aucun ennemi ne se traite seul. Une pause retourne avant toute modification.
+Le pas accepté vaut min(delta, 1/30 s) : pas de rattrapage violent d’un grand delta.
+Ce même pas alimente intentions, poses et cadence ; un pas exceptionnel trop long
+ralentit donc le temps simulé, sans faire avancer les apparitions en avance.
 
-EnemyDirector est un Node sans boucle autonome. Il déplace d’abord les acteurs
-existants, puis peut créer un ennemi : sa position initiale reste visible sur
-le côté pendant ce pas. Premier ennemi après une seconde, puis cadence une
-seconde de simulation ; au plus un nouvel ennemi par tick, sans rattrapage en
-rafale après un long pas. Budget diagnostic 4 ou 20, plafond absolu 20 présents.
-Les côtés alternent X−, Z−, X+, Z+ sur les limites intérieures ±2,65. Les groupes
-suivants utilisent des décalages 0, −1,4, +1,4, −0,7, +0,7 : résultat reproductible.
-Pas d’apparition hors écran ni de traversée de la bordure.
+Le coordinateur capture les positions, demande à chaque GroundMover un déplacement
+puis restaure sa position avant de résoudre les contacts. Les intentions lisent
+la position du héros en début de tick ; les transformations visuelles ne sont
+appliquées qu’après résolution. Les états et vitesses sont recalculés sur le
+mouvement effectivement accepté, et non la vitesse souhaitée. Le temps de marche
+n’avance que si la position change. L’arrivée et la limite ne garantissent pas
+la possibilité de contourner un autre acteur.
 
-Une cible absente, détachée, queue_free ou libérée est rejetée par GroundMover.
-Le directeur suspend les apparitions sans héros valide. Le bouton Retirer héros
-cache le mannequin et transmet null ; les tests F6 couvrent aussi sa vraie
-destruction. Rendre héros restitue la cible à tous les ennemis conservés.
-Arrêter les apparitions n’arrête pas les ennemis déjà présents. La cadence repart
-sans dette ; le budget total émis ne se renouvelle pas après suppression d’un ennemi.
-Ce comportement n’est pas encore un système de vagues.
+Les acteurs partagent World à l’identité : Vector2(x,z), y=0 en 3D. Le héros est
+l’index 0, puis les ennemis restent dans leur ordre d’insertion. L’ordre est stable,
+mais non symétrique : il introduit une priorité, pas une simulation de masses.
 
-## Pause et nettoyage
+## Contacts au sol
 
-La pause ne fait avancer ni cadence, ni route, ni pose. Le directeur expose aussi
-advance(delta, is_paused) pour tester cette suspension explicitement. Les notifications
-d’arrière-plan héritées passent en pause et exigent une reprise explicite.
-Rejouer cache et queue_free les ennemis, vide la liste, les compteurs et la cadence,
-réactive les apparitions et le héros, réinitialise la route. L’état pause est conservé.
-Le banc attend une frame pour vérifier la destruction effective des anciens nœuds.
-Les références ennemies invalides sont retirées de la liste au pas suivant.
+Disques de rayon 0,35 ; distance minimale nominale des centres 0,70. Les limites
+ArenaBounds restent ±2,65. GroundCrowd travaille sur une copie des positions.
+Pour chaque acteur autorisé à corriger : somme des demi-pénétrations dirigées
+vers l’extérieur, plafonnée à 0,6 × dt. Centres confondus : normale déterministe
+antisymétrique. Le héros n’est jamais poussé passivement ; les gardiens du scénario
+Blocage sont également fixes. Un chevauchement pathologique peut persister si
+aucune direction de correction admissible n’existe ; aucune éjection forcée.
+
+Correction puis intention passent par un test analytique segment/disque contre
+les voisins. Le déplacement est tronqué au premier contact, avec marge 0,0001.
+Pour une pénétration préexistante, seules les directions ne l’aggravant pas sont
+acceptées. Le clamp d’arène précède le test du segment. Pas de glissement automatique,
+pathfinding ou recherche de détour. Le solveur borne aussi chaque intention à
+1,2 × dt ; les intentions ennemies sont déjà bornées à 0,9 × dt par GroundMover.
+Ainsi le héros parcourt au plus 1,2 × dt, un ennemi au plus (0,9 + 0,6) × dt.
+Ces bornes excluent uniquement les positions initiales créées par Rejouer/scénario.
+
+## Apparitions, vie des références et pause
+
+Cadence une seconde simulée, au plus un nouvel acteur par tick et 20 au total.
+Chaque apparition essaie les 20 points de côté existants à partir de l’index
+courant. Un centre doit être à au moins 0,71 unité des autres centres. Si tous
+les points sont occupés, l’apparition attend la prochaine échéance. Aucun acteur
+vivant n’est déplacé pour libérer une place. Le budget ne se recharge pas après retrait.
+
+La pile de Bordure utilise explicitement allow_overlap pour créer un cas invalide
+à corriger ; cette exception n’est jamais utilisée par les apparitions normales.
+Une cible héros invalide arrête le coordinateur et annule les intentions ennemies.
+Les ennemis libérés ou queue_free sont purgés ; Rejouer cache puis supprime les
+anciennes instances et remet cadence, horloges, compteurs et maximum de pas à zéro.
+Arrière-plan : pause héritée de l’arène, reprise explicite. Rejouer conserve la pause.
 
 ## Présentation et limites
 
-Mannequins à 48 px, aucun changement aux assets/imports validés. Les trois boutons
-supplémentaires et l’état se placent dans l’espace libre au-dessus du terrain.
-La géométrie d’arène et les six réservations restent inchangées.
-Version Android 0.1.0-step008, code 7, ARM64, Compatibility, sans Gradle.
-Pas de séparation, évitement, dégâts ou combat. Les corps peuvent se superposer ;
-une distance d’arrêt au héros ne garantit pas un espacement entre ennemis.
-Les modèles riggés et animations 3D définitifs restent à produire et qualifier.
+Rendu 2D/3D, caméra 2:1, modèles 48 px, zone sûre et six cases inactives conservés.
+Des disques 2D projetés apparaissent avec Repères ; ils servent à distinguer
+contact au sol et occultation des silhouettes. Le HUD montre l’état du héros,
+le nombre de bloqués et le plus grand pas réellement observé depuis Rejouer.
+Version 0.1.0-step009 code 8, ARM64, Compatibility, sans Gradle.
+Ni PV, attaque, dégâts, masse physique, évitement global ni animation finale.
+Les scènes historiques demeurent des diagnostics, pas des systèmes simultanés.

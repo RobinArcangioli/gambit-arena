@@ -80,3 +80,9 @@ Main utilise maintenant scenes/enemies/pursuit_lab.tscn, dérivée de cette arè
 La caméra, les limites et la présentation restent inchangées. Les ennemis sont
 créés aux quatre côtés intérieurs ±2,65, pour rester dans la zone lisible.
 La scène statique reste testable via F6 ; les six cases restent inactives.
+
+## Scène principale STEP-009
+
+Main utilise scenes/crowd/crowd_lab.tscn. Caméra, limites et réservations restent
+inchangées. Repères ajoute les disques de rayon 0,35 sur le fond 2D, sous les
+modèles 3D. Les contacts sont calculés au sol ; le décor reste sans collision.

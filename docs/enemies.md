@@ -52,3 +52,11 @@ Le banc STEP-007 est conservé pour le contrôleur partagé inchangé.
 
 La distance 0,8 est un réglage d’approche, pas encore une portée de combat.
 La séparation bornée et l’encerclement appartiennent à STEP-009.
+
+## Réutilisation STEP-009
+
+Le laboratoire historique et EnemyDirector restent inchangés. Le nouveau
+CrowdSimulation reprend EnemyUnit, GroundMover et les points d’apparition,
+mais coordonne les intentions avant d’appliquer les contacts. Il vérifie la
+place libre à l’apparition et borne la séparation. Voir docs/crowd.md.
+La nouvelle scène principale est scenes/crowd/crowd_lab.tscn.

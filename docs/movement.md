@@ -81,3 +81,11 @@ GroundMover reste inchangé. Chaque EnemyUnit en possède une instance propre
 avec vitesse 0,9 et arrêt 0,8 ; la cible est le héros fourni au directeur.
 Le héros mobile du diagnostic utilise une autre instance, vitesse 1,2 et arrêt 0
 pour ses points de route. Voir docs/enemies.md. La séparation reste STEP-009.
+
+## Contacts STEP-009
+
+GroundMover reste inchangé. CrowdSimulation calcule son déplacement souhaité,
+puis GroundCrowd tronque ce déplacement aux contacts. Position, vitesse et état
+sont ensuite recalculés sur le mouvement accepté. Un voisin peut produire BLOCKED,
+même sans atteindre la bordure. Le héros n’est pas poussé passivement.
+Le laboratoire historique STEP-007 continue d’utiliser son contrat initial.

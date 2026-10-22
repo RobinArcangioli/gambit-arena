@@ -114,3 +114,10 @@ n’est pas mentionné séparément dans ce retour ; aucun résultat chiffré ni
 « zéro échec » n’est ajouté par déduction. Validation globale utilisateur reçue.
 Code testé conservé à l’identique dans cette livraison documentaire.
 Statut : Validée, commit en attente.
+
+## Clôture confirmée
+
+Commit 46dfaa77ac79fccccebe165973a1bdbfb1000cf4, main propre. Sauvegarde
+reçue gambit-arena-20261022-210049-46dfaa77ac79.tar.gz : historique complet,
+clone restauré, HEAD confirmé, 90 fichiers identiques. STEP-009 autorisée par GO.
+Les mentions « commit en attente » ci-dessus décrivent la livraison de validation.

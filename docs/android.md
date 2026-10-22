@@ -300,3 +300,13 @@ Voir docs/steps/STEP-008.md pour installation ADB, SHA-256 et critères : côté
 poursuite, plafond 20, pause, reprise Android et réinitialisation.
 L’APK STEP-007 reste validé : fa80fcb980db86072b1c8237540b7170d845fd266324ea287f4c4b9f90ade610.
 Ne jamais exporter dans le dépôt ; ne pas commiter APK/idsig.
+
+## STEP-009 — validation reçue
+
+Version 0.1.0-step009, code 8. Export Android Debug avec débogage vers
+~/gambit-arena-builds/step-009-debug.apk. Installation Success confirmée.
+Tests manuels et F6 OK, fluidité confirmée. SHA-256 :
+ff61292efe28c5688fd537982efe2f5ff03672c7934f2edeab19b5e7bf8bb24f.
+Tester encerclement, poursuite, blocage puis ouverture, bordure, pause et retours
+Android. Voir docs/steps/STEP-009.md. Les performances STEP-008 ne valident pas
+cette nouvelle logique de contacts. Conserver APK/idsig hors du dépôt.

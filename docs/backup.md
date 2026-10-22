@@ -115,3 +115,11 @@ commit 9b3240c16632e89afa6354cda2eecbe5077e57ba, historique complet et
 l’intégralité du projet et joint ce bundle séparément. Les ajouts STEP-008 ne
 sont pas dans ce bundle de base ; ils entreront dans la sauvegarde après validation
 et commit propre. Conserver les deux archives hors du dossier du projet.
+
+## Point de reprise STEP-008 et livraison STEP-009
+
+Sauvegarde reçue gambit-arena-20261022-210049-46dfaa77ac79.tar.gz,
+commit 46dfaa77ac79fccccebe165973a1bdbfb1000cf4. Historique complet et
+90 fichiers versionnés vérifiés par restauration. L’archive STEP-009 conserve
+le projet entier et joint ce bundle séparément. STEP-009 non commitée n’est pas
+dans ce bundle ; elle entrera dans la sauvegarde après validation et commit propre.
