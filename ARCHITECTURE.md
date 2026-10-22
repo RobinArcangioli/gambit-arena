@@ -1,80 +1,90 @@
-# Architecture réelle — STEP-005 validée, commit en attente
+# Architecture réelle — TRANSITION-001 validée, commit en attente
 
-Cible décidée le 22 octobre 2026 : personnages 3D sur fond 2D isométrique.
-Le présent document décrit encore le laboratoire 2D effectivement livré.
-La transition est cadrée dans docs/decisions/DEC-001-personnages-3d.md.
+## Composition du rendu
 
-## Structure réelle
+Main conserve son UID et instance scenes/hybrid/hybrid_lab.tscn. La racine du
+laboratoire est un Control contenant, dans l’ordre de dessin : fond de couleur,
+Ground (Node2D), Render3D (SubViewportContainer), HUD (Control).
+Ground dessine un damier dimétrique en 2D. Render3D affiche un unique SubViewport
+transparent avec son propre World3D. Les personnages partagent ce monde et son
+tampon de profondeur. Le HUD se dessine au-dessus ; aucun y_sort 2D ne trie les
+volumes 3D. Les anciens laboratoires restent disponibles via F6.
 
-Main conserve son UID uid://do6vxhog253vu et instance maintenant AnimationLab.
-L'ancien ProjectionLab reste disponible comme scène de diagnostic via F6.
-
-| Fichier | Responsabilité |
+| Source | Rôle |
 |---|---|
-| scenes/main.tscn | Point d'entrée |
-| scenes/debug/animation_lab.tscn | Monde trié, héros, ennemi et HUD tactile |
-| scripts/debug/animation_lab.gd | Sélection des animations, pause, parcours de test |
-| scenes/actors/hero_visual.tscn | Présentation du héros, atlas assigné |
-| scenes/actors/enemy_visual.tscn | Présentation de l'ennemi, atlas assigné |
-| scripts/actors/actor_visual.gd | Construction des SpriteFrames et lecture visuelle |
-| assets/actors/*_atlas.svg | Deux planches vectorielles sources |
-| tools/generate_actor_atlases.py | Génération déterministe des planches, Python standard |
-| scripts/world/ground_projection.gd | Conversion pure sol/écran, inchangée |
-| scenes/debug/projection_lab.tscn et script associé | Ancien laboratoire STEP-004 conservé |
+| scenes/hybrid/hybrid_lab.tscn | Arbre de composition, caméra et HUD |
+| scripts/hybrid/hybrid_lab.gd | Scénarios, raccord projection, commandes et compteurs |
+| scripts/hybrid/ground_canvas.gd | Fond 2D recalculé selon la projection de la caméra |
+| scripts/hybrid/proxy_actor.gd | Mannequin procédural, orientation et balancement des membres |
+| assets/hybrid/occluder.svg | Décor 2D original, utilisé par un Sprite3D |
+| scripts/world/ground_projection.gd | Ancienne conversion conservée pour les diagnostics 2D |
 
-## Présentation réutilisable
+## Caméra, coordonnées et décor
 
-Chaque scène d'acteur est une racine Node2D au sol. Son script crée un enfant
-AnimatedSprite2D et une bibliothèque SpriteFrames de vingt animations : cinq
-états × quatre directions, quatre images chacune. Les racines ont z_index=0 ;
-World active y_sort_enabled. Le changement de texture ne modifie pas la racine.
-Le laboratoire ajoute les croix de diagnostic ; elles ne font pas partie de
-l'acteur réutilisable et ne sont ni une collision ni une portée.
+Plan logique (x,z) = plan horizontal 3D ; altitude y=0 aux pieds. Caméra
+orthographique fixe, azimut 45 degrés et élévation 30 degrés : rapport de
+projection au sol 2:1. C’est une vue dimétrique, dans le sens courant de fond
+isométrique du projet. L’ancienne convention graphique 2:1 est conservée.
 
-Le contrat public est play_pose(state, direction, restart=false), puis
-set_visual_paused(paused). Une demande répétée de la même pose sans restart
-ne remet pas l'animation à zéro. Un changement d'état ou de direction recommence
-à la première image. Aucune sélection automatique de direction n'est implémentée.
-Chaque instance possède sa lecture et sa bibliothèque ; elle partage seulement
-la texture importée. Aucune animation ne déclenche un dégât, une mort logique
-ou un déplacement. Le signal de fin visuelle n'est pas une horloge de combat.
+Le fond n’est pas un mesh : il utilise camera.unproject_position() pour placer
+ses sommets en pixels du SubViewport. Le Node2D est au même emplacement que le
+conteneur 3D. Stretch est activé sans réduction (stretch_shrink=1) ; un pixel
+logique du rendu correspond à un pixel du fond. La caméra adapte sa largeur
+orthographique à la largeur du SubViewport / 48 pour conserver l’échelle.
+Le contrôle projection/inverse projette puis recoupe le rayon avec y=0.
 
-## Laboratoire
+Le décor est une image sur un Sprite3D vertical, orienté à 45 degrés autour de Y,
+ancré au sol. Alpha cut discard à 0,5, profondeur active, sans éclairage ni ombre.
+Les pixels opaques participent à la profondeur ; le contour transparent ne
+forme pas un rectangle opaque. Ce test décrit une carte verticale, pas un
+bâtiment volumétrique. Un fond unique aplati ne suffit pas à reproduire cette
+occultation : les futurs éléments qui masquent les personnages devront être
+séparés et raccordés à une représentation de profondeur adaptée.
 
-Deux acteurs à 48 px de corps, côte à côte au départ. Les six boutons pilotent
-les deux présentations ensemble. Image suivante suspend la lecture puis avance
-le frame modulo quatre. Rejouer réinitialise aussi le temps des croisements.
-Le croisement optionnel projette deux trajets logiques opposés ±45 unités,
-cycle de huit secondes. La direction visuelle choisie reste indépendante : ce
-mode teste le tri même sur Attack, Hit ou Death, sans simuler une action de jeu.
+## Mannequins et scénarios
 
-La pause met speed_scale à zéro et suspend uniquement le temps de diagnostic.
-Elle conserve les poses de fin des animations non bouclées. La perte de focus
-ou la pause Android déclenche cette pause locale, sans reprise automatique.
-Le HUD reste dans un CanvasLayer séparé. Le rectangle natif de zone sûre est
-converti par l'inverse de get_screen_transform(), borné au viewport, puis
-utilisé au placement. Si le rectangle est vide, le viewport est utilisé.
-Portrait de référence 540 × 960 ; autres formes non qualifiées à cette étape.
+Deux mannequins initiaux, cyan et orange, composés de BoxMesh et d’une SphereMesh
+pour la tête du cyan. Chaque racine est au sol ; seul l’enfant Model est mis
+à l’échelle. Les pivots des membres créent une marche de diagnostic par sinus.
+Pas de squelette, de modèle importé, de système d’animation de production ou de
+combat. Les commandes ne changent que la présentation et les trajets de test.
 
-## Configuration et limites
+Croisement : deux trajets opposés sur huit secondes, mêmes règles de demi-tour
+instantané que les diagnostics précédents. Décor 2D : le cyan traverse le plan
+vertical du décor ; l’orange est à l’écart. Charge 20 : vingt mannequins au total
+sur deux cercles ; les dix-huit supplémentaires sont cachés dans les autres modes.
+Ce nombre n’est pas un résultat de qualification du plafond de vingt ennemis.
 
-Godot 4.7.2 standard, Compatibility desktop/mobile, canvas_items et expand,
-portrait, ETC2/ASTC import activé, émulation souris depuis le toucher activée.
-Preset Android Debug : ARM64, APK standard, Gradle désactivé, all_resources,
-org.gambitarena.prototype, version 0.1.0-step005 code 3, signature activée.
-Les chemins SDK/JDK et clés de signature restent locaux.
-Les réglages hérités Jolt/Windows sont présents ; aucune 3D n'est utilisée.
+Une lumière directionnelle et de l’ambiance, sans ombres, sans post-traitement,
+sans MSAA ajouté. Le fond 2D ne reçoit pas l’éclairage 3D. Aucun personnage n’est
+pré-rendu individuellement ; le coût est celui d’un seul rendu 3D partagé.
 
-La chaîne Android et le laboratoire STEP-005 ont été validés par l’utilisateur.
-Installation ADB réussie ; empreinte APK consignée dans la fiche STEP-005. Filtrage linéaire, sans mipmaps ni compression VRAM demandée
-pour ces atlas de diagnostic (import SVG par défaut à contrôler sur le poste).
-Le coût brut des deux textures à échelle d'import 1 est décrit dans docs/assets.md.
-Aucun autoload, collision, combat, ciblage, gambit ou contrôleur de héros.
+## Pause et mesures
 
-## Principes pour la suite
+Une horloge locale pilote positions et poses. Pause/perte de focus la fige ;
+le retour ne la relance pas. Repartir réinitialise cycle et mesures sans reprendre.
+Moyenne = nombre de frames traitées / somme des delta non pausés ; pire image =
+plus grand delta observé. Ce sont des indications de cadence de traitement,
+non des mesures GPU. Les valeurs dépendent aussi de VSync, du delta moteur et de
+la chauffe. Changer mode, échelle ou marche réinitialise les mesures.
 
-Données, décisions, exécution et présentation resteront séparées. Les positions,
-portées et vitesses seront calculées au sol. Le déplacement exécutera une
-intention ; les animations ne posséderont pas l'horloge des dégâts. Les états
-mutables resteront propres à chaque acteur. Un décideur automatique unique et
-un exécuteur partagé pour gambits/commandes manuelles viendront aux étapes prévues.
+## Configuration
+
+Godot 4.7.2 standard, Compatibility, portrait 540 × 960 canvas_items/expand.
+Entrées tactiles via émulation souris conservée. Zone sûre Android convertie
+dans le viewport principal. Fenêtre de rendu 3D de 380 px de haut dans la zone
+sûre ; ce HUD est un diagnostic pour le portrait du Galaxy A16.
+Preset Android Debug : ARM64, APK standard, sans Gradle, paquet inchangé,
+version 0.1.0-transition001 code 4. JDK/SDK et signature restent locaux.
+La compatibilité 3D matérielle n’est pas déduite du succès STEP-005 en 2D.
+
+## Limites et suite
+
+Import, exécution et export validés par l’utilisateur le 22 octobre 2026.
+Relevé du diagnostic sur téléphone : 60 FPS moyens, pire image 16,7 ms, sans
+saccade signalée ; taille 48 px confirmée. Ce résultat ne qualifie pas les
+futurs modèles et la charge du combat. Pas de collision,
+pathfinding, dommages, gambits ou persistance. La traversée du décor est volontaire.
+Les futurs modèles riggés, cinq animations et licences seront cadrés après ce
+prototype. Le gameplay doit continuer à séparer données, décisions, exécution
+et présentation ; les animations ne posséderont pas l’horloge des dégâts.

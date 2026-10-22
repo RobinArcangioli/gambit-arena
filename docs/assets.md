@@ -82,3 +82,24 @@ historique et ne constituent plus la filière de production des personnages.
 Aucun modèle, rig ou animation 3D n’est inclus dans cette validation.
 Le prochain prototype déterminera les besoins de production 3D et la taille
 apparente ; 48 px est le repère initial, pas une dimension imposée aux modèles.
+
+## Sources nouvelles TRANSITION-001
+
+scripts/hybrid/proxy_actor.gd crée deux silhouettes de mannequins à partir de
+BoxMesh/SphereMesh Godot, sans fichier de modèle importé, rig ou texture externe.
+Couleurs cyan/orange, tête ronde/cubique. Le code est une source du projet.
+assets/hybrid/occluder.svg (96 × 112) est un dessin vectoriel original créé pour
+ce diagnostic ; aucune image ni police tierce intégrée. Même provenance et
+conditions de fourniture que les sources originales décrites plus haut.
+Le fond est dessiné par scripts/hybrid/ground_canvas.gd, sans image extérieure.
+
+La pose et la marche procédurales ne remplacent pas les cinq animations de
+production prévues. Les assets historiques 2D et leurs métadonnées restent
+conservés. Ne pas déduire un budget 3D du calcul des atlas 2D ci-dessus.
+Les nouveaux .gd.uid/.svg.import générés par Godot devront être suivis dans Git.
+
+## Échelle du prototype hybride validée
+
+Le 22 octobre 2026, l’utilisateur confirme 48 px de référence comme taille
+préférée pour les mannequins 3D. Cette échelle guidera la suite ; la lisibilité
+des futurs modèles et animations devra être vérifiée avec leurs vraies silhouettes.

@@ -78,9 +78,9 @@ qui dépend de la validation de la roadmap.
 - STEP-003 : validée après correctif ; aucun commit confirmé avant suppression.
 - RECOVERY-001 : validée et commitée — 6282d81 ; sauvegarde avec bundle reçue et vérifiée.
 - STEP-004 : validée et commitée — 491cde8 ; sauvegarde reçue et vérifiée.
-- STEP-005 : Validée, commit en attente — croisements, actions et boutons
-  confirmés fonctionnels par l’utilisateur le 22 octobre 2026.
-- TRANSITION-001 : À faire — prototype personnages 3D sur fond 2D avant STEP-006.
+- STEP-005 : validée et commitée — 44f81d5 ; sauvegarde reçue et vérifiée.
+- TRANSITION-001 : Validée, commit en attente — rendu hybride et occultation OK ;
+  48 px confirmés, 60 FPS moyens et pire image 16,7 ms rapportés sur le diagnostic.
 - STEP-006 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
@@ -136,10 +136,10 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Clôturer STEP-005 : commit et sauvegarde. Au prochain GO, réaliser
-TRANSITION-001 avant l’arène STEP-006. Ce jalon vérifie la nouvelle présentation
-sur Galaxy A16 ; les étapes historiques ne sont pas renumérotées.
-Voir docs/decisions/DEC-001-personnages-3d.md pour le périmètre et les critères.
+Clôturer TRANSITION-001 validée : commit et sauvegarde complète.
+Au prochain GO, préciser la suite de l’arène STEP-006 et les assets 3D requis.
+Le rendu hybride est validé pour le diagnostic ; les modèles riggés, animations
+et effets futurs nécessiteront leurs propres essais.
 
 ## État de l'annexe
 

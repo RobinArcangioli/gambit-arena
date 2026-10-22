@@ -147,3 +147,10 @@ TRANSITION-001 avant STEP-006, conformément à la nouvelle direction utilisateu
 
 - https://docs.godotengine.org/en/4.7/classes/class_animatedsprite2d.html
 - https://docs.godotengine.org/en/4.7/classes/class_spriteframes.html
+
+## Clôture effective
+
+Commit confirmé : 44f81d5597e061d47df59cf376908a71d1a904cb, main propre.
+Sauvegarde reçue : gambit-arena-20261022-152338-44f81d5597e0.tar.gz.
+Bundle cloné et sources comparées : 48 fichiers identiques.
+Cette clôture remplace les mentions historiques « commit en attente » de la fiche.

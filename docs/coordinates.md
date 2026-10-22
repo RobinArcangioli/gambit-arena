@@ -106,3 +106,11 @@ il faut explicitement choisir Reprendre après le retour.
 - https://docs.godotengine.org/en/4.7/classes/class_canvasitem.html#class-canvasitem-property-y-sort-enabled
 - https://docs.godotengine.org/en/4.7/classes/class_sprite2d.html
 - https://docs.godotengine.org/en/4.7/classes/class_inputeventkey.html
+
+## Transition 3D/2D
+
+Depuis TRANSITION-001, le laboratoire principal utilise un plan (x,z) en 3D,
+y pour l’altitude, et projette le fond 2D par Camera3D. Les conventions de cette
+ancienne fiche décrivent toujours le diagnostic 2D conservé via F6.
+Le nouveau contrat est dans docs/hybrid-rendering.md ; ne pas appliquer les
+anciennes unités de sprites directement aux unités des mannequins 3D.

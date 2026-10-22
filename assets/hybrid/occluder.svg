@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="112" viewBox="0 0 96 112">
+<title>Original flat diagnostic garden screen</title>
+<path d="M16 110V14L48 3L80 14V110H68V22H28V110Z" fill="#caab70" stroke="#493c35" stroke-width="3"/>
+<path d="M28 24H68V93H28Z" fill="#456e65" stroke="#243e41" stroke-width="3"/>
+<path d="M30 28L66 62M30 44L66 78M30 60L62 90M66 28L30 62M66 44L30 78M66 60L34 90" fill="none" stroke="#84b48b" stroke-width="4"/>
+<path d="M10 110H86" stroke="#caab70" stroke-width="4"/>
+</svg>

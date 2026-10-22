@@ -46,3 +46,21 @@ Conserver les IDs et résultats des étapes clôturées. Insérer TRANSITION-001
 avant STEP-006, puis actualiser les détails concernés du plan suivant ses résultats.
 Chaque livraison reste complète ; chaque étape validée reçoit un commit et
 une sauvegarde contenant le nouvel historique. Ne pas réinitialiser le dépôt.
+
+## Mise en œuvre du prototype après clôture STEP-005
+
+STEP-005 a été commitée dans 44f81d5, sauvegardée et vérifiée (48 fichiers).
+GO reçu pour TRANSITION-001. La livraison essaie un fond Node2D et un unique
+SubViewport 3D transparent avec caméra orthographique 2:1 ; le décor occultant
+est une carte Sprite3D à profondeur active. Voir docs/hybrid-rendering.md.
+Cette implémentation reste en attente de validation matérielle, sans confirmer
+la production des modèles riggés ni l’architecture artistique finale.
+
+## Validation du prototype — 22 octobre 2026
+
+L’utilisateur valide TRANSITION-001 : fond 2D visible, projection 2:1, ancrages,
+profondeur, passage devant/derrière le décor, boutons et pause fonctionnels.
+48 px retenus en 3D. Relevé rapporté : 60 FPS moyens, pire image 16,7 ms, sans
+saccade. L’approche hybride est retenue pour poursuivre le projet ; les futurs
+modèles, animations et décors complexes restent à qualifier séparément.
+Clôture Git et sauvegarde de TRANSITION-001 encore en attente.

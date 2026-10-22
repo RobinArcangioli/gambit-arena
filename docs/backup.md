@@ -79,3 +79,13 @@ La livraison STEP-005 contient les sources complètes non commitées dans
 gambit-arena/, le bundle de base dans gambit-arena-history-491cde8.bundle et
 une notice externe gambit-arena-step-005-ARCHIVE.txt. Aucun .git n'est écrasé.
 Le bundle ne contiendra STEP-005 qu'après son commit et une nouvelle sauvegarde.
+
+## Base de TRANSITION-001
+
+44f81d5597e061d47df59cf376908a71d1a904cb est la nouvelle base sauvegardée.
+Archive reçue : gambit-arena-20261022-152338-44f81d5597e0.tar.gz.
+La livraison contient les sources complètes dans gambit-arena/, le bundle de
+base dans gambit-arena-history-44f81d5.bundle et une notice de livraison.
+Le bundle ne contient pas les changements TRANSITION-001 non commitées.
+Les fichiers locaux .gd.uid/.svg.import générés à l’import seront conservés à
+l’extraction, puis devront être inclus dans le commit et la prochaine sauvegarde.

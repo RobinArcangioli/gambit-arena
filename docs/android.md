@@ -166,3 +166,42 @@ l’étape. ADB : device, puis installation Success. APK step-005-debug.apk :
 Les passages « validation en attente » de la procédure de livraison ci-dessus
 sont désormais historiques. Le prochain prototype 3D/2D nécessitera son propre
 APK et ses propres essais ; aucune performance 3D n’est déduite de ce résultat.
+
+## Export TRANSITION-001 — en attente de validation
+
+Conserver Godot 4.7.2, Compatibility, le SDK/JDK et la signature ayant fonctionné.
+Après import et tests PC, exporter Android Debug avec débogage coché vers
+~/gambit-arena-builds/transition-001-debug.apk. Version 0.1.0-transition001,
+code 4. Aucun APK n’a été produit chez l’assistant.
+
+```bash
+mkdir -p ~/gambit-arena-builds
+~/Android/Sdk/platform-tools/adb devices -l
+~/Android/Sdk/platform-tools/adb -d install -r ~/gambit-arena-builds/transition-001-debug.apk
+sha256sum ~/gambit-arena-builds/transition-001-debug.apk
+```
+
+Installer seulement après export réussi. Attendu : Success. Ouvrir l’application,
+vérifier l’en-tête TRANSITION-001 puis suivre docs/steps/TRANSITION-001.md.
+En cas d’échec ou d’écran opaque masquant le fond, transmettre le message/capture
+sans modifier au hasard le renderer ou le SDK. La 3D doit être validée séparément.
+
+## Résultat TRANSITION-001 — 22 octobre 2026
+
+Validation explicite utilisateur reçue le 22 octobre 2026.
+- Damier 2D sous les mannequins : OK.
+- Projection 2.000:1, erreur < 0,001 : OK.
+- Ancrages et profondeur entre personnages : OK.
+- Passage derrière/devant le décor 2D : OK.
+- Boutons, pause et F8 : OK ; validation globale de l’étape reçue.
+- Taille préférée en 3D : 48 px de référence.
+- Relevé utilisateur : moyenne 60 FPS, pire image 16,7 ms, aucune saccade.
+- Installation ADB : Success sur Galaxy A16 Android 16.
+- SHA-256 APK : 124654de74db47ac162a9f925d7f4f3844aa7504a316f43a559c4a3d86635f10.
+
+Ces mesures concernent le diagnostic livré et sont rapportées par l’utilisateur.
+Elles ne qualifient pas les futurs modèles riggés, animations, combat ou effets.
+Durée exacte du relevé, charge batterie/secteur et économie d’énergie non précisées
+séparément dans le retour ; aucun profil GPU ni capture n’a été transmis.
+
+La section d’export « en attente de validation » ci-dessus est désormais historique.
