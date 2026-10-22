@@ -205,3 +205,45 @@ Durée exacte du relevé, charge batterie/secteur et économie d’énergie non 
 séparément dans le retour ; aucun profil GPU ni capture n’a été transmis.
 
 La section d’export « en attente de validation » ci-dessus est désormais historique.
+
+## Export STEP-006 — en attente de validation
+
+Après tests Godot, exporter Android Debug avec débogage vers
+~/gambit-arena-builds/step-006-debug.apk. Version 0.1.0-step006, code 5.
+Ne pas laisser l’APK ou le .idsig à la racine du dépôt : ils bloqueraient la
+sauvegarde propre, comme lors de la clôture précédente. Aucun export fait ici.
+
+```bash
+mkdir -p ~/gambit-arena-builds
+~/Android/Sdk/platform-tools/adb devices -l
+~/Android/Sdk/platform-tools/adb -d install -r ~/gambit-arena-builds/step-006-debug.apk
+sha256sum ~/gambit-arena-builds/step-006-debug.apk
+```
+
+Installer seulement après l’export. Attendu : Success, puis en-tête STEP-006.
+Suivre docs/steps/STEP-006.md. Conserver le JDK/SDK et la signature qui fonctionnent.
+
+## Résultat STEP-006 reçu — 22 octobre 2026
+
+Validation explicite reçue le 22 octobre 2026.
+L’utilisateur confirme :
+- Arène et bordure entièrement visibles entre les panneaux : OK.
+- Mannequins lisibles à 48 px : OK.
+- Cinq placements dans les limites, sans silhouette coupée ni chevauchement : OK.
+- Pause bloque Position ; Repères reste utilisable : OK.
+- Six cases À venir inactives : OK.
+- Aucun message d’erreur ; arrêt F8 correct : OK.
+
+ADB : téléphone en état device, installation Success sur Galaxy A16.
+APK testé : step-006-debug.apk. SHA-256 :
+
+```text
+133d5096305e9278d9262c55dd5bc4ea8f067a571e618017fc4976866833c125
+```
+
+Ces résultats sont transmis par l’utilisateur ; l’assistant n’a pas exécuté Godot.
+Aucune capture ni mesure de performance STEP-006 n’a été transmise.
+Le retour d’arrière-plan/verrouillage n’a pas été détaillé séparément dans ce
+retour ; la validation globale de l’étape est reçue sans inventer de résultat par test.
+
+La mention « en attente de validation » de la procédure d’export ci-dessus est historique.

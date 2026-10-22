@@ -89,3 +89,12 @@ base dans gambit-arena-history-44f81d5.bundle et une notice de livraison.
 Le bundle ne contient pas les changements TRANSITION-001 non commitées.
 Les fichiers locaux .gd.uid/.svg.import générés à l’import seront conservés à
 l’extraction, puis devront être inclus dans le commit et la prochaine sauvegarde.
+
+## Base STEP-006
+
+Base reçue et vérifiée : 056a464b82869529b844571827b1aa01788bc2a6.
+Sauvegarde : gambit-arena-20261022-154651-056a464b8286.tar.gz, 59 fichiers suivis.
+La livraison STEP-006 contient les sources complètes et le bundle de cette base,
+séparés. Le bundle ne contient pas encore les changements STEP-006.
+Exporter les APK hors du dépôt, puis inclure les métadonnées Godot générées dans
+le commit validé avant de lancer la prochaine sauvegarde.

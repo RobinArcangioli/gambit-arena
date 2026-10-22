@@ -103,3 +103,12 @@ Les nouveaux .gd.uid/.svg.import générés par Godot devront être suivis dans 
 Le 22 octobre 2026, l’utilisateur confirme 48 px de référence comme taille
 préférée pour les mannequins 3D. Cette échelle guidera la suite ; la lisibilité
 des futurs modèles et animations devra être vérifiée avec leurs vraies silhouettes.
+
+## Fond STEP-006
+
+scripts/arena/arena_floor.gd produit un sol 2D vectoriel original : pavage,
+bordure, motif central et repères périphériques, sans ressource tierce.
+Aucun asset importé supplémentaire ; les mannequins du prototype hybride sont
+réutilisés sans changement. Les modèles riggés et cinq animations 3D restent
+hors de cette livraison. Les sources sont fournies dans les mêmes conditions
+que les dessins de diagnostic du projet, sans licence tierce à attribuer.

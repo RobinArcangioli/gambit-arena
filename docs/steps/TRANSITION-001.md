@@ -146,3 +146,11 @@ Seule la documentation évolue depuis la v1 testée ; aucun code fonctionnel mod
 Le bundle fourni reste celui de la base 44f81d5 jusqu’au prochain commit confirmé.
 Les métadonnées nouvelles générées localement par Godot seront incluses dans
 le commit et la sauvegarde utilisateur. Aucun hash de clôture n’est inventé.
+
+## Clôture effective
+
+Commit confirmé : 056a464b82869529b844571827b1aa01788bc2a6 ; main propre.
+L’APK et son .idsig présents à la racine ont été déplacés hors du dépôt avant
+la sauvegarde. Archive reçue : gambit-arena-20261022-154651-056a464b8286.tar.gz.
+Bundle cloné et 59 fichiers suivis comparés avec succès. Cette clôture remplace
+les mentions historiques « commit en attente » ci-dessus.

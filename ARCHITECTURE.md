@@ -1,90 +1,83 @@
-# Architecture réelle — TRANSITION-001 validée, commit en attente
+# Architecture réelle — STEP-006 validée, commit en attente
 
-## Composition du rendu
+## Scène principale et responsabilités
 
-Main conserve son UID et instance scenes/hybrid/hybrid_lab.tscn. La racine du
-laboratoire est un Control contenant, dans l’ordre de dessin : fond de couleur,
-Ground (Node2D), Render3D (SubViewportContainer), HUD (Control).
-Ground dessine un damier dimétrique en 2D. Render3D affiche un unique SubViewport
-transparent avec son propre World3D. Les personnages partagent ce monde et son
-tampon de profondeur. Le HUD se dessine au-dessus ; aucun y_sort 2D ne trie les
-volumes 3D. Les anciens laboratoires restent disponibles via F6.
+Main conserve son UID et instance scenes/arena/arena.tscn. La structure reprend
+le rendu validé : fond Node2D, unique SubViewport 3D transparent, HUD 2D au-dessus.
+Camera3D orthographique fixe (azimut 45°, élévation 30°), projection au sol 2:1.
+Les personnages partagent le tampon de profondeur 3D ; aucun y_sort 2D ne les trie.
 
 | Source | Rôle |
 |---|---|
-| scenes/hybrid/hybrid_lab.tscn | Arbre de composition, caméra et HUD |
-| scripts/hybrid/hybrid_lab.gd | Scénarios, raccord projection, commandes et compteurs |
-| scripts/hybrid/ground_canvas.gd | Fond 2D recalculé selon la projection de la caméra |
-| scripts/hybrid/proxy_actor.gd | Mannequin procédural, orientation et balancement des membres |
-| assets/hybrid/occluder.svg | Décor 2D original, utilisé par un Sprite3D |
-| scripts/world/ground_projection.gd | Ancienne conversion conservée pour les diagnostics 2D |
+| scenes/arena/arena.tscn | Composition arène, mannequins et zones de HUD |
+| scripts/arena/arena.gd | Placement de l’interface, caméra et contrôles de recette |
+| scripts/arena/arena_floor.gd | Dessin vectoriel 2D du sol et de ses bordures |
+| scripts/arena/arena_bounds.gd | Domaine logique au sol et bornage des racines |
+| scripts/hybrid/proxy_actor.gd | Mannequins 3D validés réutilisés sans modification |
+| scenes/hybrid/hybrid_lab.tscn | Diagnostic historique 3D/2D accessible avec F6 |
+| scenes/debug/*.tscn | Anciens diagnostics 2D conservés |
 
-## Caméra, coordonnées et décor
+Le HUD possède un panneau supérieur et inférieur. Six boutons désactivés sont
+créés à l’exécution pour matérialiser les futurs emplacements. Aucun gestionnaire
+de compétences ou gambits n’est encore présent. Les trois boutons de recette
+Position, Repères et Pause ont un rôle explicite et temporaire.
 
-Plan logique (x,z) = plan horizontal 3D ; altitude y=0 aux pieds. Caméra
-orthographique fixe, azimut 45 degrés et élévation 30 degrés : rapport de
-projection au sol 2:1. C’est une vue dimétrique, dans le sens courant de fond
-isométrique du projet. L’ancienne convention graphique 2:1 est conservée.
+## Monde et limites
 
-Le fond n’est pas un mesh : il utilise camera.unproject_position() pour placer
-ses sommets en pixels du SubViewport. Le Node2D est au même emplacement que le
-conteneur 3D. Stretch est activé sans réduction (stretch_shrink=1) ; un pixel
-logique du rendu correspond à un pixel du fond. La caméra adapte sa largeur
-orthographique à la largeur du SubViewport / 48 pour conserver l’échelle.
-Le contrôle projection/inverse projette puis recoupe le rayon avec y=0.
+Sol logique Vector2(x,z) ; altitude 3D y=0 aux pieds. Domaine carré [-3,3]².
+ArenaBounds fournit clamp_ground et contains_ground, avec marge initiale 0,35
+pour les mannequins. Leurs racines admissibles restent donc dans [-2,65,2,65]².
+La scène demande volontairement des positions hors domaine aux quatre coins ;
+elle applique le bornage avant de les afficher. Centre et coins permettent de
+vérifier l’alignement, la marge visuelle et la lisibilité près des bords.
+Ce helper ne déplace personne automatiquement et n’est pas une collision physique.
+STEP-007 devra l’utiliser dans le futur contrôleur de déplacement.
 
-Le décor est une image sur un Sprite3D vertical, orienté à 45 degrés autour de Y,
-ancré au sol. Alpha cut discard à 0,5, profondeur active, sans éclairage ni ombre.
-Les pixels opaques participent à la profondeur ; le contour transparent ne
-forme pas un rectangle opaque. Ce test décrit une carte verticale, pas un
-bâtiment volumétrique. Un fond unique aplati ne suffit pas à reproduire cette
-occultation : les futurs éléments qui masquent les personnages devront être
-séparés et raccordés à une représentation de profondeur adaptée.
+La bordure principale correspond à ±3. Une ceinture décorative plate s’étend
+jusqu’à ±3,3. Aucun obstacle occultant n’est posé sur l’arène ; les quatre motifs
+sur la ceinture ne sont pas encore des points de spawn fonctionnels.
+Les repères montrent la limite des racines à ±2,65 et les croix aux pieds.
+Le dessin des limites utilise les constantes d’ArenaBounds.
 
-## Mannequins et scénarios
+## Projection et interface
 
-Deux mannequins initiaux, cyan et orange, composés de BoxMesh et d’une SphereMesh
-pour la tête du cyan. Chaque racine est au sol ; seul l’enfant Model est mis
-à l’échelle. Les pivots des membres créent une marche de diagnostic par sinus.
-Pas de squelette, de modèle importé, de système d’animation de production ou de
-combat. Les commandes ne changent que la présentation et les trajets de test.
+Le fond utilise camera.unproject_position() ; son origine coïncide avec celle
+du SubViewportContainer. Stretch actif, sans réduction. La largeur de caméra
+vaut largeur du SubViewport / 48 : la taille apparente reste celle du prototype.
+Le carré au sol est fixe. L’espace disponible du portrait peut s’allonger sans
+étirer les personnages ni ajouter de zoom ou de caméra suiveuse.
 
-Croisement : deux trajets opposés sur huit secondes, mêmes règles de demi-tour
-instantané que les diagnostics précédents. Décor 2D : le cyan traverse le plan
-vertical du décor ; l’orange est à l’écart. Charge 20 : vingt mannequins au total
-sur deux cercles ; les dix-huit supplémentaires sont cachés dans les autres modes.
-Ce nombre n’est pas un résultat de qualification du plafond de vingt ennemis.
+Zone sûre Android convertie dans le viewport principal. À l’intérieur : panneau
+supérieur de 100 px, début de l’aire de rendu à y=124, panneau inférieur de 240 px
+à 12 px du bas ; marges horizontales de 16 px. Un espace de 12 px sépare rendu
+et panneau inférieur sur le format portrait ciblé. Les détails sont dans docs/arena.md.
+Les réservations représentent une première organisation, pas le HUD final STEP-021.
 
-Une lumière directionnelle et de l’ambiance, sans ombres, sans post-traitement,
-sans MSAA ajouté. Le fond 2D ne reçoit pas l’éclairage 3D. Aucun personnage n’est
-pré-rendu individuellement ; le coût est celui d’un seul rendu 3D partagé.
+## État et comportement
 
-## Pause et mesures
+Les deux mannequins ont une pose debout et une orientation fixes, sans animation
+ni trajet. Position change instantanément le placement pour la recette, sauf en
+pause. Cette téléportation de diagnostic n’est pas un contrôle manuel du héros.
+La perte de focus passe en pause et bloque Position jusqu’à Reprendre.
+Repères et les panneaux restent accessibles. Aucune horloge de combat ni sauvegarde
+d’état n’est ajoutée. La reprise après destruction du processus repart du centre.
 
-Une horloge locale pilote positions et poses. Pause/perte de focus la fige ;
-le retour ne la relance pas. Repartir réinitialise cycle et mesures sans reprendre.
-Moyenne = nombre de frames traitées / somme des delta non pausés ; pire image =
-plus grand delta observé. Ce sont des indications de cadence de traitement,
-non des mesures GPU. Les valeurs dépendent aussi de VSync, du delta moteur et de
-la chauffe. Changer mode, échelle ou marche réinitialise les mesures.
+## Configuration et limites
 
-## Configuration
+Godot 4.7.2 standard, Compatibility, portrait 540 × 960, canvas_items/expand.
+Même éclairage simple que la transition, sans ombres ou post-traitement ajouté.
+APK standard ARM64, Gradle désactivé, version 0.1.0-step006 code 5, paquet inchangé.
+SDK/JDK et signature restent locaux. STEP-006 n’a pas été exécutée chez l’assistant.
+Le relevé de 60 FPS de la transition reste historique, sans être revendiqué ici.
 
-Godot 4.7.2 standard, Compatibility, portrait 540 × 960 canvas_items/expand.
-Entrées tactiles via émulation souris conservée. Zone sûre Android convertie
-dans le viewport principal. Fenêtre de rendu 3D de 380 px de haut dans la zone
-sûre ; ce HUD est un diagnostic pour le portrait du Galaxy A16.
-Preset Android Debug : ARM64, APK standard, sans Gradle, paquet inchangé,
-version 0.1.0-transition001 code 4. JDK/SDK et signature restent locaux.
-La compatibilité 3D matérielle n’est pas déduite du succès STEP-005 en 2D.
+Les vrais modèles riggés et cinq animations 3D sont encore à produire. La scène
+réutilise les mannequins pour éviter de lier la définition de l’arène à l’art final.
+Pas de collision, ennemi autonome, compétence, dégâts ou gambits anticipés.
+Les décisions, le déplacement, l’exécution et la présentation resteront séparés.
 
-## Limites et suite
+## Validation reçue
 
-Import, exécution et export validés par l’utilisateur le 22 octobre 2026.
-Relevé du diagnostic sur téléphone : 60 FPS moyens, pire image 16,7 ms, sans
-saccade signalée ; taille 48 px confirmée. Ce résultat ne qualifie pas les
-futurs modèles et la charge du combat. Pas de collision,
-pathfinding, dommages, gambits ou persistance. La traversée du décor est volontaire.
-Les futurs modèles riggés, cinq animations et licences seront cadrés après ce
-prototype. Le gameplay doit continuer à séparer données, décisions, exécution
-et présentation ; les animations ne posséderont pas l’horloge des dégâts.
+Le 22 octobre 2026, l’utilisateur valide la visibilité complète de l’arène,
+la lisibilité à 48 px, les cinq placements bornés, la séparation de l’interface,
+la pause, les cases inactives et l’arrêt F8 sans erreur. APK installé avec succès.
+Le code de cette livraison de validation est identique à la v1 testée.

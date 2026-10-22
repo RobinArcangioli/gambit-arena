@@ -80,3 +80,11 @@ Ces mesures concernent le diagnostic livré et sont rapportées par l’utilisat
 Elles ne qualifient pas les futurs modèles riggés, animations, combat ou effets.
 Durée exacte du relevé, charge batterie/secteur et économie d’énergie non précisées
 séparément dans le retour ; aucun profil GPU ni capture n’a été transmis.
+
+## Réutilisation en STEP-006
+
+Le rendu de l’arène réutilise la composition validée, avec un viewport dont
+la hauteur s’adapte à l’espace entre panneaux de HUD. Le fond est un sol fixe
+avec bordure et limites logiques ; les mannequins restent à 48 px et immobiles.
+Le décor occultant reste dans le laboratoire historique F6, sans obstacle dans
+l’arène. Voir docs/arena.md pour le domaine et les réservations.

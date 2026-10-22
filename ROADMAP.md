@@ -79,9 +79,10 @@ qui dépend de la validation de la roadmap.
 - RECOVERY-001 : validée et commitée — 6282d81 ; sauvegarde avec bundle reçue et vérifiée.
 - STEP-004 : validée et commitée — 491cde8 ; sauvegarde reçue et vérifiée.
 - STEP-005 : validée et commitée — 44f81d5 ; sauvegarde reçue et vérifiée.
-- TRANSITION-001 : Validée, commit en attente — rendu hybride et occultation OK ;
-  48 px confirmés, 60 FPS moyens et pire image 16,7 ms rapportés sur le diagnostic.
-- STEP-006 à STEP-030 : À faire.
+- TRANSITION-001 : validée et commitée — 056a464 ; sauvegarde reçue et vérifiée.
+- STEP-006 : Validée, commit en attente — arène, placements, réservations et
+  commandes confirmés corrects par l’utilisateur le 22 octobre 2026.
+- STEP-007 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -136,10 +137,10 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Clôturer TRANSITION-001 validée : commit et sauvegarde complète.
-Au prochain GO, préciser la suite de l’arène STEP-006 et les assets 3D requis.
-Le rendu hybride est validé pour le diagnostic ; les modèles riggés, animations
-et effets futurs nécessiteront leurs propres essais.
+Clôturer STEP-006 validée : commit, confirmation du hash et sauvegarde complète.
+STEP-007 (déplacement automatique) attend ensuite un nouveau GO.
+Les mannequins sont réutilisés ; modèles riggés et animations 3D restent à produire
+et qualifier. Ils ne sont pas considérés comme acquis par les étapes historiques 2D.
 
 ## État de l'annexe
 
