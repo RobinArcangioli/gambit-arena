@@ -310,3 +310,11 @@ ff61292efe28c5688fd537982efe2f5ff03672c7934f2edeab19b5e7bf8bb24f.
 Tester encerclement, poursuite, blocage puis ouverture, bordure, pause et retours
 Android. Voir docs/steps/STEP-009.md. Les performances STEP-008 ne valident pas
 cette nouvelle logique de contacts. Conserver APK/idsig hors du dépôt.
+
+## Passage à STEP-010
+
+STEP-010 : version 0.1.0-step010, code 9. Export Debug avec débogage vers
+~/gambit-arena-builds/step-010-debug.apk. Recette : docs/steps/STEP-010.md.
+Installation ADB Success confirmée sur SM-A165F. Tests manuels et F6 OK,
+aucun doublon. SHA-256 APK :
+1ca1bbdaca13512c31d5627bea7fa0994aaeaa2d9619950a01a44b794b5a6c1e.

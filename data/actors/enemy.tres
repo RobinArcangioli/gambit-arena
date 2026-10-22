@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/actor_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+max_health = 60
+attack = 8
+defense = 1
+move_speed = 0.9

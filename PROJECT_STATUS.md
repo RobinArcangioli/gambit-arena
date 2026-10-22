@@ -2,51 +2,44 @@
 
 ## Base confirmée
 
-STEP-008 clôturée : 46dfaa77ac79fccccebe165973a1bdbfb1000cf4, main propre.
-Sauvegarde reçue : gambit-arena-20261022-210049-46dfaa77ac79.tar.gz.
-Bundle cloné et vérifié ; 90 fichiers versionnés identiques aux sources archivées.
-Tests manuels validés par l’utilisateur : aucune saccade, verrouillage et
-réduction/retour OK. Résultat automatisé F6 non détaillé séparément dans son retour.
-APK STEP-008 : 214b055b0f4af6c095c0827018d0f1a2108bffa603dd97a43a18c80dbfe50f3c.
+STEP-009 clôturée : ec576ce356ce3a6e3f2f2b43e18b82bcd7939935, main propre.
+Sauvegarde gambit-arena-20261022-212152-ec576ce356ce.tar.gz vérifiée :
+historique complet, 104 fichiers versionnés identiques, restauration propre.
+Tests manuels, F6 et fluidité confirmés par l'utilisateur.
+APK STEP-009 : ff61292efe28c5688fd537982efe2f5ff03672c7934f2edeab19b5e7bf8bb24f.
 
-## STEP-009 — Validée, commit en attente
+## STEP-010 — Validée, commit en attente
 
-Livraison : gambit-arena-complet-step-009-v1.tar.gz.
-Disques de rayon 0,35, contrôle du trajet contre les voisins, correction de
-chevauchement plafonnée à 0,6 u/s. Héros jamais déplacé par correction passive.
-Encerclement, poursuite, couronne bloquante ouvrable, bordure et pile initiale.
-Limite 20 ennemis, points d’apparition contrôlés, pause et remise à zéro.
-Version Android 0.1.0-step009, code 8. APK installé avec succès et validé ;
-empreinte et résultats consignés ci-dessous.
+GO reçu. Profils scalaires, états indépendants, PV bornés, soins sans
+résurrection, notification de mort unique. Trois mannequins et commandes de
+laboratoire ; deux ennemis partagent le profil de configuration.
+Tests F6 fournis pour les invariants, l'isolation, la pause et dix resets.
+Livraison : gambit-arena-complet-step-010-v1.tar.gz.
+Version Android 0.1.0-step010, code 9. APK installé avec succès et validé.
 
-## Vérifications et limites
+## Contrôles et limites
 
-Contrôles statiques des ressources, fichiers préservés et archive effectués.
-Une simulation numérique séparée a vérifié les budgets, une paire dans un coin,
-la couronne fermée/ouverte et des groupes de 20 ; elle ne valide pas GDScript.
-Banc F6 fourni pour exécuter les vrais scripts Godot. Godot absent ici : aucune
-exécution moteur, compilation GDScript, mesure FPS ou export Android réalisé.
-Les contacts restent conservateurs : attente possible même lorsqu’un détour
-existe. Pas de recherche de chemin, attribution de place, combat ou dégâts.
-Les résultats de performance STEP-008 ne sont pas transposés à STEP-009.
-Les vrais modèles et animations 3D restent à produire et qualifier.
+Références locales, diff et préservation des anciennes sources contrôlés.
+Godot absent : aucune compilation GDScript ou exécution moteur déclarée.
+Tests F6 et manuels confirmés OK par l'utilisateur ; aucun doublon.
+Pas encore d'attaque, de combat autonome ou de raccordement des PV à la foule.
+Les résultats de performance historiques ne valent pas validation de cette étape.
 
 ## Prochaine action
 
-Appliquer l’archive complète de validation, vérifier le diff et commiter les
-fichiers ainsi que les UID générés par Godot. Confirmer le hash et le statut
-propre, puis créer et transmettre la sauvegarde complète. STEP-010
-(statistiques et PV par instance) attend cette clôture et un nouveau GO.
+Appliquer l'archive complète de validation, vérifier le diff et commiter.
+Transmettre le hash, le statut Git et la sauvegarde complète créée.
+STEP-011 attend clôture et nouveau GO.
 
 ## Validation utilisateur reçue
 
-STEP-009 explicitement validée par l’utilisateur : tous les tests manuels OK,
-banc F6 OK, fluidité OK. Installation ADB Success sur Samsung Galaxy A16
-SM-A165F, Android 16. Aucun chiffre FPS ni temps d’image fourni.
-APK testé : step-009-debug.apk, version 0.1.0-step009, code 8.
-SHA-256 : ff61292efe28c5688fd537982efe2f5ff03672c7934f2edeab19b5e7bf8bb24f.
+STEP-010 explicitement validée : tous les tests manuels OK, F6 OK, aucun doublon.
+Installation ADB Success sur Samsung Galaxy A16 SM-A165F.
+APK : step-010-debug.apk ; version 0.1.0-step010, code 9.
+SHA-256 : 1ca1bbdaca13512c31d5627bea7fa0994aaeaa2d9619950a01a44b794b5a6c1e.
+Aucune mesure chiffrée de performance fournie.
 
-Archive de validation : gambit-arena-complet-step-009-validation.tar.gz.
-Code et configuration identiques à la livraison v1 testée ; seule la documentation
-est actualisée. Aucun lancement Godot exécuté chez l’assistant.
-Statut : Validée, commit en attente. Hash et sauvegarde après commit à recevoir.
+Archive : gambit-arena-complet-step-010-validation.tar.gz.
+Code, scènes, profils, tests et configuration identiques à la livraison v1.
+Seule la documentation évolue ; aucun lancement Godot chez l’assistant.
+Statut : Validée, commit en attente. Hash et sauvegarde à recevoir.

@@ -123,3 +123,12 @@ commit 46dfaa77ac79fccccebe165973a1bdbfb1000cf4. Historique complet et
 90 fichiers versionnés vérifiés par restauration. L’archive STEP-009 conserve
 le projet entier et joint ce bundle séparément. STEP-009 non commitée n’est pas
 dans ce bundle ; elle entrera dans la sauvegarde après validation et commit propre.
+
+## Passage à STEP-010
+
+Base STEP-010 : ec576ce, sauvegarde
+gambit-arena-20261022-212152-ec576ce356ce.tar.gz vérifiée.
+Attendre validation STEP-010 et commit avant la prochaine sauvegarde.
+
+STEP-010 validée : appliquer l’archive de validation, commiter puis lancer
+`bash tools/create_backup.sh`. Transmettre l’archive produite pour vérification.
