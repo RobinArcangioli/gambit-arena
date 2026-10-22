@@ -1,32 +1,34 @@
-# Architecture réelle — STEP-010 validée, commit en attente
+# Architecture réelle — STEP-011 validée, commit en attente
 
-Main conserve son UID et ouvre scenes/combat/stats_lab.tscn, dérivée de l'arène.
-Les sources des anciens laboratoires restent inchangées. Ils sont accessibles
-avec F6 ; leurs systèmes ne tournent pas simultanément avec ce laboratoire.
+Main conserve son UID et ouvre scenes/combat/attack_lab.tscn, dérivée de l'arène.
+Les anciens scripts, scènes et profils restent inchangés. Les laboratoires
+historiques se lancent séparément avec F6.
 
 | Élément | Responsabilité |
 |---|---|
-| ActorProfile / data/actors/*.tres | Configuration partagée, scalaires uniquement |
-| ActorState | Copie indépendante, PV, dégâts finaux, soins, signaux |
-| StatsActor | Mannequin ProxyActor et état propre |
-| StatsLab | Sélection, commandes, verrou de pause, affichage et reset |
-| test_actor_state.gd | Invariants des données et tests de la vraie scène |
+| ActorProfile / ActorState / StatsActor | Configuration et état par instance validés STEP-010 |
+| AttackAction | Une action active par exécuteur, ID, temps, impact et récupération |
+| AttackLab | Trois acteurs, sélection, scénarios, pause, présentation et reset |
+| test_attack_action.gd | Contrat d'action et intégration au vrai laboratoire |
 
-Les références aux profils ne sont pas conservées dans ActorState. Chaque
-StatsActor construit un état neuf. Le moteur de combat pourra utiliser cet état
-sans dépendre de l'interface ; ce raccordement ne fait pas partie de STEP-010.
-Le contrat des mutations et des événements figure dans docs/stats.md.
+Un exécuteur par attaquant est le contrat d'intégration. Le laboratoire possède
+un exécuteur pour le héros et aucun pour les ennemis passifs. Il avance une fois
+par tick physique, sans timer secondaire ni coroutine. L'action porte la cible
+et les états engagés ; la sélection du HUD ne modifie pas l'action en cours.
+Les coordonnées globales x/z servent à mesurer la portée, sans tenir compte de y.
 
-Le laboratoire masque les deux mannequins hérités, les supprime par queue_free
-et construit ses trois StatsActor. Rejouer masque et supprime les anciens,
-recrée trois états et conserve la pause. Aucun timer ni tick de combat.
-Le retour d'arrière-plan impose une reprise explicite via l'arène héritée.
+Le seul point de mutation des dégâts est try_impact(id), appelé par advance.
+Il verrouille la résolution avant les signaux des PV. La portée et les références
+sont contrôlées au lancement puis à l'impact. Des références libérées, en cours
+de suppression ou des états remplacés sont rejetés. L'attaque est copiée au
+lancement, la défense lue à l'impact. Voir docs/actions.md pour le contrat complet.
 
-Rendu Compatibility, projection 2:1 et taille apparente 48 px conservés.
-Les silhouettes mortes sont masquées ; pas d'animation Death ni destruction
-immédiate des états. Ni attaques, calcul de défense, mouvement dans ce labo,
-cooldowns, effets retardés, gambits ou compétences. Les mannequins 3D finaux
-et leurs animations restent à produire et qualifier.
+Rejouer annule l'ancien exécuteur et reconstruit les trois acteurs ; leurs PV
+et l'action sont neufs, les IDs de processus ne sont pas réutilisés. La pause
+est conservée. Les retours d'arrière-plan imposent une reprise explicite.
+Les scénarios automatiques coupent le tick à 0,3 s pour invalider avant l'impact.
 
-Les détails des systèmes historiques restent dans docs/movement.md,
-docs/enemies.md et docs/crowd.md. Version 0.1.0-step010, code 9.
+Rendu Compatibility, caméra 2:1, mannequins 48 px et six cases inactives conservés.
+Les morts sont masqués, les retraits supprimés. Pas encore d'animation finale,
+combat autonome, raccordement déplacement/attaque, compétence, coût ou gambit.
+Version Android 0.1.0-step011, code 10. F6 et tests manuels validés par l’utilisateur.

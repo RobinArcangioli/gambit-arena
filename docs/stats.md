@@ -43,3 +43,9 @@ activent la pause héritée de l'arène ; reprise explicite obligatoire.
 
 Tests manuels et F6 confirmés OK par l’utilisateur ; aucun doublon.
 STEP-010 validée, commit en attente. Voir docs/steps/STEP-010.md.
+
+## Passage à STEP-011
+
+Le nouveau laboratoire utilise les classes STEP-010 inchangées. AttackAction
+calcule max(1, attaque - défense) puis appelle damage avec le montant final.
+Voir docs/actions.md pour la portée, les IDs, la mort et les gardes d’impact.

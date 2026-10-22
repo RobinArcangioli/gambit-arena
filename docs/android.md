@@ -318,3 +318,11 @@ STEP-010 : version 0.1.0-step010, code 9. Export Debug avec débogage vers
 Installation ADB Success confirmée sur SM-A165F. Tests manuels et F6 OK,
 aucun doublon. SHA-256 APK :
 1ca1bbdaca13512c31d5627bea7fa0994aaeaa2d9619950a01a44b794b5a6c1e.
+
+## Passage à STEP-011
+
+STEP-011 : version 0.1.0-step011, code 10. Export Android Debug avec débogage
+vers ~/gambit-arena-builds/step-011-debug.apk, hors dépôt.
+Recette : docs/steps/STEP-011.md. F6, tests manuels et fluidité OK.
+SHA-256 APK communiqué :
+b6fe668b4647f2b84e2b8271a1e06bb351fe0e3247412de80f58663d7b879c3e.
