@@ -69,3 +69,10 @@ Un calcul numérique indépendant soutient le scénario, sans valider GDScript.
 
 F6, tests manuels et fluidité confirmés OK par l’utilisateur.
 STEP-012 validée, commit en attente. Voir docs/steps/STEP-012.md.
+
+## Passage à STEP-013
+
+CombatUnit utilise désormais SkillExecutor, dérivé de l’exécuteur d’attaque.
+Le coordinateur appelle toujours begin pour une attaque basic gratuite, sans
+cooldown supplémentaire. Relancer le banc combat après cette substitution.
+Voir docs/skill-executor.md ; les autres règles du combat restent inchangées.
