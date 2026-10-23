@@ -326,3 +326,10 @@ vers ~/gambit-arena-builds/step-011-debug.apk, hors dépôt.
 Recette : docs/steps/STEP-011.md. F6, tests manuels et fluidité OK.
 SHA-256 APK communiqué :
 b6fe668b4647f2b84e2b8271a1e06bb351fe0e3247412de80f58663d7b879c3e.
+
+## Passage à STEP-012
+
+STEP-012 : version 0.1.0-step012, code 11. Export Debug avec débogage vers
+~/gambit-arena-builds/step-012-debug.apk. Recette : docs/steps/STEP-012.md.
+F6, tests manuels et fluidité confirmés OK. SHA-256 APK communiqué :
+cb301ad46d5332a33f22162c20cba0257126f403f914c5ea14c7daba8e100892.

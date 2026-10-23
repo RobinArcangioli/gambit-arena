@@ -1,34 +1,31 @@
-# Architecture réelle — STEP-011 validée, commit en attente
+# Architecture réelle — STEP-012 validée, commit en attente
 
-Main conserve son UID et ouvre scenes/combat/attack_lab.tscn, dérivée de l'arène.
-Les anciens scripts, scènes et profils restent inchangés. Les laboratoires
-historiques se lancent séparément avec F6.
+Main conserve son UID et instance scenes/combat/battle_lab.tscn, dérivée de l'arène.
+CombatUnit compose les classes validées StatsActor, GroundMover et AttackAction.
+CombatSimulation pilote le tick unique ; BattleLab ne fournit que les commandes,
+la pause et le HUD. Aucun acteur ne se traite seul.
 
 | Élément | Responsabilité |
 |---|---|
-| ActorProfile / ActorState / StatsActor | Configuration et état par instance validés STEP-010 |
-| AttackAction | Une action active par exécuteur, ID, temps, impact et récupération |
-| AttackLab | Trois acteurs, sélection, scénarios, pause, présentation et reset |
-| test_attack_action.gd | Contrat d'action et intégration au vrai laboratoire |
+| combat_unit.gd | PV/statistiques, mouvement, action et présentation par acteur |
+| combat_simulation.gd | Ciblage, résolution des contacts, actions, morts, apparitions, fin |
+| battle_lab.gd | Trois scénarios, pause/rejouer, repères et diagnostics |
+| test_combat_simulation.gd | Combats complets et invariants d'intégration |
 
-Un exécuteur par attaquant est le contrat d'intégration. Le laboratoire possède
-un exécuteur pour le héros et aucun pour les ennemis passifs. Il avance une fois
-par tick physique, sans timer secondaire ni coroutine. L'action porte la cible
-et les états engagés ; la sélection du HUD ne modifie pas l'action en cours.
-Les coordonnées globales x/z servent à mesurer la portée, sans tenir compte de y.
+Ordre : retirer les morts, cibler, déplacer/résoudre, avancer les actions existantes,
+retirer les nouveaux morts, vérifier fin, engager les actions suivantes, apparitions.
+Priorité explicite : héros puis ordre d'insertion des ennemis. Delta commun borné
+à 1/30 s. Les actions actives immobilisent leurs acteurs, y compris les corrections.
+Portée, verrou de cible et impact unique restent ceux de STEP-011 inchangée.
 
-Le seul point de mutation des dégâts est try_impact(id), appelé par advance.
-Il verrouille la résolution avant les signaux des PV. La portée et les références
-sont contrôlées au lancement puis à l'impact. Des références libérées, en cours
-de suppression ou des états remplacés sont rejetés. L'attaque est copiée au
-lancement, la défense lue à l'impact. Voir docs/actions.md pour le contrat complet.
+Les morts n'occupent plus de disque ; leurs actions sont annulées et leurs nœuds
+supprimés. Une fin annule toutes les actions et arrête le temps. Rejouer reconstruit
+le scénario en conservant la pause. Les profils de diagnostic sont copiés localement.
+Voir docs/combat.md pour les valeurs, la sélection et les invariants des compteurs.
 
-Rejouer annule l'ancien exécuteur et reconstruit les trois acteurs ; leurs PV
-et l'action sont neufs, les IDs de processus ne sont pas réutilisés. La pause
-est conservée. Les retours d'arrière-plan imposent une reprise explicite.
-Les scénarios automatiques coupent le tick à 0,3 s pour invalider avant l'impact.
-
-Rendu Compatibility, caméra 2:1, mannequins 48 px et six cases inactives conservés.
-Les morts sont masqués, les retraits supprimés. Pas encore d'animation finale,
-combat autonome, raccordement déplacement/attaque, compétence, coût ou gambit.
-Version Android 0.1.0-step011, code 10. F6 et tests manuels validés par l’utilisateur.
+Les anciens scripts, scènes, profils et assets sont conservés. Le laboratoire
+historique se lance séparément avec F6, sans tourner en parallèle avec le combat.
+World reste à transformation identité. Caméra 2:1, mannequins 48 px et rendu
+Compatibility conservés. Version 0.1.0-step012, code 11.
+Pas encore d'exécuteur de compétences, coûts/cooldowns, gambits, vagues, animations
+finales ou écran de partie final. Le ciblage temporaire sera remplacé à STEP-017.

@@ -141,3 +141,12 @@ Attendre validation STEP-011 et commit avant la prochaine sauvegarde.
 
 STEP-011 validée : appliquer l’archive de validation, commiter puis lancer
 `bash tools/create_backup.sh`. Transmettre l’archive produite pour vérification.
+
+## Passage à STEP-012
+
+Base STEP-012 : 3633927, sauvegarde
+gambit-arena-20261023-015545-3633927fdb21.tar.gz vérifiée.
+Attendre validation STEP-012 et commit avant la prochaine sauvegarde.
+
+STEP-012 validée : appliquer l’archive de validation, commiter puis lancer
+`bash tools/create_backup.sh`. Transmettre l’archive produite pour vérification.

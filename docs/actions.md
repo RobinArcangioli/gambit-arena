@@ -60,3 +60,9 @@ recette : docs/steps/STEP-011.md. Godot non exécuté chez l'assistant.
 
 F6, tests manuels et fluidité confirmés OK par l’utilisateur.
 STEP-011 validée, commit en attente. Voir docs/steps/STEP-011.md.
+
+## Passage à STEP-012
+
+CombatSimulation réutilise AttackAction inchangée, une instance par acteur.
+Ordre des impacts : héros puis ennemis ; un mort ne riposte pas.
+Les détails du raccordement sont dans docs/combat.md.
