@@ -89,3 +89,9 @@ les mentions de compétences futures ci-dessus décrivent la livraison STEP-013.
 bind_clock relie les acteurs à la porte commune ; request, advance et try_impact
 la consultent. Les anciens laboratoires sans liaison conservent paused explicite.
 La mort de la source retire l’exécuteur ; voir docs/lifecycle.md.
+
+## Passage à STEP-017
+
+L’exécuteur ne change pas ; GambitController appelle request après revalidation
+de l’intention. Coûts, cooldowns et impact unique restent sous sa responsabilité.
+Aucun appel de l’évaluateur pur ne lance directement une compétence.

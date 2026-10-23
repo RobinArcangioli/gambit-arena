@@ -1,34 +1,40 @@
-# Architecture réelle — STEP-016 validée, commit en attente
+# Architecture réelle — STEP-017 validée, commit en attente
 
-Main conserve son UID et ouvre scenes/gambits/gambit_lab.tscn.
-GambitRule est une Resource de configuration : activation, cible, condition,
-seuil entier et compétence. GambitSnapshot contient uniquement des valeurs copiées,
-sans références vers les acteurs, leurs états, exécuteurs ou horloges.
-GambitEvaluator.evaluate parcourt au maximum trois règles dans l'ordre et retourne
-un dictionnaire neuf de scalaires. Aucun signal, timer, RNG ni appel d'exécution.
+Main conserve son UID et ouvre scenes/gambits/gambit_battle_lab.tscn.
+CombatSimulation possède un GambitController, seul appelant automatique des cibles
+et compétences du héros. Le choix temporaire du héros a été retiré ; seuls les
+ennemis restent dans la boucle de lancement basic du coordinateur.
 
-Les candidats vivants sont filtrés par condition avant la sélection du plus proche.
-À distance carrée exactement égale, l'ID positif le plus petit gagne. L'ordre des
-ennemis n'intervient pas ; l'ordre des règles est la priorité. Seuil PV strict,
-comparaison entière sans arrondir les pourcentages. Vie, pause, arrêt, occupation,
-coût et cooldowns du snapshot sont consultés sans mutation.
+Le contrôleur capture des valeurs copiées depuis les acteurs, leurs exécuteurs
+et GameClock, puis appelle l'évaluateur pur de STEP-016. Chaque CombatUnit reçoit
+un combat_id positif monotone à sa création, distinct de son serial d'affichage.
+Les IDs restent stables pendant sa vie et ne sont pas réutilisés au reset.
+L'évaluateur ne reçoit jamais les acteurs ou leurs états vivants.
 
-L'intention indique règle, source, cible, compétence et besoin d'approche.
-Elle ne réserve rien, n'alloue pas d'ID d'action et n'autorise pas un effet ultérieur.
-STEP-017 devra capturer un état frais, conserver les IDs pendant le combat,
-résoudre les acteurs et revalider via SkillExecutor avant engagement.
-Une cible hors portée reste admissible pour permettre l'approche future.
+Planification au premier tick, puis à 10 Hz lorsque libre ; invalidation d'une cible
+ou règle détectée au prochain tick sans attendre la période. Pendant une action
+engagée, aucune replanification et aucun changement de sa cible verrouillée.
+Une intention offensive fournit la cible à GroundMover ; soin ou aucune intention
+retire la cible de déplacement. Mouvement et contacts restent dans le coordinateur.
 
-GambitLab dérive du laboratoire historique pour réutiliser disposition et acteurs.
-L'exécuteur hérité est immédiatement retiré et jamais avancé. Les boutons changent
-seulement les données de test : PV du héros, énergie et cooldown simulés.
-GameClock fournit un pas borné ; accumulation locale pour lecture à 10 Hz.
-La pause et l'arrière-plan figent les lectures ; reprise explicite. Reset garde
-la pause et remet données, règles de démonstration et compteurs à zéro.
-Ce reset de laboratoire ne définit pas la conservation des gambits du futur jeu.
+Après avance des actions existantes et retrait des morts, execute revalide la règle
+sélectionnée sur un snapshot frais restreint à sa cible. Il vérifie aussi les acteurs,
+leurs identités d'état, appartenance au combat et signature de règle. À portée,
+il appelle SkillExecutor.request. Coût, cooldown et ID restent gérés uniquement par
+l'exécuteur ; chaque intention est consommée une fois. Pas d'action de secours
+implicite lorsque toutes les règles sont désactivées.
 
-CombatSimulation, SkillExecutor, AttackAction, GameClock et les profils historiques
-restent identiques à STEP-015. Les valeurs de coût/portée sont lues depuis les
-constantes de SkillExecutor. Le combat autonome utilise encore son pilote basic.
-Pas d'éditeur tactile, d'intégration des intentions au combat ni d'animations finales.
-Version 0.1.0-step016, code 15. F6 et tests manuels confirmés OK par l’utilisateur.
+Ordre du tick : purge/fin, horloge, plan héros, cibles ennemies, mouvement/contact,
+actions existantes héros puis ennemis, purge/fin, engagement héros puis ennemis,
+apparitions, présentation. Les nouveaux engagements ne reçoivent du temps qu'au
+tick suivant. Les acteurs restent immobiles pendant leurs actions.
+
+Terminal/clear invalident l'intention. Reset retire les anciens exécuteurs,
+recrée les acteurs et réinitialise le contrôleur tout en conservant les règles et
+la pause. Les scénarios du laboratoire remplacent explicitement le préréglage.
+Les diagnostics historiques utilisent une seule règle basic, via le même contrôleur.
+
+GameClock, AttackAction, SkillExecutor, profils, évaluateur et mouvement/contact
+conservent leur implémentation STEP-016. Aucun éditeur tactile ni priorité manuelle.
+Mannequins temporaires et six cases inactives conservés. Version 0.1.0-step017,
+code 16. F6 et tests manuels confirmés OK par l’utilisateur.

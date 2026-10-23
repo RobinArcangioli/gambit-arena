@@ -82,3 +82,10 @@ Voir docs/skill-executor.md ; les autres règles du combat restent inchangées.
 CombatSimulation partage GameClock avec tous les exécuteurs et fournit un même
 delta borné aux systèmes. Fin de combat : horloge arrêtée et exécuteurs retirés.
 Reset préserve la pause et retire les anciens exécuteurs. Voir docs/lifecycle.md.
+
+## Passage à STEP-017
+
+Le héros est désormais piloté uniquement par GambitController. Le sélecteur
+temporaire du héros est retiré ; les ennemis restent dans leur boucle basic.
+Le diagnostic historique utilise une règle basic via le nouveau contrôleur.
+Voir docs/gambit-controller.md pour les trois règles du nouveau laboratoire.

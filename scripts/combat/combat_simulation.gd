@@ -2,6 +2,8 @@ extends Node
 ## One deterministic coordinator. No unit ticks itself.
 const GameClock = preload("res://scripts/core/game_clock.gd")
 var clock := GameClock.new()
+const Controller = preload("res://scripts/gambits/gambit_controller.gd")
+var controller := Controller.new()
 const Unit = preload("res://scripts/combat/combat_unit.gd")
 const Action = preload("res://scripts/combat/attack_action.gd")
 const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
@@ -27,6 +29,7 @@ func configure(parent_world: Node3D) -> void:
 	world = parent_world
 
 func clear() -> void:
+	controller.stop(hero)
 	for unit in enemies:
 		_dispose(unit)
 	enemies.clear()
@@ -43,6 +46,7 @@ func _dispose(unit: Variant) -> void:
 func reset(mode: int = 0) -> void:
 	clear()
 	clock.reset()
+	controller.reset()
 	elapsed = 0.0
 	spawn_clock = 0.0
 	spawned = 0
@@ -111,6 +115,7 @@ func _finish_if_needed() -> bool:
 	else:
 		return false
 	clock.stopped = true
+	controller.stop(hero)
 	for unit in enemies:
 		unit.action.retire()
 		unit.mover.clear_target()
@@ -120,17 +125,7 @@ func _finish_if_needed() -> bool:
 	_present()
 	return true
 
-func _choose_targets() -> void:
-	# Keep a living target until its death; nearest wins, insertion order breaks ties.
-	if not Action.living(hero.mover.target):
-		var nearest: Unit = null
-		var distance: float = INF
-		for unit in enemies:
-			var candidate: float = hero.position.distance_squared_to(unit.position)
-			if candidate < distance:
-				nearest = unit
-				distance = candidate
-		hero.mover.set_target(nearest)
+func _choose_enemy_targets() -> void:
 	for unit in enemies:
 		unit.mover.set_target(hero)
 
@@ -142,7 +137,8 @@ func advance(delta: float, paused: bool = false) -> void:
 		return
 	var dt: float = clock.step(delta)
 	elapsed = clock.elapsed
-	_choose_targets()
+	controller.plan(dt, hero, enemies, clock)
+	_choose_enemy_targets()
 	var units: Array[Unit] = [hero]
 	units.append_array(enemies)
 	var points: Array[Vector2] = []
@@ -182,9 +178,9 @@ func advance(delta: float, paused: bool = false) -> void:
 	_prune()
 	if _finish_if_needed():
 		return
-	_choose_targets()
-	units.assign([hero])
-	units.append_array(enemies)
+	_choose_enemy_targets()
+	controller.execute(hero, enemies, clock)
+	units.assign(enemies)
 	# Newly engaged actions receive no time until the next common tick.
 	for unit in units:
 		if not unit.action.active and Action.living(unit.mover.target):
