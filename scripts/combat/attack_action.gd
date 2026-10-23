@@ -27,7 +27,7 @@ static func distance_between(a: StatsActor, b: StatsActor) -> float:
 	return Vector2(offset.x, offset.z).length()
 
 func begin(source: Variant, target: Variant) -> int:
-	if active or not living(source) or not living(target) or source == target:
+	if active or not living(source) or not living(target) or not _valid_pair(source, target):
 		return 0
 	if distance_between(source, target) > REACH:
 		return 0
@@ -80,7 +80,7 @@ func try_impact(expected_id: int) -> bool:
 		return false
 	# Latch before emitting any ActorState signal through damage().
 	outcome = "impact"
-	applied_damage = _target_state.damage(maxi(1, _attack - _target_state.defense))
+	applied_damage = _apply_effect()
 	return true
 
 func cancel() -> void:
@@ -91,3 +91,9 @@ func cancel() -> void:
 	phase = "ANNULEE"
 	if outcome == "en attente":
 		outcome = "acteur invalide / annulation"
+
+func _valid_pair(source: StatsActor, target: StatsActor) -> bool:
+	return source != target
+
+func _apply_effect() -> int:
+	return _target_state.damage(maxi(1, _attack - _target_state.defense))

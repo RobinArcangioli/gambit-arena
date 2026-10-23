@@ -2,7 +2,7 @@ extends "res://scripts/combat/stats_actor.gd"
 const GroundMover = preload("res://scripts/movement/ground_mover.gd")
 const SkillExecutor = preload("res://scripts/skills/skill_executor.gd")
 var mover := GroundMover.new()
-var action := SkillExecutor.new(self)
+var action := SkillExecutor.new(self, true)
 var gait: float = 0.0
 var serial: int = 0
 

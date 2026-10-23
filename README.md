@@ -1,25 +1,23 @@
-# Gambit Arena — STEP-013
+# Gambit Arena — STEP-014
 
 Prototype Godot Android portrait avec mannequins 3D temporaires.
-STEP-012 clôturée au commit 9725f5d ; STEP-013 validée, commit en attente.
-F6, tests manuels et fluidité confirmés OK par l’utilisateur.
+STEP-013 clôturée au commit 1ffd24a ; STEP-014 en attente de validation.
 
-F5 : laboratoire de l'exécuteur partagé. Manuel, Auto et Deux acteurs utilisent
-le même point d'engagement. Ressource 60 par acteur ; essai payant 20, cooldown 3 s.
-Débit et cooldown uniquement à l'acceptation ; refus sans effet, impact unique.
-Le combat autonome utilise aussi cet exécuteur pour son attaque gratuite.
+F5 : attaque, soin personnel, frappe spéciale et récupération passive de ressource.
+Trois scénarios : compétences, ressource vide, mort avant effet. Héros blessé60/100,
+ennemi passif600 PV ; valeurs de test. Tous les effets passent par l'exécuteur commun.
 
-Scénario/P, Essai20/A, Base0/B, Acteur/T, Éloigner/E, Auto/U, Rejouer/R,
-Pause/Espace, Repères/G. Six cases inactives ; soin et spéciale arrivent STEP-014.
+Scénario/P, Attaque/A, Soin/H, Spéciale/S, Blesser/D, Éloigner/E, Rejouer/R,
+Pause/Espace, Repères/G. Six cases toujours inactives ; interface provisoire.
 
-F6 : scenes/tests/skill_executor_tests.tscn puis combat_simulation_tests.tscn.
-Attendu pour chacun : OK, zéro échec. F8 arrête. Godot non exécuté ici.
-Anciens laboratoires conservés ; BattleLab reste accessible avec F6.
+F6 : skills_tests, attack_action_tests, skill_executor_tests et
+combat_simulation_tests dans scenes/tests/. Attendu : OK, zéro échec pour chacun.
+F8 arrête. Godot non exécuté chez l'assistant ; anciens laboratoires conservés.
 
-- [Recette STEP-013](docs/steps/STEP-013.md)
-- [Exécuteur](docs/skill-executor.md), [combat](docs/combat.md)
+- [Recette STEP-014](docs/steps/STEP-014.md)
+- [Compétences](docs/skills.md), [exécuteur](docs/skill-executor.md)
 - [Architecture](ARCHITECTURE.md), [état](PROJECT_STATUS.md), [roadmap](ROADMAP.md)
 - [Android](docs/android.md), [sauvegarde](docs/backup.md)
 
-Version Android 0.1.0-step013, code 12. Export Debug hors dépôt.
-Validation reçue : commit puis sauvegarde complète à effectuer.
+Version Android 0.1.0-step014, code 13. Export Debug hors dépôt.
+Commit après validation explicite, puis sauvegarde complète.

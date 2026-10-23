@@ -66,3 +66,9 @@ STEP-011 validée, commit en attente. Voir docs/steps/STEP-011.md.
 CombatSimulation réutilise AttackAction inchangée, une instance par acteur.
 Ordre des impacts : héros puis ennemis ; un mort ne riposte pas.
 Les détails du raccordement sont dans docs/combat.md.
+
+## Passage à STEP-014
+
+La garde d’impact est conservée ; _valid_pair et _apply_effect sont spécialisables
+pour autoriser le soin personnel et choisir l’effet. L’attaque par défaut conserve
+son comportement. Voir docs/skills.md et relancer les bancs partagés.

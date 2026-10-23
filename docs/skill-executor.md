@@ -76,3 +76,10 @@ Banc : scenes/tests/skill_executor_tests.tscn. Godot non exécuté chez l'assist
 
 F6, tests manuels et fluidité confirmés OK par l’utilisateur.
 STEP-013 validée, commit en attente. Voir docs/steps/STEP-013.md.
+
+## Passage à STEP-014
+
+Le catalogue comprend maintenant heal et special. La récupération est optionnelle
+au constructeur, activée dans SkillsLab et CombatUnit. Le diagnostic historique
+STEP-013 conserve sa récupération désactivée et paid_test. Voir docs/skills.md ;
+les mentions de compétences futures ci-dessus décrivent la livraison STEP-013.

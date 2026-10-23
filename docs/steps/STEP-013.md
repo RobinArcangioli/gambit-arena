@@ -94,3 +94,8 @@ Archive : gambit-arena-complet-step-013-validation.tar.gz.
 Code, scènes, profils, tests et configuration identiques à la livraison v1.
 Seule la documentation évolue ; aucun lancement Godot chez l’assistant.
 Statut : Validée, commit en attente. Hash et sauvegarde à recevoir.
+
+## Passage à STEP-014
+
+Clôture confirmée : 1ffd24ad027991f57f2aee1d96b1cbcfa87228c6.
+Sauvegarde restaurée : historique complet, 152 fichiers identiques, dépôt propre.

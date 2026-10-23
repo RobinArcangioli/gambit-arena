@@ -1,33 +1,30 @@
-# Architecture réelle — STEP-013 validée, commit en attente
+# Architecture réelle — STEP-014
 
-Main conserve son UID et ouvre scenes/skills/executor_lab.tscn, dérivée de l'arène.
-SkillExecutor hérite de la garde d'impact AttackAction, qui reste inchangée.
-Il ajoute l'engagement commun, une ressource et une table de cooldowns par acteur.
+Main garde son UID et ouvre scenes/skills/skills_lab.tscn, dérivée de l'arène.
+SkillExecutor reste l'unique point d'engagement des actions. AttackAction conserve
+la garde ID/temps/résolution, revalide vie/portée et délègue l'effet à _apply_effect.
+_valid_pair permet au soin d'accepter uniquement la source elle-même ; l'attaque
+par défaut continue à refuser une cible identique à la source.
 
-| Élément | Responsabilité |
-|---|---|
-| SkillExecutor.request | Valider, engager, débiter et démarrer le cooldown une seule fois |
-| SkillExecutor.begin | Adaptateur basic pour le combat autonome existant |
-| SkillExecutor.advance | Horloge commune des cooldowns et de l'action |
-| SkillExecutor.retire | Invalidation définitive au reset ou à la mort |
-| ExecutorLab | Demandes manuelles/automatiques et présentation des compteurs |
-| CombatUnit | Possède désormais SkillExecutor.new(self), un exécuteur par acteur |
+SkillExecutor ajoute heal et special au catalogue fermé. last_skill est enregistré
+après engagement réussi ; il ne change pas sur refus. L'effet lit cet identifiant,
+pas la sélection courante de l'interface. Le soin utilise ActorState.heal et
+le compteur applied_healing ; les dégâts utilisent toujours ActorState.damage.
+L'attaque de la spéciale est copiée au lancement puis doublée avant défense.
 
-Le coordinateur CombatSimulation et les autres classes précédentes restent
-inchangés. Leurs appels begin/advance passent désormais par SkillExecutor.
-L'attaque basic est gratuite, sans cooldown supplémentaire ; sa récupération
-STEP-011 reste le verrou de cadence. paid_test sert seulement à la recette.
+Récupération5 points/s, fractions accumulées, plafond60 sans réserve cachée.
+Elle est activée explicitement dans SkillsLab et CombatUnit. Les diagnostics
+STEP-013 gardent leur constructeur par défaut sans récupération pour conserver
+les valeurs attendues. CombatSimulation ne demande encore que basic.
+Horloge commune : pause et delta invalide bloquent action, CD et récupération ;
+les coordinateurs bornent le pas à1/30 s. Une source morte ou reconfigurée retire
+l'exécuteur avant toute récupération ou effet. Rejouer retire les anciens exécuteurs.
 
-Le coût est engagé au lancement accepté, jamais à l'impact. Le cooldown commence
-au même instant. Pas de remboursement après coup manqué/annulation ; pas de
-régénération. Le cooldown avance aussi au repos, mais jamais pendant la pause.
-Le laboratoire retire explicitement les anciens exécuteurs au reset. Une source
-morte ou dont l'état change invalide l'exécuteur ; aucun recyclage de son énergie.
-Contrat complet, limites et ordre de validation : docs/skill-executor.md.
+Le nouveau laboratoire montre PV, énergie, dépenses, récupération, CD, phase,
+dégâts et soin effectif. Son ennemi a600 PV sur une copie locale du profil.
+Anciennes scènes et profils conservés ; trois scripts partagés modifiés et couverts
+par les bancs historiques à relancer. Voir docs/skills.md pour le contrat précis.
 
-Les profils de laboratoire sont des copies avec 1000 PV ; aucun .tres n'est modifié.
-Les trois mannequins restent immobiles ; les six cases sont inactives. Rendu,
-projection 2:1 et caméra conservés. Les animations finales ne sont pas ajoutées.
-Pas encore d'exécuteur générique d'effets multiples, soin, spéciale, coûts de
-plusieurs ressources, file d'attente ou priorité des commandes manuelles.
-Version Android 0.1.0-step013, code 12. F6 et tests manuels confirmés OK par l’utilisateur.
+Pas de nouvelle animation finale, d'aire d'effet, d'allié, de gambit ou de priorité
+manuelle. Six cases inactives. Rendu et projection conservés. Version 0.1.0-step014,
+code 13. Exécution Godot à valider chez l'utilisateur.
