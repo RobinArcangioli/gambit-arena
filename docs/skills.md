@@ -55,3 +55,8 @@ et interruption de l'ensemble des compétences, puis les gambits suivront.
 F6 : scenes/tests/skills_tests.tscn. Relancer aussi attack_action_tests,
 skill_executor_tests et combat_simulation_tests car leurs composants sont partagés.
 Godot non exécuté chez l'assistant.
+
+## Validation
+
+F6, tests manuels et fluidité confirmés OK par l’utilisateur.
+STEP-014 validée, commit en attente. Voir docs/steps/STEP-014.md.

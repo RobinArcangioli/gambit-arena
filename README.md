@@ -1,7 +1,8 @@
 # Gambit Arena — STEP-014
 
 Prototype Godot Android portrait avec mannequins 3D temporaires.
-STEP-013 clôturée au commit 1ffd24a ; STEP-014 en attente de validation.
+STEP-013 clôturée au commit 1ffd24a ; STEP-014 validée, commit en attente.
+F6, tests manuels et fluidité confirmés OK par l’utilisateur.
 
 F5 : attaque, soin personnel, frappe spéciale et récupération passive de ressource.
 Trois scénarios : compétences, ressource vide, mort avant effet. Héros blessé60/100,
@@ -20,4 +21,4 @@ F8 arrête. Godot non exécuté chez l'assistant ; anciens laboratoires conserv�
 - [Android](docs/android.md), [sauvegarde](docs/backup.md)
 
 Version Android 0.1.0-step014, code 13. Export Debug hors dépôt.
-Commit après validation explicite, puis sauvegarde complète.
+Validation reçue : commit puis sauvegarde complète à effectuer.

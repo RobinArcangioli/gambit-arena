@@ -345,4 +345,5 @@ F6, tests manuels et fluidité confirmés OK. SHA-256 APK communiqué :
 
 STEP-014 : version 0.1.0-step014, code 13. Export Debug avec débogage vers
 ~/gambit-arena-builds/step-014-debug.apk. Recette : docs/steps/STEP-014.md.
-Aucun résultat matériel ni SHA-256 STEP-014 reçu.
+F6, tests manuels et fluidité confirmés OK. SHA-256 APK communiqué :
+ac06b695682b55268e741cffbaa1c3316022feb1daf10e30a7851e9fc83417d8.

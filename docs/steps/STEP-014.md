@@ -1,8 +1,8 @@
 # STEP-014 — Attaque, soin, spéciale et ressource récupérable
 
-Statut : En attente de validation.
+Statut : Validée, commit en attente.
 Base : 1ffd24ad027991f57f2aee1d96b1cbcfa87228c6, STEP-013 clôturée.
-GO reçu. Aucun résultat ni APK STEP-014 validé à ce stade.
+GO reçu. STEP-014 validée ; empreinte APK reçue, commit et sauvegarde à recevoir.
 
 ## Périmètre et fichiers
 
@@ -81,7 +81,20 @@ attaques de base : l'automatisation du choix des compétences n'est pas ajoutée
 Exporter Android Debug avec débogage vers ~/gambit-arena-builds/step-014-debug.apk,
 hors dépôt. Installer avec adb -d install -r puis calculer sha256sum.
 Transmettre les quatre résultats F6, tests manuels, fluidité et SHA-256.
-Pas de commit avant validation. Commit proposé après validation :
+Validation utilisateur reçue. Commit proposé :
 feat: [STEP-014] ajouter soin speciale et recuperation de ressource
 Puis sauvegarde complète et contrôle du point de reprise.
 STEP-015 attend clôture et GO : pause commune et interruption par la mort sans effet tardif.
+
+## Validation utilisateur reçue — 23 octobre 2026
+
+STEP-014 explicitement validée : F6 OK, tests manuels OK, fluidité OK.
+Le retour F6 est global, sans résultat séparé pour chacun des quatre bancs demandés.
+APK identifié : step-014-debug.apk ; version de la livraison 0.1.0-step014, code 13.
+SHA-256 communiqué : ac06b695682b55268e741cffbaa1c3316022feb1daf10e30a7851e9fc83417d8.
+Aucune mesure chiffrée de performance fournie.
+
+Archive : gambit-arena-complet-step-014-validation.tar.gz.
+Code, scènes, profils, tests et configuration identiques à la livraison v1.
+Seule la documentation évolue ; aucun lancement Godot chez l’assistant.
+Statut : Validée, commit en attente. Hash et sauvegarde à recevoir.

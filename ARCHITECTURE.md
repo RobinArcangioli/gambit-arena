@@ -1,4 +1,4 @@
-# Architecture réelle — STEP-014
+# Architecture réelle — STEP-014 validée, commit en attente
 
 Main garde son UID et ouvre scenes/skills/skills_lab.tscn, dérivée de l'arène.
 SkillExecutor reste l'unique point d'engagement des actions. AttackAction conserve
@@ -27,4 +27,4 @@ par les bancs historiques à relancer. Voir docs/skills.md pour le contrat préc
 
 Pas de nouvelle animation finale, d'aire d'effet, d'allié, de gambit ou de priorité
 manuelle. Six cases inactives. Rendu et projection conservés. Version 0.1.0-step014,
-code 13. Exécution Godot à valider chez l'utilisateur.
+code 13. F6 et tests manuels confirmés OK par l’utilisateur.
