@@ -60,3 +60,9 @@ Godot non exécuté chez l'assistant.
 
 F6, tests manuels et fluidité confirmés OK par l’utilisateur.
 STEP-014 validée, commit en attente. Voir docs/steps/STEP-014.md.
+
+## Passage à STEP-015
+
+L’horloge liée bloque maintenant aussi les demandes et callbacks d’impact directs.
+La mort/sortie d’arbre annule immédiatement les actions concernées, même en pause.
+Les compétences gardent leurs valeurs. Voir docs/lifecycle.md et STEP-015.

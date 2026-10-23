@@ -31,6 +31,7 @@ func begin(source: Variant, target: Variant) -> int:
 		return 0
 	if distance_between(source, target) > REACH:
 		return 0
+	_disconnect_lifecycle()
 	_next_id += 1
 	action_id = _next_id
 	_source = source
@@ -44,6 +45,7 @@ func begin(source: Variant, target: Variant) -> int:
 	applied_damage = 0
 	phase = "PREPARATION"
 	outcome = "en attente"
+	_connect_lifecycle()
 	return action_id
 
 func _participants_valid() -> bool:
@@ -65,10 +67,11 @@ func advance(delta: float, paused: bool = false) -> void:
 	if active and elapsed >= WINDUP + RECOVERY:
 		active = false
 		phase = "TERMINEE"
+		_disconnect_lifecycle()
 
 func try_impact(expected_id: int) -> bool:
 	# Single mutation gate, also safe against duplicate/stale callbacks.
-	if not active or resolved or expected_id != action_id or elapsed < WINDUP:
+	if not _effects_allowed() or not active or resolved or expected_id != action_id or elapsed < WINDUP:
 		return false
 	resolved = true
 	phase = "RECUPERATION"
@@ -84,6 +87,7 @@ func try_impact(expected_id: int) -> bool:
 	return true
 
 func cancel() -> void:
+	_disconnect_lifecycle()
 	if not active:
 		return
 	active = false
@@ -97,3 +101,31 @@ func _valid_pair(source: StatsActor, target: StatsActor) -> bool:
 
 func _apply_effect() -> int:
 	return _target_state.damage(maxi(1, _attack - _target_state.defense))
+
+func _effects_allowed() -> bool:
+	return true
+
+func _connect_lifecycle() -> void:
+	_source_state.died.connect(_on_source_lost)
+	_source.tree_exiting.connect(_on_source_lost)
+	if _target != _source:
+		_target_state.died.connect(_on_target_lost)
+		_target.tree_exiting.connect(_on_target_lost)
+
+func _disconnect_lifecycle() -> void:
+	if _source_state != null and _source_state.died.is_connected(_on_source_lost):
+		_source_state.died.disconnect(_on_source_lost)
+	if is_instance_valid(_source) and _source.tree_exiting.is_connected(_on_source_lost):
+		_source.tree_exiting.disconnect(_on_source_lost)
+	if _target_state != null and _target_state.died.is_connected(_on_target_lost):
+		_target_state.died.disconnect(_on_target_lost)
+	if is_instance_valid(_target) and _target.tree_exiting.is_connected(_on_target_lost):
+		_target.tree_exiting.disconnect(_on_target_lost)
+
+func _on_source_lost() -> void:
+	cancel()
+
+func _on_target_lost() -> void:
+	# A target killed by our already-latched impact does not cancel recovery.
+	if not resolved:
+		cancel()

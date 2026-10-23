@@ -1,5 +1,7 @@
 extends Node
 ## One deterministic coordinator. No unit ticks itself.
+const GameClock = preload("res://scripts/core/game_clock.gd")
+var clock := GameClock.new()
 const Unit = preload("res://scripts/combat/combat_unit.gd")
 const Action = preload("res://scripts/combat/attack_action.gd")
 const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
@@ -33,13 +35,14 @@ func clear() -> void:
 
 func _dispose(unit: Variant) -> void:
 	if is_instance_valid(unit):
-		unit.action.cancel()
+		unit.action.retire()
 		unit.hide()
 		if not unit.is_queued_for_deletion():
 			unit.queue_free()
 
 func reset(mode: int = 0) -> void:
 	clear()
+	clock.reset()
 	elapsed = 0.0
 	spawn_clock = 0.0
 	spawned = 0
@@ -59,6 +62,7 @@ func reset(mode: int = 0) -> void:
 	elif mode == 2:
 		profile.max_health = 2500
 	hero.configure(profile)
+	hero.action.bind_clock(clock)
 	hero.name = "CombatHero"
 	world.add_child(hero)
 	hero.place(Vector2.ZERO)
@@ -78,6 +82,7 @@ func add_enemy(at: Vector2) -> bool:
 	var unit := Unit.new()
 	unit.enemy = true
 	unit.configure(ENEMY)
+	unit.action.bind_clock(clock)
 	unit.serial = spawned + 1
 	unit.name = "CombatEnemy%d" % unit.serial
 	world.add_child(unit)
@@ -105,11 +110,12 @@ func _finish_if_needed() -> bool:
 		result = "VICTOIRE" if removed == 0 else "INTERROMPU"
 	else:
 		return false
+	clock.stopped = true
 	for unit in enemies:
-		unit.action.cancel()
+		unit.action.retire()
 		unit.mover.clear_target()
 	if is_instance_valid(hero):
-		hero.action.cancel()
+		hero.action.retire()
 		hero.mover.clear_target()
 	_present()
 	return true
@@ -129,13 +135,13 @@ func _choose_targets() -> void:
 		unit.mover.set_target(hero)
 
 func advance(delta: float, paused: bool = false) -> void:
-	if paused or result != "EN COURS" or not is_finite(delta) or delta <= 0.0:
+	if paused or not clock.permits_gameplay() or result != "EN COURS" or not is_finite(delta) or delta <= 0.0:
 		return
 	_prune()
 	if _finish_if_needed():
 		return
-	var dt: float = Crowd.safe_delta(delta)
-	elapsed += dt
+	var dt: float = clock.step(delta)
+	elapsed = clock.elapsed
 	_choose_targets()
 	var units: Array[Unit] = [hero]
 	units.append_array(enemies)
@@ -167,7 +173,7 @@ func advance(delta: float, paused: bool = false) -> void:
 		if not Action.living(hero):
 			break
 		if not Action.living(unit):
-			unit.action.cancel()
+			unit.action.retire()
 			continue
 		var was_resolved: bool = unit.action.resolved
 		unit.action.advance(dt)

@@ -83,3 +83,9 @@ Le catalogue comprend maintenant heal et special. La récupération est optionne
 au constructeur, activée dans SkillsLab et CombatUnit. Le diagnostic historique
 STEP-013 conserve sa récupération désactivée et paid_test. Voir docs/skills.md ;
 les mentions de compétences futures ci-dessus décrivent la livraison STEP-013.
+
+## Passage à STEP-015
+
+bind_clock relie les acteurs à la porte commune ; request, advance et try_impact
+la consultent. Les anciens laboratoires sans liaison conservent paused explicite.
+La mort de la source retire l’exécuteur ; voir docs/lifecycle.md.

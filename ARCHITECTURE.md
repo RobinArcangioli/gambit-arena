@@ -1,30 +1,32 @@
-# Architecture réelle — STEP-014 validée, commit en attente
+# Architecture réelle — STEP-015 validée, commit en attente
 
-Main garde son UID et ouvre scenes/skills/skills_lab.tscn, dérivée de l'arène.
-SkillExecutor reste l'unique point d'engagement des actions. AttackAction conserve
-la garde ID/temps/résolution, revalide vie/portée et délègue l'effet à _apply_effect.
-_valid_pair permet au soin d'accepter uniquement la source elle-même ; l'attaque
-par défaut continue à refuser une cible identique à la source.
+Main conserve son UID et ouvre scenes/skills/lifecycle_lab.tscn, dérivée du
+laboratoire de compétences. Les scènes historiques restent disponibles.
 
-SkillExecutor ajoute heal et special au catalogue fermé. last_skill est enregistré
-après engagement réussi ; il ne change pas sur refus. L'effet lit cet identifiant,
-pas la sélection courante de l'interface. Le soin utilise ActorState.heal et
-le compteur applied_healing ; les dégâts utilisent toujours ActorState.damage.
-L'attaque de la spéciale est copiée au lancement puis doublée avant défense.
+GameClock porte pause, arrêt terminal et temps écoulé. Chaque coordinateur appelle
+step une fois par tick : delta positif fini, borné à 1/30 s, sans rattrapage.
+CombatSimulation utilise ce même pas pour mouvement, poses, actions, cooldowns,
+récupération et apparitions. LifecycleLab l'utilise pour ses compétences statiques.
+Chaque SkillExecutor du coordinateur référence la même horloge ; request, advance
+et try_impact consultent la porte commune. L'horloge n'est pas avancée par acteur.
+Les anciens laboratoires sans horloge liée conservent leur contrat explicite paused.
 
-Récupération5 points/s, fractions accumulées, plafond60 sans réserve cachée.
-Elle est activée explicitement dans SkillsLab et CombatUnit. Les diagnostics
-STEP-013 gardent leur constructeur par défaut sans récupération pour conserver
-les valeurs attendues. CombatSimulation ne demande encore que basic.
-Horloge commune : pause et delta invalide bloquent action, CD et récupération ;
-les coordinateurs bornent le pas à1/30 s. Une source morte ou reconfigurée retire
-l'exécuteur avant toute récupération ou effet. Rejouer retire les anciens exécuteurs.
+AttackAction connecte la mort et la sortie d'arbre des participants à l'engagement,
+puis déconnecte à l'annulation ou à la fin. Mort de la source : annulation immédiate ;
+SkillExecutor se retire définitivement. Mort de la cible avant effet : annulation.
+Après effet déjà résolu, la disparition de la cible ne supprime pas la récupération.
+Une mort imposée extérieurement pendant la pause invalide donc l'action immédiatement.
+Le verrou d'impact reste posé avant l'émission des signaux de PV.
 
-Le nouveau laboratoire montre PV, énergie, dépenses, récupération, CD, phase,
-dégâts et soin effectif. Son ennemi a600 PV sur une copie locale du profil.
-Anciennes scènes et profils conservés ; trois scripts partagés modifiés et couverts
-par les bancs historiques à relancer. Voir docs/skills.md pour le contrat précis.
+Les gardes de vie, identité d'état, portée, ID et résolution restent actives.
+Remplacement d'état détecté à l'avance ou à la validation d'effet ; aucune mutation
+de l'état neuf par une ancienne action. Coûts engagés non remboursés.
+La fin du combat arrête l'horloge et retire tous les exécuteurs. Reset retire les
+anciens, recrée les acteurs, remet les compteurs à zéro et préserve la pause.
+Les notifications d'arrière-plan passent toujours par l'arène ; reprise explicite.
 
-Pas de nouvelle animation finale, d'aire d'effet, d'allié, de gambit ou de priorité
-manuelle. Six cases inactives. Rendu et projection conservés. Version 0.1.0-step014,
-code 13. F6 et tests manuels confirmés OK par l’utilisateur.
+SkillExecutor conserve basic, heal, special et paid_test historique. Soin 30,
+coût 20/CD 4 s ; spéciale 2×attaque-défense, coût 30/CD 6 s ; énergie +5/s,
+plafond 60. CombatSimulation ne demande toujours que basic. Aucun gambit ajouté.
+Mannequins, profils, projection et six cases inactives conservés.
+Version 0.1.0-step015, code 14. F6 et tests manuels confirmés OK par l’utilisateur.

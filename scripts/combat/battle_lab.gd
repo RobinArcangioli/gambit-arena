@@ -80,6 +80,7 @@ func _next_placement() -> void:
 	_reset()
 
 func _update_buttons() -> void:
+	simulation.clock.paused = paused
 	super._update_buttons()
 	if setup_complete:
 		position_button.text = "%d/3 %s" % [mode_index + 1, MODES[mode_index]]

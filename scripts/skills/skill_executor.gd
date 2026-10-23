@@ -1,6 +1,8 @@
 extends "res://scripts/combat/attack_action.gd"
 ## Shared execution gate. One instance per actor, used by manual and automatic callers.
 ## Basic, self-heal and special share validation, commitment, timing and impact guard.
+const GameClock = preload("res://scripts/core/game_clock.gd")
+var clock: GameClock
 const CAPACITY: int = 60
 const PAID_COST: int = 20
 const PAID_COOLDOWN: float = 3.0
@@ -45,8 +47,8 @@ func begin(source: Variant, target: Variant) -> int:
 
 func request(skill: StringName, target: Variant, paused: bool = false) -> int:
 	last_rejection = ""
-	if paused:
-		return _reject("pause")
+	if paused or (clock != null and not clock.permits_gameplay()):
+		return _reject("pause / arret")
 	if _retired or not living(_owner):
 		return _reject("acteur indisponible")
 	if _bound_state != null and _owner.state != _bound_state:
@@ -87,7 +89,7 @@ func _reject(reason: String) -> int:
 	return 0
 
 func advance(delta: float, paused: bool = false) -> void:
-	if paused or _retired or not is_finite(delta) or delta <= 0.0:
+	if paused or _retired or (clock != null and not clock.permits_gameplay()) or not is_finite(delta) or delta <= 0.0:
 		return
 	if not living(_owner) or (_bound_state != null and _owner.state != _bound_state):
 		retire()
@@ -151,3 +153,13 @@ func _recover(delta: float) -> void:
 	_recovery_credit = maxf(0.0, _recovery_credit - float(gain))
 	if _energy == CAPACITY:
 		_recovery_credit = 0.0
+
+func bind_clock(shared_clock: GameClock) -> void:
+	clock = shared_clock
+
+func _effects_allowed() -> bool:
+	return not _retired and (clock == null or clock.permits_gameplay())
+
+func _on_source_lost() -> void:
+	# Lifecycle invalidation is synchronous, including while game time is paused.
+	retire()

@@ -72,3 +72,9 @@ Les détails du raccordement sont dans docs/combat.md.
 La garde d’impact est conservée ; _valid_pair et _apply_effect sont spécialisables
 pour autoriser le soin personnel et choisir l’effet. L’attaque par défaut conserve
 son comportement. Voir docs/skills.md et relancer les bancs partagés.
+
+## Passage à STEP-015
+
+Les signaux de mort et sortie d’arbre sont abonnés pendant l’action et libérés
+à sa fin/annulation. La mort cible après effet résolu conserve la récupération.
+La garde _effects_allowed permet à SkillExecutor de bloquer un impact en pause.

@@ -76,3 +76,9 @@ CombatUnit utilise désormais SkillExecutor, dérivé de l’exécuteur d’atta
 Le coordinateur appelle toujours begin pour une attaque basic gratuite, sans
 cooldown supplémentaire. Relancer le banc combat après cette substitution.
 Voir docs/skill-executor.md ; les autres règles du combat restent inchangées.
+
+## Passage à STEP-015
+
+CombatSimulation partage GameClock avec tous les exécuteurs et fournit un même
+delta borné aux systèmes. Fin de combat : horloge arrêtée et exécuteurs retirés.
+Reset préserve la pause et retire les anciens exécuteurs. Voir docs/lifecycle.md.
