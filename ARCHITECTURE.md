@@ -1,32 +1,34 @@
-# Architecture réelle — STEP-015 validée, commit en attente
+# Architecture réelle — STEP-016 validée, commit en attente
 
-Main conserve son UID et ouvre scenes/skills/lifecycle_lab.tscn, dérivée du
-laboratoire de compétences. Les scènes historiques restent disponibles.
+Main conserve son UID et ouvre scenes/gambits/gambit_lab.tscn.
+GambitRule est une Resource de configuration : activation, cible, condition,
+seuil entier et compétence. GambitSnapshot contient uniquement des valeurs copiées,
+sans références vers les acteurs, leurs états, exécuteurs ou horloges.
+GambitEvaluator.evaluate parcourt au maximum trois règles dans l'ordre et retourne
+un dictionnaire neuf de scalaires. Aucun signal, timer, RNG ni appel d'exécution.
 
-GameClock porte pause, arrêt terminal et temps écoulé. Chaque coordinateur appelle
-step une fois par tick : delta positif fini, borné à 1/30 s, sans rattrapage.
-CombatSimulation utilise ce même pas pour mouvement, poses, actions, cooldowns,
-récupération et apparitions. LifecycleLab l'utilise pour ses compétences statiques.
-Chaque SkillExecutor du coordinateur référence la même horloge ; request, advance
-et try_impact consultent la porte commune. L'horloge n'est pas avancée par acteur.
-Les anciens laboratoires sans horloge liée conservent leur contrat explicite paused.
+Les candidats vivants sont filtrés par condition avant la sélection du plus proche.
+À distance carrée exactement égale, l'ID positif le plus petit gagne. L'ordre des
+ennemis n'intervient pas ; l'ordre des règles est la priorité. Seuil PV strict,
+comparaison entière sans arrondir les pourcentages. Vie, pause, arrêt, occupation,
+coût et cooldowns du snapshot sont consultés sans mutation.
 
-AttackAction connecte la mort et la sortie d'arbre des participants à l'engagement,
-puis déconnecte à l'annulation ou à la fin. Mort de la source : annulation immédiate ;
-SkillExecutor se retire définitivement. Mort de la cible avant effet : annulation.
-Après effet déjà résolu, la disparition de la cible ne supprime pas la récupération.
-Une mort imposée extérieurement pendant la pause invalide donc l'action immédiatement.
-Le verrou d'impact reste posé avant l'émission des signaux de PV.
+L'intention indique règle, source, cible, compétence et besoin d'approche.
+Elle ne réserve rien, n'alloue pas d'ID d'action et n'autorise pas un effet ultérieur.
+STEP-017 devra capturer un état frais, conserver les IDs pendant le combat,
+résoudre les acteurs et revalider via SkillExecutor avant engagement.
+Une cible hors portée reste admissible pour permettre l'approche future.
 
-Les gardes de vie, identité d'état, portée, ID et résolution restent actives.
-Remplacement d'état détecté à l'avance ou à la validation d'effet ; aucune mutation
-de l'état neuf par une ancienne action. Coûts engagés non remboursés.
-La fin du combat arrête l'horloge et retire tous les exécuteurs. Reset retire les
-anciens, recrée les acteurs, remet les compteurs à zéro et préserve la pause.
-Les notifications d'arrière-plan passent toujours par l'arène ; reprise explicite.
+GambitLab dérive du laboratoire historique pour réutiliser disposition et acteurs.
+L'exécuteur hérité est immédiatement retiré et jamais avancé. Les boutons changent
+seulement les données de test : PV du héros, énergie et cooldown simulés.
+GameClock fournit un pas borné ; accumulation locale pour lecture à 10 Hz.
+La pause et l'arrière-plan figent les lectures ; reprise explicite. Reset garde
+la pause et remet données, règles de démonstration et compteurs à zéro.
+Ce reset de laboratoire ne définit pas la conservation des gambits du futur jeu.
 
-SkillExecutor conserve basic, heal, special et paid_test historique. Soin 30,
-coût 20/CD 4 s ; spéciale 2×attaque-défense, coût 30/CD 6 s ; énergie +5/s,
-plafond 60. CombatSimulation ne demande toujours que basic. Aucun gambit ajouté.
-Mannequins, profils, projection et six cases inactives conservés.
-Version 0.1.0-step015, code 14. F6 et tests manuels confirmés OK par l’utilisateur.
+CombatSimulation, SkillExecutor, AttackAction, GameClock et les profils historiques
+restent identiques à STEP-015. Les valeurs de coût/portée sont lues depuis les
+constantes de SkillExecutor. Le combat autonome utilise encore son pilote basic.
+Pas d'éditeur tactile, d'intégration des intentions au combat ni d'animations finales.
+Version 0.1.0-step016, code 15. F6 et tests manuels confirmés OK par l’utilisateur.
