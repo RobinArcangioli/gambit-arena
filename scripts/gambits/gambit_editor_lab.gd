@@ -98,11 +98,10 @@ func _refresh_rows() -> void:
 	var rules = editor.snapshot()
 	for index in range(3):
 		var rule = rules[index]
-		var caption: String = "Attaque\nEnnemi / toujours"
-		if rule.skill == "heal":
-			caption = "Soin\nSoi / PV < 50 %"
-		elif rule.skill == "special":
-			caption = "Speciale\nEnnemi / toujours"
+		var skill_text: String = "Soin" if rule.skill == "heal" else "Speciale" if rule.skill == "special" else "Attaque"
+		var target_text: String = "Soi" if rule.target == "self" else "Ennemi"
+		var condition_text: String = "toujours" if rule.condition == "always" else "PV < %d %%" % rule.threshold
+		var caption: String = "%s\n%s / %s" % [skill_text, target_text, condition_text]
 		row_labels[index].text = "%d. %s" % [index + 1, caption]
 		row_labels[index].modulate = Color.WHITE if rule.enabled else Color(0.65, 0.65, 0.65)
 		toggle_buttons[index].text = "Oui" if rule.enabled else "Non"

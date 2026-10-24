@@ -33,3 +33,10 @@ Recette et tests : docs/steps/STEP-019.md. Validation utilisateur globale reçue
 
 Retour v1 F6/manuels/fluidité OK ; réserve de déplacement traitée par FIX-STEP-019-001.
 V2 validée : voir docs/steps/FIX-STEP-019-001.md.
+
+## Extension STEP-020
+
+GambitEditor accepte désormais update_fields avec validation atomique. Le laboratoire
+STEP-020 ajoute un formulaire modal et rend les champs réels dans chaque résumé.
+Les restrictions de champs non éditables ci-dessus décrivent STEP-019.
+Voir docs/gambit-fields.md pour le comportement actuel.

@@ -385,3 +385,10 @@ STEP-019 v2 validée par le retour utilisateur global. SHA-256 APK :
 
 STEP-019 v1 : SHA-256 reçu 7fd4027080d9f560a77168d0256ced18ab322ec139084690271b805b89f4672a,
 avec réserve sur un petit pas à l’attaque. V2 FIX-STEP-019-001 ensuite validée ; empreinte ci-dessus.
+
+## Passage à STEP-020
+
+STEP-020 : version 0.1.0-step020, code 19. Export Debug avec débogage vers
+~/gambit-arena-builds/step-020-debug.apk. Recette : docs/steps/STEP-020.md.
+F6, tests manuels et fluidité confirmés OK. SHA-256 APK communiqué :
+084cc3ea0e03a553f00a111683f048db0b5f4331a3c5b6782c4aa872b5cfe97e.

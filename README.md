@@ -1,30 +1,29 @@
-# Gambit Arena — STEP-019
+# Gambit Arena — STEP-020
 
 Prototype Godot Android portrait avec mannequins 3D temporaires.
-STEP-018 clôturée au commit 4719e8d ; STEP-019 validée, commit en attente. Correctif v2 inclus.
+STEP-019 clôturée au commit 4125d44 ; STEP-020 validée, commit en attente.
+F6, tests manuels et fluidité confirmés OK par l’utilisateur.
 
-F5 : trois gambits visibles, activables avec Oui/Non et réordonnables avec Haut/Bas.
-La première règle disponible gagne. Configuration modifiable en jeu ou en pause,
-conservée par Rejouer et les changements de scénario ; non sauvegardée sur disque.
-Une action engagée finit normalement ; une intention en attente est oubliée.
+F5 : toucher le résumé d'une des trois règles pour modifier cible, condition, seuil
+et action. Le formulaire met le combat en pause. Appliquer valide les quatre champs
+ensemble ; Annuler abandonne le brouillon. Les deux gardent la pause : reprise explicite.
+Les boutons de champ parcourent les options ; le seuil dispose de -5/-1/+1/+5.
+Les associations incompatibles affichent une raison et bloquent Appliquer.
 
-Rejouer/R, scénario/P (Combat, Soin, Groupe 20), Pause/Espace, repères/G.
-Le panneau des règles remplace les six emplacements réservés dans ce laboratoire.
-Les anciennes scènes et leurs emplacements restent disponibles. Aucun champ éditable
-(cible, condition, seuil ou action) ni commande manuelle ajouté à cette étape.
+Oui/Non et Haut/Bas restent disponibles hors formulaire. Rejouer et scénario conservent
+tous les champs, l'ordre et l'activation ; pas de sauvegarde sur disque.
+Les actions engagées ne sont pas annulées par l'édition. Le correctif d'immobilité du
+héros à portée reste inchangé. Les six emplacements futurs restent masqués dans ce labo.
 
-F6 dans scenes/tests/ : attack_stationary_tests, gambit_editor_tests, gambit_diagnostics_tests,
-gambit_controller_tests, gambit_tests, lifecycle_tests et combat_simulation_tests.
-Attendu : OK, zéro échec par banc ; F8 entre les bancs.
-Godot non exécuté chez l'assistant ; rendu et tactile à vérifier sur appareil.
+F6 dans scenes/tests/ : gambit_fields_tests, attack_stationary_tests,
+gambit_editor_tests, gambit_diagnostics_tests, gambit_controller_tests,
+gambit_tests, lifecycle_tests et combat_simulation_tests. F8 entre les bancs.
+Attendu : OK, zéro échec et aucun nouvel avertissement. Godot non exécuté chez l'assistant.
 
-- [Recette STEP-019](docs/steps/STEP-019.md)
-- [Éditeur](docs/gambit-editor.md), [diagnostics](docs/gambit-diagnostics.md)
+- [Recette STEP-020](docs/steps/STEP-020.md)
+- [Champs de règle](docs/gambit-fields.md), [éditeur](docs/gambit-editor.md)
 - [Architecture](ARCHITECTURE.md), [état](PROJECT_STATUS.md), [roadmap](ROADMAP.md)
 - [Android](docs/android.md), [sauvegarde](docs/backup.md)
 
-Version Android 0.1.0-step019, code 18. Export Debug hors dépôt.
+Version Android 0.1.0-step020, code 19. Export Debug hors dépôt.
 Validation reçue : commit puis sauvegarde complète à effectuer.
-
-V2 — FIX-STEP-019-001 : le héros cesse son approche lorsque sa cible est déjà à portée.
-Animation inchangée ; nouveau banc attack_stationary_tests. Correctif validé par le retour utilisateur global.
