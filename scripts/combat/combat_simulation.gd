@@ -148,7 +148,11 @@ func advance(delta: float, paused: bool = false) -> void:
 		var start: Vector2 = unit.mover.ground_position
 		points.append(start)
 		unit.mover.velocity = Vector2.ZERO
-		if not unit.action.active:
+		# A selected target already in attack range needs no extra approach step.
+		# Otherwise the 0.8 mover stop vs 1.0 attack reach makes the idle hero
+		# creep forward between actions. Enemies keep their existing spacing.
+		var hold_attack_position: bool = unit == hero and Action.living(unit.mover.target) and Action.distance_between(unit, unit.mover.target) <= Action.REACH
+		if not unit.action.active and not hold_attack_position:
 			unit.mover.step(dt)
 		requests.append(unit.mover.ground_position - start)
 		unit.mover.ground_position = start

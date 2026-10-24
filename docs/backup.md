@@ -204,3 +204,10 @@ Attendre validation et commit STEP-018 avant la prochaine sauvegarde.
 
 STEP-018 validée : appliquer l’archive de validation, commiter puis lancer
 `bash tools/create_backup.sh`. Transmettre la sauvegarde produite pour vérification.
+
+STEP-018 clôturée au commit 4719e8d : sauvegarde du 24 octobre 2026 reçue et vérifiée,
+207 fichiers identiques au commit et à la livraison validée ; bundle complet et intègre.
+STEP-019 reste en attente de validation ; ne pas commiter avant le retour utilisateur.
+
+STEP-019 v2 validée : appliquer l’archive de validation, commiter puis lancer
+`bash tools/create_backup.sh`. Transmettre la sauvegarde produite pour vérification.

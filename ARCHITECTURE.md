@@ -1,37 +1,40 @@
-# Architecture réelle — STEP-018 validée, commit en attente
+# Architecture réelle — STEP-019 validée, commit en attente
 
-Main conserve son UID et ouvre scenes/gambits/gambit_diagnostics_lab.tscn.
-GambitEvaluator.evaluate et explain partagent le même parcours _run. evaluate
-retourne le contrat STEP-016 inchangé ; explain ajoute au plus trois motifs de règles.
-Aucun acteur, coût ou cooldown n'est modifié par l'évaluation ou l'explication.
-Une règle sous la priorité retenue est marquée lower_priority sans être évaluée.
+Main conserve son UID et ouvre scenes/gambits/gambit_editor_lab.tscn.
+GambitEditor possède trois règles de session initialisées depuis standard_rules.
+Il permet uniquement toggle(index) et move(index, -1 ou +1), refuse les indices
+hors limites et émet changed une fois par modification acceptée. Le déplacement
+échange les règles complètes, activation comprise. snapshot retourne des Resources
+copiées ; ni contrôleur ni lecteur ne partagent les règles internes modifiables.
 
-GambitController collecte les explications à la planification et journalise décisions,
-engagements acceptés, invalidations, refus d'exécuteur et arrêts. La revalidation reste
-limitée à la règle/cible sélectionnée ; son motif est consigné si elle invalide le plan.
-Le refus d'exécuteur est enregistré au plus une fois par intention en attente.
-Pas de trace par frame d'approche ou d'action occupée. Le diagnostic est désactivable.
+GambitEditorLab étend BattleLab et réutilise CombatSimulation sans modifier son code.
+Un seul raccordement changed appelle controller.stop avec rules_changed puis remplace
+la configuration du contrôleur par une copie. Toute intention en attente est effacée,
+même si une autre règle de priorité supérieure a changé. La prochaine planification
+utilise la nouvelle configuration. L'exécuteur d'une action engagée reste propriétaire
+de son action et de sa cible ; coût, cooldown et impact ne sont pas rejoués.
 
-GambitTrace conserve les 64 dernières entrées, élimine la plus ancienne au dépassement
-et expose total/dropped. Champs autorisés seulement, chaînes bornées, trois motifs
-maximum, copies profondes à la lecture. Ni acteur, ni état, ni snapshot stocké.
-Le contrôleur garde seulement la dernière explication, également bornée et copiée.
-Les dates sont le temps de jeu de GameClock. CombatSimulation transmet l'heure de
-clear/terminal ; ses mouvements, ordre d'actions et apparitions ne changent pas.
+Les règles sont modifiables pendant la pause : seuls configuration, intention et
+présentation évoluent ; le temps de jeu reste figé. Le journal peut consigner une
+invalidation à temps constant lors d'une édition explicite. Aucun nouveau combat,
+mouvement ou engagement n'est exécuté par les boutons de règles.
+Rejouer et changer de scénario conservent ordre et activation ; le changement de
+scénario reste bloqué en pause. Retour d'arrière-plan : reprise explicite conservée.
 
-Le laboratoire montre soit le combat réel à trois règles, soit un des huit snapshots
-fixes de GambitScenarios. Dans les cas fixes, le monde est masqué et n'est pas avancé ;
-les lectures sont cadencées à 10 Hz par GameClock. Une prévisualisation initiale est
-calculée au reset, même en pause, sans événement dans le journal. Le compteur de
-lectures commence à zéro. Les règles et données des fixtures sont recréées à chaque reset.
+L'interface possède trois lignes fixes, boutons Oui/Non, Haut et Bas de 56 px de haut.
+Les déplacements hors tableau sont désactivés. Les signaux sont raccordés une fois,
+sans reconstruire les contrôles après édition ou reset. Le panneau bas remplace les
+six emplacements réservés uniquement dans ce laboratoire ; les anciennes scènes restent
+inchangées. La taille de référence reste 540 × 960 et les marges sûres sont réutilisées.
 
-Vue journal : quatre dernières entrées seulement. Vue raisons : dernière décision
-et motifs des trois règles. Une ancienne lecture ne prétend pas décrire l'état courant.
-La pause bloque nouvelles lectures/écritures ; la vue reste consultable. Reset efface
-le journal, ses compteurs et les explications, tout en gardant pause et activation.
-
-Le banc diagnostics compare les trajectoires avec/sans trace et les journaux de deux
-combats après normalisation des IDs de session. Il contrôle huit fixtures, 2000 écritures,
-copies, invalidations, refus, pause et dix resets. F6 et tests manuels confirmés OK par l’utilisateur.
-Acteurs, profils, compétences, actions, mouvement/contact et GameClock restent inchangés.
-Version 0.1.0-step018, code 17. Pas d'éditeur ni de priorité manuelle ajoutés.
+GambitEvaluator, GambitController, GameClock, SkillExecutor, AttackAction,
+acteurs, profils et solveur de contact sont identiques à STEP-018.
+FIX-STEP-019-001 modifie uniquement la demande de déplacement du héros dans
+CombatSimulation : aucune approche supplémentaire lorsque la cible vivante sélectionnée
+est déjà à portée Action.REACH. Hors portée, le mouvement habituel reprend.
+Les ennemis gardent leur déplacement existant. Les actions actives restent verrouillées.
+Le code de pose du mannequin et ses animations procédurales restent inchangés.
+Le laboratoire diagnostics STEP-018 reste accessible par sa scène historique.
+Le nouveau banc vérifie copies, bornes, signaux, réordonnancement, priorité réelle,
+intentions, actions engagées, pause et resets. Godot non exécuté chez l'assistant.
+Version 0.1.0-step019, code 18. Pas de persistance ou d'édition des champs de règle.

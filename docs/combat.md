@@ -94,3 +94,9 @@ Voir docs/gambit-controller.md pour les trois règles du nouveau laboratoire.
 
 La fin et le clear transmettent leur motif et temps de jeu au contrôleur pour le
 journal borné. L’ordre de simulation et les règles de combat restent ceux de STEP-017.
+
+## FIX-STEP-019-001
+
+L’approche du héros est suspendue lorsque sa cible vivante est déjà à portée
+Action.REACH. Cela évite le pas supplémentaire vers la distance d’arrêt de 0.8
+entre deux engagements. La poursuite hors portée reste autorisée. Voir la recette du correctif.

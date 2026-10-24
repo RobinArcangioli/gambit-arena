@@ -108,3 +108,10 @@ Archive : gambit-arena-complet-step-018-validation.tar.gz.
 Code, scènes, profils, tests et configuration identiques à la livraison v2.
 Seule la documentation évolue ; aucun lancement Godot chez l’assistant.
 Statut : Validée, commit en attente. Hash et sauvegarde à recevoir.
+
+## Clôture vérifiée — 24 octobre 2026
+
+Commit 4719e8d2790cb6dd371733d2beebcec51d145d46, parent 5b2bc4d.
+Main propre ; sauvegarde gambit-arena-20261024-180732-4719e8d2790c.tar.gz vérifiée.
+Historique complet et intègre ; 207 fichiers identiques au commit et à la livraison validée.
+Le statut « commit en attente » ci-dessus décrit la livraison de validation antérieure.
