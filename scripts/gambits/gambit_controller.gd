@@ -7,7 +7,15 @@ const Unit = preload("res://scripts/combat/combat_unit.gd")
 const Action = preload("res://scripts/combat/attack_action.gd")
 const ActorState = preload("res://scripts/combat/actor_state.gd")
 const Clock = preload("res://scripts/core/game_clock.gd")
+const Trace = preload("res://scripts/gambits/gambit_trace.gd")
 const PERIOD: float = 0.1
+var diagnostics_enabled: bool = true
+var trace := Trace.new()
+var _explanation: Dictionary = {}
+var _last_game_time: float = 0.0
+var _reported_rejection: bool = false
+var explanation: Dictionary:
+	get: return _explanation.duplicate(true)
 var rules: Array[Rule] = []
 var evaluations: int = 0
 var launched: int = 0
@@ -43,6 +51,10 @@ static func standard_rules() -> Array[Rule]:
 	return result
 
 func reset() -> void:
+	trace.clear()
+	_explanation.clear()
+	_last_game_time = 0.0
+	_reported_rejection = false
 	# Rule configuration belongs to the run owner and survives replay.
 	_source = null
 	_target = null
@@ -93,6 +105,7 @@ func _participants_valid(hero: Unit, enemies: Array[Unit]) -> bool:
 	return index >= 0 and index < rules.size() and rules.size() <= 3 and _rule_signature(rules[index]) == _signature
 
 func _forget(hero: Unit) -> void:
+	_reported_rejection = false
 	if is_instance_valid(hero):
 		hero.mover.clear_target()
 	_source = null
@@ -103,15 +116,22 @@ func _forget(hero: Unit) -> void:
 	_signature.clear()
 	_consumed = false
 
-func stop(hero: Unit) -> void:
+func _log(event: String, at: float, action_id: int = 0, reason: String = "", details: Array[Dictionary] = []) -> void:
+	if diagnostics_enabled:
+		trace.record(event, at, _decision, action_id, reason, details)
+
+func stop(hero: Unit, reason: String = "stopped", at: float = -1.0) -> void:
+	if _decision.get("kind", "none") == "intent":
+		_log("stopped" if reason in ["stopped", "terminal", "clear"] else "invalidated", _last_game_time if at < 0.0 else at, 0, reason)
 	_forget(hero)
 	_first = true
 
 func plan(delta: float, hero: Unit, enemies: Array[Unit], clock: Clock) -> void:
 	if not clock.permits_gameplay() or not is_finite(delta) or delta <= 0.0:
 		return
+	_last_game_time = clock.elapsed
 	if not Action.living(hero):
-		stop(hero)
+		stop(hero, "source_lost", clock.elapsed)
 		return
 	_remaining = maxf(0.0, _remaining - delta)
 	# Once committed, the executor owns the locked target until completion/cancel.
@@ -122,10 +142,24 @@ func plan(delta: float, hero: Unit, enemies: Array[Unit], clock: Clock) -> void:
 		return
 	_first = false
 	_remaining = PERIOD
-	var next: Dictionary = Evaluator.evaluate(rules, capture(hero, enemies, clock))
+	if stale:
+		_log("invalidated", clock.elapsed, 0, "participants_changed")
+	var report: Dictionary = {}
+	var next: Dictionary
+	if diagnostics_enabled:
+		report = Evaluator.explain(rules, capture(hero, enemies, clock))
+		next = report["decision"]
+	else:
+		next = Evaluator.evaluate(rules, capture(hero, enemies, clock))
 	evaluations += 1
 	_forget(hero)
 	_decision = next
+	# Keep the last explanation independent from the mutable pending intention.
+	_explanation = report.duplicate(true)
+	var details: Array[Dictionary] = []
+	if report.has("rules"):
+		details.assign(report["rules"])
+	_log("decision", clock.elapsed, 0, next["reason"], details)
 	if next["kind"] != "intent":
 		return
 	_source = hero
@@ -138,7 +172,7 @@ func plan(delta: float, hero: Unit, enemies: Array[Unit], clock: Clock) -> void:
 				_target = unit
 				break
 	if not Action.living(_target):
-		stop(hero)
+		stop(hero, "target_lost", clock.elapsed)
 		return
 	_target_state = _target.state
 	_signature = _rule_signature(rules[next["rule_index"]])
@@ -148,8 +182,9 @@ func plan(delta: float, hero: Unit, enemies: Array[Unit], clock: Clock) -> void:
 func execute(hero: Unit, enemies: Array[Unit], clock: Clock) -> int:
 	if not clock.permits_gameplay() or not Action.living(hero) or hero.action.active or _consumed or _decision.get("kind", "none") != "intent":
 		return 0
+	_last_game_time = clock.elapsed
 	if not _participants_valid(hero, enemies):
-		stop(hero)
+		stop(hero, "participants_changed", clock.elapsed)
 		return 0
 	# Revalidate only the selected rule/target against current values. This does not
 	# replan or switch targets between 10 Hz decisions, and does not mutate gameplay.
@@ -158,9 +193,17 @@ func execute(hero: Unit, enemies: Array[Unit], clock: Clock) -> int:
 	if _target != hero:
 		view.enemies.append(_row(_target))
 	var selected: Array[Rule] = [rules[_decision["rule_index"]]]
-	var validation: Dictionary = Evaluator.evaluate(selected, view)
+	var validation: Dictionary
+	var refusal: String = "revalidation"
+	if diagnostics_enabled:
+		var report: Dictionary = Evaluator.explain(selected, view)
+		validation = report["decision"]
+		if not report["rules"].is_empty():
+			refusal = report["rules"][0]["reason"]
+	else:
+		validation = Evaluator.evaluate(selected, view)
 	if validation["kind"] != "intent" or validation["target_id"] != _decision["target_id"] or validation["skill"] != _decision["skill"]:
-		stop(hero)
+		stop(hero, refusal, clock.elapsed)
 		return 0
 	if validation["approach"]:
 		return 0
@@ -176,4 +219,8 @@ func execute(hero: Unit, enemies: Array[Unit], clock: Clock) -> int:
 		if _target != hero:
 			var offset: Vector3 = _target.position - hero.position
 			hero.mover.facing = Vector2(offset.x, offset.z).normalized()
+		_log("commit", clock.elapsed, id, "accepted")
+	elif not _reported_rejection:
+		_reported_rejection = true
+		_log("rejected", clock.elapsed, 0, hero.action.last_rejection)
 	return id

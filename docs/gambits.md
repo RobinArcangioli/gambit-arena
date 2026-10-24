@@ -83,3 +83,9 @@ STEP-016 validée, commit en attente. Voir docs/steps/STEP-016.md.
 L’évaluateur reste inchangé. GambitController capture les valeurs et applique
 les intentions via mouvement puis SkillExecutor, après revalidation. Les règles
 survivent au reset du combat. Voir docs/gambit-controller.md pour l’intégration.
+
+## Passage à STEP-018
+
+evaluate conserve son contrat. explain partage son parcours et ajoute au plus
+trois motifs ; aucun effet de bord. Une règle de priorité inférieure à celle choisie
+est signalée non évaluée. Voir docs/gambit-diagnostics.md.

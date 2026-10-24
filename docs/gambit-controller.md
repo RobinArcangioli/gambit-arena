@@ -81,3 +81,9 @@ La prochaine étape développera les diagnostics ; éditeur et boutons manuels s
 
 F6, tests manuels et fluidité confirmés OK par l’utilisateur.
 STEP-017 validée, commit en attente. Voir docs/steps/STEP-017.md.
+
+## Passage à STEP-018
+
+Le contrôleur dispose maintenant d’un journal de 64 entrées maximum et de la
+dernière explication (trois motifs maximum). Le diagnostic est désactivable et ne
+pilote pas le gameplay. Reset efface les données collectées. Voir docs/gambit-diagnostics.md.

@@ -89,3 +89,8 @@ Le héros est désormais piloté uniquement par GambitController. Le sélecteur
 temporaire du héros est retiré ; les ennemis restent dans leur boucle basic.
 Le diagnostic historique utilise une règle basic via le nouveau contrôleur.
 Voir docs/gambit-controller.md pour les trois règles du nouveau laboratoire.
+
+## Passage à STEP-018
+
+La fin et le clear transmettent leur motif et temps de jeu au contrôleur pour le
+journal borné. L’ordre de simulation et les règles de combat restent ceux de STEP-017.

@@ -29,7 +29,7 @@ func configure(parent_world: Node3D) -> void:
 	world = parent_world
 
 func clear() -> void:
-	controller.stop(hero)
+	controller.stop(hero, "clear", clock.elapsed)
 	for unit in enemies:
 		_dispose(unit)
 	enemies.clear()
@@ -115,7 +115,7 @@ func _finish_if_needed() -> bool:
 	else:
 		return false
 	clock.stopped = true
-	controller.stop(hero)
+	controller.stop(hero, "terminal", clock.elapsed)
 	for unit in enemies:
 		unit.action.retire()
 		unit.mover.clear_target()
