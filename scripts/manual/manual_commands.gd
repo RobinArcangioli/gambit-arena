@@ -25,7 +25,7 @@ var pending: bool:
 	get: return _skill != &""
 
 static func nearest(hero: Unit, enemies: Array[Unit]) -> Unit:
-	var chosen: Unit
+	var chosen: Unit = null
 	var distance: float = INF
 	for unit in enemies:
 		if not Action.living(unit):

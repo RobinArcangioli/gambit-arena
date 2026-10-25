@@ -34,3 +34,18 @@ Recette complète : docs/steps/STEP-021.md. F6, tests manuels et fluidité confi
 
 FIX-STEP-021-001 : les hauteurs des lignes et du contenu défilable sont calculées
 depuis les minimums réels des boutons, avec marge finale. Voir la recette du correctif.
+
+## Propagation tactile — FIX-STEP-023-001 / STEP-024
+
+Contenus intermédiaires et boutons défilants en MOUSE_FILTER_PASS ; seuil natif de 12 px
+logiques. Correction du swipe incluse, validation Android en attente. Voir la recette
+docs/steps/FIX-STEP-023-001.md. Layout et zones sûres ne changent pas.
+
+### Révision v2 de FIX-STEP-023-001
+
+La propagation native de v1 a échoué au banc utilisateur. La v2 utilise un routeur tactile
+local aux listes/formulaire : swipe direct sans inertie et appui court unique au relâchement,
+avec suppression de la copie souris du geste. Validation F6 et Android en attente.
+
+STEP-024 v2 validée le 25 octobre 2026 : retour global F6, tests manuels et fluidité OK,
+correctifs tactiles inclus. Aucun détail séparé par geste fourni ; commit en attente.

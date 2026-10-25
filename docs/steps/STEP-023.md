@@ -112,3 +112,11 @@ dernières règles/cartes/détails. Vérifier les gestes commencés sur les bout
 les espaces libres ; un glissement ne doit ni commander une compétence, ni ouvrir ou
 modifier un gambit. Conserver les appuis courts, la molette, les zones sûres et la pause.
 Ajouter une régression ciblée et faire valider le geste sur le téléphone Android.
+
+## Clôture vérifiée — 25 octobre 2026
+
+Commit 7579504fd4a11b5b6fa1440567c597a92c67fa49, parent 307e8c6.
+Sauvegarde gambit-arena-20261025-061552-7579504fd4a1.tar.gz vérifiée ; main propre.
+260 fichiers identiques au commit et à la livraison validée, historique complet et intègre.
+Les statuts antérieurs ci-dessus décrivent la livraison de validation.
+FIX-STEP-023-001 livré dans STEP-024, en attente de validation ; voir sa recette dédiée.

@@ -100,3 +100,10 @@ journal borné. L’ordre de simulation et les règles de combat restent ceux de
 L’approche du héros est suspendue lorsque sa cible vivante est déjà à portée
 Action.REACH. Cela évite le pas supplémentaire vers la distance d’arrêt de 0.8
 entre deux engagements. La poursuite hors portée reste autorisée. Voir la recette du correctif.
+
+## Vague progressive — STEP-024
+
+Le nouveau laboratoire active WaveSchedule dans le coordinateur partagé. Apparitions
+progressives en fin de tick, quota confirmé uniquement après création, plafond simultané
+et aucun rattrapage en rafale. Les anciennes scènes gardent leur mode historique.
+Fin seulement après quota complet et disparition des ennemis ; voir docs/waves.md.

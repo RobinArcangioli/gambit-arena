@@ -415,3 +415,14 @@ F6, tests manuels et fluidité confirmés OK. SHA-256 APK communiqué :
 32a325594643055c00fa01a80a294f559be570c0bbc599bacc47680a47b005a1.
 Anomalie connue : swipe des listes Gambits/Compétences inopérant sur téléphone,
 molette fonctionnelle. Correctif demandé pour STEP-024 (FIX-STEP-023-001).
+
+## Passage à STEP-024
+
+STEP-024 : version 0.1.0-step024, code 23 ; export Debug vers
+~/gambit-arena-builds/step-024-debug.apk. Recette : docs/steps/STEP-024.md.
+FIX-STEP-023-001 inclus : confirmer le swipe sans activation parasite sur les deux listes.
+Validation utilisateur de STEP-024 v2 reçue : F6, tests manuels et fluidité OK.
+SHA-256 APK : d367d52fb3a3e6857d90c19f333d819a0b6e28d888fcab92c5a38a8dc46fcb09.
+
+STEP-024 v2 : réexporter et réinstaller step-024-debug.apk après FIX-STEP-024-001.
+Version/code inchangés ; SHA-256 v2 reçu ci-dessus, validation utilisateur globale confirmée.

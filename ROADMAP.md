@@ -97,8 +97,9 @@ qui dépend de la validation de la roadmap.
 - STEP-020 : validée et commitée — ac58190 ; sauvegarde reçue et vérifiée.
 - STEP-021 : validée et commitée — 9491d40 ; sauvegarde reçue et vérifiée, correctif inclus.
 - STEP-022 : validée et commitée — 307e8c6 ; sauvegarde reçue et vérifiée.
-- STEP-023 : Validée, commit en attente — F6, tests manuels et fluidité OK ; swipe reporté à STEP-024.
-- STEP-024 à STEP-030 : À faire.
+- STEP-023 : validée et commitée — 7579504 ; sauvegarde vérifiée ; swipe traité dans STEP-024.
+- STEP-024 : Validée, commit en attente — F6, tests manuels et fluidité OK, correctifs inclus.
+- STEP-025 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -153,8 +154,8 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Clôturer STEP-023 validée : commit, hash, statut propre et sauvegarde complète.
-STEP-024 attend clôture et nouveau GO ; intégrer FIX-STEP-023-001 (swipe Android).
+Clôturer STEP-024 validée : commit, hash, statut propre et sauvegarde complète.
+STEP-025 attend clôture et nouveau GO.
 Les mannequins sont réutilisés ; modèles riggés et animations 3D restent à produire
 et qualifier. Ils ne sont pas considérés comme acquis par les étapes historiques 2D.
 
@@ -178,14 +179,15 @@ Les parties des futures étapes concernant assets, projection, occultation et
 performance seront précisées après le prototype hybride. La production d’assets
 3D animés sera cadrée à son issue, sans présumer de modèles déjà disponibles.
 
-## FIX-STEP-023-001 — Prévu pendant STEP-024
+## FIX-STEP-023-001 — Inclus dans STEP-024 v2 validée
 
 Signalement utilisateur du 25 octobre 2026 : les zones de défilement Gambits et
 Compétences fonctionnent à la molette, mais pas par glissement du doigt sur téléphone.
 L’utilisateur valide STEP-023 et demande explicitement ce correctif à la prochaine étape.
-Statut : à faire, aucune correction de code dans cette archive. Cause à diagnostiquer.
+Statut : v1 en échec au banc tactile ; v2 validée par le retour utilisateur global.
+Voir docs/steps/FIX-STEP-023-001.md. Le signalement ci-dessus est conservé.
 
-À intégrer au périmètre de STEP-024 : rétablir le swipe dans les deux listes, jusqu’aux
+Périmètre intégré à STEP-024 v2 validée : rétablir le swipe dans les deux listes, jusqu’aux
 dernières règles/cartes/détails. Vérifier les gestes commencés sur les boutons et sur
 les espaces libres ; un glissement ne doit ni commander une compétence, ni ouvrir ou
 modifier un gambit. Conserver les appuis courts, la molette, les zones sûres et la pause.

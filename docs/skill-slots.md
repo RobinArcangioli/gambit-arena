@@ -40,3 +40,18 @@ Main ouvre désormais manual_command_lab : les trois cartes actives commandent
 une compétence, avec une attente prioritaire remplaçable de trois secondes de jeu.
 Les disponibilités, coûts et cooldowns affichés restent les mêmes. L'attente et ses
 refus sont présentés dans le détail défilable. Voir docs/manual-commands.md.
+
+## Swipe — STEP-024
+
+Cartes et contenu laissent remonter les gestes jusqu’au ScrollContainer. Un swipe natif
+annule l’appui du bouton ; appuis courts et molette sont conservés. Correctif livré,
+à confirmer sur téléphone (FIX-STEP-023-001).
+
+### Révision v2 de FIX-STEP-023-001
+
+La propagation native de v1 a échoué au banc utilisateur. La v2 utilise un routeur tactile
+local aux listes/formulaire : swipe direct sans inertie et appui court unique au relâchement,
+avec suppression de la copie souris du geste. Validation F6 et Android en attente.
+
+STEP-024 v2 validée le 25 octobre 2026 : retour global F6, tests manuels et fluidité OK,
+correctifs tactiles inclus. Aucun détail séparé par geste fourni ; commit en attente.

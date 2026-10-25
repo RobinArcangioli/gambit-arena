@@ -26,6 +26,7 @@ func _ready() -> void:
 		# Reuse the six historically reserved controls rather than duplicate them.
 		var card: Button = slots[index]
 		card.reparent(skills_content, false)
+		card.mouse_filter = Control.MOUSE_FILTER_PASS
 		card.show()
 		card.name = "SkillSlot%d" % (index + 1)
 		card.focus_mode = Control.FOCUS_NONE
@@ -128,3 +129,9 @@ func _skill_tooltip() -> String:
 
 func _details_caption(selected: Dictionary) -> String:
 	return "%s / cout %d E / delai %.1f s\n%s\nConsultation uniquement : aucun lancement." % [selected["name"], selected["cost"], selected["cooldown"], Availability.explanation(selected["state"])]
+
+func _touch_scrollers() -> Array[ScrollContainer]:
+	var result: Array[ScrollContainer] = super._touch_scrollers()
+	if slots_ready and editing_index < 0 and skills_scroll.is_visible_in_tree():
+		result.append(skills_scroll)
+	return result

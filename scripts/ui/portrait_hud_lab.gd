@@ -1,4 +1,6 @@
 extends "res://scripts/gambits/gambit_fields_lab.gd"
+const TouchRouter = preload("res://scripts/ui/touch_scroll_router.gd")
+var touch_router: TouchRouter = null
 const Layout = preload("res://scripts/ui/hud_layout.gd")
 var hud_ready: bool = false
 var status_panel: ColorRect
@@ -39,14 +41,18 @@ func _ready() -> void:
 	for index in range(3):
 		for button in [edit_buttons[index], toggle_buttons[index], up_buttons[index], down_buttons[index]]:
 			button.reparent(rules_content, false)
+			button.mouse_filter = Control.MOUSE_FILTER_PASS
 			button.add_theme_font_size_override("font_size", 16)
 			button.clip_text = true
 	form_scroll = _scroll(panel)
 	form_content = _content(form_scroll, 432)
 	for control in [target_button, condition_button, threshold_label, skill_button, explanation_label]:
 		control.reparent(form_content, false)
+		if control is BaseButton:
+			control.mouse_filter = Control.MOUSE_FILTER_PASS
 	for button in threshold_buttons:
 		button.reparent(form_content, false)
+		button.mouse_filter = Control.MOUSE_FILTER_PASS
 	for button in [target_button, condition_button, skill_button, apply_button, cancel_button, pause_button, replay, position_button]:
 		button.add_theme_font_size_override("font_size", 17)
 		button.clip_text = true
@@ -54,6 +60,9 @@ func _ready() -> void:
 	threshold_label.add_theme_font_size_override("font_size", 16)
 	rules_title.text = "Gambits / priorite de haut en bas"
 	rules_title.add_theme_font_size_override("font_size", 16)
+	touch_router = TouchRouter.new()
+	touch_router.active_scrollers = _touch_scrollers
+	add_child(touch_router)
 	hud_ready = true
 	_update_layout()
 	_refresh_rows()
@@ -82,6 +91,8 @@ func _bar(tint: Color) -> ProgressBar:
 
 func _scroll(parent: Node) -> ScrollContainer:
 	var scroller := ScrollContainer.new()
+	# Kept for native GUI inputs; raw HUD touches are owned by TouchRouter.
+	scroller.scroll_deadzone = 12
 	scroller.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroller.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	parent.add_child(scroller)
@@ -89,6 +100,8 @@ func _scroll(parent: Node) -> ScrollContainer:
 
 func _content(scroller: ScrollContainer, content_height: float) -> Control:
 	var content := Control.new()
+	# Wheel events pass STOP by default; touch drags need an unbroken PASS chain.
+	content.mouse_filter = Control.MOUSE_FILTER_PASS
 	content.custom_minimum_size = Vector2(0, content_height)
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroller.add_child(content)
@@ -256,3 +269,18 @@ func _present() -> void:
 		action_label.text = "R%d / %s : %s" % [intent["rule_index"] + 1, "Approche" if intent["approach"] else "Choix", _skill_name(intent["skill"])]
 	cooldown_label.text = "Delais : soin %.1f s / speciale %.1f s" % [fighter.action.remaining(&"heal"), fighter.action.remaining(&"special")]
 	enemies_label.text = "Ennemis %d / vaincus %d sur %d" % [simulation.enemies.size(), simulation.defeated, simulation.budget]
+
+func _touch_scrollers() -> Array[ScrollContainer]:
+	var result: Array[ScrollContainer] = []
+	if not hud_ready:
+		return result
+	if editing_index >= 0:
+		result.append(form_scroll)
+	elif rules_scroll.is_visible_in_tree():
+		result.append(rules_scroll)
+	return result
+
+func _reset() -> void:
+	if is_instance_valid(touch_router):
+		touch_router.cancel_gesture()
+	super._reset()

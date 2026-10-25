@@ -8,6 +8,9 @@ const Manual = preload("res://scripts/manual/manual_commands.gd")
 var manual := Manual.new()
 # Historical labs remain automatic; the STEP-023 lab opts into manual commands.
 var manual_enabled: bool = false
+const Wave = preload("res://scripts/waves/wave_schedule.gd")
+var wave := Wave.new()
+var wave_enabled: bool = false
 const Unit = preload("res://scripts/combat/combat_unit.gd")
 const Action = preload("res://scripts/combat/attack_action.gd")
 const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
@@ -61,7 +64,8 @@ func reset(mode: int = 0) -> void:
 	hits = 0
 	peak_alive = 0
 	max_step = 0.0
-	budget = 20 if mode == 2 else 3
+	wave.reset(24 if mode == 2 else 12, 20 if mode == 2 else 6)
+	budget = wave.total if wave_enabled else (20 if mode == 2 else 3)
 	result = "EN COURS"
 	hero = Unit.new()
 	# Local diagnostic profiles; shipped .tres Resources remain untouched.
@@ -76,13 +80,13 @@ func reset(mode: int = 0) -> void:
 	hero.name = "CombatHero"
 	world.add_child(hero)
 	hero.place(Vector2.ZERO)
-	if mode != 2:
+	if not wave_enabled and mode != 2:
 		for index in range(3):
 			add_enemy(Pattern.spawn_position(index))
 	_present()
 
 func add_enemy(at: Vector2) -> bool:
-	if result != "EN COURS" or not Action.living(hero) or spawned >= budget or enemies.size() >= 20 or not Bounds.contains_ground(at):
+	if result != "EN COURS" or not Action.living(hero) or spawned >= budget or enemies.size() >= (wave.cap if wave_enabled else 20) or not Bounds.contains_ground(at):
 		return false
 	if at.distance_to(hero.mover.ground_position) < Crowd.DIAMETER + 0.01:
 		return false
@@ -99,6 +103,8 @@ func add_enemy(at: Vector2) -> bool:
 	unit.place(at)
 	enemies.append(unit)
 	spawned += 1
+	if wave_enabled:
+		wave.confirm_spawn()
 	peak_alive = maxi(peak_alive, enemies.size())
 	return true
 
@@ -208,6 +214,16 @@ func advance(delta: float, paused: bool = false) -> void:
 			if unit.action.begin(unit, unit.mover.target) > 0:
 				var offset: Vector3 = unit.mover.target.position - unit.position
 				unit.mover.facing = Vector2(offset.x, offset.z).normalized()
+	_advance_spawning(dt)
+	_present()
+
+func _advance_spawning(dt: float) -> void:
+	if wave_enabled:
+		if wave.advance(dt, enemies.size()):
+			for attempt in range(20):
+				if add_enemy(Pattern.spawn_position((spawned + attempt) % 20)):
+					break
+		return
 	if spawned < budget:
 		spawn_clock += dt
 		if spawn_clock >= 1.0:
@@ -215,7 +231,6 @@ func advance(delta: float, paused: bool = false) -> void:
 			for attempt in range(20):
 				if add_enemy(Pattern.spawn_position((spawned + attempt) % 20)):
 					break
-	_present()
 
 func _present() -> void:
 	if is_instance_valid(hero):
