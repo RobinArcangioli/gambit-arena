@@ -1,43 +1,39 @@
-# Architecture réelle — STEP-021 validée, commit en attente
+# Architecture réelle — STEP-022 validée, commit en attente
 
-Main conserve son UID et ouvre scenes/ui/portrait_hud_lab.tscn.
-PortraitHudLab étend GambitFieldsLab sans modifier les fichiers de STEP-020.
-Les signaux existants sont conservés : boutons de règles déplacés dans un ScrollContainer,
-champs du formulaire dans un second ScrollContainer. Pas de double raccordement.
-Appliquer/Annuler restent hors du défilement ; la modalité et la pause sont héritées.
-Les résumés ont trois lignes pour rester lisibles aux largeurs réduites.
+Main conserve son UID et ouvre scenes/ui/skill_slots_lab.tscn.
+SkillSlotsLab étend PortraitHudLab sans modifier ses fichiers. Deux onglets partagent
+le pied de page : règles et compétences. Les six contrôles réservés historiques sont
+réutilisés, déplacés dans un contenu défilable ; aucun deuxième jeu de six boutons créé.
+Les trois premières cartes ont un seul callback de consultation ; les trois dernières
+sont désactivées et n'ont aucun callback. Le bouton ne demande jamais d'action.
 
-HudLayout est un calcul de rectangles sans état de jeu. Il intersecte la zone sûre avec
-le viewport et retombe sur ce dernier si la zone reçue est vide, non finie ou disjointe.
-Sur Android, la zone physique est convertie par l'inverse du screen_transform avant
-intersection. HUD et arène appliquent l'offset sûr une seule fois. Le voile modal couvre
-le viewport entier, son panneau reste dans la zone sûre. Un override logique est réservé
-au banc F6 ; aucun bouton utilisateur n'active ce mode diagnostic.
+SkillAvailability décrit six entrées à partir d'un GambitSnapshot, sans référence
+persistante à des acteurs. Trois compétences fixes utilisent les constantes de coût,
+cooldown et portée de SkillExecutor. Les trois entrées réservées restent inactives.
+La validation du snapshot précède toute lecture. Les sorties sont nouvelles à chaque
+appel ; aucun snapshot, acteur, état, journal ou exécuteur n'est modifié.
 
-Le HUD comporte en-tête, état chiffré, arène et pied de page sans superposition. La
-hauteur de liste varie ; ses trois règles restent atteignables par défilement. Le panneau
-modal est limité à 616 px et à la hauteur sûre moins 24 px. Ses champs peuvent défiler,
-ses commandes restent fixes. Recette sur zones utiles de 360 × 640 à 768 × 1024 et
-formats allongés ; les tailles inférieures ne constituent pas une cible validée.
+Priorité d'affichage : entrée invalide, héros mort, combat terminé, pause, action occupée,
+cooldown, soin inutile, énergie insuffisante, cible absente/hors portée, prêt.
+Pour les attaques, l'ennemi vivant le plus proche est utilisé ; égalité départagée par
+ID stable. Le soin vise soi-même. Cela décrit la disponibilité immédiate indépendamment
+des conditions et priorités des gambits ; cela ne réserve aucune cible pour STEP-023.
+L'exécuteur reste la seule autorité d'exécution. Les futurs clics devront revalider.
 
-La projection orthographique ajuste uniquement son cadrage : au plus 48 px par unité,
-largeur visible minimale 10.2 unités et hauteur minimale 6.8 unités. Cela réserve de la
-place au sol et aux mannequins quand la zone d'arène se réduit. Les positions physiques,
-rotations et poses ne sont pas modifiées par le HUD.
+L'adaptation utilise Capture.capture. Comme celui-ci omet les sources mortes pour la
+planification, la vue de présentation fournit leurs valeurs scalaires pour afficher
+Mort au lieu d'une erreur générique. La copie ne conserve aucune référence d'acteur.
+Les délais restants sont arrondis vers le haut au dixième pour éviter un 0.0 prématuré.
+Le coût et le cooldown nominal sont disponibles dans le détail de la carte sélectionnée.
+La consultation fonctionne en pause et après fin ; elle ne reprend pas le combat.
 
-L'affichage lit PV/max PV, énergie/60, action réellement engagée (ou intention courante),
-cooldowns, ennemis vivants et vaincus. Il n'invente pas un compteur de vagues. Les barres
-ont aussi des valeurs numériques. Les délais et états restent figés par la même horloge.
-Le résultat terminal est visible dans l'en-tête. L'affichage n'émet aucune action de jeu.
+Les onglets restent hors défilement et sont bloqués par le formulaire modal. Les hauteurs
+de cartes et de contenu tiennent compte des minimums réels ; le bas est accessible par
+scroll. La vue et la sélection survivent à Rejouer/scénario, comme la configuration.
+Aucun état de consultation n'est sauvegardé sur disque. Les anciennes scènes restent intactes.
 
-La disposition est recalculée sur resize et reprise ; une vérification toutes les 0.25 s
-réagit aussi aux changements de zone sûre sans resize. Ce temps UI ne fait pas avancer
-GameClock. Les six emplacements manuels restent masqués, en attente de STEP-022.
-
-Simulation, actions, compétences, déplacements, mannequin, contrôleur, évaluateur,
-modèle d'éditeur et anciens tests sont identiques à STEP-020, correctif d'immobilité inclus.
-Le banc HUD compare aussi la chronologie d'un combat avec celle du laboratoire STEP-020.
-Godot non exécuté chez l'assistant. Version 0.1.0-step021, code 20.
-
-FIX-STEP-021-001 : les hauteurs des lignes et du contenu défilable sont calculées
-depuis les minimums réels des boutons, avec marge finale. Voir la recette du correctif.
+Tous les fichiers de combat, compétences, actions, animation, mouvement, horloge,
+évaluation, contrôle, édition et HUD STEP-021 sont identiques à la base vérifiée.
+Le banc teste les états, seuils de coût/portée, pureté, lecture, pause, défilement et un
+combat identique à STEP-021 malgré les consultations répétées. Godot non exécuté ici.
+Version 0.1.0-step022, code 21. Pas de commande manuelle ni de file d'attente ajoutée.

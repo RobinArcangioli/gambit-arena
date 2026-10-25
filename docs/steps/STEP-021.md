@@ -128,3 +128,10 @@ Statut : Validée, commit en attente. Hash et sauvegarde à recevoir.
 
 Empreinte STEP-021 v2 corrigée par l’utilisateur : 224dfb87269dd7cd4a955eb3813711fdfb6c72b68af8e060ffa39a5d94a68b35.
 La première empreinte transmise répétait celle de STEP-020 par erreur.
+
+## Clôture vérifiée — 25 octobre 2026
+
+Commit 9491d40df3d396cf4f8532d603b4edaaf5d03176, parent ac58190.
+Main propre ; sauvegarde gambit-arena-20261025-023405-9491d40df3d3.tar.gz vérifiée.
+Historique complet et intègre ; 240 fichiers identiques au commit et à la livraison validée.
+Le statut « commit en attente » ci-dessus décrit la livraison de validation antérieure.
