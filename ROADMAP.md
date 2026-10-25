@@ -94,8 +94,9 @@ qui dépend de la validation de la roadmap.
 - STEP-017 : validée et commitée — 5b2bc4d ; sauvegarde reçue et vérifiée.
 - STEP-018 : validée et commitée — 4719e8d ; sauvegarde reçue et vérifiée.
 - STEP-019 : validée et commitée — 4125d44 ; sauvegarde reçue et vérifiée, correctif inclus.
-- STEP-020 : Validée, commit en attente — F6, tests manuels et fluidité OK.
-- STEP-021 à STEP-030 : À faire.
+- STEP-020 : validée et commitée — ac58190 ; sauvegarde reçue et vérifiée.
+- STEP-021 : Validée, commit en attente — F6, tests manuels et fluidité OK.
+- STEP-022 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -150,8 +151,8 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Clôturer STEP-020 validée : commit, hash, statut propre et sauvegarde complète.
-STEP-021 attend clôture et nouveau GO.
+Clôturer STEP-021 validée : commit, hash, statut propre et sauvegarde complète.
+STEP-022 attend clôture et nouveau GO.
 Les mannequins sont réutilisés ; modèles riggés et animations 3D restent à produire
 et qualifier. Ils ne sont pas considérés comme acquis par les étapes historiques 2D.
 

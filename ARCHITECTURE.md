@@ -1,34 +1,43 @@
-# Architecture réelle — STEP-020 validée, commit en attente
+# Architecture réelle — STEP-021 validée, commit en attente
 
-Main conserve son UID et ouvre scenes/gambits/gambit_fields_lab.tscn.
-GambitFieldsLab étend le laboratoire éditeur STEP-019. Ses trois résumés sont désormais
-des boutons qui ouvrent un formulaire modal. Un brouillon Dictionary contient quatre
-scalaires : target, condition, threshold, skill. L'activation reste propriété de la ligne.
-Le formulaire met paused et GameClock.paused à true. Appliquer/Annuler ferment le
-formulaire sans reprendre le temps. Les raccourcis et commandes sous-jacentes sont
-bloqués pendant l'édition ; Échap annule. L'arrière-plan conserve pause et brouillon.
+Main conserve son UID et ouvre scenes/ui/portrait_hud_lab.tscn.
+PortraitHudLab étend GambitFieldsLab sans modifier les fichiers de STEP-020.
+Les signaux existants sont conservés : boutons de règles déplacés dans un ScrollContainer,
+champs du formulaire dans un second ScrollContainer. Pas de double raccordement.
+Appliquer/Annuler restent hors du défilement ; la modalité et la pause sont héritées.
+Les résumés ont trois lignes pour rester lisibles aux largeurs réduites.
 
-GambitEditor.validate_fields refuse les clés manquantes/supplémentaires, types incorrects,
-options inconnues, seuil non entier ou hors 0..100 et couples cible/action incompatibles.
-Soin nécessite Soi ; Attaque et Spéciale nécessitent Ennemi. update_fields applique
-une nouvelle Resource d'un seul coup, en conservant enabled et la position. L'appelant
-ne partage aucune référence modifiable. Un changement accepté émet changed une fois ;
-un refus ou une sauvegarde sans différence n'émet rien et ne modifie pas l'intention.
+HudLayout est un calcul de rectangles sans état de jeu. Il intersecte la zone sûre avec
+le viewport et retombe sur ce dernier si la zone reçue est vide, non finie ou disjointe.
+Sur Android, la zone physique est convertie par l'inverse du screen_transform avant
+intersection. HUD et arène appliquent l'offset sûr une seule fois. Le voile modal couvre
+le viewport entier, son panneau reste dans la zone sûre. Un override logique est réservé
+au banc F6 ; aucun bouton utilisateur n'active ce mode diagnostic.
 
-Le raccordement STEP-019 invalide toute intention en attente lors d'un changement réel
-puis transmet une copie au contrôleur. Une action engagée garde son coût, sa cible et
-son exécuteur. Ni l'ouverture ni les ajustements du brouillon ne publient une règle.
-Annuler n'altère pas l'intention en attente. Rejouer et scénario conservent les champs.
+Le HUD comporte en-tête, état chiffré, arène et pied de page sans superposition. La
+hauteur de liste varie ; ses trois règles restent atteignables par défilement. Le panneau
+modal est limité à 616 px et à la hauteur sûre moins 24 px. Ses champs peuvent défiler,
+ses commandes restent fixes. Recette sur zones utiles de 360 × 640 à 768 × 1024 et
+formats allongés ; les tailles inférieures ne constituent pas une cible validée.
 
-Le résumé du laboratoire de base est rendu depuis les valeurs réelles des règles,
-y compris le seuil. Les anciens résumés des trois règles standard gardent leur sens.
-Toujours ignore le seuil mais conserve sa valeur. PV < seuil est strict et porte sur
-la cible de la règle ; le soin inutile à PV pleins reste refusé par l'évaluateur.
+La projection orthographique ajuste uniquement son cadrage : au plus 48 px par unité,
+largeur visible minimale 10.2 unités et hauteur minimale 6.8 unités. Cela réserve de la
+place au sol et aux mannequins quand la zone d'arène se réduit. Les positions physiques,
+rotations et poses ne sont pas modifiées par le HUD.
 
-GambitRule, GambitEvaluator, GambitController, CombatSimulation, GameClock,
-SkillExecutor, AttackAction, mannequin, acteurs, profils et mouvement/contact sont
-identiques à STEP-019. FIX-STEP-019-001 est conservé octet pour octet.
-Les anciens laboratoires et tests restent disponibles. Un nouveau banc teste validation,
-atomicité, copies, bornes, application réelle, modalité, pause, action engagée et resets.
-Godot non exécuté chez l'assistant. Version 0.1.0-step020, code 19.
-Aucune compétence supplémentaire, commande manuelle ou persistance ajoutée.
+L'affichage lit PV/max PV, énergie/60, action réellement engagée (ou intention courante),
+cooldowns, ennemis vivants et vaincus. Il n'invente pas un compteur de vagues. Les barres
+ont aussi des valeurs numériques. Les délais et états restent figés par la même horloge.
+Le résultat terminal est visible dans l'en-tête. L'affichage n'émet aucune action de jeu.
+
+La disposition est recalculée sur resize et reprise ; une vérification toutes les 0.25 s
+réagit aussi aux changements de zone sûre sans resize. Ce temps UI ne fait pas avancer
+GameClock. Les six emplacements manuels restent masqués, en attente de STEP-022.
+
+Simulation, actions, compétences, déplacements, mannequin, contrôleur, évaluateur,
+modèle d'éditeur et anciens tests sont identiques à STEP-020, correctif d'immobilité inclus.
+Le banc HUD compare aussi la chronologie d'un combat avec celle du laboratoire STEP-020.
+Godot non exécuté chez l'assistant. Version 0.1.0-step021, code 20.
+
+FIX-STEP-021-001 : les hauteurs des lignes et du contenu défilable sont calculées
+depuis les minimums réels des boutons, avec marge finale. Voir la recette du correctif.

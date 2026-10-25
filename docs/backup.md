@@ -218,3 +218,10 @@ STEP-020 reste en attente de validation ; ne pas commiter avant le retour utilis
 
 STEP-020 validée : appliquer l’archive de validation, commiter puis lancer
 `bash tools/create_backup.sh`. Transmettre la sauvegarde produite pour vérification.
+
+STEP-020 clôturée au commit ac58190 : sauvegarde du 25 octobre 2026 reçue et vérifiée,
+229 fichiers identiques au commit et à la livraison validée ; bundle complet et intègre.
+STEP-021 reste en attente de validation ; ne pas commiter avant le retour utilisateur.
+
+STEP-021 validée : appliquer l’archive de validation, commiter puis lancer
+`bash tools/create_backup.sh`. Transmettre la sauvegarde produite pour vérification.
