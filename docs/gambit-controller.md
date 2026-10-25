@@ -87,3 +87,11 @@ STEP-017 validée, commit en attente. Voir docs/steps/STEP-017.md.
 Le contrôleur dispose maintenant d’un journal de 64 entrées maximum et de la
 dernière explication (trois motifs maximum). Le diagnostic est désactivable et ne
 pilote pas le gameplay. Reset efface les données collectées. Voir docs/gambit-diagnostics.md.
+
+## Arbitrage manuel — STEP-023
+
+Le contrôleur demeure l'unique pilote automatique. CombatSimulation lui donne la main
+seulement lorsqu'aucune commande manuelle valide n'attend. Un appui accepté appelle
+stop pour oublier l'intention automatique, sans interrompre l'action engagée. Après
+expiration ou perte de cible, une nouvelle évaluation automatique est possible.
+Les compteurs manuels sont distincts ; voir docs/manual-commands.md.

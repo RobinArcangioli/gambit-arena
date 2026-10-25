@@ -96,8 +96,9 @@ qui dépend de la validation de la roadmap.
 - STEP-019 : validée et commitée — 4125d44 ; sauvegarde reçue et vérifiée, correctif inclus.
 - STEP-020 : validée et commitée — ac58190 ; sauvegarde reçue et vérifiée.
 - STEP-021 : validée et commitée — 9491d40 ; sauvegarde reçue et vérifiée, correctif inclus.
-- STEP-022 : Validée, commit en attente — F6, tests manuels et fluidité OK.
-- STEP-023 à STEP-030 : À faire.
+- STEP-022 : validée et commitée — 307e8c6 ; sauvegarde reçue et vérifiée.
+- STEP-023 : Validée, commit en attente — F6, tests manuels et fluidité OK ; swipe reporté à STEP-024.
+- STEP-024 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -152,8 +153,8 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Clôturer STEP-022 validée : commit, hash, statut propre et sauvegarde complète.
-STEP-023 attend clôture et nouveau GO.
+Clôturer STEP-023 validée : commit, hash, statut propre et sauvegarde complète.
+STEP-024 attend clôture et nouveau GO ; intégrer FIX-STEP-023-001 (swipe Android).
 Les mannequins sont réutilisés ; modèles riggés et animations 3D restent à produire
 et qualifier. Ils ne sont pas considérés comme acquis par les étapes historiques 2D.
 
@@ -176,3 +177,16 @@ Le gameplay MVP, le déplacement automatique et les gambits restent dans le pér
 Les parties des futures étapes concernant assets, projection, occultation et
 performance seront précisées après le prototype hybride. La production d’assets
 3D animés sera cadrée à son issue, sans présumer de modèles déjà disponibles.
+
+## FIX-STEP-023-001 — Prévu pendant STEP-024
+
+Signalement utilisateur du 25 octobre 2026 : les zones de défilement Gambits et
+Compétences fonctionnent à la molette, mais pas par glissement du doigt sur téléphone.
+L’utilisateur valide STEP-023 et demande explicitement ce correctif à la prochaine étape.
+Statut : à faire, aucune correction de code dans cette archive. Cause à diagnostiquer.
+
+À intégrer au périmètre de STEP-024 : rétablir le swipe dans les deux listes, jusqu’aux
+dernières règles/cartes/détails. Vérifier les gestes commencés sur les boutons et sur
+les espaces libres ; un glissement ne doit ni commander une compétence, ni ouvrir ou
+modifier un gambit. Conserver les appuis courts, la molette, les zones sûres et la pause.
+Ajouter une régression ciblée et faire valider le geste sur le téléphone Android.

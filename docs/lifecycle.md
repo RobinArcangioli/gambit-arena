@@ -40,3 +40,10 @@ La recette Android inclut accueil, retour et verrouillage ; validation moteur re
 
 F6, tests manuels et fluidité confirmés OK par l’utilisateur.
 STEP-015 validée, commit en attente. Voir docs/steps/STEP-015.md.
+
+## Attente manuelle — STEP-023
+
+Une commande attend au plus trois secondes de GameClock.elapsed ; pause et arrière-plan
+figent son échéance. Nouveaux appuis refusés en pause. Mort/sortie d'arbre des participants
+annulent l'attente via signaux ; reset/scénario/fin la nettoient. Aucun coût n'est engagé
+par une simple attente. Une action déjà engagée reste sous le cycle de vie existant.

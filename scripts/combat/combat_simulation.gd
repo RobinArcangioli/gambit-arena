@@ -4,6 +4,10 @@ const GameClock = preload("res://scripts/core/game_clock.gd")
 var clock := GameClock.new()
 const Controller = preload("res://scripts/gambits/gambit_controller.gd")
 var controller := Controller.new()
+const Manual = preload("res://scripts/manual/manual_commands.gd")
+var manual := Manual.new()
+# Historical labs remain automatic; the STEP-023 lab opts into manual commands.
+var manual_enabled: bool = false
 const Unit = preload("res://scripts/combat/combat_unit.gd")
 const Action = preload("res://scripts/combat/attack_action.gd")
 const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
@@ -29,6 +33,7 @@ func configure(parent_world: Node3D) -> void:
 	world = parent_world
 
 func clear() -> void:
+	manual.clear()
 	controller.stop(hero, "clear", clock.elapsed)
 	for unit in enemies:
 		_dispose(unit)
@@ -47,6 +52,7 @@ func reset(mode: int = 0) -> void:
 	clear()
 	clock.reset()
 	controller.reset()
+	manual.reset()
 	elapsed = 0.0
 	spawn_clock = 0.0
 	spawned = 0
@@ -115,6 +121,7 @@ func _finish_if_needed() -> bool:
 	else:
 		return false
 	clock.stopped = true
+	manual.clear("terminal")
 	controller.stop(hero, "terminal", clock.elapsed)
 	for unit in enemies:
 		unit.action.retire()
@@ -130,6 +137,8 @@ func _choose_enemy_targets() -> void:
 		unit.mover.set_target(hero)
 
 func advance(delta: float, paused: bool = false) -> void:
+	if manual.pending and (not manual_enabled or clock.stopped or not Action.living(hero)):
+		manual.clear("terminal")
 	if paused or not clock.permits_gameplay() or result != "EN COURS" or not is_finite(delta) or delta <= 0.0:
 		return
 	_prune()
@@ -137,7 +146,9 @@ func advance(delta: float, paused: bool = false) -> void:
 		return
 	var dt: float = clock.step(delta)
 	elapsed = clock.elapsed
-	controller.plan(dt, hero, enemies, clock)
+	var manual_priority: bool = manual_enabled and manual.prepare(hero, enemies, clock)
+	if not manual_priority:
+		controller.plan(dt, hero, enemies, clock)
 	_choose_enemy_targets()
 	var units: Array[Unit] = [hero]
 	units.append_array(enemies)
@@ -183,7 +194,13 @@ func advance(delta: float, paused: bool = false) -> void:
 	if _finish_if_needed():
 		return
 	_choose_enemy_targets()
-	controller.execute(hero, enemies, clock)
+	if manual_enabled and manual.prepare(hero, enemies, clock, false):
+		manual.execute(hero, enemies, clock)
+	else:
+		# A target can die during existing impacts; resume gambits on this tick.
+		if manual_priority:
+			controller.plan(dt, hero, enemies, clock)
+		controller.execute(hero, enemies, clock)
 	units.assign(enemies)
 	# Newly engaged actions receive no time until the next common tick.
 	for unit in units:
@@ -205,3 +222,15 @@ func _present() -> void:
 		hero.present()
 	for unit in enemies:
 		unit.present()
+
+func request_manual(skill: StringName) -> bool:
+	if not manual_enabled or result != "EN COURS":
+		return false
+	if not manual.submit(skill, hero, enemies, clock):
+		return false
+	# Forget only the automatic intention, never interrupt the executor.
+	controller.stop(hero, "manual", clock.elapsed)
+	return true
+
+func _exit_tree() -> void:
+	manual.clear()

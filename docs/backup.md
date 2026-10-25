@@ -232,3 +232,11 @@ STEP-022 reste en attente de validation ; ne pas commiter avant le retour utilis
 
 STEP-022 validée : appliquer l’archive de validation, commiter puis lancer
 `bash tools/create_backup.sh`. Transmettre la sauvegarde produite pour vérification.
+
+STEP-022 clôturée au commit 307e8c6 : sauvegarde du 25 octobre 2026 reçue et vérifiée,
+250 fichiers identiques au commit et à la livraison validée ; bundle complet et intègre.
+STEP-023 reste en attente de validation ; ne pas commiter avant le retour utilisateur.
+
+STEP-023 validée : appliquer l’archive de validation, commiter puis lancer
+`bash tools/create_backup.sh`. Transmettre la sauvegarde produite pour vérification.
+FIX-STEP-023-001 (swipe Android) est planifié pour STEP-024, sans changement de code ici.

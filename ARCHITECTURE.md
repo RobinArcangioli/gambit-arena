@@ -1,39 +1,57 @@
-# Architecture réelle — STEP-022 validée, commit en attente
+# Architecture réelle — STEP-023 validée, commit en attente
 
-Main conserve son UID et ouvre scenes/ui/skill_slots_lab.tscn.
-SkillSlotsLab étend PortraitHudLab sans modifier ses fichiers. Deux onglets partagent
-le pied de page : règles et compétences. Les six contrôles réservés historiques sont
-réutilisés, déplacés dans un contenu défilable ; aucun deuxième jeu de six boutons créé.
-Les trois premières cartes ont un seul callback de consultation ; les trois dernières
-sont désactivées et n'ont aucun callback. Le bouton ne demande jamais d'action.
+Main conserve son UID et ouvre scenes/manual/manual_command_lab.tscn.
+ManualCommandLab étend SkillSlotsLab et active simulation.manual_enabled.
+Les anciens laboratoires restent automatiques ; skill_slots_lab conserve ses callbacks
+de consultation, via les deux méthodes de texte surchargeables ajoutées à son script.
+Les six contrôles existants sont réutilisés, sans ajout de boutons ou de connexions.
 
-SkillAvailability décrit six entrées à partir d'un GambitSnapshot, sans référence
-persistante à des acteurs. Trois compétences fixes utilisent les constantes de coût,
-cooldown et portée de SkillExecutor. Les trois entrées réservées restent inactives.
-La validation du snapshot précède toute lecture. Les sorties sont nouvelles à chaque
-appel ; aucun snapshot, acteur, état, journal ou exécuteur n'est modifié.
+ManualCommands est un RefCounted attaché au coordinateur. Il contient au plus une
+intention : compétence, références source/cible, leurs ActorState et une échéance sur
+GameClock.elapsed. snapshot() restitue uniquement une nouvelle copie de valeurs.
+L'appui choisit soi pour Soin, sinon le plus proche ennemi vivant ; égalité par ID stable.
+Une cible absente, une compétence inconnue, la pause ou la fin font refuser l'appui
+sans remplacer l'attente existante. Occupé, cooldown, énergie, PV pleins et portée sont
+réévalués pendant l'attente. Une commande acceptée ne dépense rien dans le callback.
 
-Priorité d'affichage : entrée invalide, héros mort, combat terminé, pause, action occupée,
-cooldown, soin inutile, énergie insuffisante, cible absente/hors portée, prêt.
-Pour les attaques, l'ennemi vivant le plus proche est utilisé ; égalité départagée par
-ID stable. Le soin vise soi-même. Cela décrit la disponibilité immédiate indépendamment
-des conditions et priorités des gambits ; cela ne réserve aucune cible pour STEP-023.
-L'exécuteur reste la seule autorité d'exécution. Les futurs clics devront revalider.
+CombatSimulation.request_manual accepte puis oublie l'intention automatique via
+controller.stop, qui ne coupe jamais l'action engagée. Sur chaque tick autorisé :
+1. Prune/fin, puis avance unique de GameClock.
+2. Validation/expiration manuelle ; si attente valide, elle fournit l'approche et les
+   gambits ne planifient pas. Sinon, planification automatique historique.
+3. Déplacements et séparation, avec l'arrêt à portée inchangé (FIX-STEP-019-001).
+4. Avance des actions existantes, prune et éventuelle fin.
+5. Nouvelle revalidation de la commande manuelle, sinon exécution automatique.
+   Si sa cible disparaît pendant les impacts, les gambits peuvent reprendre ce tick.
+6. Engagements ennemis, apparitions et présentation historiques.
 
-L'adaptation utilise Capture.capture. Comme celui-ci omet les sources mortes pour la
-planification, la vue de présentation fournit leurs valeurs scalaires pour afficher
-Mort au lieu d'une erreur générique. La copie ne conserve aucune référence d'acteur.
-Les délais restants sont arrondis vers le haut au dixième pour éviter un 0.0 prématuré.
-Le coût et le cooldown nominal sont disponibles dans le détail de la carte sélectionnée.
-La consultation fonctionne en pause et après fin ; elle ne reprend pas le combat.
+La validation de fin de tick ne réécrit pas la vitesse de déplacement : les jambes
+continuent de marcher pendant une approche réelle. L'expiration est inclusive à trois
+secondes de temps de jeu (tolérance numérique 1e-6). Une commande remplacée repart
+pour trois secondes. Les grands deltas restent bornés par GameClock.MAX_STEP.
+Le soin n'approche personne ; une attaque approche sa cible verrouillée, même si elle
+attend encore une ressource ou un cooldown. Les gambits attendent derrière elle.
 
-Les onglets restent hors défilement et sont bloqués par le formulaire modal. Les hauteurs
-de cartes et de contenu tiennent compte des minimums réels ; le bas est accessible par
-scroll. La vue et la sélection survivent à Rejouer/scénario, comme la configuration.
-Aucun état de consultation n'est sauvegardé sur disque. Les anciennes scènes restent intactes.
+Au lancement, SkillExecutor.request reste l'unique autorité : vivant, pause/arrêt,
+acteur non retiré, état, occupation, cooldown, utilité du soin, coût, cible et portée.
+Paiement, cooldown, windup, impact unique et récupération ne sont pas modifiés.
+L'intention manuelle est consommée après succès ; aucun rejeu automatique de cette
+commande. Une action engagée continue même si l'attente suivante expire/remplace.
+La mort/destruction des participants annule l'attente via signaux ; changement d'état
+ou retrait de la liste est détecté à la revalidation. Les connexions sont retirées
+à la consommation, au remplacement, à l'annulation et à la destruction du coordinateur.
+Rejouer/scénario efface l'attente et les compteurs ; la pause survit comme auparavant.
 
-Tous les fichiers de combat, compétences, actions, animation, mouvement, horloge,
-évaluation, contrôle, édition et HUD STEP-021 sont identiques à la base vérifiée.
-Le banc teste les états, seuils de coût/portée, pureté, lecture, pause, défilement et un
-combat identique à STEP-021 malgré les consultations répétées. Godot non exécuté ici.
-Version 0.1.0-step022, code 21. Pas de commande manuelle ni de file d'attente ajoutée.
+Les compteurs manuels sont distincts des compteurs gambits. Sans appels directs de test,
+hero.action.accepted = controller.launched + manual.launched pour la partie courante.
+Le journal borné historique reste consacré aux gambits ; l'état manuel expose uniquement
+la dernière issue et des compteurs, sans liste croissante. L'UI montre l'attente et son
+reste dans l'en-tête, les détails et refus sous la grille. Les cartes affichent toujours
+la disponibilité immédiate ; celle-ci ne réserve pas une nouvelle cible pour l'attente.
+
+Nouveaux scripts : manual_commands.gd, manual_command_lab.gd, test_manual_commands.gd.
+Logique historique modifiée : arbitrage dans CombatSimulation uniquement.
+SkillSlotsLab reçoit deux méthodes de texte surchargeables, sans changer son comportement.
+Action, exécuteur, contrôleur gambit, animation, mouvement, profils, horloge, layout et
+anciens tests sont identiques à la base vérifiée 307e8c6.
+Version Android 0.1.0-step023, code 22. Contrôles statiques ici ; validation utilisateur reçue, swipe Android restant à corriger.

@@ -115,10 +115,16 @@ func _refresh_skills() -> void:
 		changed_text = changed_text or skill_cards[index].text != caption_text
 		skill_cards[index].text = caption_text
 		skill_cards[index].modulate = Color("c1f1d2") if row["state"] == "ready" else Color.WHITE
-		skill_cards[index].tooltip_text = "Consulter les details" if index < 3 else "Emplacement reserve"
+		skill_cards[index].tooltip_text = _skill_tooltip() if index < 3 else "Emplacement reserve"
 	var selected: Dictionary = slot_states[selected_slot]
-	var details_text: String = "%s / cout %d E / delai %.1f s\n%s\nConsultation uniquement : aucun lancement." % [selected["name"], selected["cost"], selected["cooldown"], Availability.explanation(selected["state"])]
+	var details_text: String = _details_caption(selected)
 	changed_text = changed_text or skill_details.text != details_text
 	skill_details.text = details_text
 	if changed_text:
 		call_deferred("_update_layout")
+
+func _skill_tooltip() -> String:
+	return "Consulter les details"
+
+func _details_caption(selected: Dictionary) -> String:
+	return "%s / cout %d E / delai %.1f s\n%s\nConsultation uniquement : aucun lancement." % [selected["name"], selected["cost"], selected["cooldown"], Availability.explanation(selected["state"])]

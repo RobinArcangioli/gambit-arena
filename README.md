@@ -1,30 +1,33 @@
-# Gambit Arena — STEP-022
+# Gambit Arena — STEP-023
 
 Prototype Godot Android portrait avec mannequins 3D temporaires.
-STEP-021 clôturée au commit 9491d40 ; STEP-022 validée, commit en attente.
-F6, tests manuels et fluidité confirmés OK par l’utilisateur.
+STEP-022 clôturée au commit 307e8c6 ; STEP-023 validée, commit en attente.
+F6, tests manuels et fluidité confirmés OK ; anomalie de swipe reportée à STEP-024.
 
-F5 : onglets Compétences et Gambits. Six emplacements en deux rangées de trois :
-Attaque, Soin, Spéciale, puis trois réservés désactivés. Les compétences montrent coût,
-délai restant et disponibilité immédiate : prêt, pause, occupé, délai, énergie,
-PV pleins, sans cible, hors portée, mort ou fin du combat.
-Appuyer sur une compétence consulte son explication ; aucun lancement manuel à cette
-étape. L'exécution manuelle et son attente prioritaire appartiennent à STEP-023.
+F5 : les trois cartes Attaque, Soin et Spéciale commandent maintenant une compétence.
+Une seule commande attend, prioritaire sur les gambits, pendant trois secondes de temps
+de jeu. Un nouvel appui valide la remplace et renouvelle ce délai. L'action déjà engagée
+se termine normalement ; le nouvel appui ne la coupe pas. Les trois réserves restent inactives.
 
-L'onglet Gambits conserve activation, ordre et formulaire de STEP-020/021. Les deux
-listes défilent si nécessaire, sans réduire l'arène. Le formulaire bloque les onglets.
-Combat, animations, immobilité à portée et zones sûres restent inchangés.
+Les attaques ciblent l'ennemi vivant le plus proche au moment de l'appui, avec approche
+si nécessaire. Cette cible reste verrouillée pour la commande ; sa disparition annule
+l'attente. Le soin vise soi-même. L'exécuteur partagé revalide avant tout coût/effet.
+En pause : compteur figé, nouveaux appuis refusés. Rejouer efface l'attente et conserve
+les gambits et la pause. Les gambits reprennent après exécution, expiration ou annulation.
+Le détail sous les cartes précise l'attente, le motif et les refus ; il reste défilable.
 
-F6 : skill_slots_tests, portrait_hud_tests, gambit_fields_tests,
-attack_stationary_tests, gambit_editor_tests, gambit_diagnostics_tests,
-gambit_controller_tests, gambit_tests, lifecycle_tests et combat_simulation_tests.
+Sans appui manuel, le combat automatique suit le même chemin qu'en STEP-022.
+Animations et correctif d'immobilité à portée inchangés.
+La scène historique skill_slots_lab conserve la consultation seule pour sa régression.
+
+F6 : manual_commands_tests, puis les dix bancs de régression listés dans la recette.
 F8 entre les bancs. Attendu : OK, zéro échec et aucun nouvel avertissement.
-Godot non exécuté chez l'assistant ; validation utilisateur globale reçue.
+Godot non installé chez l'assistant : aucune compilation ni exécution F6 réalisée ici.
 
-- [Recette STEP-022](docs/steps/STEP-022.md)
-- [Emplacements](docs/skill-slots.md), [HUD](docs/portrait-hud.md)
+- [Recette STEP-023](docs/steps/STEP-023.md)
+- [Commande manuelle](docs/manual-commands.md), [emplacements](docs/skill-slots.md)
 - [Architecture](ARCHITECTURE.md), [état](PROJECT_STATUS.md), [roadmap](ROADMAP.md)
 - [Android](docs/android.md), [sauvegarde](docs/backup.md)
 
-Version Android 0.1.0-step022, code 21. Export Debug hors dépôt.
+Version Android 0.1.0-step023, code 22. Export Debug hors dépôt.
 Validation reçue : commit puis sauvegarde complète à effectuer.

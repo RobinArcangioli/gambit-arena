@@ -32,3 +32,11 @@ L'état affiché n'est pas une garantie pour un futur engagement : il faudra rev
 cible, portée, coût, cooldown et cycle de vie au moment de la commande STEP-023.
 
 Recette et tests : docs/steps/STEP-022.md. F6, tests manuels et fluidité confirmés OK par l’utilisateur ; commit en attente.
+
+## Extension STEP-023
+
+Le comportement de consultation décrit ci-dessus reste celui de skill_slots_lab.
+Main ouvre désormais manual_command_lab : les trois cartes actives commandent
+une compétence, avec une attente prioritaire remplaçable de trois secondes de jeu.
+Les disponibilités, coûts et cooldowns affichés restent les mêmes. L'attente et ses
+refus sont présentés dans le détail défilable. Voir docs/manual-commands.md.

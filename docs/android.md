@@ -406,3 +406,12 @@ STEP-022 : version 0.1.0-step022, code 21. Export Debug avec débogage vers
 ~/gambit-arena-builds/step-022-debug.apk. Recette : docs/steps/STEP-022.md.
 F6, tests manuels et fluidité confirmés OK. SHA-256 APK communiqué :
 2c3c52c1d17d10049a037dac8a7618ee197f54b6d2099bbf1473e7dc0a77366d.
+
+## Passage à STEP-023
+
+STEP-023 : version 0.1.0-step023, code 22. Export Debug avec débogage vers
+~/gambit-arena-builds/step-023-debug.apk. Recette : docs/steps/STEP-023.md.
+F6, tests manuels et fluidité confirmés OK. SHA-256 APK communiqué :
+32a325594643055c00fa01a80a294f559be570c0bbc599bacc47680a47b005a1.
+Anomalie connue : swipe des listes Gambits/Compétences inopérant sur téléphone,
+molette fonctionnelle. Correctif demandé pour STEP-024 (FIX-STEP-023-001).
