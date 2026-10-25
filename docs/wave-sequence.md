@@ -47,3 +47,15 @@ wave_sequence_tests vérifie les transitions à 30/60/120 Hz avec éliminations 
 mort simultanée et soin engagé. Un combat réel utilise un héros durable uniquement dans
 le banc pour isoler l’enchaînement de l’équilibrage. Le laboratoire conserve ses profils.
 Godot non exécuté chez l’assistant. Recette matérielle dans docs/steps/STEP-025.md.
+
+## STEP-026 — En attente de validation
+
+Base clôturée f62162d, fix1 inclus. Fin de partie unique, bilan figé et nettoyage des
+actions/cibles au redémarrage. Nouveau banc run_lifecycle_tests.tscn.
+Recette : docs/steps/STEP-026.md. Android 0.1.0-step026, code 26,
+export step-026-debug.apk ; aucun nouveau SHA d’APK reçu.
+Les mentions des étapes précédentes sont historiques. Commit après validation.
+
+STEP-026 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
+Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
+APK : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.

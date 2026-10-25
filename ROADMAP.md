@@ -99,8 +99,9 @@ qui dépend de la validation de la roadmap.
 - STEP-022 : validée et commitée — 307e8c6 ; sauvegarde reçue et vérifiée.
 - STEP-023 : validée et commitée — 7579504 ; sauvegarde vérifiée ; swipe traité dans STEP-024.
 - STEP-024 : validée et commitée — 89ae0f6 ; sauvegarde reçue et vérifiée, correctifs inclus.
-- STEP-025 : Validée, commit en attente — trois vagues et compteurs exacts.
-- STEP-026 à STEP-030 : À faire.
+- STEP-025 : validée et commitée — f62162d ; fix1 inclus, sauvegarde reçue et vérifiée.
+- STEP-026 : Validée, commit en attente — défaite et dix redémarrages sans résidus.
+- STEP-027 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -155,8 +156,8 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Clôturer STEP-025 avec fix1 validée : commit, statut propre et sauvegarde complète.
-STEP-026 attend clôture de STEP-025 et nouveau GO.
+Clôturer STEP-026 validée : commit, statut propre et sauvegarde complète.
+STEP-027 attend clôture de STEP-026 et nouveau GO.
 Les mannequins sont réutilisés ; modèles riggés et animations 3D restent à produire
 et qualifier. Ils ne sont pas considérés comme acquis par les étapes historiques 2D.
 
@@ -223,3 +224,24 @@ antérieures d’attente décrivent les livraisons précédentes ; ne pas les re
 pour cette seule mise à jour documentaire.
 Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
 STEP-026 attend cette clôture et un nouveau GO.
+
+## Clôture STEP-025 / démarrage STEP-026
+
+Le commit f62162d et sa sauvegarde ont été vérifiés après la validation de fix1.
+Les mentions précédentes de commit en attente décrivent la clôture antérieure.
+GO STEP-026 reçu ; validation utilisateur reçue, voir docs/steps/STEP-026.md.
+
+## Validation utilisateur — 25 octobre 2026
+
+STEP-026 explicitement validée : F6 OK, tests manuels OK, fluidité OK.
+Retour global, sans résultats séparés par banc ou mesure chiffrée ; aucune réserve signalée.
+APK : step-026-debug.apk ; version 0.1.0-step026, code 26.
+SHA-256 : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.
+Statut : Validée, commit en attente.
+
+Archive : gambit-arena-complet-step-026-validation.tar.gz.
+Seule la documentation change depuis v1 ; code, scènes, tests et configuration identiques.
+Aucun lancement Godot chez l’assistant. Les instructions de recette précédentes décrivent
+la validation maintenant reçue ; aucun nouveau test requis pour cette mise à jour documentaire.
+Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
+STEP-027 attend clôture et nouveau GO.

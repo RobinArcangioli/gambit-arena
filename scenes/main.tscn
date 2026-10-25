@@ -1,7 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://do6vxhog253vu"]
 
-[ext_resource type="PackedScene" path="res://scenes/waves/wave_sequence_lab.tscn" id="1_lab"]
+[ext_resource type="PackedScene" path="res://scenes/waves/run_lifecycle_lab.tscn" id="1_lab"]
 
 [node name="Main" type="Node2D" unique_id=1193079028]
 
-[node name="WaveSequenceLab" parent="." instance=ExtResource("1_lab")]
+[node name="RunLifecycleLab" parent="." instance=ExtResource("1_lab")]

@@ -38,11 +38,17 @@ var hits: int = 0
 var peak_alive: int = 0
 var max_step: float = 0.0
 var result: String = "EN COURS"
+var run_id: int = 0
+var terminal_count: int = 0
+var _final_report: Dictionary = {}
+var final_report: Dictionary:
+	get: return _final_report.duplicate(true)
 
 func configure(parent_world: Node3D) -> void:
 	world = parent_world
 
 func clear() -> void:
+	clock.stopped = true
 	manual.clear()
 	controller.stop(hero, "clear", clock.elapsed)
 	for unit in enemies:
@@ -54,12 +60,17 @@ func clear() -> void:
 func _dispose(unit: Variant) -> void:
 	if is_instance_valid(unit):
 		unit.action.retire()
+		unit.mover.clear_target()
+		unit.clear_enemy_focus()
 		unit.hide()
 		if not unit.is_queued_for_deletion():
 			unit.queue_free()
 
 func reset(mode: int = 0) -> void:
 	clear()
+	run_id += 1
+	terminal_count = 0
+	_final_report.clear()
 	clock.reset()
 	controller.reset()
 	manual.reset()
@@ -134,11 +145,14 @@ func _prune() -> void:
 			enemies.remove_at(index)
 
 func _finish_if_needed() -> bool:
+	if result != "EN COURS":
+		return true
+	var outcome: String = ""
 	if not Action.living(hero):
-		result = "DEFAITE"
+		outcome = "DEFAITE"
 	elif wave_enabled and wave.issued >= wave.total and enemies.is_empty():
 		if removed > 0:
-			result = "INTERROMPU"
+			outcome = "INTERROMPU"
 		else:
 			# Archive once, after pruning, before resetting only the arrival schedule.
 			if completed_waves.size() < wave_number:
@@ -150,20 +164,34 @@ func _finish_if_needed() -> bool:
 				wave.reset(wave.total, wave.cap)
 				controller.stop(hero, "wave", clock.elapsed)
 				return false
-			result = "VICTOIRE"
+			outcome = "VICTOIRE"
 	elif spawned >= budget and enemies.is_empty():
-		result = "VICTOIRE" if removed == 0 else "INTERROMPU"
+		outcome = "VICTOIRE" if removed == 0 else "INTERROMPU"
 	else:
 		return false
+	return _end_run(outcome)
+
+func _end_run(outcome: String) -> bool:
+	# Only one terminal transition, even if callbacks or later ticks observe death again.
+	if result != "EN COURS":
+		return true
+	result = outcome
+	terminal_count += 1
 	clock.stopped = true
 	manual.clear("terminal")
 	controller.stop(hero, "terminal", clock.elapsed)
 	for unit in enemies:
 		unit.action.retire()
 		unit.mover.clear_target()
+		unit.clear_enemy_focus()
 	if is_instance_valid(hero):
 		hero.action.retire()
 		hero.mover.clear_target()
+		hero.clear_enemy_focus()
+	_final_report = {"run_id": run_id, "result": result, "elapsed": elapsed,
+		"wave": wave_number, "waves": wave_count, "completed": completed_waves.size(),
+		"spawned": spawned, "budget": budget, "defeated": defeated, "removed": removed,
+		"alive": enemies.size(), "hits": hits, "peak_alive": peak_alive}
 	_present()
 	return true
 
@@ -172,6 +200,11 @@ func _choose_enemy_targets() -> void:
 		unit.mover.set_target(hero)
 
 func advance(delta: float, paused: bool = false) -> void:
+	# Lifecycle death can be observed during pause without advancing any gameplay time.
+	if result == "EN COURS" and is_instance_valid(hero) and not Action.living(hero):
+		_prune()
+		_end_run("DEFAITE")
+		return
 	if manual.pending and (not manual_enabled or clock.stopped or not Action.living(hero)):
 		manual.clear("terminal")
 	if paused or not clock.permits_gameplay() or result != "EN COURS" or not is_finite(delta) or delta <= 0.0:
@@ -277,7 +310,7 @@ func request_manual(skill: StringName) -> bool:
 	return true
 
 func _exit_tree() -> void:
-	manual.clear()
+	clear()
 
 func wave_snapshot() -> Dictionary:
 	# Detached scalar values: callers cannot mutate the authoritative counters.

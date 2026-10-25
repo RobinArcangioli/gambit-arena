@@ -1,6 +1,7 @@
-# Architecture réelle — STEP-025
+# Architecture réelle — STEP-026
 
-Main conserve son UID et ouvre scenes/waves/wave_sequence_lab.tscn.
+Main conserve son UID et ouvre scenes/waves/run_lifecycle_lab.tscn.
+RunLifecycleLab étend WaveSequenceLab et ajoute la présentation du bilan terminal.
 WaveSequenceLab étend WaveLab, lui-même dérivé de ManualCommandLab. Le nouveau lab active
 sequence_enabled ; WaveLab active wave_enabled et conserve seul une vague historique.
 
@@ -72,3 +73,29 @@ d’un acteur invalide les références pour éviter de conserver une ancienne i
 
 STEP-025 avec fix1 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
 APK fix1 : a05863ca35183215d53c270652a0a1927da4e74c8547fcf32112f6a42e97544a. Commit et sauvegarde en attente.
+
+## Fin unique et cycle de partie — STEP-026
+
+CombatSimulation._finish_if_needed garde les conditions existantes et délègue la fin
+à _end_run. Cette méthode est idempotente : résultat terminal, horloge arrêtée, actions
+retirées, mouvements et cibles oubliés, commande annulée, puis bilan scalaire figé.
+final_report renvoie une copie profonde, jamais un dictionnaire mutable partagé.
+Le dernier impact létal est compté avant le bilan. Aucune notification de mort ne
+réinitialise la simulation au milieu du calcul d’un impact.
+
+advance observe aussi une mort déjà survenue avant le filtre de pause : la défaite
+est consignée au prochain appel, sans avancer le temps. Le jeu ne peut pas produire
+de nouveaux dégâts en pause ; ce chemin couvre les modifications externes de cycle de vie.
+clear arrête l’horloge et retire chaque exécuteur, mouvement et cible avant queue_free.
+_exit_tree appelle clear, même si le monde des acteurs appartient à une autre branche.
+reset crée un nouvel acteur et état, réinitialise les compteurs, traces, commande, vagues
+et bilan, conserve les règles et la pause. run_id est un compteur de diagnostic monotone ;
+terminal_count vaut zéro puis un par partie. Aucun de ces champs ne pilote les actions.
+
+RunLifecycleLab réutilise le panneau de statut et les détails existants. Le résultat
+terminal a priorité visuelle sur PAUSE. Aucun modal ne bloque Rejouer ou l’éditeur.
+Le bilan est effacé par reset ; le bandeau normal reprend alors son affichage habituel.
+
+STEP-026 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
+Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
+APK : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.

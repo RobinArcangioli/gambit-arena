@@ -47,3 +47,15 @@ Une commande attend au plus trois secondes de GameClock.elapsed ; pause et arri�
 figent son échéance. Nouveaux appuis refusés en pause. Mort/sortie d'arbre des participants
 annulent l'attente via signaux ; reset/scénario/fin la nettoient. Aucun coût n'est engagé
 par une simple attente. Une action déjà engagée reste sous le cycle de vie existant.
+
+## STEP-026 — En attente de validation
+
+Base clôturée f62162d, fix1 inclus. Fin de partie unique, bilan figé et nettoyage des
+actions/cibles au redémarrage. Nouveau banc run_lifecycle_tests.tscn.
+Recette : docs/steps/STEP-026.md. Android 0.1.0-step026, code 26,
+export step-026-debug.apk ; aucun nouveau SHA d’APK reçu.
+Les mentions des étapes précédentes sont historiques. Commit après validation.
+
+STEP-026 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
+Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
+APK : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.
