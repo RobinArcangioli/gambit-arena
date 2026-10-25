@@ -11,6 +11,13 @@ var manual_enabled: bool = false
 const Wave = preload("res://scripts/waves/wave_schedule.gd")
 var wave := Wave.new()
 var wave_enabled: bool = false
+# Opt-in: historical single-wave labs retain their original behavior.
+var sequence_enabled: bool = false
+var wave_number: int = 1
+var wave_count: int = 1
+var wave_start_defeated: int = 0
+var wave_start_removed: int = 0
+var completed_waves: Array[Dictionary] = []
 const Unit = preload("res://scripts/combat/combat_unit.gd")
 const Action = preload("res://scripts/combat/attack_action.gd")
 const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
@@ -65,7 +72,12 @@ func reset(mode: int = 0) -> void:
 	peak_alive = 0
 	max_step = 0.0
 	wave.reset(24 if mode == 2 else 12, 20 if mode == 2 else 6)
-	budget = wave.total if wave_enabled else (20 if mode == 2 else 3)
+	wave_count = 3 if sequence_enabled and wave_enabled else 1
+	wave_number = 1
+	wave_start_defeated = 0
+	wave_start_removed = 0
+	completed_waves.clear()
+	budget = wave.total * wave_count if wave_enabled else (20 if mode == 2 else 3)
 	result = "EN COURS"
 	hero = Unit.new()
 	# Local diagnostic profiles; shipped .tres Resources remain untouched.
@@ -86,6 +98,8 @@ func reset(mode: int = 0) -> void:
 	_present()
 
 func add_enemy(at: Vector2) -> bool:
+	if wave_enabled and wave.issued >= wave.total:
+		return false
 	if result != "EN COURS" or not Action.living(hero) or spawned >= budget or enemies.size() >= (wave.cap if wave_enabled else 20) or not Bounds.contains_ground(at):
 		return false
 	if at.distance_to(hero.mover.ground_position) < Crowd.DIAMETER + 0.01:
@@ -122,6 +136,21 @@ func _prune() -> void:
 func _finish_if_needed() -> bool:
 	if not Action.living(hero):
 		result = "DEFAITE"
+	elif wave_enabled and wave.issued >= wave.total and enemies.is_empty():
+		if removed > 0:
+			result = "INTERROMPU"
+		else:
+			# Archive once, after pruning, before resetting only the arrival schedule.
+			if completed_waves.size() < wave_number:
+				completed_waves.append(wave_snapshot())
+			if wave_number < wave_count:
+				wave_number += 1
+				wave_start_defeated = defeated
+				wave_start_removed = removed
+				wave.reset(wave.total, wave.cap)
+				controller.stop(hero, "wave", clock.elapsed)
+				return false
+			result = "VICTOIRE"
 	elif spawned >= budget and enemies.is_empty():
 		result = "VICTOIRE" if removed == 0 else "INTERROMPU"
 	else:
@@ -249,3 +278,9 @@ func request_manual(skill: StringName) -> bool:
 
 func _exit_tree() -> void:
 	manual.clear()
+
+func wave_snapshot() -> Dictionary:
+	# Detached scalar values: callers cannot mutate the authoritative counters.
+	return {"number": wave_number, "total": wave.total, "spawned": wave.issued,
+		"defeated": defeated - wave_start_defeated, "removed": removed - wave_start_removed,
+		"alive": enemies.size(), "remaining": wave.total - wave.issued}

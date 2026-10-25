@@ -247,3 +247,13 @@ STEP-024 avec FIX-STEP-023-001 reste en attente de validation.
 
 STEP-024 v2 validée : appliquer l’archive de validation, commiter puis lancer
 `bash tools/create_backup.sh`. Transmettre la sauvegarde produite pour vérification.
+
+## STEP-025 — Livraison en attente de validation
+
+Base clôturée 89ae0f6. Main ouvre maintenant trois vagues ; le laboratoire STEP-024
+reste disponible. Version 0.1.0-step025, code 24, export step-025-debug.apk.
+Recette et commandes : docs/steps/STEP-025.md. Aucun SHA d’APK STEP-025 reçu.
+Les sections STEP-024 ci-dessus décrivent la livraison précédente.
+
+STEP-025 avec fix1 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
+APK fix1 : a05863ca35183215d53c270652a0a1927da4e74c8547fcf32112f6a42e97544a. Commit et sauvegarde en attente.

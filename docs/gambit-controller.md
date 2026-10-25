@@ -95,3 +95,14 @@ seulement lorsqu'aucune commande manuelle valide n'attend. Un appui accepté app
 stop pour oublier l'intention automatique, sans interrompre l'action engagée. Après
 expiration ou perte de cible, une nouvelle évaluation automatique est possible.
 Les compteurs manuels sont distincts ; voir docs/manual-commands.md.
+
+## STEP-025-fix1 — Mise à jour
+
+La cible offensive vivante à portée est conservée entre actions, y compris à travers
+un soin, et partagée entre commandes manuelles et gambits. La recherche du plus proche
+n’intervient qu’en l’absence de cible valide. Les descriptions antérieures de ciblage
+sont à lire avec cette règle. Recette : docs/steps/STEP-025-fix1.md.
+APK step-025-fix1-debug.apk ; version 0.1.0-step025-fix1, code 25, validation en attente.
+
+STEP-025 avec fix1 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
+APK fix1 : a05863ca35183215d53c270652a0a1927da4e74c8547fcf32112f6a42e97544a. Commit et sauvegarde en attente.

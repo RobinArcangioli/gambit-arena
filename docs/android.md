@@ -426,3 +426,21 @@ SHA-256 APK : d367d52fb3a3e6857d90c19f333d819a0b6e28d888fcab92c5a38a8dc46fcb09.
 
 STEP-024 v2 : réexporter et réinstaller step-024-debug.apk après FIX-STEP-024-001.
 Version/code inchangés ; SHA-256 v2 reçu ci-dessus, validation utilisateur globale confirmée.
+
+## STEP-025 — Livraison en attente de validation
+
+Base clôturée 89ae0f6. Main ouvre maintenant trois vagues ; le laboratoire STEP-024
+reste disponible. Version 0.1.0-step025, code 24, export step-025-debug.apk.
+Recette et commandes : docs/steps/STEP-025.md. Aucun SHA d’APK STEP-025 reçu.
+Les sections STEP-024 ci-dessus décrivent la livraison précédente.
+
+## STEP-025-fix1 — Mise à jour
+
+La cible offensive vivante à portée est conservée entre actions, y compris à travers
+un soin, et partagée entre commandes manuelles et gambits. La recherche du plus proche
+n’intervient qu’en l’absence de cible valide. Les descriptions antérieures de ciblage
+sont à lire avec cette règle. Recette : docs/steps/STEP-025-fix1.md.
+APK step-025-fix1-debug.apk ; version 0.1.0-step025-fix1, code 25, validation en attente.
+
+STEP-025 avec fix1 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
+APK fix1 : a05863ca35183215d53c270652a0a1927da4e74c8547fcf32112f6a42e97544a. Commit et sauvegarde en attente.

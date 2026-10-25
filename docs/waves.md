@@ -31,3 +31,10 @@ neuf, zéro apparition et une horloge remise à zéro, tout en conservant pause 
 Le HUD affiche les présents/plafond et apparus/total. Vaincus et restant à venir sont dans
 le détail sous les compétences. L'enchaînement de trois vagues sera STEP-025.
 Recette : docs/steps/STEP-024.md. F6, tests manuels et fluidité confirmés OK par l’utilisateur ; commit en attente.
+
+## STEP-025 — Livraison en attente de validation
+
+Base clôturée 89ae0f6. Main ouvre maintenant trois vagues ; le laboratoire STEP-024
+reste disponible. Version 0.1.0-step025, code 24, export step-025-debug.apk.
+Recette et commandes : docs/steps/STEP-025.md. Aucun SHA d’APK STEP-025 reçu.
+Les sections STEP-024 ci-dessus décrivent la livraison précédente.

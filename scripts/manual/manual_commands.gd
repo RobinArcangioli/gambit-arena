@@ -44,12 +44,18 @@ func submit(skill: StringName, hero: Unit, enemies: Array[Unit], clock: Clock) -
 		return _reject("finished")
 	if clock.paused:
 		return _reject("paused")
-	var chosen: Unit = hero if skill == &"heal" else nearest(hero, enemies)
+	var chosen: Unit = hero
+	if skill != &"heal":
+		chosen = hero.focused_enemy(enemies)
+		if chosen == null:
+			chosen = nearest(hero, enemies)
 	if not Action.living(chosen):
 		return _reject("no_target")
 	# A rejected click never replaces a valid pending command.
 	var replacing: bool = pending
 	clear("replaced" if replacing else "queued")
+	if chosen != hero:
+		hero.remember_enemy(chosen)
 	_source = hero
 	_target = chosen
 	_source_state = hero.state

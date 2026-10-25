@@ -144,13 +144,18 @@ func plan(delta: float, hero: Unit, enemies: Array[Unit], clock: Clock) -> void:
 	_remaining = PERIOD
 	if stale:
 		_log("invalidated", clock.elapsed, 0, "participants_changed")
+	var view: Snapshot = capture(hero, enemies, clock)
+	var focused: Unit = hero.focused_enemy(enemies)
+	if focused != null:
+		view.enemies.clear()
+		view.enemies.append(_row(focused))
 	var report: Dictionary = {}
 	var next: Dictionary
 	if diagnostics_enabled:
-		report = Evaluator.explain(rules, capture(hero, enemies, clock))
+		report = Evaluator.explain(rules, view)
 		next = report["decision"]
 	else:
-		next = Evaluator.evaluate(rules, capture(hero, enemies, clock))
+		next = Evaluator.evaluate(rules, view)
 	evaluations += 1
 	_forget(hero)
 	_decision = next
@@ -177,6 +182,7 @@ func plan(delta: float, hero: Unit, enemies: Array[Unit], clock: Clock) -> void:
 	_target_state = _target.state
 	_signature = _rule_signature(rules[next["rule_index"]])
 	if _target != hero:
+		hero.remember_enemy(_target)
 		hero.mover.set_target(_target)
 
 func execute(hero: Unit, enemies: Array[Unit], clock: Clock) -> int:

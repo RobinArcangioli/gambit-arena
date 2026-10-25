@@ -1,40 +1,21 @@
-# Architecture réelle — STEP-024 v2 validée, commit en attente
+# Architecture réelle — STEP-025
 
-Main conserve son UID et ouvre scenes/waves/wave_lab.tscn.
-WaveLab étend ManualCommandLab et active simulation.wave_enabled avant le reset initial.
-Les anciens laboratoires restent sur leur mode historique (wave_enabled false).
-Aucun appel direct d'action n'est ajouté à l'interface ; la commande manuelle et les
-règles continuent d'emprunter leur arbitrage et leur exécuteur partagés existants.
+Main conserve son UID et ouvre scenes/waves/wave_sequence_lab.tscn.
+WaveSequenceLab étend WaveLab, lui-même dérivé de ManualCommandLab. Le nouveau lab active
+sequence_enabled ; WaveLab active wave_enabled et conserve seul une vague historique.
 
-WaveSchedule est un RefCounted sans acteurs, Timer ou dépendance visuelle. reset borne
-le total entre 1 et 100, et le plafond simultané entre 1 et 20. Par défaut : 12/6 ; mode
-Charge : 24/20. issued compte uniquement les apparitions réellement réussies.
-Le premier délai est 1 s ; après les apparitions du premier tiers, l'intervalle passe
-de 2 à 1,5 s, puis à 1 s au dernier tiers. L'arène commence vide, sans victoire prématurée.
-Le crédit n'avance qu'avec le dt borné de GameClock ; aucun temps système indépendant.
-Il ne dépasse jamais un intervalle, même si la limite d'acteurs ou les bords sont occupés.
+CombatSimulation reste le seul coordinateur : prune/fin-transition, horloge, intentions,
+mouvement/séparation, actions engagées, prune/fin-transition, engagements puis apparitions.
+Le plan WaveSchedule conserve ses bornes, ses cadences 1 puis 2/1,5/1 secondes et son crédit
+limité à une arrivée. Les nouvelles vagues ne recréent ni héros ni exécuteur.
+Les compteurs globaux persistent ; les compteurs locaux se calculent à partir de bases
+mémorisées à la transition. Les serials sont uniques dans une partie. Aucune interface
+ne déclenche directement une action ; l’arbitrage manuel/gambits reste inchangé.
 
-CombatSimulation.reset conserve le profil de chaque scénario, nettoie acteurs/actions/
-commandes puis réinitialise le plan. En mode vague, budget vient du plan et aucune
-apparition immédiate n'est effectuée. add_enemy applique la limite du plan et le contrôle
-historique de distance/limites ; il confirme le plan seulement après création de l'acteur.
-Le compteur spawned et wave.issued avancent ainsi ensemble. Les refus ne consomment rien.
-
-Le coordinateur reste déterministe : prune/fin, horloge, intentions manuelles/gambits,
-mouvement/séparation, actions engagées, prune/fin, nouveaux engagements, puis apparitions.
-_advance_spawning choisit le plan de vague ou la branche historique inchangée.
-Une échéance teste au plus 20 positions de bord existantes et crée au plus un ennemi.
-Un échec conserve seulement une arrivée due ; un succès remet le crédit à zéro.
-Les nouveaux acteurs ne bougent et n'attaquent pas avant le tick suivant.
-Le plafond porte sur les acteurs présents ; les morts sont retirés avant l'admission.
-
-Le résultat existant est réutilisé : aucune victoire tant que spawned < budget ; ensuite
-VICTOIRE seulement si la liste est vide et removed == 0. Une suppression externe aboutit
-à INTERROMPU, jamais à une fausse victoire. La mort du héros donne DEFAITE en priorité.
-La fin arrête l'horloge, les actions et la commande manuelle. Pause et resets conservent
-leurs garanties. Il s'agit d'une seule vague ; l'enchaînement appartient à STEP-025.
-L'UI distingue vivants/plafond et arrivés/total ; vaincus et restant à venir sont dans
-le détail défilable. Les valeurs de cadence sont des choix initiaux, non un équilibrage validé.
+Voir docs/wave-sequence.md pour les conditions de transition, invariants et cas terminaux.
+La défaite précède la transition, une suppression externe interdit la victoire, et seule
+la troisième fin réussie arrête la partie gagnée. Rejouer seul réinitialise tout le combat.
+Le nouveau banc couvre le coordinateur réel ; les bancs historiques restent inchangés.
 
 ## FIX-STEP-023-001 / FIX-STEP-024-001 : routeur tactile v2
 
@@ -70,5 +51,24 @@ au ciblage, qui conserve la sélection du plus proche et le départage par ident
 Le banc tactile continue d'injecter les événements au viewport réel, sans appeler les
 callbacks. Il ajoute annulation sans déplacement, second doigt, swipe inverse, reset
 pendant un appui et retour d'arrière-plan. Les tests ne sont pas exécutés ici (Godot absent).
-La vague, ses profils, son calendrier, son coordinateur et son banc restent identiques
-à STEP-024 v1. Exécution des actions, animation et immobilité à portée inchangées.
+Le routeur tactile reste identique à la STEP-024 v2 validée. Exécution des actions,
+animation et immobilité à portée inchangées.
+
+## STEP-025-fix1 — Mémoire de cible indépendante des intentions
+
+CombatUnit conserve une référence de cible offensive et les identités ActorState
+du héros et de la cible. focused_enemy invalide une cible morte, supprimée, absente
+du combat, dont l’état a changé ou à une distance strictement supérieure à REACH (1).
+La borne exacte de portée reste verrouillée. Une nouvelle instance au replay repart sans cible.
+Controller.plan limite les ennemis du snapshot à cette cible tant qu’elle est valide.
+L’évaluateur pur et sa priorité des règles restent inchangés : un soin peut viser le héros,
+et une règle devenue inapplicable ne permet pas de contourner le verrou sur un autre ennemi.
+Le contrôleur mémorise la cible offensive choisie, indépendamment de _forget/stop et
+de la fin d’une action. ManualCommands.submit réutilise ce même verrou avant nearest,
+et mémorise la cible d’une commande offensive acceptée. Un clic rejeté ne la remplace pas.
+Une action engagée conserve toujours son propre verrou d’exécution. Aucun cooldown, coût,
+animation, déplacement ni seuil de portée n’est modifié. La disparition/réinitialisation
+d’un acteur invalide les références pour éviter de conserver une ancienne identité.
+
+STEP-025 avec fix1 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
+APK fix1 : a05863ca35183215d53c270652a0a1927da4e74c8547fcf32112f6a42e97544a. Commit et sauvegarde en attente.

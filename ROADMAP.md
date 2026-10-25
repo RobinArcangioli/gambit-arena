@@ -98,8 +98,9 @@ qui dépend de la validation de la roadmap.
 - STEP-021 : validée et commitée — 9491d40 ; sauvegarde reçue et vérifiée, correctif inclus.
 - STEP-022 : validée et commitée — 307e8c6 ; sauvegarde reçue et vérifiée.
 - STEP-023 : validée et commitée — 7579504 ; sauvegarde vérifiée ; swipe traité dans STEP-024.
-- STEP-024 : Validée, commit en attente — F6, tests manuels et fluidité OK, correctifs inclus.
-- STEP-025 à STEP-030 : À faire.
+- STEP-024 : validée et commitée — 89ae0f6 ; sauvegarde reçue et vérifiée, correctifs inclus.
+- STEP-025 : Validée, commit en attente — trois vagues et compteurs exacts.
+- STEP-026 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -141,7 +142,7 @@ Les autres documents sont créés lorsqu'ils ont un contenu utile.
 Une étape validée = un commit incluant sa documentation.
 Le message contient [STEP-XXX]. Aucun hash n'est inventé.
 
-Statuts : À faire, En cours, En attente de validation,
+Statuts : À faire, En cours, Validée, commit en attente,
 Validée, commit en attente, Bloquée.
 
 Avant commit : validation utilisateur consignée et statut
@@ -154,8 +155,8 @@ Aucune nouvelle étape ne commence sans feu vert explicite.
 
 ## Prochaine action
 
-Clôturer STEP-024 validée : commit, hash, statut propre et sauvegarde complète.
-STEP-025 attend clôture et nouveau GO.
+Clôturer STEP-025 avec fix1 validée : commit, statut propre et sauvegarde complète.
+STEP-026 attend clôture de STEP-025 et nouveau GO.
 Les mannequins sont réutilisés ; modèles riggés et animations 3D restent à produire
 et qualifier. Ils ne sont pas considérés comme acquis par les étapes historiques 2D.
 
@@ -192,3 +193,33 @@ dernières règles/cartes/détails. Vérifier les gestes commencés sur les bout
 les espaces libres ; un glissement ne doit ni commander une compétence, ni ouvrir ou
 modifier un gambit. Conserver les appuis courts, la molette, les zones sûres et la pause.
 Ajouter une régression ciblée et faire valider le geste sur le téléphone Android.
+
+## STEP-025-fix1 — Cible offensive persistante
+
+Retour utilisateur : F6 OK, tests manuels OK, fluidité OK ; STEP-025 déclarée validée.
+SHA-256 de cette livraison avant correctif : 660feca8138818606bc2e9e2315019b83b05f7fd86e704362579b3c080f46329.
+Réserve signalée simultanément : changement de cible avant sa mort, correction immédiate
+demandée. La cible doit rester la même tant qu’elle est vivante et à portée.
+STEP-025-fix1 : validée, commit en attente ; nouveau SHA reçu ci-dessous.
+Cette section remplace les instructions de livraison précédentes : appliquer
+gambit-arena-complet-step-025-fix1.tar.gz sur STEP-025 non commitée.
+Recette : docs/steps/STEP-025-fix1.md. Export step-025-fix1-debug.apk,
+version 0.1.0-step025-fix1, code 25. Commit après validation du correctif.
+
+## Validation finale — 25 octobre 2026
+
+STEP-025 avec STEP-025-fix1 explicitement validée par l’utilisateur :
+F6 OK, tests manuels OK, fluidité OK. Aucune nouvelle réserve signalée.
+Retour global ; aucun résultat séparé par banc ou mesure chiffrée fourni.
+APK : step-025-fix1-debug.apk ; version 0.1.0-step025-fix1, code 25.
+SHA-256 : a05863ca35183215d53c270652a0a1927da4e74c8547fcf32112f6a42e97544a.
+La validation précédente et son SHA décrivent STEP-025 avant correction du ciblage.
+
+Statut actuel : Validée, commit en attente. Archive de validation :
+gambit-arena-complet-step-025-validation.tar.gz. Seule la documentation change
+par rapport à fix1 ; code, scènes, tests et configuration strictement identiques.
+Aucun lancement Godot chez l’assistant. Les instructions de recette et mentions
+antérieures d’attente décrivent les livraisons précédentes ; ne pas les relancer
+pour cette seule mise à jour documentaire.
+Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
+STEP-026 attend cette clôture et un nouveau GO.
