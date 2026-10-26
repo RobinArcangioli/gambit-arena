@@ -1,5 +1,18 @@
 # Tests, environnement et preuves de validation
 
+## Actualisation GRAPHICS-002
+
+Validation globale explicite reçue du propriétaire le 26 octobre 2026 ; commit demandé.
+Ce retour n'ajoute pas de mesure ni de détail par banc aux preuves suivantes.
+
+27 bancs headless : 1 728 contrôles, zéro échec, aucun warning/erreur Godot dans cette campagne.
+Le nouveau `arena_catalog_tests.tscn` ajoute 79 contrôles, dont gestes tactiles réels au
+viewport, sélection des neuf profils, calage, états conservés, cycle de vie et nettoyage.
+14 contrôles supplémentaires passent en fenêtre, avec captures des huit fonds et du sélecteur.
+Preset actuel : `graphics-002-debug.apk`, version `0.1.0-graphics002`, code 30.
+Recette et empreinte : [GRAPHICS-002](../steps/GRAPHICS-002.md).
+Les actualisations suivantes décrivent les versions précédentes.
+
 ## Actualisation GRAPHICS-001
 
 26 bancs headless : 1 649 contrôles, zéro échec, aucun warning/erreur Godot dans cette campagne.

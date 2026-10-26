@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://do6vxhog253vu"]
 
-[ext_resource type="PackedScene" path="res://scenes/performance/performance_lab.tscn" id="1_lab"]
+[ext_resource type="PackedScene" path="res://scenes/presentation/arena_application_lab.tscn" id="1_lab"]
 [ext_resource type="Resource" path="res://resources/presentation/arenas/colisee_solaire.tres" id="2_arena"]
 
 [node name="Main" type="Node2D" unique_id=1193079028]

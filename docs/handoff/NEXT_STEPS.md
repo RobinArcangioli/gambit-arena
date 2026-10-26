@@ -6,10 +6,11 @@ STEP-028 est maintenant clôturée : commit 580ce64, push et sauvegarde vérifi�
 a demandé de préparer des évolutions graphiques avant la recette finale. Lire la
 [roadmap graphique](../graphics-roadmap.md), GRAPHICS-001 à GRAPHICS-007 : arènes, modèles 3D,
 attaque, soin et Foudre, avec présentation interchangeable et gameplay préservé.
-Plan validé et GO reçu : GRAPHICS-001 est en recette après implémentation du Colisée et de la
-présentation interchangeable. Les sections ci-dessous conservent le contexte des étapes
-initiales de livraison, qui gardent leurs identifiants. Après validation/clôture de GRAPHICS-001,
-la prochaine étape graphique est GRAPHICS-002 : catalogue des huit arènes fournies.
+GRAPHICS-001 est clôturée au commit local f5a790d, sauvegarde restaurée/vérifiée.
+GRAPHICS-002 est validée par le propriétaire, qui demande son commit ; les huit arènes et
+leur catalogue sont implémentés. Les sections ci-dessous conservent le contexte des étapes
+initiales de livraison, qui gardent leurs identifiants. La prochaine étape graphique est
+GRAPHICS-003 : modèles 3D et animation de base, en attente des modèles annoncés par le propriétaire.
 
 STEP-001 à STEP-027 sont clôturées selon les preuves du registre, avec reprise d’historique
 RECOVERY-001 et transition 3D TRANSITION-001. HANDOFF-001 prépare la transmission et GitHub ;

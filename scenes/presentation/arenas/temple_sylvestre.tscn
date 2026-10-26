@@ -1,0 +1,8 @@
+[gd_scene load_steps=4 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/illustrated_arena_view.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/arenas/temple_sylvestre/temple_sylvestre.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/art/arenas/calibration/grille_8x8.png" id="3"]
+[node name="IllustratedArenaView" type="Node2D"]
+script = ExtResource("1")
+background = ExtResource("2")
+calibration_overlay = ExtResource("3")

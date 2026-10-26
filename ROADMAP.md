@@ -125,15 +125,16 @@ Le propriétaire a demandé de préparer un chantier graphique avant la livraiso
 voir la [roadmap graphique GRAPHICS-001 à GRAPHICS-007](docs/graphics-roadmap.md).
 Elle prévoit d'abord les arènes interchangeables, puis les personnages 3D et les actions
 attaque, soin et Foudre, avec une couche de présentation isolée du gameplay. Plan validé et
-GO reçu : GRAPHICS-001 validée, GO pour GRAPHICS-002. STEP-029 et STEP-030 conservent
+GRAPHICS-001 clôturée localement (f5a790d), GRAPHICS-002 validée avec commit autorisé. STEP-029 et STEP-030 conservent
 leurs identifiants et se dérouleront après ce chantier.
 
 | Étape | État | Livrable |
 |---|---|---|
 | STEP-028 | Clôturée — 580ce64, poussée et sauvegarde vérifiée | Mesures reproductibles sur téléphone ; objectif historique 30 FPS non atteint en Debug, accepté pour le périmètre prévu |
-| GRAPHICS-001 | Validée par le propriétaire | Colisée et référence interchangeables, galerie et contrat de présentation |
-| GRAPHICS-002 | GO reçu | Catalogue des huit arènes fournies |
-| GRAPHICS-003 à GRAPHICS-007 | À faire, plan validé | Modèles 3D et actions remplaçables via la présentation |
+| GRAPHICS-001 | Validée, commit local f5a790d et sauvegarde vérifiée | Colisée et référence interchangeables, galerie et contrat de présentation |
+| GRAPHICS-002 | Validée, commit autorisé | Catalogue des huit arènes fournies |
+| GRAPHICS-003 | En attente des modèles annoncés par le propriétaire | Modèles 3D et animation de base |
+| GRAPHICS-004 à GRAPHICS-007 | À faire, plan validé | Actions et qualification graphique |
 | STEP-029 | À faire | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |
 

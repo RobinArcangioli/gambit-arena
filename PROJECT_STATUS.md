@@ -1,5 +1,23 @@
 # État du projet — 26 octobre 2026
 
+## GRAPHICS-002 — validée, commit autorisé
+
+GRAPHICS-001 validée, commit local `f5a790d38ed12cd3ccc3bac85162308986a5f894`.
+Sauvegarde `gambit-arena-20261026-055618-f5a790d38ed1.tar.gz` restaurée et vérifiée :
+bundle, intégrité Git et 354 fichiers identiques. Ce checkpoint est local ; origin/main
+reste à STEP-028 tant qu'aucun push supplémentaire n'a été effectué.
+
+GO reçu pour GRAPHICS-002 : les huit arènes sont intégrées, avec vignettes et sélecteur commun
+au jeu et à la galerie. Ouverture en pause, choix sans reset ni mutation du combat, reprise
+explicite, Rejouer conserve le décor dans la session. 27 bancs headless : 1 728 contrôles,
+zéro échec et aucun warning/erreur Godot ; 14 contrôles en fenêtre passent également.
+Voir [docs/steps/GRAPHICS-002.md](docs/steps/GRAPHICS-002.md).
+
+GRAPHICS-002 est explicitement validée par le propriétaire, qui demande son commit.
+La sauvegarde sera créée et vérifiée après ce commit. GRAPHICS-003 attend les modèles 3D
+de personnages/ennemis annoncés par le propriétaire. GRAPHICS-003 à GRAPHICS-007, puis
+STEP-029/030 restent à réaliser. Les sections suivantes sont historiques.
+
 ## GRAPHICS-001 — validée par le propriétaire
 
 Roadmap graphique validée par le propriétaire, GO reçu. Base commitée : STEP-028 / 580ce64.

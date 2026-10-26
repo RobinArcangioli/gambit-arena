@@ -1,10 +1,12 @@
 # Roadmap graphique — GRAPHICS-001 à GRAPHICS-007
 
 Préparée le 26 octobre 2026 à la demande du propriétaire, sur STEP-028 clôturée au commit
-`580ce641390f30667133cec0a580ee3d64f0c51a`. Roadmap validée. GRAPHICS-001 est validée
-par le propriétaire, avec GO pour GRAPHICS-002 ; les étapes suivantes restent à réaliser.
+`580ce641390f30667133cec0a580ee3d64f0c51a`. Roadmap validée. GRAPHICS-001 est clôturée
+au commit local f5a790d avec sauvegarde vérifiée. GRAPHICS-002 est validée après intégration
+du catalogue, avec commit autorisé. GRAPHICS-003 attend les modèles 3D annoncés par le
+propriétaire ; les étapes suivantes restent à réaliser.
 Le chantier graphique s'intercale avant STEP-029 et STEP-030, qui gardent leurs identifiants
-et seront exécutées sur la version enrichie. Voir docs/steps/GRAPHICS-001.md pour la livraison.
+et seront exécutées sur la version enrichie. Voir docs/steps/GRAPHICS-002.md pour la livraison actuelle.
 
 ## Objectif et périmètre
 

@@ -1,4 +1,11 @@
-# Architecture actuelle — GRAPHICS-001 en recette
+# Architecture actuelle — GRAPHICS-002 validée
+
+ArenaApplicationLab → PerformanceLab → ApplicationLab est maintenant le sommet de la chaîne
+de Main. La couche de composition connaît ArenaCatalog et ArenaPicker ; la simulation ne
+connaît ni le catalogue ni les fichiers artistiques. Le sélecteur modal réutilise le routeur
+tactile et le garde Android, remet le jeu en pause et remplace seulement la vue ArenaFloor.
+Les grandes textures se chargent à la sélection ; le menu utilise huit vignettes distinctes.
+La galerie sans combat partage le même catalogue et le même composant de sélection.
 
 Depuis la base STEP-028 / 580ce64, ArenaFloor est une façade de présentation possédant une
 ArenaView interchangeable. La Resource exportée `Arena.arena_definition` choisit la scène

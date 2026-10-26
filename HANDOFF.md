@@ -1,12 +1,14 @@
 # Passation Gambit Arena — HANDOFF-001
 
-## Priorité actuelle — GRAPHICS-001 en recette
+## Priorité actuelle — clôture GRAPHICS-002
 
 STEP-028 est clôturée au commit 580ce64, poussé et sauvegardé avec restauration vérifiée.
 Le propriétaire a demandé une roadmap graphique : [docs/graphics-roadmap.md](docs/graphics-roadmap.md).
 La roadmap GRAPHICS-001 à GRAPHICS-007 est validée, avec GO pour la première étape.
-GRAPHICS-001 est implémentée : voir docs/steps/GRAPHICS-001.md pour les preuves et la recette
-utilisateur attendue. Les mentions de commit STEP-028 en attente ci-dessous sont historiques.
+GRAPHICS-001 a été validée, commitée localement (f5a790d) et sauvegardée avec restauration
+vérifiée. GRAPHICS-002 est validée et son commit est demandé : voir docs/steps/GRAPHICS-002.md.
+GRAPHICS-003 attend les modèles 3D annoncés par le propriétaire. Les mentions d'attente ci-dessous
+décrivent les checkpoints historiques ; lire PROJECT_STATUS.md en priorité.
 
 ## Actualisation de reprise — STEP-028
 

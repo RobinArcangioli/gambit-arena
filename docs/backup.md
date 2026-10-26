@@ -1,5 +1,22 @@
 # Sauvegarde du projet
 
+## GRAPHICS-002 — validation reçue
+
+Le propriétaire a explicitement validé GRAPHICS-002 et demandé son commit. La sauvegarde
+post-commit doit inclure le catalogue, les huit décors et la documentation de validation.
+Le code, les scènes, les assets et la configuration restent identiques à la livraison validée ;
+seuls les documents sont actualisés pour consigner ce retour. GRAPHICS-003 attend les modèles
+annoncés pour les personnages et ennemis.
+
+## GRAPHICS-001 — checkpoint local vérifié
+
+Validation utilisateur reçue avec GO pour GRAPHICS-002. Commit local :
+`f5a790d38ed12cd3ccc3bac85162308986a5f894`. Sauvegarde
+`gambit-arena-20261026-055618-f5a790d38ed1.tar.gz` restaurée : bundle vérifié, intégrité Git
+contrôlée et 354 fichiers identiques au commit. Le code/configuration est identique à la
+livraison GRAPHICS-001 validée ; la validation n'a modifié que les documents.
+GRAPHICS-002 reste une évolution non commitée au-dessus de ce checkpoint.
+
 ## STEP-028 — validée, commit et sauvegarde en attente
 
 Le 26 octobre 2026, le propriétaire a validé STEP-028 : F6, F5, tactile Android et

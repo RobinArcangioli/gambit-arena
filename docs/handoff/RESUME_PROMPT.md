@@ -1,5 +1,14 @@
 # Prompt à transmettre à la prochaine IA
 
+Actualisation GRAPHICS-002 : GRAPHICS-001 est validée et clôturée au commit local f5a790d,
+avec sauvegarde restaurée/vérifiée (354 fichiers). GRAPHICS-002 est implémentée après GO,
+et validée par le propriétaire : catalogue des huit fonds fournis, vignettes et sélecteur
+en pause dans le jeu et la galerie. Lire docs/steps/GRAPHICS-002.md et PROJECT_STATUS.md.
+Le propriétaire demande le commit de GRAPHICS-002 ; vérifier Git pour son hash effectif.
+GRAPHICS-003 attend les modèles 3D qu'il a annoncé fournir. origin/main n'a pas reçu le
+checkpoint graphique local à la rédaction de cette note.
+Les paragraphes suivants conservent le contexte des checkpoints antérieurs.
+
 Actualisation GRAPHICS-001 : STEP-028 est clôturée au commit 580ce64, poussée et sauvegarde
 restaurée/vérifiée (327 fichiers). Le propriétaire a validé la roadmap graphique et donné GO.
 GRAPHICS-001 est maintenant implémentée, en attente de validation utilisateur : lire
