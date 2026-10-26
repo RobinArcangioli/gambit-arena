@@ -9,3 +9,7 @@ model = ExtResource("2")
 model_scale = 0.65
 idle_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Idle|CharacterArmature|Idle"
 move_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Walk|CharacterArmature|Walk"
+attack_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Sword|CharacterArmature|Swo"
+hit_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|HitReact|CharacterArmature|"
+death_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Death|CharacterArmature|Dea"
+cast_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Duck|CharacterArmature|Duck"

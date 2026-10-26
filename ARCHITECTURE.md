@@ -1,3 +1,12 @@
+# GRAPHICS-004 — transitions et vues d'action
+
+PartyExecutor publie des faits de transition, PartySimulation les copie avec run_id et
+collecte les morts. CombatPresenter applique l'instantané d'action avant les réactions,
+consomme une seule fois les faits et transfère uniquement la vue graphique lors d'une mort.
+CharacterView échantillonne les clips manuellement avec priorité explicite ; aucune piste
+ne rappelle le jeu. La fin visuelle terminale respecte pause/focus sans avancer le combat.
+Voir docs/combat-presentation.md. Les paragraphes suivants sont historiques.
+
 # GAMEPLAY-001-fix1
 
 PartyRules inclut la source dans les candidats du soin et partage prefer_heal avec les

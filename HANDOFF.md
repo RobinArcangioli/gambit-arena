@@ -1,3 +1,21 @@
+# GRAPHICS-004 et fix1 validés — 26 octobre 2026
+
+Le propriétaire confirme « Tout est OK. Step validée. » pour la livraison fix1,
+APK 0.1.0-graphics004-fix1 (35), installé sur Galaxy A16.
+SHA-256 APK : `242961171f11a2f9e0ae1dbd9efad59af43df5b02e8e745261ca24c9bd805959`.
+Les fichiers non documentaires restent identiques à la livraison validée ; les 34 bancs /
+2 154 contrôles déjà réussis ne sont pas relancés pour cette clôture documentaire.
+Clôture par un commit unique, fix1 inclus, puis sauvegarde et restauration vérifiées.
+Prochaine étape : GRAPHICS-005, effet de soin ; attendre GO avant de la démarrer.
+Les mentions de recette ci-dessous décrivent les états antérieurs.
+
+# Reprise actuelle — GRAPHICS-004/fix1 en recette
+
+Dernier commit : b1dfb33 (GAMEPLAY-001 avec fix1), sauvegarde vérifiée.
+Lire docs/steps/GRAPHICS-004.md et docs/combat-presentation.md. 34 bancs / 2 154 contrôles.
+APK actif 0.1.0-graphics004-fix1 (35), installé et lancé sur Galaxy A16, version vérifiée par ADB.
+GRAPHICS-004 n'est pas encore validée/commitée. Les états suivants sont historiques.
+
 # GAMEPLAY-001 et fix1 validés
 
 Le propriétaire confirme « Steps validée. ». La livraison fix1, APK 0.1.0-gameplay001-fix1

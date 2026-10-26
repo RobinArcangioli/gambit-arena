@@ -15,6 +15,9 @@ var last_rejection: String
 var cooldowns: Dictionary = {}
 var retired: bool = false
 var _engaging: StringName
+const MAX_VISUAL_EVENTS: int = 16
+var _visual_events: Array[Dictionary] = []
+var _visual_sequence: int = 0
 var _bound_state
 
 func _init(owner_actor = null) -> void:
@@ -61,6 +64,7 @@ func request(skill: StringName, target) -> int:
 	accepted += 1
 	applied_healing = 0
 	cooldowns[skill] = cooldown(skill)
+	_record_visual(_visual_values("start"))
 	return id
 
 func _reject(reason: String) -> int:
@@ -77,7 +81,9 @@ func advance(dt: float, paused: bool = false) -> void:
 		var left: float = maxf(0.0, cooldowns[skill] - dt)
 		cooldowns[skill] = 0.0 if left < 0.000001 else left
 	mana = minf(actor.mana_capacity, mana + actor.mana_regeneration * dt)
+	var was_active: bool = active
 	super.advance(dt)
+	if was_active and not active and phase == "TERMINEE": _record_visual(_visual_values("end"))
 
 func _valid_pair(source: StatsActor, target: StatsActor) -> bool:
 	var skill: StringName = _engaging if _engaging != &"" else last_skill
@@ -127,3 +133,43 @@ func _effects_allowed() -> bool:
 
 func _on_source_lost() -> void:
 	retire()
+
+func try_impact(expected_id: int) -> bool:
+	var pending: bool = not resolved
+	var values: Dictionary = _visual_values("resolve")
+	var success: bool = super.try_impact(expected_id)
+	if pending and resolved and phase == "RECUPERATION":
+		values["outcome"] = outcome
+		values["damage"] = applied_damage
+		values["healing"] = applied_healing
+		values["elapsed"] = elapsed
+		_record_visual(values)
+	return success
+
+func cancel() -> void:
+	var was_active: bool = active
+	var values: Dictionary = _visual_values("cancel")
+	super.cancel()
+	if was_active:
+		values["outcome"] = outcome
+		_record_visual(values)
+
+func _visual_values(kind: String) -> Dictionary:
+	return {"kind": kind, "source_id": actor.get("combat_id") if is_instance_valid(actor) else 0,
+		"target_id": _target.get("combat_id") if is_instance_valid(_target) else 0,
+		"action_id": action_id, "skill": String(last_skill), "elapsed": elapsed,
+		"windup": _windup(), "recovery": _recovery(), "outcome": outcome,
+		"source_position": actor.position if is_instance_valid(actor) else Vector3.ZERO,
+		"target_position": _target.position if is_instance_valid(_target) else Vector3.ZERO,
+		"damage": 0, "healing": 0, "game_time": clock.elapsed if clock != null else 0.0}
+
+func _record_visual(values: Dictionary) -> void:
+	_visual_sequence += 1
+	values["sequence"] = _visual_sequence
+	if _visual_events.size() >= MAX_VISUAL_EVENTS: _visual_events.pop_front()
+	_visual_events.append(values)
+
+func take_visual_events() -> Array[Dictionary]:
+	var values: Array[Dictionary] = _visual_events
+	_visual_events = []
+	return values

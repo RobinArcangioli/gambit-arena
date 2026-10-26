@@ -1,3 +1,11 @@
+# Checkpoint GAMEPLAY-001, fix1 inclus
+
+Commit b1dfb33b12ba4ab74388894aefd0004cb1ce39e4.
+Archive /home/arkhane/gambit-arena-backups/gambit-arena-20261026-172958-b1dfb33b12ba.tar.gz.
+SHA-256 d24379a99c7ec0f42bb1f82e881bf5012cac9d18fc591703126ef96eafce11a8.
+Restauration /tmp/gameplay001-restore-36lwhmgq : bundle cloné, fsck valide, HEAD/parent
+et 479 fichiers identiques entre commit, archive et workspace. Checkpoint local.
+
 # Checkpoint GRAPHICS-003
 
 Commit 7956cfce2efcdaf4b95fd3f0631193cb9d442589.

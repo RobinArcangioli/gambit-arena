@@ -91,5 +91,5 @@ persistante ; il ne prétend pas récupérer une ancienne configuration personne
 
 Les modèles ne déterminent jamais les compétences. Une comparaison de 900 ticks de Main
 avec modèles, mannequins et sans vue donne les mêmes états et couvre réellement Soin/Foudre.
-Les gestes Duck et les effets de soin/Foudre restent GRAPHICS-005/006 ; les gestes de frappe,
-réaction et mort restent GRAPHICS-004. Cette étape affiche encore Idle/Walk pendant le combat.
+GRAPHICS-004/fix1 raccorde désormais Sword, HitReact, Death et Duck, avec priorité stricte
+des actions. Les effets de soin/Foudre restent GRAPHICS-005/006 ; voir docs/combat-presentation.md.

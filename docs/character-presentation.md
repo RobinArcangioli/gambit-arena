@@ -15,7 +15,7 @@ Les sources ont des transformations internes non unitaires : ne pas modifier le 
 Les sockets d'armes ne sont pas extraits dans cette étape ; les armes embarquées suivent
 les ancrages du modèle d'origine.
 
-CharacterView conserve uniquement Idle et Walk dans ses bibliothèques locales. Les clips
+CharacterView conserve Idle, Walk, Sword, HitReact, Death et Duck dans ses bibliothèques locales. Les clips
 sources restent intacts dans le GLB. Les pistes exécutables, les transformations de nœuds
 et les pistes du joint Root sont exclues ; les transformations osseuses utiles sont lues
 avec AnimationPlayer en mode manuel. Aucun callback d'animation ne pilote le jeu.
@@ -48,5 +48,5 @@ La scène scenes/tests/character_presentation_tests.tscn compare 900 ticks avec 
 paires de modèles, le mannequin et la vue absente ; elle vérifie aussi le repli, le
 remplacement répété, les Rejouer et la pause. Les tests de comptage des anciens labs
 comptent désormais StatsActor, car le mannequin n'est plus la classe de l'acteur logique.
-Les attaques utilisent encore Idle dans cette étape ; les gestes d'action suivent dans
-GRAPHICS-004/005/006. L'équipe de deux héros et ses règles arrivent dans GAMEPLAY-001.
+Les gestes d'action sont désormais raccordés dans GRAPHICS-004/fix1, avec priorité stricte ;
+voir docs/combat-presentation.md. L'équipe et ses règles sont livrées dans GAMEPLAY-001.

@@ -1,5 +1,6 @@
 extends "res://scripts/arena/arena.gd"
 ## Composition of independent party logic, models, bars, Android guard and touch-safe UI.
+const Presenter = preload("res://scripts/presentation/combat_presenter.gd")
 const Simulation = preload("res://scripts/party/party_simulation.gd")
 const Rules = preload("res://scripts/party/party_rules.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
@@ -12,8 +13,10 @@ const Picker = preload("res://scripts/presentation/arena_picker.gd")
 const Catalog = preload("res://scripts/presentation/arena_catalog.gd")
 const APPEARANCES = {&"anne": preload("res://resources/presentation/characters/anne.tres"), &"mako": preload("res://resources/presentation/characters/mako.tres"), &"skeleton": preload("res://resources/presentation/characters/skeleton_variant.tres")}
 @export var characters_enabled: bool = true
+@export var action_animations_enabled: bool = true
 @export var save_path: String = "user://party_rules_v2.json"
 var simulation := Simulation.new()
+var action_presenter := Presenter.new()
 var application_guard := Guard.new()
 var touch_router := Router.new()
 var arena_picker: Picker
@@ -57,6 +60,8 @@ func _ready() -> void:
 	$HUD/Title.add_theme_font_size_override("font_size", 20)
 	$HUD/Description.add_theme_font_size_override("font_size", 15)
 	world.child_entered_tree.connect(_compose_actor)
+	action_presenter.name = "CombatPresentation"
+	world.add_child(action_presenter)
 	add_child(simulation)
 	simulation.configure(world)
 	if not save_path.is_empty():
@@ -261,16 +266,24 @@ func _physics_process(delta: float) -> void:
 	if not paused and application_guard.consume_return_step():
 		_present()
 		return
+	action_presenter.capture(simulation.all_units(), simulation.run_id)
 	var before: float = simulation.clock.elapsed
 	simulation.advance(delta, paused)
 	var dt: float = maxf(0, simulation.clock.elapsed - before)
-	for unit in simulation.all_units(): unit.advance_visual(dt)
+	var visual_dt: float = dt
+	# A bounded visual tail completes death after terminal gameplay has stopped.
+	# It obeys the same pause/focus gate and never advances the game clock.
+	if simulation.result != "EN COURS" and not paused and not application_guard.blocked and not application_guard.resume_required and is_finite(delta) and delta > 0.0:
+		visual_dt = minf(delta, simulation.clock.MAX_STEP)
+	action_presenter.enabled = action_animations_enabled
+	action_presenter.present(simulation.all_units(), simulation.events, visual_dt, simulation.run_id, simulation.result != "EN COURS")
 	_present()
 
 func _reset() -> void:
 	if not ready_ui or application_guard.blocked: return
 	touch_router.cancel_gesture()
 	simulation.reset()
+	action_presenter.reset_run(simulation.run_id)
 	simulation.clock.paused = paused
 	_rebuild_footer()
 	_update_buttons()

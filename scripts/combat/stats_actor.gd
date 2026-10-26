@@ -61,3 +61,10 @@ func pose(time: float, walking: bool, facing: Vector2) -> void:
 func advance_visual(dt: float) -> void:
 	if visual is CharacterView:
 		visual.advance_visual(dt)
+
+func release_visual() -> Node3D:
+	# Presentation-only transfer. Death views never keep the logical actor in combat.
+	var released: Node3D = visual
+	visual = null
+	if is_instance_valid(released): remove_child(released)
+	return released

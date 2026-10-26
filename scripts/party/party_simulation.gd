@@ -29,7 +29,12 @@ var hits: int = 0
 var terminal_count: int = 0
 var feedback: String = ""
 # Value-only resolutions for later presentation stages. Bounded per accepted tick.
-var events: Array[Dictionary] = []
+var _events: Array[Dictionary] = []
+var events: Array[Dictionary]:
+	get: return _events.duplicate(true)
+const MAX_VISUAL_EVENTS: int = 384
+var _pending_deaths: Array[Dictionary] = []
+var _death_ids: Dictionary = {}
 
 func configure(parent_world: Node3D) -> void:
 	world = parent_world
@@ -50,6 +55,7 @@ func reset() -> void:
 		var unit := Unit.new()
 		unit.configure_party(profile)
 		unit.action.clock = clock
+		unit.state.died.connect(_record_death.bind(unit))
 		unit.name = profile.display_name
 		world.add_child(unit)
 		unit.place(Vector2(-0.65, 0.65) if profile == ANNE else Vector2(0.65, -0.65))
@@ -80,6 +86,7 @@ func add_enemy(at: Vector2) -> bool:
 	unit.configure_party(ENEMY)
 	unit.name = "Skeleton%d" % (spawned + 1)
 	unit.action.clock = clock
+	unit.state.died.connect(_record_death.bind(unit))
 	world.add_child(unit)
 	unit.place(at)
 	enemies.append(unit)
@@ -101,7 +108,8 @@ func _prune() -> void:
 			unit.hide()
 
 func advance(delta: float, paused: bool = false) -> void:
-	events.clear()
+	_events.clear()
+	_collect_visual_events(all_units())
 	if result != "EN COURS": return
 	_prune()
 	if living_heroes().is_empty():
@@ -115,9 +123,8 @@ func advance(delta: float, paused: bool = false) -> void:
 		var resolved_before: bool = unit.action.resolved
 		unit.action.advance(dt)
 		if not resolved_before and unit.action.resolved and unit.action.outcome in ["impact", "soin", "PV pleins", "hors portee"]:
-			var action = unit.action
-			events.append({"run_id": run_id, "source_id": unit.combat_id, "target_id": action._target.combat_id if is_instance_valid(action._target) else 0, "action_id": action.action_id, "skill": String(action.last_skill), "outcome": action.outcome, "damage": action.applied_damage, "healing": action.applied_healing, "source_position": unit.position, "target_position": action._target.position if is_instance_valid(action._target) else Vector3.ZERO})
-			if action.applied_damage > 0: hits += 1
+			if unit.action.applied_damage > 0: hits += 1
+	_collect_visual_events(all_units())
 	_prune()
 	if living_heroes().is_empty():
 		_finish("DEFAITE")
@@ -146,6 +153,7 @@ func advance(delta: float, paused: bool = false) -> void:
 	if wave.advance(dt, enemies.size()):
 		for attempt in range(20):
 			if add_enemy(Pattern.spawn_position((spawned + attempt) % 20)): break
+	_collect_visual_events(all_units())
 	for unit in all_units():
 		unit.present()
 
@@ -266,10 +274,12 @@ func _finish(outcome: String) -> void:
 		unit.pending.clear()
 		unit.clear_intention()
 		unit.present()
+	_collect_visual_events(all_units())
 
 func _dispose(unit) -> void:
 	if not is_instance_valid(unit): return
 	unit.action.retire()
+	_collect_visual_events([unit])
 	unit.pending.clear()
 	unit.clear_intention()
 	unit.hide()
@@ -280,7 +290,30 @@ func clear() -> void:
 	for unit in all_units(): _dispose(unit)
 	heroes.clear()
 	enemies.clear()
-	events.clear()
+	_events.clear()
+	_pending_deaths.clear()
+	_death_ids.clear()
 
 func _exit_tree() -> void:
 	clear()
+
+func _record_death(unit: Unit) -> void:
+	if _death_ids.has(unit.combat_id): return
+	_death_ids[unit.combat_id] = true
+	_pending_deaths.append({"kind": "death", "run_id": run_id, "actor_id": unit.combat_id,
+		"source_id": unit.combat_id, "target_id": unit.combat_id, "action_id": 0,
+		"skill": "", "outcome": "death", "damage": 0, "healing": 0,
+		"position": unit.position, "facing": unit.mover.facing, "game_time": clock.elapsed})
+
+func _append_visual_event(values: Dictionary) -> void:
+	if _events.size() >= MAX_VISUAL_EVENTS: _events.pop_front()
+	values["run_id"] = run_id
+	values.make_read_only()
+	_events.append(values)
+
+func _collect_visual_events(units: Array[Unit]) -> void:
+	for unit in units:
+		if is_instance_valid(unit):
+			for values in unit.action.take_visual_events(): _append_visual_event(values)
+	for values in _pending_deaths: _append_visual_event(values)
+	_pending_deaths.clear()

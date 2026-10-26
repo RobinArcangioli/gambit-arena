@@ -1,3 +1,10 @@
+# Actualisation des priorités — instruction du propriétaire
+
+GRAPHICS-004/fix1 intègre la règle Mort > action active (attaque/sort) > déplacement >
+HitReact > Idle. Les deux derniers sont immédiatement interrompus par un état prioritaire.
+Duck pour Soin/Foudre est donc raccordé dès GRAPHICS-004 ; GRAPHICS-005/006 gardent les
+ effets dédiés à produire. Voir docs/steps/GRAPHICS-004.md. Le plan initial suit ci-dessous.
+
 # Roadmap graphique — GRAPHICS-001 à GRAPHICS-007
 
 Préparée le 26 octobre 2026 à la demande du propriétaire, sur STEP-028 clôturée au commit
@@ -6,9 +13,9 @@ au commit local f5a790d avec sauvegarde vérifiée. GRAPHICS-002 est validée ap
 du catalogue, clôturée au commit local `1e427560a9d2884ce1d3e339a093d576192fc22f`.
 Les modèles de GRAPHICS-003 sont reçus : Anne et Mako du Pirate Kit pour les héros,
 les deux squelettes du même Pirate Kit pour les ennemis (KayKit réservé pour plus tard). Voir [l'inspection des assets](character-assets-intake.md)
-pour les clips disponibles et les raccordements à prévoir. GRAPHICS-003 est clôturée au commit 7956cfc. GAMEPLAY-001 est validée avec fix1 ; voir docs/steps/GAMEPLAY-001.md.
+pour les clips disponibles et les raccordements à prévoir. GRAPHICS-003 est clôturée au commit 7956cfc. GAMEPLAY-001 est clôturée au commit b1dfb33. GRAPHICS-004/fix1 est validée par le propriétaire ; voir docs/steps/GRAPHICS-004.md.
 Le chantier graphique s'intercale avant STEP-029 et STEP-030, qui gardent leurs identifiants
-et seront exécutées sur la version enrichie. Voir docs/steps/GAMEPLAY-001.md pour la livraison actuelle.
+et seront exécutées sur la version enrichie. Voir docs/steps/GRAPHICS-004.md pour la livraison actuelle.
 
 ## Objectif et périmètre
 
