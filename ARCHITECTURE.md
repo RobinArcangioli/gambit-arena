@@ -1,3 +1,12 @@
+# GRAPHICS-007 — qualification sans dépendance du gameplay
+
+Un laboratoire distinct compose Main avec des règles en mémoire et contrôle les variantes
+artistiques. Le collecteur borné de STEP-028 est réutilisé, avec les callbacks physiques et
+processus normaux. Les modèles/exemples d'éclair sont des ressources remplaçables ; les
+traces comparatives vérifient l'identité des valeurs du jeu. Les outils d'inventaire,
+d'export diagnostique isolé et de synthèse des mesures ne sont pas appelés par Main.
+Voir docs/graphics-qualification.md. Les sections suivantes sont historiques.
+
 # GRAPHICS-006 — présentation de Foudre
 
 CombatPresenter compose un LightningPresenter indépendant qui ne reçoit que des faits

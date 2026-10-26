@@ -137,8 +137,8 @@ leurs identifiants et se dérouleront après ce chantier.
 | GAMEPLAY-001 | Clôturée localement — b1dfb33, sauvegarde vérifiée | Équipe Anne/Mako, compétences propres, soin ciblé et gambit Allié < 50 % PV ; voir docs/party-skills-plan.md |
 | GRAPHICS-004 | Clôturée localement — 074f971, sauvegarde vérifiée | Attaque, réaction, mort et priorités des actions ; Duck pour les sorts |
 | GRAPHICS-005 | Clôturée localement — bf4904d, sauvegarde vérifiée | Halo de soin, valeur rendue, profil remplaçable et cycle de vie |
-| GRAPHICS-006 | Validée — clôture autorisée | Éclair descendant et glow, préparation et impact sur cible réelle |
-| GRAPHICS-007 | À faire | Qualification graphique et facilité de remplacement |
+| GRAPHICS-006 | Clôturée localement — 834f532, sauvegarde vérifiée | Éclair descendant et glow, préparation et impact sur cible réelle |
+| GRAPHICS-007 | Validée — clôture autorisée | Qualification graphique et facilité de remplacement |
 | STEP-029 | À faire | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |
 

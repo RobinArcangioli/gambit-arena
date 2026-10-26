@@ -1,3 +1,12 @@
+# Checkpoint GRAPHICS-006 vérifié
+
+Commit 834f532912a9ee0092133a6761ff40bc70a32933, parent bf4904d.
+Archive gambit-arena-20261026-223245-834f532912a9.tar.gz,
+SHA-256 5ebd326ba824424cc0fefd3960b457e26b789afff565b4e5e165463f1834ca80.
+Restauration /tmp/graphics006-restore-6y5d1ja5 : bundle valide, clone et fsck corrects,
+HEAD/parent vérifiés, arbres propres et 529 fichiers identiques entre commit, sauvegarde
+et projet. Code identique à la livraison validée. Base de GRAPHICS-007 ; aucun nouveau push.
+
 # Checkpoint GRAPHICS-005 vérifié
 
 Commit bf4904d5d56338f7fbc11395c2e6ba24c4a96259, parent 074f971.

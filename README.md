@@ -1,3 +1,28 @@
+# GRAPHICS-007 validée — 26 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison GRAPHICS-007,
+APK normal 0.1.0-graphics007 (39), installé sur Galaxy A16.
+SHA-256 APK : `adbbffbf33239c05622e83059827f45f32f263742631509d878617eca71b7231`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure FPS.
+Les fichiers non documentaires sont identiques à la livraison validée ; les 37 bancs /
+2 374 contrôles déjà réussis ne sont pas relancés pour cette clôture documentaire.
+Clôture par un commit unique, puis sauvegarde et restauration vérifiées.
+Le chantier GRAPHICS-001 à GRAPHICS-007 est validé. Prochaine étape : STEP-029,
+clone/import/export/installation reproductibles ; attendre GO avant de la démarrer.
+Les mentions de recette ci-dessous décrivent les états antérieurs.
+
+# GRAPHICS-007 — qualification graphique en recette
+
+GRAPHICS-006 clôturée au commit local 834f532, sauvegarde restaurée/vérifiée.
+48 cas visuels inspectés sur Galaxy, 10 captures de coût graphique complètes et trois
+remplacements artistiques démontrés. 37 bancs / 2 374 contrôles passent ; inventaire et
+budgets documentés. Réserve : pointes lors des reconstructions du laboratoire.
+Voir docs/steps/GRAPHICS-007.md et docs/graphics-qualification.md.
+F6 : scenes/debug/graphics_qualification_lab.tscn ; F8/F5 retrouve Main.
+APK normal 0.1.0-graphics007 (39), installé sur Galaxy A16 après la qualification code 38.
+Étape non commitée ; attendre validation avant clôture et STEP-029.
+Les sections suivantes décrivent les états historiques.
+
 # GRAPHICS-006 validée — 26 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la livraison GRAPHICS-006,

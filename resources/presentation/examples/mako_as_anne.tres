@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/character_definition.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/art/characters/pirates/anne.glb" id="2"]
+[resource]
+script = ExtResource("1")
+character_id = &"mako_visual_demo"
+display_name = "Anne (apparence de demonstration)"
+model = ExtResource("2")
+model_scale = 0.65
+idle_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Idle|CharacterArmature|Idle"
+move_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Walk|CharacterArmature|Walk"
+attack_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Sword|CharacterArmature|Swo"
+hit_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|HitReact|CharacterArmature|"
+death_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Death|CharacterArmature|Dea"
+cast_clip = &"CharacterArmature|CharacterArmature|CharacterArmature|Duck|CharacterArmature|Duck"

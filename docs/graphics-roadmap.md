@@ -1,3 +1,11 @@
+# Actualisation GRAPHICS-007
+
+GRAPHICS-006 clôturée localement au commit 834f532, sauvegarde vérifiée.
+GRAPHICS-007 est validée par le propriétaire : matrice des huit arènes sur téléphone, 10 captures de coût
+sur la vraie équipe, trois remplacements démontrés, inventaire et budgets documentés.
+Voir steps/GRAPHICS-007.md et graphics-qualification.md. Les réserves et limites des mesures
+y sont explicites. STEP-029/030 restent à faire après validation/clôture. Le plan historique suit.
+
 # Actualisation GRAPHICS-006
 
 GRAPHICS-005 clôturée localement au commit bf4904d, sauvegarde vérifiée.
