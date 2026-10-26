@@ -1,3 +1,29 @@
+# GAMEPLAY-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.
+APK normal 0.1.0-gameplay002 (41), installé sur Galaxy A16 et laissé en pause.
+SHA-256 APK : `105021ffe77922674c6a9c90be8cd60a79f5a8cbd748776ff76bcf1e1e6d0505`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets et configuration identiques à la livraison validée ; seuls les documents
+sont actualisés. Les 39 bancs / 2 481 contrôles et 28 cas Android déjà réussis ne sont pas
+relancés pour cette clôture documentaire. Clôture par un commit unique puis sauvegarde
+restaurée/vérifiée. GAMEPLAY-003 (gabarits plus fins) attend un nouveau GO.
+Les mentions de recette et de préparation suivantes décrivent les états historiques.
+
+# Mise à jour du 27 octobre 2026
+
+GAMEPLAY-002 est implémentée et en recette sur le Galaxy A16 ; voir steps/GAMEPLAY-002.md.
+GAMEPLAY-003 reste planifiée après validation/clôture de cette étape. Les modèles actuels
+restent à l'échelle 0,65 et les corps au rayon 0,35. Les étapes graphiques ci-dessous sont
+historiques et validées ; STEP-029 et STEP-030 viennent après les deux étapes de déplacement.
+
+# Suite après le chantier graphique validé
+
+GRAPHICS-001 à GRAPHICS-007 sont validées ; GRAPHICS-007 est clôturée au commit 440829b.
+Deux étapes demandées s'intercalent désormais avant STEP-029/030 : GAMEPLAY-002 pour le
+contournement local partagé, puis GAMEPLAY-003 pour réduire l'emprise et l'échelle des
+participants. Voir local-navigation-plan.md. Les plans graphiques suivants sont historiques.
+
 # Actualisation GRAPHICS-007
 
 GRAPHICS-006 clôturée localement au commit 834f532, sauvegarde vérifiée.

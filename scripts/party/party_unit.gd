@@ -1,4 +1,6 @@
 extends "res://scripts/combat/stats_actor.gd"
+const Navigator = preload("res://scripts/movement/local_navigator.gd")
+var navigation := Navigator.new()
 const Mover = preload("res://scripts/movement/ground_mover.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
 const Profile = preload("res://scripts/party/party_profile.gd")
@@ -36,6 +38,7 @@ func configure_party(profile: Profile) -> void:
 	mover.speed = state.move_speed
 
 func place(at: Vector2) -> void:
+	navigation.reset()
 	mover.reset(at)
 	position = Vector3(at.x, 0, at.y)
 

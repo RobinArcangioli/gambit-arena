@@ -1,3 +1,21 @@
+# GAMEPLAY-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.
+APK normal 0.1.0-gameplay002 (41), installé sur Galaxy A16 et laissé en pause.
+SHA-256 APK : `105021ffe77922674c6a9c90be8cd60a79f5a8cbd748776ff76bcf1e1e6d0505`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets et configuration identiques à la livraison validée ; seuls les documents
+sont actualisés. Les 39 bancs / 2 481 contrôles et 28 cas Android déjà réussis ne sont pas
+relancés pour cette clôture documentaire. Clôture par un commit unique puis sauvegarde
+restaurée/vérifiée. GAMEPLAY-003 (gabarits plus fins) attend un nouveau GO.
+Les mentions de recette et de préparation suivantes décrivent les états historiques.
+
+# GAMEPLAY-002 — en recette
+
+Contournement partagé livré sur les gabarits actuels : 39 bancs / 2 481 contrôles et
+28 scénarios Android. Attendre validation/clôture avant GAMEPLAY-003 (gabarits plus fins),
+puis STEP-029 et STEP-030. Voir docs/steps/GAMEPLAY-002.md. Le registre initial suit.
+
 # Roadmap — Gambit Arena
 
 La roadmap détaillée a été validée par l'utilisateur dans la conversation
@@ -121,6 +139,12 @@ Voir [HANDOFF.md](HANDOFF.md) et [la procédure GitHub](docs/handoff/GITHUB.md).
 
 ## Étapes restantes
 
+Actualisation après GRAPHICS-007 : deux nouvelles étapes de gameplay demandées par le
+propriétaire s'intercalent avant STEP-029/030. D'abord contournement local partagé, puis
+réduction de gabarit ; voir [le plan](docs/local-navigation-plan.md). Le plan est préparé,
+les deux fonctionnalités ne sont pas implémentées. Le prochain GO démarre GAMEPLAY-002.
+
+
 Le propriétaire a demandé de préparer un chantier graphique avant la livraison finale :
 voir la [roadmap graphique GRAPHICS-001 à GRAPHICS-007](docs/graphics-roadmap.md).
 Elle prévoit d'abord les arènes interchangeables, puis les personnages 3D et les actions
@@ -138,8 +162,10 @@ leurs identifiants et se dérouleront après ce chantier.
 | GRAPHICS-004 | Clôturée localement — 074f971, sauvegarde vérifiée | Attaque, réaction, mort et priorités des actions ; Duck pour les sorts |
 | GRAPHICS-005 | Clôturée localement — bf4904d, sauvegarde vérifiée | Halo de soin, valeur rendue, profil remplaçable et cycle de vie |
 | GRAPHICS-006 | Clôturée localement — 834f532, sauvegarde vérifiée | Éclair descendant et glow, préparation et impact sur cible réelle |
-| GRAPHICS-007 | Validée — clôture autorisée | Qualification graphique et facilité de remplacement |
-| STEP-029 | À faire | Clone neuf, import, export et installation reproductibles |
+| GRAPHICS-007 | Clôturée localement — 440829b, sauvegarde vérifiée | Qualification graphique et facilité de remplacement |
+| GAMEPLAY-002 | Validée — 27 octobre 2026 | Contournement local partagé héros/ennemis aux dimensions actuelles |
+| GAMEPLAY-003 | Plan préparé — après GAMEPLAY-002 | Emprise au sol et modèles plus petits, paramètres cohérents et parcours comparés |
+| STEP-029 | Après GAMEPLAY-003 | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |
 
 Le [plan détaillé proposé](docs/handoff/NEXT_STEPS.md) prépare ces étapes ; il ne prétend

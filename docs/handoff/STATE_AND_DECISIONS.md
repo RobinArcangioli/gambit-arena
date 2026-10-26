@@ -1,3 +1,32 @@
+# GAMEPLAY-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.
+APK normal 0.1.0-gameplay002 (41), installé sur Galaxy A16 et laissé en pause.
+SHA-256 APK : `105021ffe77922674c6a9c90be8cd60a79f5a8cbd748776ff76bcf1e1e6d0505`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets et configuration identiques à la livraison validée ; seuls les documents
+sont actualisés. Les 39 bancs / 2 481 contrôles et 28 cas Android déjà réussis ne sont pas
+relancés pour cette clôture documentaire. Clôture par un commit unique puis sauvegarde
+restaurée/vérifiée. GAMEPLAY-003 (gabarits plus fins) attend un nouveau GO.
+Les mentions de recette et de préparation suivantes décrivent les états historiques.
+
+# GAMEPLAY-002 en recette
+
+La navigation locale commune aux héros et ennemis est implémentée sur Main ; elle contourne
+les empreintes logiques, sans ajouter de collisions aux PNG. Les gabarits restent inchangés.
+Voir ../local-navigation.md et ../steps/GAMEPLAY-002.md. GAMEPLAY-003 attend validation/clôture
+de cette étape. Les décisions et exclusions suivantes décrivent des états antérieurs.
+
+# Actualisation après GRAPHICS-007
+
+L'équipe Anne/Mako, les squelettes pirates, le soin et Foudre sont livrés et validés ;
+GRAPHICS-007 est clôturée au commit 440829b. La nouvelle demande autorise la préparation de
+deux étapes avant STEP-029 : GAMEPLAY-002 (navigation locale sur les obstacles logiques,
+commune à tous) puis GAMEPLAY-003 (rayon et échelle visuelle réduits). Plan détaillé dans
+../local-navigation-plan.md. La navigation globale complexe et le décor bloquant ne font
+pas partie de cette demande. Aucun changement d'implémentation avec cette mise à jour.
+Les décisions et exclusions ci-dessous décrivent des états historiques.
+
 # État et décisions à préserver
 
 ## Produit

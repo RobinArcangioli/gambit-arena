@@ -1,3 +1,35 @@
+# GAMEPLAY-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.
+APK normal 0.1.0-gameplay002 (41), installé sur Galaxy A16 et laissé en pause.
+SHA-256 APK : `105021ffe77922674c6a9c90be8cd60a79f5a8cbd748776ff76bcf1e1e6d0505`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets et configuration identiques à la livraison validée ; seuls les documents
+sont actualisés. Les 39 bancs / 2 481 contrôles et 28 cas Android déjà réussis ne sont pas
+relancés pour cette clôture documentaire. Clôture par un commit unique puis sauvegarde
+restaurée/vérifiée. GAMEPLAY-003 (gabarits plus fins) attend un nouveau GO.
+Les mentions de recette et de préparation suivantes décrivent les états historiques.
+
+# GAMEPLAY-002 — navigateur partagé dans PartyUnit
+
+Chaque unité possède un LocalNavigator sans références de scène. PartySimulation transmet
+positions, cible et portée, répartit une recherche par pas en rotation et applique ensuite
+GroundCrowd. Le résultat réel alimente progression, état/facing et animation. Les actions
+actives et l'arrivée à portée figent l'approche. Mort/replay invalident les routes ; le temps
+suit GameClock. La grille native est petite et les recherches espacées. Les colliders/images,
+les règles et la présentation ne pilotent pas le routage. Voir docs/local-navigation.md.
+Les sections suivantes sont historiques.
+
+# Navigation locale et gabarits — architecture prévue
+
+GAMEPLAY-002 prévoit un composant de navigation partagé par PartyUnit et ses déplacements,
+qui reçoit cible/portée et propose un trajet court ; GroundCrowd reste l'autorité finale
+pour les contacts. Le navigateur ne choisit aucune cible et ne dépend pas des modèles.
+GAMEPLAY-003 réduira ensuite les empreintes logiques et les profils visuels séparément,
+avec des valeurs cohérentes pour contacts/navigation/bords/spawn. Cette architecture est
+planifiée, non implémentée. Voir docs/local-navigation-plan.md. Les sections suivantes
+décrivent l'implémentation déjà livrée.
+
 # GRAPHICS-007 — qualification sans dépendance du gameplay
 
 Un laboratoire distinct compose Main avec des règles en mémoire et contrôle les variantes

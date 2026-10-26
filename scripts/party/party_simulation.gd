@@ -11,6 +11,11 @@ const Wave = preload("res://scripts/waves/wave_schedule.gd")
 const ANNE = preload("res://data/party/anne.tres")
 const MAKO = preload("res://data/party/mako.tres")
 const ENEMY = preload("res://data/party/skeleton.tres")
+const MAX_NAV_SEARCHES_PER_TICK: int = 1
+var navigation_enabled: bool = true
+var navigation_obstacles: Array[Vector2] = []
+var navigation_cursor: int = 0
+var navigation_searches_last_tick: int = 0
 var world: Node3D
 var clock := Clock.new()
 var wave := Wave.new()
@@ -105,6 +110,7 @@ func _prune() -> void:
 			unit.pending.clear()
 			unit.clear_intention()
 			unit.action.retire()
+			unit.navigation.clear()
 			unit.hide()
 
 func advance(delta: float, paused: bool = false) -> void:
@@ -235,6 +241,7 @@ func request_manual(key: StringName, skill: StringName) -> bool:
 	return true
 
 func _move(dt: float) -> void:
+	if not is_finite(dt) or dt <= 0: return
 	var units: Array[Unit] = []
 	for unit in all_units():
 		if Executor.living(unit): units.append(unit)
@@ -242,23 +249,56 @@ func _move(dt: float) -> void:
 	var requests: Array[Vector2] = []
 	var corrections: Array[bool] = []
 	for unit in units:
-		var start: Vector2 = unit.mover.ground_position
-		points.append(start)
+		points.append(unit.mover.ground_position)
+		requests.append(Vector2.ZERO)
+		corrections.append(unit.team != 0 and not unit.action.active)
+	for point in navigation_obstacles:
+		points.append(point)
+		requests.append(Vector2.ZERO)
+		corrections.append(false)
+	navigation_searches_last_tick = 0
+	for order in range(units.size()):
+		var index: int = (order + navigation_cursor) % units.size()
+		var unit: Unit = units[index]
+		var start: Vector2 = points[index]
 		unit.mover.velocity = Vector2.ZERO
+		unit.navigation.tick(dt)
 		var reach: float = Executor.skill_reach(unit.desired_skill)
-		var hold: bool = unit.action.active or (Executor.living(unit.desired_target) and Executor.distance_between(unit, unit.desired_target) <= reach)
-		if not hold:
+		var valid: bool = Executor.living(unit.desired_target)
+		var hold: bool = unit.action.active or (valid and Executor.distance_between(unit, unit.desired_target) <= reach)
+		if hold:
+			unit.navigation.hold()
+		elif not valid:
+			unit.navigation.clear()
+		elif navigation_enabled:
+			var obstacles: Array[Vector2] = points.duplicate()
+			obstacles.remove_at(index)
+			var destination := Vector2(unit.desired_target.position.x, unit.desired_target.position.z)
+			var before_searches: int = unit.navigation.searches
+			requests[index] = unit.navigation.request(start, destination, unit.desired_target.combat_id,
+				reach, unit.mover.speed, dt, obstacles, navigation_searches_last_tick < MAX_NAV_SEARCHES_PER_TICK)
+			navigation_searches_last_tick += unit.navigation.searches - before_searches
+		else:
 			unit.mover.stopping_distance = maxf(0.1, reach - 0.2)
 			unit.mover.step(dt)
-		requests.append(unit.mover.ground_position - start)
-		unit.mover.ground_position = start
-		corrections.append(unit.team != 0 and not unit.action.active)
+			requests[index] = unit.mover.ground_position - start
+			unit.mover.ground_position = start
+	if not units.is_empty(): navigation_cursor = (navigation_cursor + 1) % units.size()
 	var positions: Array[Vector2] = Crowd.solve(points, requests, corrections, dt)
 	for i in range(units.size()):
 		var unit: Unit = units[i]
 		var movement: Vector2 = positions[i] - points[i]
+		unit.navigation.observe(points[i], positions[i], requests[i], dt)
 		unit.mover.ground_position = positions[i]
 		unit.mover.velocity = movement / dt
+		if Executor.living(unit.desired_target):
+			var destination := Vector2(unit.desired_target.position.x, unit.desired_target.position.z)
+			unit.mover.distance_to_target = positions[i].distance_to(destination)
+			if unit.action.active or unit.mover.distance_to_target <= Executor.skill_reach(unit.desired_skill):
+				unit.mover.state = unit.Mover.State.ARRIVED
+			else:
+				unit.mover.state = unit.Mover.State.MOVING if movement.length_squared() > 0.0000000001 else unit.Mover.State.BLOCKED
+		else: unit.mover.state = unit.Mover.State.NO_TARGET
 		if movement.length_squared() > 0.00000001:
 			unit.gait += dt
 			unit.mover.facing = movement.normalized()
@@ -273,6 +313,7 @@ func _finish(outcome: String) -> void:
 		unit.action.retire()
 		unit.pending.clear()
 		unit.clear_intention()
+		unit.navigation.clear()
 		unit.present()
 	_collect_visual_events(all_units())
 
@@ -282,10 +323,14 @@ func _dispose(unit) -> void:
 	_collect_visual_events([unit])
 	unit.pending.clear()
 	unit.clear_intention()
+	unit.navigation.clear()
 	unit.hide()
 	unit.queue_free()
 
 func clear() -> void:
+	navigation_obstacles.clear()
+	navigation_cursor = 0
+	navigation_searches_last_tick = 0
 	clock.stopped = true
 	for unit in all_units(): _dispose(unit)
 	heroes.clear()

@@ -1,3 +1,26 @@
+# GAMEPLAY-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.
+APK normal 0.1.0-gameplay002 (41), installé sur Galaxy A16 et laissé en pause.
+SHA-256 APK : `105021ffe77922674c6a9c90be8cd60a79f5a8cbd748776ff76bcf1e1e6d0505`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets et configuration identiques à la livraison validée ; seuls les documents
+sont actualisés. Les 39 bancs / 2 481 contrôles et 28 cas Android déjà réussis ne sont pas
+relancés pour cette clôture documentaire. Clôture par un commit unique puis sauvegarde
+restaurée/vérifiée. GAMEPLAY-003 (gabarits plus fins) attend un nouveau GO.
+Les mentions de recette et de préparation suivantes décrivent les états historiques.
+
+# GAMEPLAY-002 — contournement local en recette
+
+Anne, Mako et les squelettes partagent un navigateur local : détour, cache de chemin,
+recalculs bornés et attente stable sans passage. GroundCrowd garde le contrôle de contact.
+Rayon 0,35 et échelle 0,65 conservés. 39 bancs / 2 481 contrôles passent ; 28 scénarios
+Android réussis et relevé de coût en combat réel. Voir docs/steps/GAMEPLAY-002.md et
+docs/local-navigation.md. F6 : scenes/debug/local_navigation_lab.tscn ; F8/F5 : Main.
+APK normal 0.1.0-gameplay002 (41), installé/lancé sur Galaxy A16.
+Étape non commitée ; attendre validation avant clôture et GAMEPLAY-003.
+Les sections suivantes décrivent les préparations et états historiques.
+
 # GRAPHICS-007 validée — 26 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la livraison GRAPHICS-007,

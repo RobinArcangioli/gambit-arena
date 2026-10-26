@@ -1,3 +1,28 @@
+# GAMEPLAY-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.
+APK normal 0.1.0-gameplay002 (41), installé sur Galaxy A16 et laissé en pause.
+SHA-256 APK : `105021ffe77922674c6a9c90be8cd60a79f5a8cbd748776ff76bcf1e1e6d0505`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets et configuration identiques à la livraison validée ; seuls les documents
+sont actualisés. Les 39 bancs / 2 481 contrôles et 28 cas Android déjà réussis ne sont pas
+relancés pour cette clôture documentaire. Clôture par un commit unique puis sauvegarde
+restaurée/vérifiée. GAMEPLAY-003 (gabarits plus fins) attend un nouveau GO.
+Les mentions de recette et de préparation suivantes décrivent les états historiques.
+
+# Checkpoint GRAPHICS-007 vérifié
+
+Commit 440829bfca597654a520897f488cf97ea24fb1f4, parent 834f532.
+Archive gambit-arena-20261026-232221-440829bfca59.tar.gz,
+SHA-256 bbb2b967eba209400f048dc461b0c1c5bc7d2b8838213aa60c6f59111c80c95e.
+Restauration /tmp/graphics007-restore-6m_fx2aw : bundle valide, clone/fsck corrects,
+HEAD/parent et arbres propres vérifiés, 548 fichiers conformes. Code et données inchangés
+par rapport à la livraison validée. Les 48 PNG et rapports bruts sont conservés avec les
+sauvegardes dans gambit-arena-graphics007-delivery-validated-5c3d9469.tar.gz,
+SHA-256 5c3d9469d614c800abca280881b268972f4d338d9c090e9816b8f119fe6ce349.
+GAMEPLAY-002 est désormais en recette, sans commit/push ; GAMEPLAY-003 reste planifiée.
+Le checkpoint ci-dessus reste la base fonctionnelle restaurable.
+
 # Checkpoint GRAPHICS-006 vérifié
 
 Commit 834f532912a9ee0092133a6761ff40bc70a32933, parent bf4904d.

@@ -1,3 +1,10 @@
+# Extension GAMEPLAY-002 sur Main
+
+GroundCrowd reste inchangé et assure toujours le contrôle final des contacts. Main compose
+désormais un LocalNavigator partagé avant ce solveur pour proposer des détours. Les anciens
+CrowdSimulation/laboratoires ci-dessous gardent leur comportement sans pathfinding.
+Voir local-navigation.md. Les paramètres corporels restent 0,35/0,70.
+
 # Foule et séparation — STEP-009
 
 Statut : validé par l’utilisateur, commit en attente. Tests manuels et F6 OK,

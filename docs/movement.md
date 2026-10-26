@@ -1,3 +1,10 @@
+# Extension GAMEPLAY-002
+
+GroundMover et ses anciens bancs restent inchangés. Dans Main, le déplacement de PartyUnit
+est désormais proposé par LocalNavigator puis limité par GroundCrowd ; les données du mover
+sont mises à jour avec le mouvement effectué. Voir local-navigation.md. Les descriptions
+ci-dessous sont celles des étapes initiales, sans détour à cette époque.
+
 # Déplacement au sol — STEP-007
 
 ## API et responsabilité
