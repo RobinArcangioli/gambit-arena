@@ -1,42 +1,45 @@
-# Gambit Arena — STEP-026
+# Gambit Arena — STEP-027
 
-STEP-025 avec fix1 clôturée au commit f62162d ; sauvegarde vérifiée, 289 fichiers conformes.
-STEP-026 : Validée, commit en attente. F5 ouvre RunLifecycleLab : trois vagues progressives,
-ciblage conservé tant que la cible vit et reste à portée, et bilan de fin de partie figé.
+STEP-026 clôturée au commit 344a584 ; sauvegarde vérifiée, 297 fichiers conformes.
+STEP-027 : Validée, commit en attente. F5 ouvre ApplicationLab, qui conserve le combat
+à trois vagues, le ciblage fix1 et le bilan/replay STEP-026.
 
-La défaite arrête les actions, commandes, mouvements et arrivées. Le HUD indique le résultat,
-les vagues terminées, vaincus, arrivés et survivants. Les détails des compétences donnent
-le bilan complet. Rejouer crée une partie neuve avec les mêmes gambits et le même état de
-pause. Aucun acteur ou effet d’une ancienne partie ne doit agir sur la suivante.
+Perdre le focus ou mettre l’application en arrière-plan impose la pause. Le retour ne
+reprend jamais le combat automatiquement : toucher Reprendre une fois l’application
+revenue. Le premier pas de simulation après cette reprise est ignoré ; les suivants
+utilisent l’horloge existante, sans rattraper le temps passé hors application.
+Les actions, coûts déjà payés, cooldowns, commandes en attente et vagues sont conservés.
 
-Le nouveau banc vérifie dix resets consécutifs du coordinateur et dix clics réels sur
-Rejouer, des morts en pause, des actions et commandes en attente, les références et signaux,
-les comptes, un bilan de victoire, le nettoyage de 20 ennemis et la sortie du coordinateur.
-Les modes Combat/Soin/Charge, profils, animations, routeur tactile et règle de cible fix1
-sont conservés. Normal : trois fois 12 ennemis, plafond 6 ; Charge : trois fois 24, plafond 20.
+Les entrées sont bloquées pendant l’absence de focus/suspension. Un ancien relâchement
+ne doit ni commander une compétence, ni activer Reprendre/Rejouer. Un geste neuf reste
+utilisable au retour. Le formulaire garde son brouillon et la pause ; la zone sûre est
+recalculée. Une défaite reste terminale. Aucune reprise de partie après arrêt du processus
+n’est ajoutée : les configurations restent en mémoire de session, sans sauvegarde persistante.
 
-F6 : run_lifecycle_tests.tscn, puis les régressions de la [recette STEP-026](docs/steps/STEP-026.md).
-F8 entre chaque banc. Godot absent chez l’assistant : contrôles statiques uniquement.
-Validation utilisateur globale reçue : F6, tests manuels et fluidité OK.
+F6 : application_lifecycle_tests.tscn, puis les régressions de la
+[recette STEP-027](docs/steps/STEP-027.md). F8 entre chaque banc.
+Godot absent chez l’assistant : contrôles statiques uniquement, tests moteur à exécuter.
+Les notifications synthétiques du banc ne prouvent pas le comportement du téléphone :
+la recette Android (Accueil, applications récentes, verrouillage) est obligatoire.
 
-- [Défaite et Rejouer](docs/run-lifecycle.md)
+- [Cycle de l’application](docs/application-lifecycle.md)
 - [Architecture](ARCHITECTURE.md), [état](PROJECT_STATUS.md), [roadmap](ROADMAP.md)
 - [Android](docs/android.md), [sauvegarde](docs/backup.md)
 
-Android 0.1.0-step026, code 26. Export : ../gambit-arena-builds/step-026-debug.apk.
-Validation reçue : commit et sauvegarde à effectuer. Équilibrage et performance restent à qualifier.
+Android 0.1.0-step027, code 27. Export : ../gambit-arena-builds/step-027-debug.apk.
+Validation reçue : commit et sauvegarde à effectuer. Animations, profils et logique de combat inchangés.
 
-## Validation utilisateur — 25 octobre 2026
+## Validation utilisateur — 26 octobre 2026
 
-STEP-026 explicitement validée : F6 OK, tests manuels OK, fluidité OK.
+STEP-027 explicitement validée : F6 OK, tests manuels OK, fluidité OK.
 Retour global, sans résultats séparés par banc ou mesure chiffrée ; aucune réserve signalée.
-APK : step-026-debug.apk ; version 0.1.0-step026, code 26.
-SHA-256 : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.
+APK : step-027-debug.apk ; version 0.1.0-step027, code 27.
+SHA-256 : 07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611.
 Statut : Validée, commit en attente.
 
-Archive : gambit-arena-complet-step-026-validation.tar.gz.
+Archive : gambit-arena-complet-step-027-validation.tar.gz.
 Seule la documentation change depuis v1 ; code, scènes, tests et configuration identiques.
 Aucun lancement Godot chez l’assistant. Les instructions de recette précédentes décrivent
 la validation maintenant reçue ; aucun nouveau test requis pour cette mise à jour documentaire.
 Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
-STEP-027 attend clôture et nouveau GO.
+STEP-028 attend clôture et nouveau GO.

@@ -456,3 +456,14 @@ Les mentions des étapes précédentes sont historiques. Commit après validatio
 STEP-026 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
 Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
 APK : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.
+
+## STEP-027 — Livraison en attente de validation
+
+Base clôturée 344a584. ApplicationLab ajoute la protection de retour au premier plan,
+avec reprise explicite et rejet des anciens gestes. Recette : docs/steps/STEP-027.md.
+Android 0.1.0-step027, code 27 ; export step-027-debug.apk. Aucun nouveau SHA reçu.
+Les mentions antérieures décrivent les livraisons précédentes. Commit après validation.
+
+STEP-027 validée le 26 octobre 2026 : F6, tests manuels et fluidité OK.
+Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
+APK : 07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611.

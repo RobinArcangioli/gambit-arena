@@ -1,6 +1,7 @@
-# Architecture réelle — STEP-026
+# Architecture réelle — STEP-027
 
-Main conserve son UID et ouvre scenes/waves/run_lifecycle_lab.tscn.
+Main conserve son UID et ouvre scenes/platform/application_lab.tscn.
+ApplicationLab étend RunLifecycleLab et porte la politique de retour au premier plan.
 RunLifecycleLab étend WaveSequenceLab et ajoute la présentation du bilan terminal.
 WaveSequenceLab étend WaveLab, lui-même dérivé de ManualCommandLab. Le nouveau lab active
 sequence_enabled ; WaveLab active wave_enabled et conserve seul une vague historique.
@@ -99,3 +100,27 @@ Le bilan est effacé par reset ; le bandeau normal reprend alors son affichage h
 STEP-026 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
 Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
 APK : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.
+
+## ApplicationGuard — STEP-027
+
+Le nouveau Node est ajouté en dernier enfant après la construction du HUD : son _input
+précède le routeur tactile selon le parcours inverse en profondeur de Godot. Il ne
+déclenche aucune action. Il consomme les entrées pendant suspended ou !focused et les
+relâchements/drags sans nouvel appui correspondant. Les pressions souris physiques et
+émulées sont distinguées par device ; la molette n’est pas filtrée au premier plan.
+
+ApplicationLab reçoit les notifications avec observe ; _notification ne rappelle pas
+super, puisque Godot distribue cette méthode à chaque classe de la chaîne. Le parent
+Arena garde son comportement historique. À la perte, le nouveau lab impose la pause,
+oublie les gestes du routeur, et bloque Reprendre/Rejouer. Deux indicateurs distincts
+attendent leurs notifications de retour respectives, dans n’importe quel ordre.
+
+Le retour conserve paused et recalcule le layout. Un nouveau clic Reprendre peut lever
+la pause seulement au premier plan et hors formulaire. Le prochain _physics_process
+actif ignore son delta une seule fois. Aucun temps système, timer séparé ou rattrapage
+n’est introduit. La simulation, les exécuteurs et tous les laboratoires historiques
+restent inchangés. Détails, tests et limites : docs/application-lifecycle.md.
+
+STEP-027 validée le 26 octobre 2026 : F6, tests manuels et fluidité OK.
+Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
+APK : 07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611.
