@@ -29,7 +29,7 @@ static func distance_between(a: StatsActor, b: StatsActor) -> float:
 func begin(source: Variant, target: Variant) -> int:
 	if active or not living(source) or not living(target) or not _valid_pair(source, target):
 		return 0
-	if distance_between(source, target) > REACH:
+	if distance_between(source, target) > _reach():
 		return 0
 	_disconnect_lifecycle()
 	_next_id += 1
@@ -62,23 +62,23 @@ func advance(delta: float, paused: bool = false) -> void:
 		cancel()
 		return
 	elapsed += delta
-	if elapsed >= WINDUP and not resolved:
+	if elapsed >= _windup() and not resolved:
 		try_impact(action_id)
-	if active and elapsed >= WINDUP + RECOVERY:
+	if active and elapsed >= _windup() + _recovery():
 		active = false
 		phase = "TERMINEE"
 		_disconnect_lifecycle()
 
 func try_impact(expected_id: int) -> bool:
 	# Single mutation gate, also safe against duplicate/stale callbacks.
-	if not _effects_allowed() or not active or resolved or expected_id != action_id or elapsed < WINDUP:
+	if not _effects_allowed() or not active or resolved or expected_id != action_id or elapsed < _windup():
 		return false
 	resolved = true
 	phase = "RECUPERATION"
 	if not _participants_valid():
 		cancel()
 		return false
-	if distance_between(_source, _target) > REACH:
+	if distance_between(_source, _target) > _reach():
 		outcome = "hors portee"
 		return false
 	# Latch before emitting any ActorState signal through damage().
@@ -129,3 +129,12 @@ func _on_target_lost() -> void:
 	# A target killed by our already-latched impact does not cancel recovery.
 	if not resolved:
 		cancel()
+
+func _windup() -> float:
+	return WINDUP
+
+func _recovery() -> float:
+	return RECOVERY
+
+func _reach() -> float:
+	return REACH

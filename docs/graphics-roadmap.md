@@ -6,9 +6,9 @@ au commit local f5a790d avec sauvegarde vérifiée. GRAPHICS-002 est validée ap
 du catalogue, clôturée au commit local `1e427560a9d2884ce1d3e339a093d576192fc22f`.
 Les modèles de GRAPHICS-003 sont reçus : Anne et Mako du Pirate Kit pour les héros,
 les deux squelettes du même Pirate Kit pour les ennemis (KayKit réservé pour plus tard). Voir [l'inspection des assets](character-assets-intake.md)
-pour les clips disponibles et les raccordements à prévoir. GRAPHICS-003 est maintenant livrée en recette ; voir docs/steps/GRAPHICS-003.md.
+pour les clips disponibles et les raccordements à prévoir. GRAPHICS-003 est clôturée au commit 7956cfc. GAMEPLAY-001 est validée avec fix1 ; voir docs/steps/GAMEPLAY-001.md.
 Le chantier graphique s'intercale avant STEP-029 et STEP-030, qui gardent leurs identifiants
-et seront exécutées sur la version enrichie. Voir docs/steps/GRAPHICS-003.md pour la livraison actuelle.
+et seront exécutées sur la version enrichie. Voir docs/steps/GAMEPLAY-001.md pour la livraison actuelle.
 
 ## Objectif et périmètre
 

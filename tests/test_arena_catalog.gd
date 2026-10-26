@@ -1,5 +1,5 @@
 extends Node
-const Main = preload("res://scenes/main.tscn")
+const Main = preload("res://scenes/debug/graphics003_reference.tscn")
 const Gallery = preload("res://scenes/debug/graphics_lab.tscn")
 const Catalog = preload("res://scripts/presentation/arena_catalog.gd")
 const Illustrated = preload("res://scripts/presentation/illustrated_arena_view.gd")

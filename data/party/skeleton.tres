@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/party/party_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+actor_key = &"skeleton"
+display_name = "Squelette"
+team = 1
+max_health = 60
+attack = 8
+defense = 1
+move_speed = 0.9
+abilities = Array[StringName]([&"basic"])

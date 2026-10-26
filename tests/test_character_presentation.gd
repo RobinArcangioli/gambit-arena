@@ -2,7 +2,7 @@ extends Node
 const Actor = preload("res://scripts/combat/stats_actor.gd")
 const View = preload("res://scripts/presentation/character_view.gd")
 const Definition = preload("res://scripts/presentation/character_definition.gd")
-const Main = preload("res://scenes/main.tscn")
+const Main = preload("res://scenes/debug/graphics003_reference.tscn")
 const Gallery = preload("res://scenes/debug/character_lab.tscn")
 const PROFILES = [preload("res://resources/presentation/characters/anne.tres"), preload("res://resources/presentation/characters/mako.tres"), preload("res://resources/presentation/characters/skeleton.tres"), preload("res://resources/presentation/characters/skeleton_variant.tres")]
 var checks: int = 0

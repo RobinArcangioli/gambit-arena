@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/presentation/arena_application_lab.tscn" id="1_lab"]
+[ext_resource type="Resource" path="res://resources/presentation/arenas/colisee_solaire.tres" id="2_arena"]
+
+[node name="Main" type="Node2D"]
+
+[node name="ApplicationLab" parent="." instance=ExtResource("1_lab")]
+arena_definition = ExtResource("2_arena")

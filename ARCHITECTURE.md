@@ -1,3 +1,21 @@
+# GAMEPLAY-001-fix1
+
+PartyRules inclut la source dans les candidats du soin et partage prefer_heal avec les
+commandes manuelles (ratio de PV, puis distance et identité). PartyExecutor ne débite plus
+à request : le débit est dans _apply_effect après les gardes d'AttackAction, avant les
+signaux de santé. La résolution est déjà verrouillée, ce qui interdit un double débit.
+Voir docs/steps/GAMEPLAY-001-fix1.md ; les conventions antérieures ci-dessous sont historiques.
+
+# GAMEPLAY-001 — équipe, exécuteurs et HUD composés
+
+Main instancie PartyApplication, qui compose PartySimulation, PartyUnit, PartyExecutor,
+PartyRules et OverheadBars. Les profils de combat sont séparés des CharacterDefinition.
+La simulation détient incantation, mana, effets et cibles ; les barres ne lisent que des
+valeurs. AttackAction expose portée/préparation/récupération surchargeables, avec ses
+valeurs historiques par défaut. Voir [l'architecture d'équipe](docs/party-gameplay.md).
+L'ancienne composition ArenaApplicationLab reste dans graphics003_reference.tscn pour
+les régressions et le banc de mesure historique. Les sections suivantes sont historiques.
+
 # Actualisation — GRAPHICS-003 en recette
 
 StatsActor est désormais Node3D avec une vue enfant facultative. CharacterDefinition décrit

@@ -1,6 +1,6 @@
 extends Node
 const Gallery = preload("res://scenes/debug/graphics_lab.tscn")
-const Main = preload("res://scenes/main.tscn")
+const Main = preload("res://scenes/debug/graphics003_reference.tscn")
 const REFERENCE = preload("res://resources/presentation/arenas/reference.tres")
 const COLISEE = preload("res://resources/presentation/arenas/colisee_solaire.tres")
 const Definition = preload("res://scripts/presentation/arena_definition.gd")

@@ -1,0 +1,4 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://tests/test_party_fix1.gd" id="1"]
+[node name="PartyFix1Tests" type="Node"]
+script = ExtResource("1")

@@ -1,3 +1,11 @@
+# Checkpoint GRAPHICS-003
+
+Commit 7956cfce2efcdaf4b95fd3f0631193cb9d442589.
+Archive /home/arkhane/gambit-arena-backups/gambit-arena-20261026-161953-7956cfce2efc.tar.gz.
+SHA-256 344fd7c86fbb58ed8e6e28e6b7ac695f83dd14615b6e39cedb32f712b74682cf.
+Restauration /tmp/g003-restore-gkya6t6p : bundle cloné, fsck valide, 445 fichiers identiques
+entre commit, sauvegarde et workspace avant GAMEPLAY-001. Checkpoint local, pas poussé.
+
 # Sauvegarde du projet
 
 ## GRAPHICS-002 — validation reçue

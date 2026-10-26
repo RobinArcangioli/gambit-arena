@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/party/party_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+actor_key = &"anne"
+display_name = "Anne"
+team = 0
+max_health = 140
+attack = 12
+defense = 3
+move_speed = 1.2
+abilities = Array[StringName]([&"basic", &"heal"])

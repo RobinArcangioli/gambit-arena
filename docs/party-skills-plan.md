@@ -1,3 +1,11 @@
+# Mise en œuvre GAMEPLAY-001
+
+Les décisions ci-dessous sont mises en œuvre et livrées en recette. Voir
+[les paramètres retenus et le fonctionnement](party-gameplay.md) et
+[la fiche de livraison](steps/GAMEPLAY-001.md). Les points autrefois à fixer sont désormais
+tranchés pour cette première version ; les sections suivantes conservent la préparation
+initiale. GAMEPLAY-001 et fix1 sont validés par le propriétaire.
+
 # Équipe, compétences et lancement de sorts
 
 Décisions du propriétaire du 26 octobre 2026, à implémenter. Elles remplacent les
@@ -14,7 +22,7 @@ par cette mise à jour du plan.
 - Le geste de présentation `cast_spell` correspond au clip `Duck` pour tous les personnages,
   héros comme ennemis. Ce geste commun ne donne pas automatiquement un sort aux squelettes.
 - Le gambit « Allié < 50 % PV → Soin » permet à Anne de cibler et soigner Mako.
-  « Allié » désigne un autre membre vivant de l'équipe, excluant le lanceur et les ennemis.
+  « Allié » désigne un membre vivant de l'équipe, lanceur inclus et ennemis exclus (correction fix1).
   Le seuil est strict : 50 % exactement ne déclenche pas cette condition.
 - La cible du soin est distincte de la cible offensive mémorisée. Anne conserve cette
   dernière pendant le soin et la reprend si elle est toujours valide.

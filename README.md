@@ -1,3 +1,28 @@
+# GAMEPLAY-001 et fix1 validés
+
+Le propriétaire confirme « Steps validée. ». La livraison fix1, APK 0.1.0-gameplay001-fix1
+(code 33), est validée. Les sources non documentaires sont identiques à la livraison.
+Clôture par un commit unique, fix1 inclus, puis sauvegarde vérifiée. GRAPHICS-004 est la
+prochaine étape ; attendre GO. Les statuts de recette antérieurs ci-dessous sont historiques.
+
+# GAMEPLAY-001-fix1 — correctif en recette
+
+Le soin inclut Anne et privilégie le plus bas pourcentage de PV. La mana est débitée
+uniquement à l'effet réussi ; une annulation pendant l'incantation ne coûte rien.
+32 bancs / 1 959 contrôles passent. APK 0.1.0-gameplay001-fix1 (33) installé sur A16.
+Voir docs/steps/GAMEPLAY-001-fix1.md et docs/party-gameplay.md. Les états de livraison
+précédents ci-dessous sont historiques. Validation de GAMEPLAY-001 toujours attendue.
+
+# GAMEPLAY-001 — équipe et incantations en recette
+
+Anne et Mako combattent ensemble : Anne soigne un allié, Mako lance Foudre. Chaque héros a
+ses compétences et trois gambits. Vie rouge, mana bleu, incantation jaune or au-dessus de
+tous les acteurs ; Soin 1,5 s, Foudre 2 s. Sélection du héros dans le HUD, reprise explicite.
+F6 : [équipe](scenes/party/party_application.tscn), puis F8/F5 : partie complète.
+[Recette et APK](docs/steps/GAMEPLAY-001.md), [paramètres et architecture](docs/party-gameplay.md).
+31 bancs / 1 921 contrôles passent ; APK installé sur Galaxy A16. Équilibrage provisoire.
+Les anciennes compositions ci-dessous restent accessibles comme bancs de référence.
+
 # GRAPHICS-003 — recette disponible
 
 Anne, Mako et les deux squelettes pirates sont intégrés avec repos et marche.
