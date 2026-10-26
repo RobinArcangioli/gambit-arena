@@ -8,6 +8,9 @@ var replay: Button
 var readout: Label
 var mode_index: int = 0
 var setup_complete: bool = false
+# Opt-in timing only; historical labs retain their original execution path.
+var measure_simulation: bool = false
+var last_simulation_usec: int = 0
 
 func _ready() -> void:
 	super._ready()
@@ -52,7 +55,12 @@ func _reset() -> void:
 func _physics_process(delta: float) -> void:
 	if not setup_complete:
 		return
-	simulation.advance(delta, paused)
+	if measure_simulation:
+		var before_usec: int = Time.get_ticks_usec()
+		simulation.advance(delta, paused)
+		last_simulation_usec = Time.get_ticks_usec() - before_usec
+	else:
+		simulation.advance(delta, paused)
 	_present()
 
 func _present() -> void:

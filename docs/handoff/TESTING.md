@@ -1,5 +1,32 @@
 # Tests, environnement et preuves de validation
 
+## Actualisation STEP-028 — 26 octobre 2026
+
+Environnement effectif vérifié : Ubuntu 24.04.5, Godot 4.7.2.stable.official.ed1daf0bf,
+templates 4.7.2.stable, OpenJDK 21.0.12.1, SDK Android et ADB 37.0.1 présents.
+Galaxy A16 SM-A165F Android 16 connecté ; les anciennes limites « Godot absent » ci-dessous
+décrivent la passation historique. STEP-028 dispose maintenant de 25 scènes, avec
+`performance_tests.tscn` en plus des 24 bancs de base.
+
+Les 24 bancs historiques ont été réellement exécutés en headless dans une copie isolée :
+1 594 contrôles, zéro échec, aucune erreur/avertissement Godot relevé. Un harnais temporaire
+arrête chaque scène après son bilan ; ce n'est pas un runner global versionné ni une équivalence
+aux recettes manuelles F6/tactile. Le nouveau banc passe 32 contrôles en headless et en fenêtre
+X11/Compatibility. Il valide horloges, buffers, quantiles, profils de fixture, interruptions,
+export, retour au jeu ordinaire et dix resets synthétiques. Aucun de ces tests accélérés
+n'est un benchmark. Résultats matériels et SHA : ../steps/STEP-028.md.
+
+Commande autonome du nouveau banc, avec dossier de données de test isolé :
+
+```bash
+XDG_DATA_HOME=/tmp/gambit-performance-tests Godot_v4.7.2-stable_linux.x86_64 \
+  --headless --path . scenes/tests/performance_tests.tscn -- --test-exit
+```
+
+Adapter le chemin du binaire. En F6 le banc reste affiché jusqu'à F8.
+Le 26 octobre 2026, le propriétaire a validé STEP-028 avec le retour global : F6, F5,
+tactile Android et pause/reprise OK. Aucun détail par banc, durée ou FPS n'est ajouté à ce retour.
+
 ## Environnement rapporté par l’utilisateur
 
 Poste Ubuntu 24.04.5 LTS x86_64 ; Godot 4.7.2 standard, templates installés ; OpenJDK
@@ -9,13 +36,15 @@ pas un inventaire refait sur le poste pendant HANDOFF-001. Sur une nouvelle mach
 vérifier la version réellement installée et utiliser les templates correspondants.
 Le projet déclare 4.7 et GL Compatibility ; référence 540 × 960, portrait, arm64-v8a.
 
-L’environnement de l’assistant ne possède pas Godot. Jusqu’ici : vérifications statiques
-chez l’assistant, exécution F6 et recette matérielle chez l’utilisateur. Aucun banc CI,
-benchmark matériel ou seuil de performance mesuré n’a été confirmé.
+Godot 4.7.2 et le Galaxy A16 ont été disponibles pour STEP-028 : les exécutions et mesures
+effectivement réalisées sont consignées en tête de ce fichier et dans ../steps/STEP-028.md.
+Les restrictions mentionnées dans les textes historiques de HANDOFF-001 ne décrivent plus
+l'environnement de cette étape.
 
 ## Procédure
 
-Ouvrir project.godot, laisser terminer l’import. F5 lance Main/ApplicationLab. Pour chaque
+Ouvrir project.godot, laisser terminer l’import. F5 lance Main/PerformanceLab, qui délègue
+le jeu courant à ApplicationLab hors capture. Pour chaque
 banc ci-dessous, ouvrir sa scène sous scenes/tests, F6, attendre le bilan, consulter Sortie/
 Débogueur puis F8 avant la scène suivante. Attendu : OK, zéro échec, aucun nouvel avertissement.
 Les longues boucles de simulation peuvent nécessiter quelques frames avant le bilan.
@@ -68,18 +97,19 @@ Voir ../steps/STEP-025-fix1.md, ../steps/STEP-026.md et ../steps/STEP-027.md.
 
 ## Export et identité APK
 
-Le preset actuel Android Debug utilise ../gambit-arena-builds/step-027-debug.apk,
-version 0.1.0-step027, code 27, paquet org.gambitarena.prototype. Exporter en mode Debug
-explicitement ; le nom du preset ne suffit pas à prouver le mode utilisé.
+Le preset actuel Android Debug utilise ../gambit-arena-builds/step-028-debug.apk,
+version 0.1.0-step028, code 28, paquet org.gambitarena.prototype. L'APK de référence
+mesuré porte le SHA-256 `d2c710ef6fb1c935eb6afecbfe54e98b1a03d0a03266753c5c8b537cce1a23b9`.
+Exporter en mode Debug explicitement ; le nom du preset ne suffit pas à prouver le mode utilisé.
 
 ```bash
 ~/Android/Sdk/platform-tools/adb devices -l &&
-~/Android/Sdk/platform-tools/adb -d install -r ~/gambit-arena-builds/step-027-debug.apk &&
-sha256sum ~/gambit-arena-builds/step-027-debug.apk
+~/Android/Sdk/platform-tools/adb -d install -r ~/gambit-arena-builds/step-028-debug.apk &&
+sha256sum ~/gambit-arena-builds/step-028-debug.apk
 ```
 
 Le SHA réellement installé/testé doit être communiqué, pas une ancienne empreinte copiée.
-HANDOFF-001 ne change pas le code/configuration et ne nécessite pas un nouvel APK.
+STEP-028 modifie le code, les scènes et le preset ; HANDOFF-001 seul était documentaire.
 
 ## Dernières preuves reçues
 

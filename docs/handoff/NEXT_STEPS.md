@@ -6,8 +6,19 @@ elle n’autorise ni n’implémente STEP-028. Les trois étapes restantes garde
 
 ## STEP-028 — Mesures reproductibles et budget matériel
 
-Objectif approuvé : vérifier le budget matériel, avec objectif provisoire de 30 images/s
-soutenues sur le Galaxy A16. Aucune mesure chiffrée n’est actuellement disponible.
+Actualisation du 26 octobre : instrumentation, protocole et campagnes Android sont exécutés.
+Consulter ../steps/STEP-028.md pour les essais, résultats et SHA testé. L'ancien objectif de
+30 FPS Debug n'est pas atteint ; le propriétaire a cependant accepté explicitement la performance
+pour le périmètre réel, où 20 ennemis simultanés ne sont pas prévus. Le plan ci-dessous reste
+le contexte historique de l'étape, pas une promesse de performance générale.
+
+Le propriétaire a ensuite validé STEP-028 : F6, F5, tactile Android et pause/reprise OK.
+La clôture immédiate consiste uniquement à commiter puis sauvegarder cette étape ; STEP-029
+reste une étape distincte, à démarrer seulement avec son GO.
+
+Objectif initial : vérifier le budget matériel, avec cible provisoire de 30 images/s soutenues
+sur le Galaxy A16. Les mesures chiffrées et la décision produit sont maintenant consignées dans
+`../steps/STEP-028.md` ; ne pas les remplacer par ce plan antérieur.
 
 Plan d’implémentation proposé, à préciser au démarrage :
 
@@ -62,8 +73,6 @@ des 30 étapes est conservé, mais ne pas inventer une spécification originale 
 
 ## Premier tour recommandé pour la prochaine IA
 
-Vérifier le dépôt reçu et le commit documentaire de passation ; lire HANDOFF.md et les
-invariants ; confirmer les outils réellement disponibles. Si le prochain GO autorise
-STEP-028, proposer/implémenter l’instrumentation et le protocole sans altérer la logique
-validée. Si la demande porte encore sur GitHub, terminer cette publication avant de changer
-de sujet. Toujours conserver les corrections utilisateur et les preuves de validation.
+Vérifier le commit STEP-028 et sa sauvegarde une fois fournis ; lire HANDOFF.md et les
+invariants ; confirmer les outils réellement disponibles. Attendre ensuite un GO explicite
+pour STEP-029. Toujours conserver les corrections utilisateur et les preuves de validation.

@@ -67,7 +67,7 @@ qui dépend de la validation de la roadmap.
 | STEP-025 | 11. Partie | Enchaînement de trois vagues et compteurs exacts |
 | STEP-026 | 11. Partie | Défaite et dix redémarrages sans résidus |
 | STEP-027 | 12. Robustesse | Pause, arrière-plan, verrouillage et retour Android cohérents |
-| STEP-028 | 12. Performance | Mesures reproductibles et budget matériel respecté |
+| STEP-028 | 12. Performance | Mesures reproductibles et décision produit sur le budget matériel |
 | STEP-029 | 13. Livraison | Clone propre, import, export et installation reproductibles |
 | STEP-030 | 13. Livraison | Recette finale du MVP validée sur l'APK identifié |
 
@@ -102,7 +102,11 @@ qui dépend de la validation de la roadmap.
 - STEP-025 : validée et commitée — f62162d ; fix1 inclus, sauvegarde reçue et vérifiée.
 - STEP-026 : validée et commitée — 344a584 ; sauvegarde reçue et vérifiée.
 - STEP-027 : validée et commitée — 665c0c8 ; sauvegarde reçue et vérifiée.
-- STEP-028 à STEP-030 : À faire.
+- STEP-028 : validée explicitement par l'utilisateur ; F6, F5, tactile Android et pause/reprise
+  OK. L'ancien seuil 30 FPS Debug n'est pas atteint, mais la décision produit l'accepte pour le
+  périmètre réel et 20 ennemis reste un stress test. Commit et sauvegarde en attente.
+  Voir docs/steps/STEP-028.md.
+- STEP-029 et STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
 sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
@@ -112,14 +116,14 @@ Voir [la reprise](docs/recovery.md) et [les sauvegardes](docs/backup.md).
 ## Situation de passation
 
 HANDOFF-001 documente l’état après STEP-027, sans nouvelle étape fonctionnelle.
-Commit documentaire et push GitHub à effectuer par l’utilisateur ; aucune publication confirmée.
+Commit documentaire cc91c79 et main GitHub vérifiés le 26 octobre 2026.
 Voir [HANDOFF.md](HANDOFF.md) et [la procédure GitHub](docs/handoff/GITHUB.md).
 
 ## Étapes restantes
 
 | Étape | État | Livrable |
 |---|---|---|
-| STEP-028 | À faire, GO attendu | Mesures reproductibles sur téléphone ; vérifier l’objectif provisoire 30 FPS soutenues |
+| STEP-028 | Validée par l'utilisateur ; commit/sauvegarde en attente | Mesures reproductibles sur téléphone ; objectif historique 30 FPS non atteint en Debug, accepté pour le périmètre prévu |
 | STEP-029 | À faire | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |
 

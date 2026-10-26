@@ -1,5 +1,16 @@
 # Passation Gambit Arena — HANDOFF-001
 
+## Actualisation de reprise — STEP-028
+
+Le 26 octobre 2026, main et GitHub ont été vérifiés sur cc91c79, arbre propre.
+Le GO STEP-028 a ensuite été reçu. La couche de mesure et les campagnes Android sont terminées ;
+le propriétaire a accepté explicitement la performance pour le périmètre réel (20 ennemis reste
+un stress test), puis validé F6, F5, tactile Android et pause/reprise. Voir PROJECT_STATUS.md,
+docs/performance.md et docs/steps/STEP-028.md pour l'état récent.
+Les mentions ci-dessous « commit/push non effectués » sont le contexte historique de rédaction,
+pas l'état actuel. STEP-028 est maintenant explicitement validée par l'utilisateur, mais n'est
+pas encore commitée ni sauvegardée. STEP-029 n'est pas autorisée par cette validation seule.
+
 Établie le 26 octobre 2026 à la demande de l’utilisateur. Ce document est le point
 d’entrée de la prochaine IA. La passation ne démarre pas STEP-028.
 

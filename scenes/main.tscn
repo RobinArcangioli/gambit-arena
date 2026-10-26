@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://do6vxhog253vu"]
 
-[ext_resource type="PackedScene" path="res://scenes/platform/application_lab.tscn" id="1_lab"]
+[ext_resource type="PackedScene" path="res://scenes/performance/performance_lab.tscn" id="1_lab"]
 
 [node name="Main" type="Node2D" unique_id=1193079028]
 

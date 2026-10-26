@@ -1,5 +1,21 @@
 # État du projet — 26 octobre 2026
 
+## STEP-028 — validée par l'utilisateur, commit et sauvegarde en attente
+
+Base réelle vérifiée : cc91c79b0bcf82df6fb852d9b792fce63aa32148, main propre et identique
+à GitHub au démarrage. Aucun changement utilisateur à écraser. HANDOFF-001 a bien été
+commitée et publiée ; les sections historiques ci-dessous décrivent sa rédaction antérieure.
+
+Instrumentation optionnelle, captures bornées, menu de mesures et export JSON implémentés.
+Protocole fixé dans docs/performance.md : chauffe 30 s, capture 60 s, trois répétitions
+Normal/20 ennemis et dix resets. Tests et mesures effectifs : docs/steps/STEP-028.md.
+L'objectif initial de 30 FPS n'est pas atteint par cet APK Debug, avec ou sans économie
+d'énergie ; le propriétaire a explicitement accepté la performance pour le contenu prévu et a
+retiré 20 ennemis simultanés des critères de livraison. Aucun correctif de rendu spéculatif n'a
+été intégré. Le propriétaire a explicitement validé F6, F5, tactile Android et pause/reprise.
+STEP-028 est donc validée par l'utilisateur ; aucun commit/push ni sauvegarde STEP-028 n'a été
+effectué.
+
 ## Dernière étape fonctionnelle clôturée
 
 STEP-027 : validée et commitée, sauvegarde reçue et vérifiée.
@@ -24,14 +40,12 @@ La prochaine IA doit vérifier si le commit/push a été réalisé après rédac
 
 ## Suite
 
-Appliquer la passation, vérifier le diff documentaire, commiter, créer la sauvegarde puis
-configurer/vérifier le dépôt GitHub choisi et pousser main. Procédure : docs/handoff/GITHUB.md.
-Transmettre le hash, le statut, le résultat du push et la nouvelle sauvegarde pour vérification.
-STEP-028 reste à faire et attend son GO ; STEP-029 et STEP-030 restent à faire.
-Ne pas traiter cette passation comme une validation de performance ou de reproductibilité.
+Préparer le commit STEP-028, créer la sauvegarde après le commit et vérifier celle-ci.
+Transmettre le hash, le statut et la nouvelle sauvegarde pour vérification. STEP-029 et
+STEP-030 restent à faire et nécessitent leur propre GO ; aucun push n'est implicite.
 
 ## Limites de preuve
 
-Godot non disponible chez l’assistant : contrôles statiques et Git seulement. Les validations
-moteur/matérielles viennent de l’utilisateur. Mesures chiffrées, clone propre final et recette
-MVP finale restent à réaliser. Voir HANDOFF.md et docs/handoff/NEXT_STEPS.md.
+Les limites « Godot non disponible » des sections historiques décrivent HANDOFF-001, non le
+travail STEP-028 effectivement exécuté. Le clone propre final et la recette MVP finale restent
+à réaliser. Voir HANDOFF.md et docs/handoff/NEXT_STEPS.md.

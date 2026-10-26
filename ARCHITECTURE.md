@@ -1,14 +1,15 @@
-# Architecture actuelle — base STEP-027 clôturée
+# Architecture actuelle — STEP-028, mesures et décision performance consignées
 
 Référence : `665c0c8d86a6400f88c77773295ed06b1a518206`. Cette synthèse de passation remplace
-les formulations de livraison des étapes précédentes ; aucun code n’a changé.
+les formulations de livraison des étapes précédentes. STEP-028 ajoute la couche de mesure
+décrite ci-dessous, sur la base documentaire cc91c79.
 
 ## Scène d’entrée et héritage UI
 
 project.godot lance scenes/main.tscn (UID conservé), qui instancie
-scenes/platform/application_lab.tscn. Chaîne des scripts :
+scenes/performance/performance_lab.tscn. Chaîne des scripts :
 
-ApplicationLab → RunLifecycleLab → WaveSequenceLab → WaveLab → ManualCommandLab →
+PerformanceLab → ApplicationLab → RunLifecycleLab → WaveSequenceLab → WaveLab → ManualCommandLab →
 SkillSlotsLab → PortraitHudLab → GambitFieldsLab → GambitEditorLab → BattleLab → Arena.
 
 Les couches parent construisent l’arène et le HUD, les couches dérivées ajoutent leurs
@@ -104,6 +105,20 @@ conservent leurs garanties. _notification est distribué par Godot aux classes d
 ne pas rajouter super._notification, qui dupliquerait le traitement.
 
 ## Documentation détaillée et points d’entrée
+
+PerformanceLab délègue le jeu ordinaire à ApplicationLab. Une capture explicite utilise
+PerformanceCapture, RefCounted à valeurs scalaires, horloge monotone indépendante de GameClock,
+buffers bornés et export JSON après arrêt. BattleLab possède un chronométrage optionnel autour
+de simulation.advance ; aucune règle de simulation n'y est modifiée. Le tick complet est mesuré
+par la couche dérivée. Les coûts incluent respectivement la présentation des acteurs et le HUD.
+Les temps GPU et la présentation physique de l'écran ne sont pas mesurés.
+
+Le menu de diagnostic utilise les zones sûres, un ScrollContainer et TouchScrollRouter ;
+ApplicationGuard est remis en dernier enfant pour conserver son ordre de réception des entrées.
+Le banc contrôle UI/règles, invalide les captures interrompues et laisse la pause à la fin.
+La fixture saturated20 utilise seulement des profils locaux durables et des positions initiales
+espacées ; Rejouer retrouve les trois vagues. Le gameplay des laboratoires historiques reste inchangé.
+Voir docs/performance.md et scenes/tests/performance_tests.tscn.
 
 Lire docs/actions.md, docs/skill-executor.md, docs/skills.md, docs/gambit-controller.md,
 docs/manual-commands.md, docs/wave-sequence.md, docs/run-lifecycle.md et

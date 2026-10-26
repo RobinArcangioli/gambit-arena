@@ -1,5 +1,14 @@
 # Sauvegarde du projet
 
+## STEP-028 — validée, commit et sauvegarde en attente
+
+Le 26 octobre 2026, le propriétaire a validé STEP-028 : F6, F5, tactile Android et
+pause/reprise OK. Une archive complète de validation est fournie avant commit ; elle doit
+contenir les sources STEP-028 sans `.git`/`.godot`, le bundle historique séparé et les preuves
+de mesure. Le prochain bundle ne pourra inclure STEP-028 qu'après le commit réalisé par le
+propriétaire. Exécuter ensuite `bash tools/create_backup.sh` depuis un arbre propre et
+transmettre l'archive produite pour vérification.
+
 ## Engagement de livraison
 
 À partir de RECOVERY-001, l'assistant fournit une archive du projet complet

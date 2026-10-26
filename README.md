@@ -4,9 +4,12 @@ Prototype Godot Android portrait : héros autonome piloté par trois gambits, co
 manuelles de compétences, trois vagues, pause et redémarrage. Personnages 3D procéduraux
 sur arène dimétrique ; assets et équilibrage encore provisoires.
 
-**État : STEP-027 validée, commitée et sauvegardée — 665c0c8.**
-La passation HANDOFF-001 ajoute uniquement la documentation. Aucun push GitHub n’est
-confirmé à sa rédaction et aucune étape de performance n’est encore réalisée.
+**STEP-028 est validée par l'utilisateur ; commit et sauvegarde restent à effectuer.**
+Base de travail : HANDOFF-001, cc91c79, main publiée sur GitHub et vérifiée le 26 octobre.
+STEP-028 ajoute une collecte de performance bornée et un protocole Android. Les mesures Debug
+n'atteignent pas l'ancien seuil de 30 FPS, mais les performances ont été explicitement acceptées
+pour le périmètre prévu ; la fixture de 20 ennemis est un stress test. Voir
+[les mesures](docs/performance.md).
 
 ## Reprendre le projet
 
@@ -18,14 +21,17 @@ les tests, les commandes GitHub et un prompt prêt à transmettre à une autre I
 
 Environnement documenté : Godot 4.7.2 standard, rendu Compatibility, référence 540 × 960,
 Android portrait. Importer project.godot avec les templates correspondant à la version
-installée. F5 lance Main/ApplicationLab. Les scènes sous scenes/tests se lancent avec F6,
+installée. F5 lance Main/PerformanceLab, couche optionnelle au-dessus d'ApplicationLab.
+Le bouton GAMBIT / Mesures ouvre les diagnostics ; hors capture, le combat reste ordinaire.
+Les scènes sous scenes/tests se lancent avec F6,
 puis F8 entre bancs. Voir [les tests](docs/handoff/TESTING.md) et [Android](docs/android.md).
 
-Version actuelle : 0.1.0-step027, code 27 ; sortie Android Debug :
-../gambit-arena-builds/step-027-debug.apk. SHA-256 du dernier APK validé :
-`07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611`.
-F6, tests manuels et fluidité ont été confirmés par l’utilisateur. Aucune mesure chiffrée
-ni exécution moteur chez l’assistant n’est revendiquée.
+Version STEP-028 : 0.1.0-step028, code 28 ; sortie Android Debug :
+../gambit-arena-builds/step-028-debug.apk. APK de référence mesuré :
+`d2c710ef6fb1c935eb6afecbfe54e98b1a03d0a03266753c5c8b537cce1a23b9`.
+Pour STEP-027, F6, tests manuels et fluidité ont été confirmés par l’utilisateur.
+Pour STEP-028, voir les [résultats et limites](docs/steps/STEP-028.md) : l'utilisateur a
+validé F6, F5, tactile Android et pause/reprise ; le commit reste en attente.
 
 ## Documentation
 
@@ -36,5 +42,5 @@ ni exécution moteur chez l’assistant n’est revendiquée.
 - [Commit/push/restauration](docs/handoff/GITHUB.md).
 - [Assets et provenance](docs/assets.md).
 
-STEP-028 : mesures ; STEP-029 : reproductibilité clone/export ; STEP-030 : recette finale.
+STEP-028 : validée, commit/sauvegarde à faire ; STEP-029 : reproductibilité clone/export ; STEP-030 : recette finale.
 La licence publique globale reste à choisir par le propriétaire.
