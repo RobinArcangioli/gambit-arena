@@ -1,4 +1,13 @@
-# Architecture actuelle — STEP-028, mesures et décision performance consignées
+# Architecture actuelle — GRAPHICS-001 en recette
+
+Depuis la base STEP-028 / 580ce64, ArenaFloor est une façade de présentation possédant une
+ArenaView interchangeable. La Resource exportée `Arena.arena_definition` choisit la scène
+de fond : Main utilise Colisée solaire, les anciens labs gardent la référence procédurale.
+La vue reçoit seulement caméra et taille de viewport ; elle ne possède aucune référence à la
+simulation. Le dessin des repères/pieds reste dans ArenaFloor, au-dessus de la vue et sous
+le rendu 3D. La caméra, les dimensions jouables et les exécuteurs sont inchangés.
+Voir docs/arena-presentation.md. La séparation des modèles de personnages est prévue dans
+GRAPHICS-003 ; leur héritage actuel n'est pas encore refactorisé.
 
 Référence : `665c0c8d86a6400f88c77773295ed06b1a518206`. Cette synthèse de passation remplace
 les formulations de livraison des étapes précédentes. STEP-028 ajoute la couche de mesure

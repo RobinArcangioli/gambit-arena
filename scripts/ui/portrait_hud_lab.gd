@@ -208,7 +208,7 @@ func _sync_projection() -> void:
 		return
 	camera.size = Layout.camera_width(Vector2(viewport_3d.size))
 	floor_canvas.view_size = Vector2(viewport_3d.size)
-	floor_canvas.queue_redraw()
+	floor_canvas.sync_view()
 
 func _refresh_rows() -> void:
 	super._refresh_rows()

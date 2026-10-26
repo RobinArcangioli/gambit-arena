@@ -4,7 +4,11 @@ Prototype Godot Android portrait : héros autonome piloté par trois gambits, co
 manuelles de compétences, trois vagues, pause et redémarrage. Personnages 3D procéduraux
 sur arène dimétrique ; assets et équilibrage encore provisoires.
 
-**STEP-028 est validée par l'utilisateur ; commit et sauvegarde restent à effectuer.**
+**STEP-028 est clôturée — 580ce64, poussée et sauvegarde vérifiée.**
+La [roadmap graphique validée](docs/graphics-roadmap.md) prévoit des arènes interchangeables,
+des personnages 3D et les animations d'attaque, de soin et de Foudre, avant STEP-029/030.
+GRAPHICS-001 est en recette : Colisée solaire dans Main, terrain de référence conservé et
+[galerie indépendante](scenes/debug/graphics_lab.tscn) pour vérifier les deux présentations.
 Base de travail : HANDOFF-001, cc91c79, main publiée sur GitHub et vérifiée le 26 octobre.
 STEP-028 ajoute une collecte de performance bornée et un protocole Android. Les mesures Debug
 n'atteignent pas l'ancien seuil de 30 FPS, mais les performances ont été explicitement acceptées
@@ -26,8 +30,8 @@ Le bouton GAMBIT / Mesures ouvre les diagnostics ; hors capture, le combat reste
 Les scènes sous scenes/tests se lancent avec F6,
 puis F8 entre bancs. Voir [les tests](docs/handoff/TESTING.md) et [Android](docs/android.md).
 
-Version STEP-028 : 0.1.0-step028, code 28 ; sortie Android Debug :
-../gambit-arena-builds/step-028-debug.apk. APK de référence mesuré :
+Version GRAPHICS-001 : 0.1.0-graphics001, code 29 ; sortie Android Debug :
+../gambit-arena-builds/graphics-001-debug.apk. APK de référence mesuré pour STEP-028 :
 `d2c710ef6fb1c935eb6afecbfe54e98b1a03d0a03266753c5c8b537cce1a23b9`.
 Pour STEP-027, F6, tests manuels et fluidité ont été confirmés par l’utilisateur.
 Pour STEP-028, voir les [résultats et limites](docs/steps/STEP-028.md) : l'utilisateur a
@@ -41,6 +45,7 @@ validé F6, F5, tactile Android et pause/reprise ; le commit reste en attente.
 - [Historique](docs/handoff/HISTORY.md), [sauvegardes](docs/backup.md).
 - [Commit/push/restauration](docs/handoff/GITHUB.md).
 - [Assets et provenance](docs/assets.md).
+- [Présentation des arènes et remplacement du fond](docs/arena-presentation.md).
 
 STEP-028 : validée, commit/sauvegarde à faire ; STEP-029 : reproductibilité clone/export ; STEP-030 : recette finale.
 La licence publique globale reste à choisir par le propriétaire.

@@ -1,5 +1,11 @@
 # Assets temporaires et contrat d'animation — STEP-005
 
+Actualisation GRAPHICS-001 : le Colisée solaire et la grille de calibration fournis par le
+propriétaire sont maintenant intégrés sous `assets/art/arenas/`. Inventaire, empreintes et
+provenance : [PROVENANCE.md](../assets/art/arenas/PROVENANCE.md). Les sources PNG n'ont pas
+été retouchées ; la présentation applique seulement une échelle uniforme et un recadrage.
+Les sections ci-dessous décrivent les assets de prototype précédents, conservés.
+
 ## Origine et utilisation
 
 Les SVG assets/debug/ et assets/actors/ sont des formes vectorielles originales

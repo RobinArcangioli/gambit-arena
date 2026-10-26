@@ -3,6 +3,8 @@ extends Control
 const ArenaBounds = preload("res://scripts/arena/arena_bounds.gd")
 const ProxyActor = preload("res://scripts/hybrid/proxy_actor.gd")
 const ArenaFloor = preload("res://scripts/arena/arena_floor.gd")
+const ArenaDefinition = preload("res://scripts/presentation/arena_definition.gd")
+@export var arena_definition: ArenaDefinition
 const PLACEMENTS: Array[Vector2] = [Vector2.ZERO, Vector2(-4, -4), Vector2(4, -4), Vector2(4, 4), Vector2(-4, 4)]
 @onready var floor_canvas: ArenaFloor = $Floor
 @onready var render_box: SubViewportContainer = $Render3D
@@ -37,6 +39,7 @@ func _ready() -> void:
 	light.shadow_enabled = false
 	world.add_child(light)
 	floor_canvas.camera = camera
+	floor_canvas.set_definition(arena_definition)
 	for index in range(6):
 		var slot := Button.new()
 		slot.name = "ReservedSlot%d" % (index + 1)
@@ -106,7 +109,7 @@ func _sync_projection() -> void:
 		return
 	camera.size = float(viewport_3d.size.x) / 48.0
 	floor_canvas.view_size = Vector2(viewport_3d.size)
-	floor_canvas.queue_redraw()
+	floor_canvas.sync_view()
 
 func _place_actors() -> void:
 	var ground: Vector2 = ArenaBounds.clamp_ground(PLACEMENTS[placement_index])

@@ -121,9 +121,19 @@ Voir [HANDOFF.md](HANDOFF.md) et [la procédure GitHub](docs/handoff/GITHUB.md).
 
 ## Étapes restantes
 
+Le propriétaire a demandé de préparer un chantier graphique avant la livraison finale :
+voir la [roadmap graphique GRAPHICS-001 à GRAPHICS-007](docs/graphics-roadmap.md).
+Elle prévoit d'abord les arènes interchangeables, puis les personnages 3D et les actions
+attaque, soin et Foudre, avec une couche de présentation isolée du gameplay. Plan validé et
+GO reçu : GRAPHICS-001 validée, GO pour GRAPHICS-002. STEP-029 et STEP-030 conservent
+leurs identifiants et se dérouleront après ce chantier.
+
 | Étape | État | Livrable |
 |---|---|---|
-| STEP-028 | Validée par l'utilisateur ; commit/sauvegarde en attente | Mesures reproductibles sur téléphone ; objectif historique 30 FPS non atteint en Debug, accepté pour le périmètre prévu |
+| STEP-028 | Clôturée — 580ce64, poussée et sauvegarde vérifiée | Mesures reproductibles sur téléphone ; objectif historique 30 FPS non atteint en Debug, accepté pour le périmètre prévu |
+| GRAPHICS-001 | Validée par le propriétaire | Colisée et référence interchangeables, galerie et contrat de présentation |
+| GRAPHICS-002 | GO reçu | Catalogue des huit arènes fournies |
+| GRAPHICS-003 à GRAPHICS-007 | À faire, plan validé | Modèles 3D et actions remplaçables via la présentation |
 | STEP-029 | À faire | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |
 

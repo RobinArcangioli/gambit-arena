@@ -1,5 +1,13 @@
 # Prompt à transmettre à la prochaine IA
 
+Actualisation GRAPHICS-001 : STEP-028 est clôturée au commit 580ce64, poussée et sauvegarde
+restaurée/vérifiée (327 fichiers). Le propriétaire a validé la roadmap graphique et donné GO.
+GRAPHICS-001 est maintenant implémentée, en attente de validation utilisateur : lire
+docs/steps/GRAPHICS-001.md, docs/arena-presentation.md et docs/graphics-roadmap.md avant
+les paragraphes historiques suivants. Main affiche le Colisée fourni, les anciens labs
+gardent la référence. Ne pas redémarrer STEP-028 ni lancer STEP-029 à la place du chantier
+graphique. La prochaine étape graphique après clôture est GRAPHICS-002.
+
 Tu reprends Gambit Arena, prototype Godot Android portrait. Travaille en français et commence
 par lire HANDOFF.md, PROJECT_STATUS.md, ARCHITECTURE.md, ROADMAP.md et docs/handoff/.
 Lis aussi les instructions locales éventuellement présentes dans ton nouvel environnement.

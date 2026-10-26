@@ -1,5 +1,16 @@
 # Tests, environnement et preuves de validation
 
+## Actualisation GRAPHICS-001
+
+26 bancs headless : 1 649 contrôles, zéro échec, aucun warning/erreur Godot dans cette campagne.
+Le nouveau `arena_presentation_tests.tscn` couvre les vues, replis, calage et équivalence du jeu
+sur 900 ticks avec trois présentations de terrain. Sept contrôles supplémentaires en fenêtre
+X11 passent via le viewport réel. Contrôle d'affichage réalisé sur Galaxy A16 après installation.
+Recette utilisateur et APK identifié : [GRAPHICS-001](../steps/GRAPHICS-001.md).
+F6 sur `scenes/debug/graphics_lab.tscn` ouvre la galerie sans combat. Le preset actuel est
+`graphics-001-debug.apk`, version `0.1.0-graphics001`, code 29 ; les sections STEP-028 suivantes
+décrivent la base précédente.
+
 ## Actualisation STEP-028 — 26 octobre 2026
 
 Environnement effectif vérifié : Ubuntu 24.04.5, Godot 4.7.2.stable.official.ed1daf0bf,

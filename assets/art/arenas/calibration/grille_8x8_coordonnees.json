@@ -1,0 +1,44 @@
+{
+  "canvas_px": [
+    540,
+    960
+  ],
+  "grid_cells": [
+    8,
+    8
+  ],
+  "grid_type": "projection orthographique isometrique 2D",
+  "screen_origin_top_px": [
+    270,
+    317
+  ],
+  "screen_basis_per_tile_px": {
+    "i": [
+      30,
+      17.25
+    ],
+    "j": [
+      -30,
+      17.25
+    ]
+  },
+  "grid_extents_px": {
+    "top": [
+      270,
+      317
+    ],
+    "left": [
+      30,
+      455
+    ],
+    "right": [
+      510,
+      455
+    ],
+    "bottom": [
+      270,
+      593
+    ]
+  },
+  "note": "Grille mathematiquement identique a superposer sur les 4 visuels. Les lignes imprimees par l'illustration generee sont decoratives et non des donnees de navigation ni de collision."
+}

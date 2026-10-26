@@ -1,5 +1,30 @@
 # État du projet — 26 octobre 2026
 
+## GRAPHICS-001 — validée par le propriétaire
+
+Roadmap graphique validée par le propriétaire, GO reçu. Base commitée : STEP-028 / 580ce64.
+Le Colisée fourni est intégré dans Main via une Resource de présentation ; la référence
+procédurale reste le défaut des anciens laboratoires. Galerie indépendante et test de contrat
+ajoutés. Les huit thèmes sont fixés par l'archive reçue ; sept restent pour GRAPHICS-002.
+Voir [docs/steps/GRAPHICS-001.md](docs/steps/GRAPHICS-001.md) et
+[docs/arena-presentation.md](docs/arena-presentation.md).
+
+Les 26 bancs headless passent 1 649 contrôles ; sept contrôles graphiques supplémentaires
+passent en fenêtre. Le propriétaire a validé GRAPHICS-001 et donné le GO pour GRAPHICS-002.
+Checkpoint et sauvegarde de la première étape à réaliser avant l'intégration du catalogue.
+
+## Actualisation — clôture STEP-028 et proposition graphique
+
+STEP-028 est clôturée au commit `580ce641390f30667133cec0a580ee3d64f0c51a`, poussé sur main.
+Sauvegarde `gambit-arena-20261026-044515-580ce641390f.tar.gz` restaurée et vérifiée : bundle
+valide, contrôle d'intégrité Git et 327 fichiers identiques au commit. Les mentions de commit
+en attente dans la section suivante décrivent la validation avant cette clôture.
+
+Le propriétaire demande maintenant une roadmap d'évolutions graphiques isolées du gameplay.
+Plan dans [docs/graphics-roadmap.md](docs/graphics-roadmap.md) : GRAPHICS-001 à GRAPHICS-007,
+arènes puis modèles 3D, attaque, soin et Foudre. Le plan est maintenant validé et GRAPHICS-001
+est en recette ; STEP-029 et STEP-030 restent à faire après le chantier graphique.
+
 ## STEP-028 — validée par l'utilisateur, commit et sauvegarde en attente
 
 Base réelle vérifiée : cc91c79b0bcf82df6fb852d9b792fce63aa32148, main propre et identique
