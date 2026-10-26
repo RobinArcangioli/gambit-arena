@@ -2,6 +2,10 @@ extends Node3D
 ## One-way adapter. Bindings own presentation values/views, never ActorState or executors.
 const View = preload("res://scripts/presentation/character_view.gd")
 const MAX_GHOSTS: int = 12
+const MAX_HEAL_EFFECTS: int = 8
+@export var heal_definition: Resource = preload("res://resources/presentation/effects/heal.tres")
+var heal_effects: Array[Dictionary] = []
+var heals_played: int = 0
 var enabled: bool = true
 var run_id: int = -1
 var bindings: Dictionary = {}
@@ -15,6 +19,8 @@ func reset_run(id: int) -> void:
 	if run_id == id: return
 	for ghost in ghosts: _release_ghost(ghost)
 	ghosts.clear()
+	_clear_heals()
+	heals_played = 0
 	bindings.clear()
 	_sequences.clear()
 	_dead_ids.clear()
@@ -31,6 +37,8 @@ func capture(units: Array, id: int) -> void:
 
 func present(units: Array, values: Array[Dictionary], dt: float, id: int, terminal: bool = false) -> void:
 	reset_run(id)
+	capture(units, id)
+	_advance_heals(dt)
 	# Advance previously existing visuals first. New impacts/deaths begin at this tick's end.
 	for ghost in ghosts.duplicate():
 		ghost.age += dt
@@ -43,7 +51,6 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 		if ghost.age >= ghost.duration or not is_instance_valid(view):
 			_release_ghost(ghost)
 			ghosts.erase(ghost)
-	capture(units, id)
 	# Latch the current authoritative action BEFORE receiving this tick's impacts.
 	# HitReact must never decide priority using the previous tick's action state.
 	var current: Dictionary = {}
@@ -59,11 +66,12 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 	else:
 		for ghost in ghosts: _release_ghost(ghost)
 		ghosts.clear()
+		_clear_heals()
 	for actor_id in bindings.keys():
 		if not current.has(actor_id): bindings.erase(actor_id)
 
 func consume(event: Dictionary) -> void:
-	if int(event.get("run_id", -1)) != run_id: return
+	if not enabled or int(event.get("run_id", -1)) != run_id: return
 	var kind: String = event.get("kind", "")
 	if kind == "death":
 		_death(int(event.actor_id))
@@ -72,6 +80,8 @@ func consume(event: Dictionary) -> void:
 	var sequence: int = int(event.get("sequence", 0))
 	if sequence <= int(_sequences.get(source_id, 0)): return
 	_sequences[source_id] = sequence
+	if kind == "resolve" and event.get("skill", "") == "heal" and int(event.get("healing", 0)) > 0:
+		_heal(event)
 	if kind == "resolve" and int(event.get("damage", 0)) > 0:
 		var target_id: int = int(event.get("target_id", 0))
 		if _dead_ids.has(target_id) or not bindings.has(target_id): return
@@ -83,6 +93,8 @@ func consume(event: Dictionary) -> void:
 func _death(actor_id: int) -> void:
 	if _dead_ids.has(actor_id): return
 	_dead_ids[actor_id] = true
+	for effect in heal_effects.duplicate():
+		if effect.target_id == actor_id: _release_heal(effect)
 	if not bindings.has(actor_id): return
 	var snapshot: Dictionary = bindings[actor_id]
 	var view: Node3D = snapshot.view
@@ -112,3 +124,46 @@ func _release_ghost(ghost: Dictionary) -> void:
 	view.hide()
 	if view.get_parent() == self: remove_child(view)
 	view.queue_free()
+
+func _heal(event: Dictionary) -> void:
+	var target_id: int = int(event.get("target_id", 0))
+	if _dead_ids.has(target_id) or heal_definition == null or heal_definition.scene == null: return
+	var view: Node = heal_definition.scene.instantiate()
+	if not view is Node3D or not view.has_method("setup") or not view.has_method("advance_visual"):
+		view.free()
+		return
+	var origin: Vector3 = event.get("target_position", Vector3.ZERO)
+	origin = _heal_origin(target_id, origin)
+	if heal_effects.size() >= MAX_HEAL_EFFECTS: _release_heal(heal_effects[0])
+	add_child(view)
+	view.position = origin
+	view.setup(heal_definition, int(event.healing))
+	heal_effects.append({"view": view, "age": 0.0, "duration": maxf(0.1, heal_definition.duration), "target_id": target_id})
+	heals_played += 1
+
+func _advance_heals(dt: float) -> void:
+	for effect in heal_effects.duplicate():
+		effect.age += maxf(0, dt)
+		if is_instance_valid(effect.view):
+			if bindings.has(effect.target_id):
+				effect.view.position = _heal_origin(effect.target_id, bindings[effect.target_id].position)
+			effect.view.advance_visual(dt)
+		if effect.age >= effect.duration or not is_instance_valid(effect.view): _release_heal(effect)
+
+func _release_heal(effect: Dictionary) -> void:
+	var view = effect.view
+	if is_instance_valid(view):
+		view.hide()
+		if view.get_parent() == self: remove_child(view)
+		view.queue_free()
+	heal_effects.erase(effect)
+
+func _clear_heals() -> void:
+	for effect in heal_effects.duplicate(): _release_heal(effect)
+
+func _heal_origin(target_id: int, at: Vector3) -> Vector3:
+	if bindings.has(target_id):
+		var snapshot: Dictionary = bindings[target_id]
+		if snapshot.definition != null:
+			return at + snapshot.transform.basis * snapshot.definition.heal_effect_origin
+	return at

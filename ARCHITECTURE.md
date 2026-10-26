@@ -1,3 +1,11 @@
+# GRAPHICS-005 — présentation du soin
+
+CombatPresenter consomme les événements heal résolus avec soin positif ; le halo n'a
+aucune référence au combat. HealEffect reçoit profil, montant et temps accepté. Un profil
+Resource référence une PackedScene remplaçable. CharacterDefinition fournit l'origine par
+modèle. Les effets suivent les instantanés de cible, restent bornés et sont nettoyés par le
+présentateur. Voir docs/heal-presentation.md. Les sections suivantes sont historiques.
+
 # GRAPHICS-004 — transitions et vues d'action
 
 PartyExecutor publie des faits de transition, PartySimulation les copie avec run_id et

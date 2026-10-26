@@ -1,3 +1,11 @@
+# Actualisation GRAPHICS-005
+
+GRAPHICS-004/fix1 clôturée localement au commit 074f971, sauvegarde vérifiée.
+GRAPHICS-005 est validée par le propriétaire : halo local vert et montant réel du soin, scène/profil
+remplaçables, origine par modèle. Duck reste raccordé depuis GRAPHICS-004.
+Voir steps/GRAPHICS-005.md et heal-presentation.md. GRAPHICS-006/007 restent à faire.
+Le plan historique suit.
+
 # Actualisation des priorités — instruction du propriétaire
 
 GRAPHICS-004/fix1 intègre la règle Mort > action active (attaque/sort) > déplacement >

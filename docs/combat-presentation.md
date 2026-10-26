@@ -1,3 +1,9 @@
+# Extension GRAPHICS-005 — soin
+
+CombatPresenter présente désormais les résolutions heal positives avec un effet local,
+un montant réel, une scène remplaçable et une origine par modèle. Aucun changement des
+priorités ci-dessous. Voir heal-presentation.md pour ce contrat et son cycle de vie.
+
 # Présentation des actions — GRAPHICS-004, fix1 inclus
 
 Les modèles lisent des valeurs de combat et des événements ; ils ne décident jamais d'un

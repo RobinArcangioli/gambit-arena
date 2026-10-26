@@ -22,3 +22,5 @@ extends Resource
 
 @export var cast_clip: StringName
 @export var cast_release: float = 1.25
+
+@export var heal_effect_origin: Vector3 = Vector3.ZERO

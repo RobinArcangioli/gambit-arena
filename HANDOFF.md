@@ -1,3 +1,26 @@
+# GRAPHICS-005 validée — 26 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison GRAPHICS-005,
+APK 0.1.0-graphics005 (36), installé sur Galaxy A16.
+SHA-256 APK : `060c79e8cedc6236d7d4ea33a7df8ec7245b9c938b94976fc9362f01251cc8da`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure FPS.
+Les fichiers non documentaires sont identiques à la livraison validée ; les 35 bancs /
+2 243 contrôles déjà réussis ne sont pas relancés pour cette clôture documentaire.
+Clôture par un commit unique, puis sauvegarde et restauration vérifiées.
+Prochaine étape : GRAPHICS-006, effet Foudre de Mako ; attendre GO avant de la démarrer.
+Les mentions de recette ci-dessous décrivent les états antérieurs.
+
+# GRAPHICS-005 — effet de soin en recette
+
+GRAPHICS-004/fix1 clôturée au commit local 074f971, sauvegarde restaurée/vérifiée.
+Halo de soin, signes + et valeur réellement rendue, uniquement après résolution positive.
+Apparence remplaçable, origine par modèle et suivi de cible ; pause/reprise et nettoyage.
+35 bancs / 2 243 contrôles passent. Voir docs/steps/GRAPHICS-005.md et docs/heal-presentation.md.
+F6 : scenes/debug/heal_lab.tscn, bouton Soin (demo), puis F8/F5 pour le vrai combat.
+APK 0.1.0-graphics005 (36), installé et lancé sur Galaxy A16, version vérifiée par ADB.
+Étape non commitée ; attendre validation avant clôture et GRAPHICS-006.
+Les sections suivantes décrivent les états historiques.
+
 # GRAPHICS-004 et fix1 validés — 26 octobre 2026
 
 Le propriétaire confirme « Tout est OK. Step validée. » pour la livraison fix1,
