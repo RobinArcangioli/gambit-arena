@@ -1,3 +1,12 @@
+# Actualisation — GRAPHICS-003 en recette
+
+StatsActor est désormais Node3D avec une vue enfant facultative. CharacterDefinition décrit
+l'art ; CharacterView lit Idle/Walk en mode manuel. ArenaApplicationLab compose les profils
+et transmet le temps de simulation accepté. Le mannequin reste un repli et la vue nulle
+est testée. Voir [la présentation des personnages](docs/character-presentation.md).
+Les paragraphes suivants décrivent les étapes précédentes ; la mention d'un héritage
+StatsActor/ProxyActor à extraire est remplacée par cette implémentation.
+
 # Architecture actuelle — GRAPHICS-002 validée
 
 ArenaApplicationLab → PerformanceLab → ApplicationLab est maintenant le sommet de la chaîne

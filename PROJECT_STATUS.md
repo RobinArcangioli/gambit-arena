@@ -1,3 +1,18 @@
+# GRAPHICS-003 validée — clôture autorisée
+
+Le propriétaire valide GRAPHICS-003 et donne GO pour GAMEPLAY-001.
+Les fichiers non documentaires sont identiques à la livraison validée.
+
+# Actualisation GRAPHICS-003 — livrée en recette
+
+Base GRAPHICS-002 : commit local 1e427560a9d2884ce1d3e339a093d576192fc22f,
+sauvegarde restaurée et vérifiée. GRAPHICS-003 ajoute les quatre modèles pirates, Idle/Walk,
+les vues remplaçables et la galerie character_lab. 28 bancs / 1 803 contrôles sans échec.
+APK 0.1.0-graphics003 (code 31) installé et lancé sur Galaxy A16 ; rendu capturé.
+Voir [la recette](docs/steps/GRAPHICS-003.md). Validation utilisateur et commit en attente.
+GAMEPLAY-001 vient ensuite : équipe Anne/Mako, soin allié, Foudre, mana et barres.
+Les sections ci-dessous décrivent les états historiques.
+
 # État du projet — 26 octobre 2026
 
 ## GRAPHICS-002 — validée, commit autorisé

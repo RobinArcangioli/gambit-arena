@@ -1,3 +1,10 @@
+# Reprise actuelle — GRAPHICS-003 en recette
+
+Consulter docs/steps/GRAPHICS-003.md et docs/character-presentation.md.
+Le dernier commit reste GRAPHICS-002 / 1e427560a9d2884ce1d3e339a093d576192fc22f.
+GRAPHICS-003 est livrée sans commit ; attendre validation avant clôture.
+GAMEPLAY-001 suit selon docs/party-skills-plan.md. Le texte suivant est historique.
+
 # Passation Gambit Arena — HANDOFF-001
 
 ## Priorité actuelle — clôture GRAPHICS-002

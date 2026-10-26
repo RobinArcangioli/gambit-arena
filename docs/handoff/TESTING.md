@@ -1,3 +1,9 @@
+# GRAPHICS-003 — recette actuelle
+
+28 bancs, 1 803 contrôles, zéro échec. Nouveau banc character_presentation_tests.tscn.
+F6 character_lab.tscn puis F8/F5 ; Android installé, contrôle visuel effectué, recette
+utilisateur attendue. Voir docs/steps/GRAPHICS-003.md pour APK et limites.
+
 # Tests, environnement et preuves de validation
 
 ## Actualisation GRAPHICS-002

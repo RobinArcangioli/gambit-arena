@@ -2,7 +2,7 @@ extends Node
 const Layout = preload("res://scripts/ui/hud_layout.gd")
 const Lab = preload("res://scenes/ui/portrait_hud_lab.tscn")
 const Reference = preload("res://scenes/gambits/gambit_fields_lab.tscn")
-const Actor = preload("res://scripts/hybrid/proxy_actor.gd")
+const Actor = preload("res://scripts/combat/stats_actor.gd")
 var checks: int = 0
 var failures: int = 0
 

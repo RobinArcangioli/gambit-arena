@@ -3,12 +3,33 @@
 Préparée le 26 octobre 2026 à la demande du propriétaire, sur STEP-028 clôturée au commit
 `580ce641390f30667133cec0a580ee3d64f0c51a`. Roadmap validée. GRAPHICS-001 est clôturée
 au commit local f5a790d avec sauvegarde vérifiée. GRAPHICS-002 est validée après intégration
-du catalogue, avec commit autorisé. GRAPHICS-003 attend les modèles 3D annoncés par le
-propriétaire ; les étapes suivantes restent à réaliser.
+du catalogue, clôturée au commit local `1e427560a9d2884ce1d3e339a093d576192fc22f`.
+Les modèles de GRAPHICS-003 sont reçus : Anne et Mako du Pirate Kit pour les héros,
+les deux squelettes du même Pirate Kit pour les ennemis (KayKit réservé pour plus tard). Voir [l'inspection des assets](character-assets-intake.md)
+pour les clips disponibles et les raccordements à prévoir. GRAPHICS-003 est maintenant livrée en recette ; voir docs/steps/GRAPHICS-003.md.
 Le chantier graphique s'intercale avant STEP-029 et STEP-030, qui gardent leurs identifiants
-et seront exécutées sur la version enrichie. Voir docs/steps/GRAPHICS-002.md pour la livraison actuelle.
+et seront exécutées sur la version enrichie. Voir docs/steps/GRAPHICS-003.md pour la livraison actuelle.
 
 ## Objectif et périmètre
+
+### Révision : équipe et compétences propres aux héros
+
+La décision du propriétaire du 26 octobre 2026 ajoute Anne et Mako dans la même équipe,
+le soin d'Anne sur Mako via « Allié < 50 % PV », et la Foudre propre à Mako. `Duck`
+est le geste `cast_spell` commun aux héros et ennemis. La notion de compétence
+spéciale/secondaire disparaît. Le [plan équipe et compétences](party-skills-plan.md)
+fait foi et remplace les hypothèses antérieures contradictoires ci-dessous concernant
+le héros unique, le soin personnel et Foudre comme habillage inchangé de `special`.
+GAMEPLAY-001 s'intercale après GRAPHICS-003 et avant GRAPHICS-004 ; les étapes graphiques
+restent indépendantes des règles. Les sections suivantes conservent le plan initial
+comme référence pour les invariants non remplacés.
+
+Les temps d'incantation sont désormais fixés à **1,5 s pour le soin** et **2 s pour la
+Foudre**. GAMEPLAY-001 inclut la mana et les barres au-dessus de tous les héros et ennemis :
+vie rouge, puis mana bleu, puis incantation jaune or uniquement pendant le lancement.
+GRAPHICS-005/006 synchronisent Duck sur ces durées de jeu. Ces décisions remplacent les
+anciennes hypothèses de durées inchangées pour les sorts ; détails et recette dans le
+plan équipe et compétences.
 
 ### Arènes fournies par le propriétaire
 
@@ -186,7 +207,8 @@ correctes à faible cadence d'image, en pause et après dix Rejouer.
 
 ### GRAPHICS-005 — Soigner
 
-Associer `heal` à un geste propre et à un effet local lisible (halo/particules légères),
+Associer `heal` au clip `Duck` du Pirate Kit, choisi par le propriétaire comme geste
+`cast spell`, et à un effet local lisible (halo/particules légères),
 avec origine configurable sur le modèle. La préparation peut commencer à l'engagement ;
 le signal visuel de réussite et la valeur de soin suivent la résolution effective.
 Le soin conserve la cible offensive, le coût 20, le cooldown 4 s et le soin de 30 PV existants.
@@ -197,7 +219,8 @@ après Rejouer ; fermeture d'un menu ne reprend pas l'animation sans reprise du 
 
 ### GRAPHICS-006 — Lancer Foudre
 
-Ajouter un geste de lancement, une préparation discrète, un éclair dirigé sur la cible réelle
+Utiliser le clip `Duck` du Pirate Kit comme geste de lancement (`cast spell`), commun au
+soin selon le choix du propriétaire. Ajouter une préparation discrète, un éclair dirigé sur la cible réelle
 puis un impact bref. L'éclair utilise un effet léger compatible Android ; ni lumière dynamique,
 ni shader coûteux, ni plein écran clignotant ne sont requis pour la première version.
 Le profil visuel de `special` porte les scènes, couleurs, durées et sockets de Foudre.

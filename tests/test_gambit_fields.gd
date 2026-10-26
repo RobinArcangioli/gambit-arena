@@ -2,7 +2,7 @@ extends Node
 const Editor = preload("res://scripts/gambits/gambit_editor.gd")
 const Evaluator = preload("res://scripts/gambits/gambit_evaluator.gd")
 const Snapshot = preload("res://scripts/gambits/gambit_snapshot.gd")
-const Actor = preload("res://scripts/hybrid/proxy_actor.gd")
+const Actor = preload("res://scripts/combat/stats_actor.gd")
 const Lab = preload("res://scenes/gambits/gambit_fields_lab.tscn")
 var checks: int = 0
 var failures: int = 0

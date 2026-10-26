@@ -132,8 +132,9 @@ leurs identifiants et se dérouleront après ce chantier.
 |---|---|---|
 | STEP-028 | Clôturée — 580ce64, poussée et sauvegarde vérifiée | Mesures reproductibles sur téléphone ; objectif historique 30 FPS non atteint en Debug, accepté pour le périmètre prévu |
 | GRAPHICS-001 | Validée, commit local f5a790d et sauvegarde vérifiée | Colisée et référence interchangeables, galerie et contrat de présentation |
-| GRAPHICS-002 | Validée, commit autorisé | Catalogue des huit arènes fournies |
-| GRAPHICS-003 | En attente des modèles annoncés par le propriétaire | Modèles 3D et animation de base |
+| GRAPHICS-002 | Clôturée localement — 1e42756, sauvegarde vérifiée | Catalogue des huit arènes fournies |
+| GRAPHICS-003 | Livrée en recette — validation attendue | Anne, Mako et deux squelettes : modèles 3D et animation de base |
+| GAMEPLAY-001 | À réaliser après GRAPHICS-003 | Équipe Anne/Mako, compétences propres, soin ciblé et gambit Allié < 50 % PV ; voir docs/party-skills-plan.md |
 | GRAPHICS-004 à GRAPHICS-007 | À faire, plan validé | Actions et qualification graphique |
 | STEP-029 | À faire | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |

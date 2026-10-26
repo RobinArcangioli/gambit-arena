@@ -3,7 +3,7 @@ const Availability = preload("res://scripts/ui/skill_availability.gd")
 const Snapshot = preload("res://scripts/gambits/gambit_snapshot.gd")
 const Lab = preload("res://scenes/ui/skill_slots_lab.tscn")
 const Reference = preload("res://scenes/ui/portrait_hud_lab.tscn")
-const Actor = preload("res://scripts/hybrid/proxy_actor.gd")
+const Actor = preload("res://scripts/combat/stats_actor.gd")
 var checks: int = 0
 var failures: int = 0
 

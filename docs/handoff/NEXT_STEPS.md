@@ -1,3 +1,10 @@
+# État courant
+
+GRAPHICS-003 est en recette : modèles pirates, vues remplaçables, Idle/Walk, galerie.
+Voir ../steps/GRAPHICS-003.md. Attendre validation puis commit/sauvegarde vérifiée.
+Étape suivante : GAMEPLAY-001 selon ../party-skills-plan.md, puis GRAPHICS-004 à 007.
+Les propositions anciennes ci-dessous sont remplacées lorsqu'elles contredisent ce plan.
+
 # Roadmap restante et plan de reprise
 
 ## Nouvelle priorité validée — évolutions graphiques

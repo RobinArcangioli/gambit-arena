@@ -1,3 +1,10 @@
+# Reprise au 26 octobre 2026 — GRAPHICS-003
+
+Lire PROJECT_STATUS.md, docs/steps/GRAPHICS-003.md, docs/character-presentation.md et
+ docs/party-skills-plan.md. GRAPHICS-003 non commitée, en attente de validation. APK
+0.1.0-graphics003 / code31 installé sur A16. Les états de combat sont inchangés ; GAMEPLAY-001
+reste à faire. Les consignes anciennes ci-dessous décrivent les checkpoints précédents.
+
 # Prompt à transmettre à la prochaine IA
 
 Actualisation GRAPHICS-002 : GRAPHICS-001 est validée et clôturée au commit local f5a790d,

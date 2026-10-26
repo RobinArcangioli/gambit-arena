@@ -1,3 +1,13 @@
+# GRAPHICS-003 — recette disponible
+
+Anne, Mako et les deux squelettes pirates sont intégrés avec repos et marche.
+Main utilise Anne et le squelette avec crâne. F6 : [galerie des personnages](scenes/debug/character_lab.tscn),
+F8 puis F5 : combat. [Recette et APK](docs/steps/GRAPHICS-003.md),
+[modifier une apparence](docs/character-presentation.md).
+28 bancs / 1 803 contrôles passent. APK GRAPHICS-003 installé sur Galaxy A16.
+L'équipe Anne/Mako, les nouvelles compétences, les barres et incantations sont prévues
+ensuite dans [GAMEPLAY-001](docs/party-skills-plan.md). Étape en attente de validation.
+
 # Gambit Arena
 
 Prototype Godot Android portrait : héros autonome piloté par trois gambits, commandes

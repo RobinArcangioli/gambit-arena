@@ -2,11 +2,18 @@ extends "res://scripts/performance/performance_lab.gd"
 ## Only the composition/UI layer knows the art catalogue. Combat inherits unchanged.
 const ArenaPicker = preload("res://scripts/presentation/arena_picker.gd")
 const Catalog = preload("res://scripts/presentation/arena_catalog.gd")
+const CharacterActor = preload("res://scripts/combat/stats_actor.gd")
+const CharacterProfile = preload("res://scripts/presentation/character_definition.gd")
+@export var hero_appearance: CharacterProfile = preload("res://resources/presentation/characters/anne.tres")
+@export var enemy_appearance: CharacterProfile = preload("res://resources/presentation/characters/skeleton_variant.tres")
+@export var characters_enabled: bool = true
 var arena_picker: ArenaPicker
 var arena_menu_ready: bool = false
 
 func _ready() -> void:
 	super._ready()
+	world.child_entered_tree.connect(_apply_character)
+	refresh_characters()
 	arena_picker = ArenaPicker.new()
 	arena_picker.hide()
 	add_child(arena_picker)
@@ -69,3 +76,25 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	super._unhandled_key_input(event)
+
+func _apply_character(node: Node) -> void:
+	if not node is CharacterActor or node.is_queued_for_deletion():
+		return
+	var choice = enemy_appearance if node.enemy else hero_appearance
+	if node.is_node_ready():
+		node.set_appearance(choice, characters_enabled)
+	else:
+		node.appearance = choice
+		node.presentation_enabled = characters_enabled
+
+func refresh_characters() -> void:
+	for node in world.get_children():
+		_apply_character(node)
+
+func _physics_process(delta: float) -> void:
+	var before: float = simulation.clock.elapsed
+	super._physics_process(delta)
+	var accepted: float = maxf(0.0, simulation.clock.elapsed - before)
+	for node in world.get_children():
+		if node is CharacterActor and not node.is_queued_for_deletion():
+			node.advance_visual(accepted)
