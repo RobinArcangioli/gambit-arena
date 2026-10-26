@@ -1,50 +1,37 @@
-# État du projet
+# État du projet — 26 octobre 2026
 
-## Base confirmée
+## Dernière étape fonctionnelle clôturée
 
-STEP-026 clôturée : 344a584ec680ba7b45fb648b3a2eceb8937a97ae, main propre.
-Parent : f62162db145d4a3e3b70a7cc839770f34df4caaa.
-Sauvegarde gambit-arena-20261025-170810-344a584ec680.tar.gz restaurée et vérifiée :
-bundle complet, git fsck OK ; 297 fichiers identiques au commit et à l’archive validée.
-F6, tests manuels et fluidité OK ; retour global sans mesures chiffrées.
-SHA-256 APK : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.
-
-## STEP-027 — Validée, commit en attente
-
-GO reçu après clôture, confirmé pendant le travail. Livraison préparée le 26 octobre 2026.
-ApplicationGuard + ApplicationLab : pause forcée à la perte de focus/suspension,
-reprise explicite, entrées fraîches et rejet du premier delta après retour.
-Nouveau banc application_lifecycle_tests : dix cycles, notifications répétées et ordres
-inversés, actions payées, commande en attente, gestes, modal, zone sûre, replay et défaite.
-Livraison gambit-arena-complet-step-027-v1.tar.gz.
-Android 0.1.0-step027, code 27 ; SHA-256 de l’APK validé reçu ci-dessous.
-
-## Contrôles et limites
-
-Contrôles statiques des références, UID, différences autorisées et archive complète.
-Godot absent : aucune compilation GDScript ou exécution F6 chez l’assistant.
-Retour utilisateur global F6 et tests manuels OK ; la recette Android porte sur les notifications
-réelles d’Accueil, applications récentes, verrouillage et retour. Aucun résultat détaillé
-par scénario ni mesure chiffrée fourni. Le processus tué/recréé recommence une session ; pas de persistance ajoutée.
-Combat, exécuteur, ciblage fix1, routeur tactile, profils et animations inchangés.
-
-## Prochaine action
-
-Appliquer l’archive de validation, vérifier le diff puis commiter STEP-027.
-Transmettre le hash, le statut et la sauvegarde complète pour vérification.
-STEP-028 attend clôture et nouveau GO.
-
-## Validation utilisateur — 26 octobre 2026
-
-STEP-027 explicitement validée : F6 OK, tests manuels OK, fluidité OK.
-Retour global, sans résultats séparés par banc ou mesure chiffrée ; aucune réserve signalée.
+STEP-027 : validée et commitée, sauvegarde reçue et vérifiée.
+Commit : 665c0c8d86a6400f88c77773295ed06b1a518206 ; branche main propre au checkpoint.
+Parent : 344a584ec680ba7b45fb648b3a2eceb8937a97ae.
+Backup : gambit-arena-20261026-011155-665c0c8d86a6.tar.gz.
+Bundle complet, fsck OK, 307 fichiers identiques entre commit/backup/livraison validée.
 APK : step-027-debug.apk ; version 0.1.0-step027, code 27.
 SHA-256 : 07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611.
-Statut : Validée, commit en attente.
+Retour utilisateur : F6 OK, tests manuels OK, fluidité OK. Aucun résultat détaillé par banc
+ou mesure chiffrée fourni. Aucune nouvelle réserve signalée à cette clôture.
 
-Archive : gambit-arena-complet-step-027-validation.tar.gz.
-Seule la documentation change depuis v1 ; code, scènes, tests et configuration identiques.
-Aucun lancement Godot chez l’assistant. Les instructions de recette précédentes décrivent
-la validation maintenant reçue ; aucun nouveau test requis pour cette mise à jour documentaire.
-Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
-STEP-028 attend clôture et nouveau GO.
+## HANDOFF-001 — Documents préparés, commit/push à effectuer
+
+Demande utilisateur : documenter le projet pour une prochaine IA, créer une archive et
+fournir les commandes de push GitHub. Livrable : gambit-arena-complet-handoff-001.tar.gz.
+Documents d’entrée actualisés et dossier docs/handoff ajouté. Aucun changement de code,
+scène, test, asset, preset ou project.godot ; aucun nouvel APK requis.
+Le bundle inclus reste celui de 665c0c8 ; les documents sont dans les sources mais pas encore
+commités. Aucun hash documentaire ni URL GitHub ne sont inventés. Aucun push effectué ici.
+La prochaine IA doit vérifier si le commit/push a été réalisé après rédaction de cet état.
+
+## Suite
+
+Appliquer la passation, vérifier le diff documentaire, commiter, créer la sauvegarde puis
+configurer/vérifier le dépôt GitHub choisi et pousser main. Procédure : docs/handoff/GITHUB.md.
+Transmettre le hash, le statut, le résultat du push et la nouvelle sauvegarde pour vérification.
+STEP-028 reste à faire et attend son GO ; STEP-029 et STEP-030 restent à faire.
+Ne pas traiter cette passation comme une validation de performance ou de reproductibilité.
+
+## Limites de preuve
+
+Godot non disponible chez l’assistant : contrôles statiques et Git seulement. Les validations
+moteur/matérielles viennent de l’utilisateur. Mesures chiffrées, clone propre final et recette
+MVP finale restent à réaliser. Voir HANDOFF.md et docs/handoff/NEXT_STEPS.md.

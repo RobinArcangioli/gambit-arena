@@ -280,3 +280,11 @@ Les mentions antérieures décrivent les livraisons précédentes. Commit après
 STEP-027 validée le 26 octobre 2026 : F6, tests manuels et fluidité OK.
 Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
 APK : 07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611.
+
+## HANDOFF-001 — 26 octobre 2026
+
+STEP-027 clôturée au commit 665c0c8, backup vérifié (307 fichiers). L’archive de passation
+contient le projet complet et des documents nouveaux, sans modification de code. Le bundle
+séparé s’arrête à 665c0c8 ; il n’inclut pas le futur commit documentaire HANDOFF-001.
+Après commit, exécuter bash tools/create_backup.sh pour obtenir une sauvegarde incluant
+la passation. Voir docs/handoff/GITHUB.md pour push, vérification et restauration.

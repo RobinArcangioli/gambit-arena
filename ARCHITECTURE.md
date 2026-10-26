@@ -1,126 +1,111 @@
-# Architecture réelle — STEP-027
+# Architecture actuelle — base STEP-027 clôturée
 
-Main conserve son UID et ouvre scenes/platform/application_lab.tscn.
-ApplicationLab étend RunLifecycleLab et porte la politique de retour au premier plan.
-RunLifecycleLab étend WaveSequenceLab et ajoute la présentation du bilan terminal.
-WaveSequenceLab étend WaveLab, lui-même dérivé de ManualCommandLab. Le nouveau lab active
-sequence_enabled ; WaveLab active wave_enabled et conserve seul une vague historique.
+Référence : `665c0c8d86a6400f88c77773295ed06b1a518206`. Cette synthèse de passation remplace
+les formulations de livraison des étapes précédentes ; aucun code n’a changé.
 
-CombatSimulation reste le seul coordinateur : prune/fin-transition, horloge, intentions,
-mouvement/séparation, actions engagées, prune/fin-transition, engagements puis apparitions.
-Le plan WaveSchedule conserve ses bornes, ses cadences 1 puis 2/1,5/1 secondes et son crédit
-limité à une arrivée. Les nouvelles vagues ne recréent ni héros ni exécuteur.
-Les compteurs globaux persistent ; les compteurs locaux se calculent à partir de bases
-mémorisées à la transition. Les serials sont uniques dans une partie. Aucune interface
-ne déclenche directement une action ; l’arbitrage manuel/gambits reste inchangé.
+## Scène d’entrée et héritage UI
 
-Voir docs/wave-sequence.md pour les conditions de transition, invariants et cas terminaux.
-La défaite précède la transition, une suppression externe interdit la victoire, et seule
-la troisième fin réussie arrête la partie gagnée. Rejouer seul réinitialise tout le combat.
-Le nouveau banc couvre le coordinateur réel ; les bancs historiques restent inchangés.
+project.godot lance scenes/main.tscn (UID conservé), qui instancie
+scenes/platform/application_lab.tscn. Chaîne des scripts :
 
-## FIX-STEP-023-001 / FIX-STEP-024-001 : routeur tactile v2
+ApplicationLab → RunLifecycleLab → WaveSequenceLab → WaveLab → ManualCommandLab →
+SkillSlotsLab → PortraitHudLab → GambitFieldsLab → GambitEditorLab → BattleLab → Arena.
 
-La v1 utilisait la propagation PASS et le scroll natif. Le retour F6 utilisateur montre
-que cela ne suffit pas : les gestes injectés n'ont pas défilé et ont déclenché des erreurs.
-La v2 ne déduit aucune réussite matérielle de cette première approche.
+Les couches parent construisent l’arène et le HUD, les couches dérivées ajoutent leurs
+fonctions. Beaucoup de méthodes sont virtuelles et appelées pendant le _ready parent :
+respecter setup_complete/editor_ready/hud_ready/slots_ready/manual_ready et les contrôles
+is_node_ready. Les laboratoires historiques peuvent être lancés seuls par F6.
 
-PortraitHudLab possède un TouchScrollRouter (Node). Son Callable fournit uniquement
-les ScrollContainer actifs : formulaire si modal, sinon liste visible. SkillSlotsLab
-ajoute la liste des compétences quand elle est visible. Aucun bouton extérieur à ces
-zones n'est géré par le routeur. Les anciens laboratoires HUD bénéficient du même correctif.
+Arena possède le SubViewport 3D, caméra, mannequins initiaux, lumières et HUD. BattleLab
+remplace les mannequins par la simulation. Le parent graphique du monde n’est pas forcément
+le coordinateur ; ce dernier nettoie donc les acteurs dans _exit_tree.
+Les constantes de modes des anciens labs ne doivent pas être confondues avec les libellés
+actuels des trois vagues.
 
-_input prend possession des InputEventScreenTouch/ScreenDrag commençant dans une zone.
-Le routeur garde un seul doigt, la zone, le bouton de départ, la position initiale dans
-le repère local et la valeur de scroll. Au-delà de 12 pixels, le geste reste un swipe,
-même s'il revient au point de départ. La valeur verticale est calculée depuis l'origine
-et bornée au scrollbar, sans inertie. Un relâchement court n'active que le bouton de
-départ encore visible, activable, sous le doigt et dans la même zone. L'état de geste
-est libéré avant l'unique émission pressed, car ce callback peut ouvrir un formulaire.
+## Simulation et données
 
-Les événements tactiles capturés sont consommés avant le GUI natif. Leur copie souris
-(device -1) est également consommée, y compris après un changement de modal au relâchement.
-La souris physique et sa molette ne passent pas par ce chemin. Un second doigt annule
-l'appui. Rejouer annule un geste en cours ; une notification d'arrière-plan oublie le
-capture pour qu'un nouveau geste fonctionne au retour. Une annulation système, une zone
-masquée/redimensionnée ou un bouton désactivé ne peut pas valider un appui.
+| Composant | Responsabilité / fichier |
+|---|---|
+| CombatSimulation | Seul coordinateur des ticks, acteurs, arrivées, transitions et fins ; scripts/combat/combat_simulation.gd |
+| GameClock | Temps de jeu, pause/stopped, dt borné ; scripts/core/game_clock.gd |
+| ActorProfile / ActorState | Resource de configuration puis état indépendant d’acteur ; scripts/combat/ |
+| CombatUnit | Mover, exécuteur, identité, mémoire de cible offensive, présentation |
+| GroundMover / GroundCrowd | Approche de la cible fournie et séparation déterministe bornée ; scripts/movement/ et scripts/crowd/ |
+| AttackAction | Identité, préparation/récupération, latch d’impact, portée et annulations |
+| SkillExecutor | Coûts, cooldowns, ressource et effets uniques ; scripts/skills/skill_executor.gd |
+| GambitSnapshot / Evaluator | Valeurs capturées et évaluation pure sans effet ; scripts/gambits/ |
+| GambitController | Intentions 10 Hz, revalidation et engagement via exécuteur |
+| ManualCommands | Une attente de 3 s, remplacement/revalidation/priorité ; scripts/manual/manual_commands.gd |
+| WaveSchedule | Calendrier d’arrivées borné sans acteurs ; scripts/waves/wave_schedule.gd |
 
-Les filtres PASS de v1 restent compatibles avec le GUI souris. Aucun gestionnaire global
-de déplacement, ni connexion pressed supplémentaire, ni changement de project.godot.
-chosen est explicitement initialisé à null dans ManualCommands.nearest : seul changement
-au ciblage, qui conserve la sélection du plus proche et le départage par identité.
+Ordre du tick : observer une éventuelle mort préalable ; filtres pause/temps ; prune et
+fin/transition ; horloge ; intention manuelle sinon gambits ; cibles ennemies ; mouvement
+et séparation ; actions engagées (héros puis ennemis stables) ; prune et fin/transition ;
+engagement manuel sinon automatique ; nouveaux engagements ennemis ; arrivées ; présentation.
+Un nouvel acteur ou une action nouvellement engagée ne reçoit pas rétroactivement le dt.
+Le héros ne marche pas si son action est active ou si sa cible sélectionnée vit à portée.
 
-Le banc tactile continue d'injecter les événements au viewport réel, sans appeler les
-callbacks. Il ajoute annulation sans déplacement, second doigt, swipe inverse, reset
-pendant un appui et retour d'arrière-plan. Les tests ne sont pas exécutés ici (Godot absent).
-Le routeur tactile reste identique à la STEP-024 v2 validée. Exécution des actions,
-animation et immobilité à portée inchangées.
+La cible offensive de CombatUnit est indépendante du mouvement et de l’intention du moment.
+focused_enemy valide source/état, cible/état, appartenance au combat et portée. Le contrôleur
+restreint le snapshot à cette cible ; ManualCommands la préfère à nearest. Un soin ne l’efface
+pas. La mémoire est nettoyée à la fin/replay, sans changer le comportement en combat.
 
-## STEP-025-fix1 — Mémoire de cible indépendante des intentions
+## Coûts et annulations
 
-CombatUnit conserve une référence de cible offensive et les identités ActorState
-du héros et de la cible. focused_enemy invalide une cible morte, supprimée, absente
-du combat, dont l’état a changé ou à une distance strictement supérieure à REACH (1).
-La borne exacte de portée reste verrouillée. Une nouvelle instance au replay repart sans cible.
-Controller.plan limite les ennemis du snapshot à cette cible tant qu’elle est valide.
-L’évaluateur pur et sa priorité des règles restent inchangés : un soin peut viser le héros,
-et une règle devenue inapplicable ne permet pas de contourner le verrou sur un autre ennemi.
-Le contrôleur mémorise la cible offensive choisie, indépendamment de _forget/stop et
-de la fin d’une action. ManualCommands.submit réutilise ce même verrou avant nearest,
-et mémorise la cible d’une commande offensive acceptée. Un clic rejeté ne la remplace pas.
-Une action engagée conserve toujours son propre verrou d’exécution. Aucun cooldown, coût,
-animation, déplacement ni seuil de portée n’est modifié. La disparition/réinitialisation
-d’un acteur invalide les références pour éviter de conserver une ancienne identité.
+SkillExecutor est le seul point d’engagement. Le débit précède l’exécution et n’est pas
+répété à l’impact. AttackAction ne peut appliquer son effet qu’une fois pour action_id.
+Les signaux de mort/sortie et identités ActorState invalident les participants périmés.
+retire annule définitivement un ancien exécuteur ; il ne peut pas affecter une nouvelle partie.
+Une action payée annulée ne récupère pas automatiquement son coût. Pas de résurrection par soin.
 
-STEP-025 avec fix1 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
-APK fix1 : a05863ca35183215d53c270652a0a1927da4e74c8547fcf32112f6a42e97544a. Commit et sauvegarde en attente.
+ManualCommands.submit mémorise source/cible/états et deadline GameClock. Une commande
+invalide n’écrase pas une attente valide. Busy/cooldown/énergie/soin inutile/approche peuvent
+attendre jusqu’à expiration. La mort/sortie invalide les références et les connexions sont
+nettoyées. Une file prioritaire n’interrompt jamais l’action engagée.
 
-## Fin unique et cycle de partie — STEP-026
+## Vagues et fins
 
-CombatSimulation._finish_if_needed garde les conditions existantes et délègue la fin
-à _end_run. Cette méthode est idempotente : résultat terminal, horloge arrêtée, actions
-retirées, mouvements et cibles oubliés, commande annulée, puis bilan scalaire figé.
-final_report renvoie une copie profonde, jamais un dictionnaire mutable partagé.
-Le dernier impact létal est compté avant le bilan. Aucune notification de mort ne
-réinitialise la simulation au milieu du calcul d’un impact.
+wave_enabled préserve les anciens laboratoires ; sequence_enabled active trois vagues.
+Normal/Soin : quota 12 par vague, cap 6 ; Charge : quota 24, cap 20.
+WaveSchedule ne confirme issued qu’après une création réussie. Saturation/bord occupé ne
+consomment pas le budget et ne stockent qu’une arrivée due, jamais une rafale.
 
-advance observe aussi une mort déjà survenue avant le filtre de pause : la défaite
-est consignée au prochain appel, sans avancer le temps. Le jeu ne peut pas produire
-de nouveaux dégâts en pause ; ce chemin couvre les modifications externes de cycle de vie.
-clear arrête l’horloge et retire chaque exécuteur, mouvement et cible avant queue_free.
-_exit_tree appelle clear, même si le monde des acteurs appartient à une autre branche.
-reset crée un nouvel acteur et état, réinitialise les compteurs, traces, commande, vagues
-et bilan, conserve les règles et la pause. run_id est un compteur de diagnostic monotone ;
-terminal_count vaut zéro puis un par partie. Aucun de ces champs ne pilote les actions.
+spawned, defeated et removed sont cumulés sur la partie ; wave.issued est local à la vague.
+Après prune : spawned = defeated + removed + vivants. Des bases mémorisées calculent les
+vaincus/retirés locaux. Serial d’ennemi est global à la partie. completed_waves contient au
+plus trois instantanés scalaires. La transition remet seulement le calendrier local à zéro,
+conserve le héros et réapplique le délai initial d’une seconde.
 
-RunLifecycleLab réutilise le panneau de statut et les détails existants. Le résultat
-terminal a priorité visuelle sur PAUSE. Aucun modal ne bloque Rejouer ou l’éditeur.
-Le bilan est effacé par reset ; le bandeau normal reprend alors son affichage habituel.
+La défaite précède la transition/victoire. Une suppression externe entraîne INTERROMPU
+à la fin de vague, pas une victoire. _end_run est unique : horloge arrêtée, actions retirées,
+cibles/commandes annulées puis bilan figé. final_report renvoie une copie de valeurs.
+run_id et terminal_count servent aux diagnostics. Rejouer recrée acteurs/états, efface
+compteurs, vagues, traces et bilan ; garde règles et pause. clear/_exit_tree assurent le nettoyage.
 
-STEP-026 validée le 25 octobre 2026 : F6, tests manuels et fluidité OK.
-Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
-APK : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.
+## Interface, scroll et application
 
-## ApplicationGuard — STEP-027
+PortraitHudLab calcule les zones sûres via HudLayout, réorganise status/arène/footer/modal
+et utilise des ScrollContainer dont la hauteur de contenu est explicite. Les hauteurs
+minimales réelles des contrôles doivent être respectées. L’éditeur ouvre la pause et ne
+reprend pas automatiquement en fermant ; son brouillon n’est appliqué qu’explicitement.
+SkillAvailability décrit la disponibilité sans effet ; ManualCommandLab active les commandes.
 
-Le nouveau Node est ajouté en dernier enfant après la construction du HUD : son _input
-précède le routeur tactile selon le parcours inverse en profondeur de Godot. Il ne
-déclenche aucune action. Il consomme les entrées pendant suspended ou !focused et les
-relâchements/drags sans nouvel appui correspondant. Les pressions souris physiques et
-émulées sont distinguées par device ; la molette n’est pas filtrée au premier plan.
+TouchScrollRouter possède les séquences tactiles commençant dans une liste active.
+Au-delà de 12 pixels logiques, le geste reste un swipe. Appui court valide : une émission
+pressed au relâchement. La copie souris device -1 est consommée ; souris physique/molette
+restent natives. Multi-touch, annulation, zone invalide, replay et arrière-plan annulent l’appui.
 
-ApplicationLab reçoit les notifications avec observe ; _notification ne rappelle pas
-super, puisque Godot distribue cette méthode à chaque classe de la chaîne. Le parent
-Arena garde son comportement historique. À la perte, le nouveau lab impose la pause,
-oublie les gestes du routeur, et bloque Reprendre/Rejouer. Deux indicateurs distincts
-attendent leurs notifications de retour respectives, dans n’importe quel ordre.
+ApplicationGuard est ajouté en dernier pour recevoir _input avant le routeur/GUI. Il suit
+focus et suspension séparément, bloque les entrées pendant l’absence, et refuse les drags/
+relâchements/répétitions sans nouvel appui. ApplicationLab force la pause, annule les gestes,
+recalcule le layout au retour et attend Reprendre. Le premier pas actif après cette reprise
+est écarté ; ensuite GameClock reprend sans temps mural. Un formulaire et un bilan terminal
+conservent leurs garanties. _notification est distribué par Godot aux classes de l’héritage :
+ne pas rajouter super._notification, qui dupliquerait le traitement.
 
-Le retour conserve paused et recalcule le layout. Un nouveau clic Reprendre peut lever
-la pause seulement au premier plan et hors formulaire. Le prochain _physics_process
-actif ignore son delta une seule fois. Aucun temps système, timer séparé ou rattrapage
-n’est introduit. La simulation, les exécuteurs et tous les laboratoires historiques
-restent inchangés. Détails, tests et limites : docs/application-lifecycle.md.
+## Documentation détaillée et points d’entrée
 
-STEP-027 validée le 26 octobre 2026 : F6, tests manuels et fluidité OK.
-Retour global sans mesure chiffrée ; commit et sauvegarde en attente.
-APK : 07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611.
+Lire docs/actions.md, docs/skill-executor.md, docs/skills.md, docs/gambit-controller.md,
+docs/manual-commands.md, docs/wave-sequence.md, docs/run-lifecycle.md et
+docs/application-lifecycle.md. Les règles fix1 priment sur les anciennes descriptions
+« choisir le plus proche » sans mémoire entre actions. Pour les tests : docs/handoff/TESTING.md.

@@ -101,7 +101,7 @@ qui dépend de la validation de la roadmap.
 - STEP-024 : validée et commitée — 89ae0f6 ; sauvegarde reçue et vérifiée, correctifs inclus.
 - STEP-025 : validée et commitée — f62162d ; fix1 inclus, sauvegarde reçue et vérifiée.
 - STEP-026 : validée et commitée — 344a584 ; sauvegarde reçue et vérifiée.
-- STEP-027 : Validée, commit en attente — pause, arrière-plan et retour Android.
+- STEP-027 : validée et commitée — 665c0c8 ; sauvegarde reçue et vérifiée.
 - STEP-028 à STEP-030 : À faire.
 
 Les anciens hashes STEP-001/002 attestent les retours utilisateur ; leurs objets
@@ -109,161 +109,39 @@ sont perdus. Le nouveau commit 6282d81 est disponible et sauvegardé.
 STEP-003 validée est incluse dans ce commit de reprise.
 Voir [la reprise](docs/recovery.md) et [les sauvegardes](docs/backup.md).
 
-## Chemin critique et jalons Android
+## Situation de passation
 
-- STEP-004 : prototype technique sur téléphone.
-- STEP-005 : lisibilité des animations.
-- STEP-012 : premier combat jouable sur téléphone.
-- STEP-018 : cœur stratégique et diagnostics.
-- STEP-020 à STEP-023 : ergonomie tactile.
-- STEP-026 : boucle de partie complète.
-- STEP-027 à STEP-030 : robustesse, performance et livraison.
+HANDOFF-001 documente l’état après STEP-027, sans nouvelle étape fonctionnelle.
+Commit documentaire et push GitHub à effectuer par l’utilisateur ; aucune publication confirmée.
+Voir [HANDOFF.md](HANDOFF.md) et [la procédure GitHub](docs/handoff/GITHUB.md).
 
-## Risques principaux
+## Étapes restantes
 
-Sprites trop petits ; mémoire des animations ; confusion entre coordonnées
-logiques et affichées ; tri visuel ; oscillations à portée ; blocage par
-séparation ; ciblage instable ; effets ou coûts doublés ; priorité manuelle ;
-ergonomie de l'éditeur ; compatibilité de l'export ; chauffe du téléphone.
+| Étape | État | Livrable |
+|---|---|---|
+| STEP-028 | À faire, GO attendu | Mesures reproductibles sur téléphone ; vérifier l’objectif provisoire 30 FPS soutenues |
+| STEP-029 | À faire | Clone neuf, import, export et installation reproductibles |
+| STEP-030 | À faire | Recette finale MVP sur APK identifié |
 
-La validation matérielle précoce et les tests ciblés des actions et gambits
-doivent précéder toute optimisation ou extension de périmètre.
+Le [plan détaillé proposé](docs/handoff/NEXT_STEPS.md) prépare ces étapes ; il ne prétend
+ni les implémenter ni remplacer leur autorisation. « Fluidité OK » ne prouve pas un budget
+matériel mesuré. La publication initiale du dépôt ne remplace pas la recette STEP-029.
 
-## Documentation par étape
+## Conventions et risques
 
-Chaque étape possède docs/steps/STEP-XXX.md, rédigé au moment de sa livraison :
-objectif, périmètre, dépendances, décisions, fichiers, installation,
-comportement, limites, vérifications, tests manuels, critères et commit.
+Une étape validée est commitée avec sa documentation, puis sauvegardée et vérifiée avant GO.
+Le hash d’un commit est consigné à l’étape suivante, sans amendement circulaire. Les recettes
+historiques peuvent donc mentionner « commit en attente » ; le présent registre et Git
+font foi pour l’état courant. Correctifs et changements de direction restent documentés.
 
-ROADMAP.md et PROJECT_STATUS.md évoluent à chaque étape.
-README.md et ARCHITECTURE.md décrivent uniquement le projet réel.
-Les autres documents sont créés lorsqu'ils ont un contenu utile.
+Préserver ciblage vivant à portée, impact/coût uniques, immobilité à portée, swipe tactile,
+compteurs des trois vagues, fin/replay et reprise explicite Android. Les modèles/animations
+finaux, l’équilibrage et la mesure matérielle ne sont pas acquis. Voir la passation.
 
-## Conventions Git
+## Limite du document initial
 
-Une étape validée = un commit incluant sa documentation.
-Le message contient [STEP-XXX]. Aucun hash n'est inventé.
-
-Statuts : À faire, En cours, Validée, commit en attente,
-Validée, commit en attente, Bloquée.
-
-Avant commit : validation utilisateur consignée et statut
-« Validée, commit en attente ». La présence du commit établit la clôture.
-Le statut précédent est actualisé dans le commit de l'étape suivante.
-Aucun amendement ou commit dédié uniquement à l'ajout d'un hash.
-
-Une correction après clôture reçoit un nouvel ID stable.
-Aucune nouvelle étape ne commence sans feu vert explicite.
-
-## Prochaine action
-
-Clôturer STEP-027 validée : commit, statut propre et sauvegarde complète.
-STEP-028 attend clôture de STEP-027 et nouveau GO.
-Les mannequins sont réutilisés ; modèles riggés et animations 3D restent à produire
-et qualifier. Ils ne sont pas considérés comme acquis par les étapes historiques 2D.
-
-## État de l'annexe
-
-Le fichier transmis le 21 octobre 2026 contient le titre ci-dessous, mais aucun
-texte d'annexe. Le registre des 30 étapes ci-dessus est conservé intégralement.
-La proposition détaillée validée reste dans la conversation de lancement ;
-son contenu n'est pas encore archivé dans ce fichier. Cette lacune documentaire
-est distincte de l'avancement technique de STEP-002.
-
-## Proposition détaillée validée
-
-## Révision de présentation — décision du 22 octobre 2026
-
-Le choix utilisateur remplace les personnages en sprites par des personnages 3D
-sur fond 2D isométrique. STEP-005 reste une validation historique du laboratoire.
-TRANSITION-001 est insérée comme dépendance supplémentaire de STEP-006.
-Le gameplay MVP, le déplacement automatique et les gambits restent dans le périmètre.
-Les parties des futures étapes concernant assets, projection, occultation et
-performance seront précisées après le prototype hybride. La production d’assets
-3D animés sera cadrée à son issue, sans présumer de modèles déjà disponibles.
-
-## FIX-STEP-023-001 — Inclus dans STEP-024 v2 validée
-
-Signalement utilisateur du 25 octobre 2026 : les zones de défilement Gambits et
-Compétences fonctionnent à la molette, mais pas par glissement du doigt sur téléphone.
-L’utilisateur valide STEP-023 et demande explicitement ce correctif à la prochaine étape.
-Statut : v1 en échec au banc tactile ; v2 validée par le retour utilisateur global.
-Voir docs/steps/FIX-STEP-023-001.md. Le signalement ci-dessus est conservé.
-
-Périmètre intégré à STEP-024 v2 validée : rétablir le swipe dans les deux listes, jusqu’aux
-dernières règles/cartes/détails. Vérifier les gestes commencés sur les boutons et sur
-les espaces libres ; un glissement ne doit ni commander une compétence, ni ouvrir ou
-modifier un gambit. Conserver les appuis courts, la molette, les zones sûres et la pause.
-Ajouter une régression ciblée et faire valider le geste sur le téléphone Android.
-
-## STEP-025-fix1 — Cible offensive persistante
-
-Retour utilisateur : F6 OK, tests manuels OK, fluidité OK ; STEP-025 déclarée validée.
-SHA-256 de cette livraison avant correctif : 660feca8138818606bc2e9e2315019b83b05f7fd86e704362579b3c080f46329.
-Réserve signalée simultanément : changement de cible avant sa mort, correction immédiate
-demandée. La cible doit rester la même tant qu’elle est vivante et à portée.
-STEP-025-fix1 : validée, commit en attente ; nouveau SHA reçu ci-dessous.
-Cette section remplace les instructions de livraison précédentes : appliquer
-gambit-arena-complet-step-025-fix1.tar.gz sur STEP-025 non commitée.
-Recette : docs/steps/STEP-025-fix1.md. Export step-025-fix1-debug.apk,
-version 0.1.0-step025-fix1, code 25. Commit après validation du correctif.
-
-## Validation finale — 25 octobre 2026
-
-STEP-025 avec STEP-025-fix1 explicitement validée par l’utilisateur :
-F6 OK, tests manuels OK, fluidité OK. Aucune nouvelle réserve signalée.
-Retour global ; aucun résultat séparé par banc ou mesure chiffrée fourni.
-APK : step-025-fix1-debug.apk ; version 0.1.0-step025-fix1, code 25.
-SHA-256 : a05863ca35183215d53c270652a0a1927da4e74c8547fcf32112f6a42e97544a.
-La validation précédente et son SHA décrivent STEP-025 avant correction du ciblage.
-
-Statut actuel : Validée, commit en attente. Archive de validation :
-gambit-arena-complet-step-025-validation.tar.gz. Seule la documentation change
-par rapport à fix1 ; code, scènes, tests et configuration strictement identiques.
-Aucun lancement Godot chez l’assistant. Les instructions de recette et mentions
-antérieures d’attente décrivent les livraisons précédentes ; ne pas les relancer
-pour cette seule mise à jour documentaire.
-Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
-STEP-026 attend cette clôture et un nouveau GO.
-
-## Clôture STEP-025 / démarrage STEP-026
-
-Le commit f62162d et sa sauvegarde ont été vérifiés après la validation de fix1.
-Les mentions précédentes de commit en attente décrivent la clôture antérieure.
-GO STEP-026 reçu ; validation utilisateur reçue, voir docs/steps/STEP-026.md.
-
-## Validation utilisateur — 25 octobre 2026
-
-STEP-026 explicitement validée : F6 OK, tests manuels OK, fluidité OK.
-Retour global, sans résultats séparés par banc ou mesure chiffrée ; aucune réserve signalée.
-APK : step-026-debug.apk ; version 0.1.0-step026, code 26.
-SHA-256 : 1c6e699d3acf44a6f3e5ce6e85d333ac9bb60c14e946a548992bd5eb099a47a2.
-Statut : Validée, commit en attente.
-
-Archive : gambit-arena-complet-step-026-validation.tar.gz.
-Seule la documentation change depuis v1 ; code, scènes, tests et configuration identiques.
-Aucun lancement Godot chez l’assistant. Les instructions de recette précédentes décrivent
-la validation maintenant reçue ; aucun nouveau test requis pour cette mise à jour documentaire.
-Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
-STEP-027 attend clôture et nouveau GO.
-
-## Clôture STEP-026 / démarrage STEP-027
-
-344a584 et sa sauvegarde ont été vérifiés après validation utilisateur.
-Les mentions précédentes de commit en attente décrivent les étapes antérieures.
-GO STEP-027 reçu et confirmé ; livraison du 26 octobre 2026 validée, commit en attente.
-
-## Validation utilisateur — 26 octobre 2026
-
-STEP-027 explicitement validée : F6 OK, tests manuels OK, fluidité OK.
-Retour global, sans résultats séparés par banc ou mesure chiffrée ; aucune réserve signalée.
-APK : step-027-debug.apk ; version 0.1.0-step027, code 27.
-SHA-256 : 07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611.
-Statut : Validée, commit en attente.
-
-Archive : gambit-arena-complet-step-027-validation.tar.gz.
-Seule la documentation change depuis v1 ; code, scènes, tests et configuration identiques.
-Aucun lancement Godot chez l’assistant. Les instructions de recette précédentes décrivent
-la validation maintenant reçue ; aucun nouveau test requis pour cette mise à jour documentaire.
-Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
-STEP-028 attend clôture et nouveau GO.
+Le fichier transmis au lancement contenait un titre d’annexe sans son texte détaillé.
+Le registre des 30 étapes ci-dessus est conservé. Ne pas inventer l’annexe manquante.
+Le choix du 22 octobre 2026 remplace les sprites par des personnages 3D sur fond 2D :
+TRANSITION-001 a été insérée après STEP-005 et avant STEP-006. Les anciens laboratoires
+2D restent historiques ; la production d’assets 3D définitifs n’a pas été réalisée.

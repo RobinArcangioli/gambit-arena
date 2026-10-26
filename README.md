@@ -1,45 +1,40 @@
-# Gambit Arena — STEP-027
+# Gambit Arena
 
-STEP-026 clôturée au commit 344a584 ; sauvegarde vérifiée, 297 fichiers conformes.
-STEP-027 : Validée, commit en attente. F5 ouvre ApplicationLab, qui conserve le combat
-à trois vagues, le ciblage fix1 et le bilan/replay STEP-026.
+Prototype Godot Android portrait : héros autonome piloté par trois gambits, commandes
+manuelles de compétences, trois vagues, pause et redémarrage. Personnages 3D procéduraux
+sur arène dimétrique ; assets et équilibrage encore provisoires.
 
-Perdre le focus ou mettre l’application en arrière-plan impose la pause. Le retour ne
-reprend jamais le combat automatiquement : toucher Reprendre une fois l’application
-revenue. Le premier pas de simulation après cette reprise est ignoré ; les suivants
-utilisent l’horloge existante, sans rattraper le temps passé hors application.
-Les actions, coûts déjà payés, cooldowns, commandes en attente et vagues sont conservés.
+**État : STEP-027 validée, commitée et sauvegardée — 665c0c8.**
+La passation HANDOFF-001 ajoute uniquement la documentation. Aucun push GitHub n’est
+confirmé à sa rédaction et aucune étape de performance n’est encore réalisée.
 
-Les entrées sont bloquées pendant l’absence de focus/suspension. Un ancien relâchement
-ne doit ni commander une compétence, ni activer Reprendre/Rejouer. Un geste neuf reste
-utilisable au retour. Le formulaire garde son brouillon et la pause ; la zone sûre est
-recalculée. Une défaite reste terminale. Aucune reprise de partie après arrêt du processus
-n’est ajoutée : les configurations restent en mémoire de session, sans sauvegarde persistante.
+## Reprendre le projet
 
-F6 : application_lifecycle_tests.tscn, puis les régressions de la
-[recette STEP-027](docs/steps/STEP-027.md). F8 entre chaque banc.
-Godot absent chez l’assistant : contrôles statiques uniquement, tests moteur à exécuter.
-Les notifications synthétiques du banc ne prouvent pas le comportement du téléphone :
-la recette Android (Accueil, applications récentes, verrouillage) est obligatoire.
+Commencer par [HANDOFF.md](HANDOFF.md), puis [PROJECT_STATUS.md](PROJECT_STATUS.md).
+La passation contient les décisions, l’architecture, l’historique, la méthode de travail,
+les tests, les commandes GitHub et un prompt prêt à transmettre à une autre IA.
 
-- [Cycle de l’application](docs/application-lifecycle.md)
-- [Architecture](ARCHITECTURE.md), [état](PROJECT_STATUS.md), [roadmap](ROADMAP.md)
-- [Android](docs/android.md), [sauvegarde](docs/backup.md)
+## Lancer
 
-Android 0.1.0-step027, code 27. Export : ../gambit-arena-builds/step-027-debug.apk.
-Validation reçue : commit et sauvegarde à effectuer. Animations, profils et logique de combat inchangés.
+Environnement documenté : Godot 4.7.2 standard, rendu Compatibility, référence 540 × 960,
+Android portrait. Importer project.godot avec les templates correspondant à la version
+installée. F5 lance Main/ApplicationLab. Les scènes sous scenes/tests se lancent avec F6,
+puis F8 entre bancs. Voir [les tests](docs/handoff/TESTING.md) et [Android](docs/android.md).
 
-## Validation utilisateur — 26 octobre 2026
+Version actuelle : 0.1.0-step027, code 27 ; sortie Android Debug :
+../gambit-arena-builds/step-027-debug.apk. SHA-256 du dernier APK validé :
+`07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611`.
+F6, tests manuels et fluidité ont été confirmés par l’utilisateur. Aucune mesure chiffrée
+ni exécution moteur chez l’assistant n’est revendiquée.
 
-STEP-027 explicitement validée : F6 OK, tests manuels OK, fluidité OK.
-Retour global, sans résultats séparés par banc ou mesure chiffrée ; aucune réserve signalée.
-APK : step-027-debug.apk ; version 0.1.0-step027, code 27.
-SHA-256 : 07467efcfb7e663e363e6f6fc61644fd2bf2889e7ee3a3001d42589e0c6cf611.
-Statut : Validée, commit en attente.
+## Documentation
 
-Archive : gambit-arena-complet-step-027-validation.tar.gz.
-Seule la documentation change depuis v1 ; code, scènes, tests et configuration identiques.
-Aucun lancement Godot chez l’assistant. Les instructions de recette précédentes décrivent
-la validation maintenant reçue ; aucun nouveau test requis pour cette mise à jour documentaire.
-Prochaine action : commit, statut propre et sauvegarde complète à transmettre.
-STEP-028 attend clôture et nouveau GO.
+- [Architecture](ARCHITECTURE.md) et [décisions à préserver](docs/handoff/STATE_AND_DECISIONS.md).
+- [Roadmap complète](ROADMAP.md) et [étapes restantes](docs/handoff/NEXT_STEPS.md).
+- [Méthode de livraison](docs/handoff/DEVELOPMENT_GUIDE.md).
+- [Historique](docs/handoff/HISTORY.md), [sauvegardes](docs/backup.md).
+- [Commit/push/restauration](docs/handoff/GITHUB.md).
+- [Assets et provenance](docs/assets.md).
+
+STEP-028 : mesures ; STEP-029 : reproductibilité clone/export ; STEP-030 : recette finale.
+La licence publique globale reste à choisir par le propriétaire.
