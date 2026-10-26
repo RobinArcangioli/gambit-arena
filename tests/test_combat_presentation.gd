@@ -221,7 +221,7 @@ func _test_main() -> void:
 	app._physics_process(1.0/60.0)
 	check(app.action_presenter.ghosts.size() == app.action_presenter.MAX_GHOSTS, "many simultaneous deaths respect the visual view cap")
 	await settle()
-	check(app.action_presenter.get_child_count() == app.action_presenter.MAX_GHOSTS, "evicted death views are freed")
+	check(app.action_presenter.get_children().filter(func(node): return node.name.begins_with("Death_")).size() == app.action_presenter.MAX_GHOSTS, "evicted death views are freed")
 	app._reset()
 	check(app.action_presenter.ghosts.is_empty(), "replay clears capped death batches")
 	app.paused = false

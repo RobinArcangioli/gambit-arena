@@ -1,3 +1,11 @@
+# Actualisation GRAPHICS-006
+
+GRAPHICS-005 clôturée localement au commit bf4904d, sauvegarde vérifiée.
+GRAPHICS-006 validée par le propriétaire : Foudre descendante, rapide et bien visible avec glow, selon la
+précision du propriétaire. Préparation sur le lanceur/la cible puis impact réel, scènes
+remplaçables. Voir steps/GRAPHICS-006.md et lightning-presentation.md.
+GRAPHICS-007 reste à faire. Le plan historique suit.
+
 # Actualisation GRAPHICS-005
 
 GRAPHICS-004/fix1 clôturée localement au commit 074f971, sauvegarde vérifiée.

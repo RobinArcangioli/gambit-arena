@@ -1,3 +1,12 @@
+# GRAPHICS-006 — présentation de Foudre
+
+CombatPresenter compose un LightningPresenter indépendant qui ne reçoit que des faits
+et des instantanés de présentation. Il gère la préparation suivie et les frappes détachées
+à la position de résolution, même sur coup fatal. Deux scènes passives et un profil Resource
+portent l'apparence ; un shader local dessine le glow et de petits ArrayMesh regroupent
+les branches/étincelles. Le temps est fourni explicitement ; aucun appel de combat ni RNG
+global. Voir docs/lightning-presentation.md. Les sections suivantes sont historiques.
+
 # GRAPHICS-005 — présentation du soin
 
 CombatPresenter consomme les événements heal résolus avec soin positif ; le halo n'a

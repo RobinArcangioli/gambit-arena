@@ -1,6 +1,8 @@
 extends Node3D
 ## One-way adapter. Bindings own presentation values/views, never ActorState or executors.
 const View = preload("res://scripts/presentation/character_view.gd")
+const Lightning = preload("res://scripts/presentation/lightning_presenter.gd")
+var lightning := Lightning.new()
 const MAX_GHOSTS: int = 12
 const MAX_HEAL_EFFECTS: int = 8
 @export var heal_definition: Resource = preload("res://resources/presentation/effects/heal.tres")
@@ -15,8 +17,13 @@ var _dead_ids: Dictionary = {}
 var reactions_played: int = 0
 var deaths_played: int = 0
 
+func _init() -> void:
+	lightning.name = "LightningPresentation"
+	add_child(lightning)
+
 func reset_run(id: int) -> void:
 	if run_id == id: return
+	lightning.reset_run(id)
 	for ghost in ghosts: _release_ghost(ghost)
 	ghosts.clear()
 	_clear_heals()
@@ -31,14 +38,17 @@ func reset_run(id: int) -> void:
 func capture(units: Array, id: int) -> void:
 	reset_run(id)
 	for unit in units:
-		if not is_instance_valid(unit.visual): continue
-		bindings[unit.combat_id] = {"view": unit.visual, "transform": unit.visual.global_transform,
-			"definition": unit.appearance, "position": unit.position, "facing": unit.mover.facing}
+		bindings[unit.combat_id] = {"view": unit.visual,
+			"transform": unit.visual.global_transform if is_instance_valid(unit.visual) else unit.global_transform,
+			"definition": unit.appearance, "position": unit.position, "facing": unit.mover.facing,
+			"alive": unit.state.alive, "casting": unit.action.casting(), "action_id": unit.action.action_id,
+			"skill": String(unit.action.last_skill), "elapsed": unit.action.elapsed, "windup": unit.action._windup()}
 
 func present(units: Array, values: Array[Dictionary], dt: float, id: int, terminal: bool = false) -> void:
 	reset_run(id)
 	capture(units, id)
 	_advance_heals(dt)
+	lightning.advance_visual(bindings, dt)
 	# Advance previously existing visuals first. New impacts/deaths begin at this tick's end.
 	for ghost in ghosts.duplicate():
 		ghost.age += dt
@@ -67,6 +77,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 		for ghost in ghosts: _release_ghost(ghost)
 		ghosts.clear()
 		_clear_heals()
+		lightning.clear_visuals()
 	for actor_id in bindings.keys():
 		if not current.has(actor_id): bindings.erase(actor_id)
 
@@ -74,12 +85,14 @@ func consume(event: Dictionary) -> void:
 	if not enabled or int(event.get("run_id", -1)) != run_id: return
 	var kind: String = event.get("kind", "")
 	if kind == "death":
+		lightning.consume(event)
 		_death(int(event.actor_id))
 		return
 	var source_id: int = int(event.get("source_id", 0))
 	var sequence: int = int(event.get("sequence", 0))
 	if sequence <= int(_sequences.get(source_id, 0)): return
 	_sequences[source_id] = sequence
+	lightning.consume(event)
 	if kind == "resolve" and event.get("skill", "") == "heal" and int(event.get("healing", 0)) > 0:
 		_heal(event)
 	if kind == "resolve" and int(event.get("damage", 0)) > 0:

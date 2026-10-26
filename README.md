@@ -1,3 +1,27 @@
+# GRAPHICS-006 validée — 26 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la livraison GRAPHICS-006,
+APK 0.1.0-graphics006 (37), installé sur Galaxy A16.
+SHA-256 APK : `fa3303a96264d5d5e4d847854f1fe6ad7c1cfa9adad54d6227677d285a6c9910`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure FPS.
+Les fichiers non documentaires sont identiques à la livraison validée ; les 36 bancs /
+2 320 contrôles déjà réussis ne sont pas relancés pour cette clôture documentaire.
+Clôture par un commit unique, puis sauvegarde et restauration vérifiées.
+Prochaine étape : GRAPHICS-007, qualification graphique et remplacement des assets ;
+attendre GO avant de la démarrer. Les mentions de recette ci-dessous sont historiques.
+
+# GRAPHICS-006 — Foudre avec glow en recette
+
+GRAPHICS-005 clôturée au commit local bf4904d, sauvegarde restaurée/vérifiée.
+Éclair descendant rapide, cœur blanc bleuté, branches cyan et glow diffus, impact local.
+Préparation liée à Duck et à la cible réelle ; succès uniquement après dégâts effectifs.
+Scènes/profil/origine remplaçables ; pause et nettoyage, sans modification du gameplay.
+36 bancs / 2 320 contrôles passent. Voir docs/steps/GRAPHICS-006.md et docs/lightning-presentation.md.
+F6 : scenes/debug/lightning_lab.tscn, Foudre (demo), puis F8/F5 pour le vrai combat.
+APK 0.1.0-graphics006 (37), installé et lancé sur Galaxy A16, version vérifiée par ADB.
+Étape non commitée ; attendre validation avant clôture et GRAPHICS-007.
+Les sections suivantes décrivent les états historiques.
+
 # GRAPHICS-005 validée — 26 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la livraison GRAPHICS-005,

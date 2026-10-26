@@ -1,3 +1,9 @@
+# Extension GRAPHICS-006 — Foudre
+
+CombatPresenter compose désormais un adaptateur de Foudre pour ses préparations et ses
+frappes, à partir de faits dédupliqués et d'instantanés artistiques. Voir lightning-presentation.md.
+Les priorités, le soin et la séparation du gameplay restent ceux décrits ci-dessous.
+
 # Extension GRAPHICS-005 — soin
 
 CombatPresenter présente désormais les résolutions heal positives avec un effet local,
