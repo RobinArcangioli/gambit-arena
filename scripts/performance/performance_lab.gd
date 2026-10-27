@@ -141,8 +141,8 @@ func start_benchmark(choice: String) -> bool:
 	touch_router.cancel_gesture()
 	last_export = ""
 	var metadata: Dictionary = {"scenario": scenario, "build": "0.1.0-step028-v1", "base_commit": "cc91c79b0bcf82df6fb852d9b792fce63aa32148", "godot": Engine.get_version_info().string, "os": OS.get_name(), "os_version": OS.get_version(), "model": OS.get_model_name(), "debug": OS.is_debug_build(), "display": DisplayServer.get_name(), "renderer": RenderingServer.get_current_rendering_method(), "adapter": RenderingServer.get_video_adapter_name(), "viewport": str(get_viewport_rect().size), "subviewport": str(viewport_3d.size), "vsync_mode": DisplayServer.window_get_vsync_mode(), "physics_hz": Engine.physics_ticks_per_second, "max_fps": Engine.max_fps, "note": condition_note.text.left(240), "rules": "heal:self:hp_below:50,special:enemy:always,basic:enemy:always", "diagnostics": simulation.controller.diagnostics_enabled, "utc_started": Time.get_datetime_string_from_system(true), "frame_metric": "monotonic intervals between _process callbacks; not GPU or display presentation timing", "simulation_metric": "CombatSimulation.advance including actor presentation", "tick_metric": "physics callback including simulation, HUD and benchmark resets"}
-	metadata["build"] = "0.1.0-ui004"
-	metadata["base_commit"] = "c8497aac5760bc4672c80cdff7f80745749e3a49"
+	metadata["build"] = "0.1.0-gambits001"
+	metadata["base_commit"] = "2f1e9b9603d75b8acc2c3a920036254398461233"
 	metadata["combat_fixture"] = "historical-single-hero; not PartySimulation"
 	metadata["arena_id"] = str(floor_canvas.definition.arena_id)
 	metadata["arena_presentation_enabled"] = floor_canvas.presentation_enabled

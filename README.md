@@ -1,3 +1,55 @@
+# GAMBITS-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour le nouveau modèle et son laboratoire
+isolé. Validation globale, sans précisions supplémentaires. APK normal 0.1.0-gambits001 (48),
+SHA-256 `b2a8e4defb65f46d41ebbd4f91cf57dcf85c8d066f58291943cad4d06e1c073e`.
+APK laboratoire 0.1.0-gambits001-lab (48), SHA-256
+`bfa7b4781efa728a54ebebaf5cefa71facd46a1adc07d8a13e85050bbe4eeb97`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et les deux APK
+restent identiques à la livraison validée. Les 52 bancs / 3 461 contrôles déjà réussis ne
+sont pas relancés. Aucune nouvelle mesure FPS. Règles de jeu Android v2 conservées.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : GAMBITS-002,
+bascule du combat et des éditeurs, sauvegarde immédiate sans Appliquer/Annuler, 100 ordres.
+Le jeu normal conserve UI-004 en v2 jusqu'à cette bascule. Puis UI-005 et STEP-029/030.
+GAMEPLAY-003 reste annulée. Les mentions de recette ci-dessous sont historiques.
+
+# GAMBITS-001 — Modèle et laboratoire en recette — 27 octobre 2026
+
+GO reçu pour la première étape de refonte. Catalogue des dix critères fixes, ordres à
+critère/capacité indépendants, listes de 0 à 100 par héros, résolution déterministe et
+codec v3 avec migration v2 et sauvegarde protégée. Écriture immédiate par héros, sans
+workflow Appliquer/Annuler dans le nouveau modèle. Anne 80 % devient 70 % en migration.
+F6 : scenes/debug/gambits_criteria_lab.tscn. Ce banc isolé résout des instantanés et écrit
+uniquement user://gambits_v3_lab.json ; il ne lance aucun soin/attaque/sort réel.
+F5 et l'APK normal conservent intégralement le jeu et l'éditeur UI-004 en v2, y compris leurs
+anciennes commandes : la bascule du combat et de l'interface est GAMBITS-002, pas cette étape.
+52 bancs / 3 461 contrôles réussis ; captures GPU PC et laboratoire Android vérifiés.
+APK normal 0.1.0-gambits001 (48), SHA-256 `b2a8e4defb65f46d41ebbd4f91cf57dcf85c8d066f58291943cad4d06e1c073e`.
+Téléphone remis sur l'accueil de l'APK normal ; règles de jeu Android identiques à l'origine.
+Voir docs/gambits-model.md et docs/steps/GAMBITS-001.md. En recette, non commitée.
+Après validation : clôture et sauvegarde vérifiée, puis GO pour GAMBITS-002 et UI-005.
+GAMEPLAY-003 reste annulée. Les états précédents ci-dessous sont historiques.
+
+# Précision de périmètre — sauvegarde immédiate des gambits
+
+Demande du propriétaire : aucune commande Appliquer/Annuler dans la refonte. Chaque
+changement est enregistré immédiatement, y compris ajout, suppression et réordonnancement.
+Retour conserve les modifications. Interface sobre, sans confirmation ni message de réussite
+à chaque action. Ce comportement concerne la refonte GAMBITS-001/002 ; le checkpoint UI-004
+reste inchangé tant que cette refonte n'est pas implémentée.
+
+# Refonte des gambits proposée — 27 octobre 2026
+
+Demandes et précisions du propriétaire : Critère de ciblage + capacité, dix critères fixes,
+alliés incluant soi-même, sélection de l'allié au plus faible pourcentage de PV, ennemis
+classés par PV actuels absolus, associations libres, 0 à 100 ordres par héros. Migration
+des seuils vers le plus grand seuil disponible inférieur ou égal (Anne 80 → 70).
+Plan : GAMBITS-001 (catalogue/modèle/migration isolés), GAMBITS-002 (bascule combat et
+éditeurs sur une ligne avec ajout/suppression), puis UI-005 étendue à la recette intégrée.
+Voir docs/gambits-refactor-roadmap.md. Plan proposé, aucun code ou APK modifié. Attendre
+validation du découpage et GO. UI-004 reste le checkpoint fonctionnel 2f1e9b9603d7.
+Les périmètres antérieurs ci-dessous sont historiques s'ils décrivent les trois règles v2.
+
 # UI-004 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour les gambits hors combat et le correctif

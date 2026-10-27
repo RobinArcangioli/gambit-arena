@@ -1,3 +1,31 @@
+# GAMBITS-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour le nouveau modèle et son laboratoire
+isolé. Validation globale, sans précisions supplémentaires. APK normal 0.1.0-gambits001 (48),
+SHA-256 `b2a8e4defb65f46d41ebbd4f91cf57dcf85c8d066f58291943cad4d06e1c073e`.
+APK laboratoire 0.1.0-gambits001-lab (48), SHA-256
+`bfa7b4781efa728a54ebebaf5cefa71facd46a1adc07d8a13e85050bbe4eeb97`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et les deux APK
+restent identiques à la livraison validée. Les 52 bancs / 3 461 contrôles déjà réussis ne
+sont pas relancés. Aucune nouvelle mesure FPS. Règles de jeu Android v2 conservées.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : GAMBITS-002,
+bascule du combat et des éditeurs, sauvegarde immédiate sans Appliquer/Annuler, 100 ordres.
+Le jeu normal conserve UI-004 en v2 jusqu'à cette bascule. Puis UI-005 et STEP-029/030.
+GAMEPLAY-003 reste annulée. Les mentions de recette ci-dessous sont historiques.
+
+# Checkpoint UI-004 vérifié — base de GAMBITS-001
+
+Commit 2f1e9b9603d75b8acc2c3a920036254398461233, parent c8497aac5760bc4672c80cdff7f80745749e3a49.
+Archive gambit-arena-20261027-063908-2f1e9b9603d7.tar.gz, SHA-256
+c365b5b9110f3bc49a70843163804b09f1e9d737a8405f67215619975afe27b7.
+Restauration /tmp/ui004-checkpoint-restore-osz0w4ep : bundle verify, clone/fsck, HEAD/parent,
+arbre propre et 653 fichiers identiques. Livraison validée avec APK/preuves :
+gambit-arena-ui004-delivery-validated-130c2934.tar.gz, SHA-256
+130c29345342a7890344ce44e9bafa540e2c19c7c2cffbcc333e6337621d3e38.
+Sauvegardes sous /home/arkhane/gambit-arena-backups. Aucun push de UI-004.
+GAMBITS-001 reprend aussi le plan documentaire de refonte préparé après ce checkpoint.
+Les checkpoints suivants sont historiques.
+
 # UI-004 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour les gambits hors combat et le correctif
