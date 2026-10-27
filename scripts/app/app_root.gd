@@ -7,6 +7,7 @@ const ArenaPage = preload("res://scenes/app/arena_page.tscn")
 const Choice = preload("res://scripts/app/arena_choice.gd")
 const Guard = preload("res://scripts/platform/application_guard.gd")
 const Layout = preload("res://scripts/ui/hud_layout.gd")
+const HomeLighting = preload("res://scripts/presentation/home_lighting.gd")
 const Home = preload("res://assets/art/ui/home.png")
 const AppTheme = preload("res://resources/ui/night_gold.tres")
 const ROUTES = [&"home", &"arena", &"team", &"hero", &"gambits"]
@@ -14,6 +15,7 @@ const ROUTES = [&"home", &"arena", &"team", &"hero", &"gambits"]
 var arena_choice := Choice.new()
 var guard := Guard.new()
 var background: TextureRect
+var home_lighting: HomeLighting
 var home_page: Control
 var arena_button: Button
 var team_button: Button
@@ -36,6 +38,7 @@ func _ready() -> void:
 	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
+	home_lighting = HomeLighting.new();background.add_child(home_lighting)
 	home_page = Control.new();home_page.mouse_filter = Control.MOUSE_FILTER_IGNORE;add_child(home_page)
 	team_button = _button("Équipe");team_button.pressed.connect(open_team)
 	arena_button = _button("Arène");arena_button.pressed.connect(open_arena)
@@ -54,6 +57,7 @@ func _layout() -> void:
 	if background == null:return
 	var view: Rect2 = get_viewport_rect()
 	background.position = Vector2.ZERO;background.size = view.size
+	if home_lighting!=null:home_lighting.size = view.size
 	var candidate: Rect2 = safe_area_override
 	if not candidate.has_area() and OS.get_name() == "Android":candidate = get_viewport().get_screen_transform().affine_inverse()*Rect2(DisplayServer.get_display_safe_area())
 	var safe: Rect2 = Layout.usable_rect(view,candidate)
@@ -74,6 +78,7 @@ func open_arena() -> void:
 	combat.home_requested.connect(return_home)
 	add_child(combat)
 	home_page.hide();background.hide();route = &"arena"
+	home_lighting.set_active(false)
 	call_deferred("_finish_transition")
 
 func return_home() -> void:
@@ -92,6 +97,7 @@ func return_home() -> void:
 		team_page.set_active(false)
 		remove_child(team_page);team_page.queue_free();team_page = null
 	route = &"home";home_page.show();background.show()
+	home_lighting.set_active(not guard.blocked)
 	call_deferred("_finish_transition")
 
 func _finish_transition() -> void:
@@ -128,6 +134,7 @@ func _notification(what: int) -> void:
 	if guard == null:return
 	if guard.observe(what) and is_instance_valid(arena_button):
 		arena_button.disabled = guard.blocked
+		if home_lighting!=null:home_lighting.set_active(not guard.blocked and route==&"home")
 		team_button.disabled = guard.blocked
 		if team_page != null:team_page.set_active(not guard.blocked and route==&"team")
 		if hero_page != null:hero_page.set_active(not guard.blocked and route==&"hero")
@@ -147,6 +154,7 @@ func open_team() -> void:
 	team_page.hero_selected.connect(_select_team_hero)
 	add_child(team_page)
 	home_page.hide();background.hide();route = &"team"
+	home_lighting.set_active(false)
 	call_deferred("_finish_transition")
 
 func _select_team_hero(id: StringName) -> void:

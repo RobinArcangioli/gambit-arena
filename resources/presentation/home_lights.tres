@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/home_lighting_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+candles = PackedVector2Array(71, 695, 150, 927, 164, 907, 182, 929, 215, 1071, 282, 1100, 917, 1108, 938, 1083)
+braziers = PackedVector2Array(379, 948, 831, 946)
