@@ -1,3 +1,12 @@
+# Extension GAMBITS-003 — Allié et candidats ordonnés
+
+Catalogue de onze critères : ajout ally_roster, libellé Allié, sans seuil. Rang d'équipe
+explicite partagé par UI et simulation ; sélection Mako avant Anne parmi les vivants.
+Criteria.candidates expose des instantanés détachés ; choose garde le contrat de premier
+candidat. Les capacités actuelles utilisent ce premier candidat ; les filtres de buffs
+seront branchés dans BUFFS-002. Schéma v3 et anciens critères inchangés.
+Voir [GAMBITS-003](steps/GAMBITS-003.md) et la [roadmap Booster](booster-roadmap.md).
+
 # GAMBITS-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la refonte intégrée et sa passe stylistique.

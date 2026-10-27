@@ -55,12 +55,15 @@ func _refresh() -> void:
 	skill_picker.clear()
 	for skill in Orders.PROFILES[hero_id].abilities:skill_picker.add_item(Reference.TITLES[skill])
 	skill_picker.select(Orders.PROFILES[hero_id].abilities.find(StringName(order.skill)))
-	var mako: Dictionary = {"id":1,"health":100,"max_health":180,"position":Vector2.ZERO}
-	var anne: Dictionary = {"id":2,"health":40,"max_health":140,"position":Vector2(2,0)}
+	var mako: Dictionary = {"id":1,"team_slot":0,"health":100,"max_health":180,"position":Vector2.ZERO}
+	var anne: Dictionary = {"id":2,"team_slot":1,"health":40,"max_health":140,"position":Vector2(2,0)}
 	var view: Dictionary = {"key":hero_id,"source":mako if hero_id==&"mako" else anne,"allies":[anne if hero_id==&"mako" else mako],"enemies":[{"id":3,"health":80,"max_health":100,"position":Vector2(1,0)},{"id":4,"health":120,"max_health":300,"position":Vector2(5,0)}],"mana":60.0,"abilities":Orders.PROFILES[hero_id].abilities,"cooldowns":{}}
 	var choice: Dictionary = Orders.evaluate([order],view)
 	var names: Dictionary = {1:"Mako",2:"Anne",3:"Ennemi 80 PV",4:"Ennemi 120 PV"}
 	result_label.text = "Cible résolue : "+names.get(choice.get("target_id",-1),"Aucune")+"\nCapacité : "+Reference.TITLES[StringName(order.skill)]
+	var ranked_names: PackedStringArray = []
+	for candidate in Catalogue.candidates(order.criterion,view):ranked_names.append(names.get(candidate.id,"?"))
+	result_label.text += "\nCandidats : "+(" → ".join(ranked_names) if not ranked_names.is_empty() else "Aucun")
 	storage_label.text = "Écriture immédiate isolée : gambits_v3_lab.json" if load_error==OK else "Écriture du laboratoire impossible (%d)." % load_error
 	for picker in [hero_picker,criterion_picker,skill_picker]:picker.disabled = not active or load_error!=OK
 func _hero_changed(index: int) -> void:

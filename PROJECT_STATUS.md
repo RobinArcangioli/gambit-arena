@@ -1,3 +1,50 @@
+# GAMBITS-003 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » : critère Allié sans condition, ordre
+Mako puis Anne parmi les vivants, lanceur compris, et candidats classés préparés
+pour les buffs. Catalogue de onze critères, sauvegarde v3 immédiate conservée.
+Résultats de la recette précédente : 55 bancs / 3 644 contrôles réussis et recette
+tactile Android ; réglages d'origine restaurés. Aucun nouveau test moteur pour
+cette clôture documentaire, aucune modification du code ou de la configuration.
+APK validé : 0.1.0-gambits003 (54), SHA-256
+`cbe4b7c0b65b9f305aab866c1d563b40f900b1a3902088d24294e3cfa5a086a5`.
+Les fichiers temporaires de livraison et l'APK local de la recette précédente ne
+sont plus disponibles ; leur empreinte ci-dessus est celle consignée à la livraison.
+La clôture sauvegarde les sources et l'historique Git, sans recréer cet APK.
+Prochain GO : BUFFS-001 (états de buffs et horloge personnelle), puis BUFFS-002,
+GRAPHICS-010 et UI-005. Les descriptions antérieures ci-dessous sont historiques.
+
+# GAMBITS-003 — Critère Allié et ordre d'équipe — en recette
+
+Roadmap Allié / Booster validée par le GO du propriétaire. Première étape implémentée :
+critère « Allié » sans condition, candidats ordonnés et rang d'équipe explicite. Mako précède
+Anne, y compris si Anne est le lanceur. L'ordre de traitement Anne puis Mako ne change pas.
+Catalogue de onze critères ; sauvegarde immédiate v3 et défaut Ennemi proche conservés.
+55 bancs / 3 644 contrôles réussis sans erreur ni avertissement moteur ; captures GPU PC
+et recette Android dans la livraison. Aucun nouveau benchmark FPS.
+APK 0.1.0-gambits003 (54), SHA-256 `cbe4b7c0b65b9f305aab866c1d563b40f900b1a3902088d24294e3cfa5a086a5`.
+Base clôturée : ARENA-001 `15bf1f5cc21c1334491f3fa43e2cc04edd9f30bc` (706 fichiers vérifiés).
+Le plan préparé après cette clôture est inclus dans la livraison de GAMBITS-003.
+Étape en attente de validation, commit et sauvegarde vérifiée. Prochain GO : BUFFS-001,
+puis BUFFS-002, GRAPHICS-010, UI-005 et STEP-029/030. Booster et l'horloge personnelle
+ne sont pas encore implémentés. Les états précédents ci-dessous sont historiques.
+
+# Roadmap proposée — Allié et Booster — 27 octobre 2026
+
+Nouvelles fonctionnalités à intégrer avant UI-005 : GAMBITS-003 → BUFFS-001 → BUFFS-002 →
+GRAPHICS-010, puis UI-005 et STEP-029/030. Détail et recettes :
+[roadmap Allié / Booster](docs/booster-roadmap.md).
+
+Décisions confirmées : ordre d'équipe Mako puis Anne, buffs déjà actifs ignorés, mana
+insuffisante → skip pour tous les gambits. Booster pour Mako : 20 mana, cast 1,5 s,
+×1,30 pendant 60 s de combat, recharges accélérées mais régénération de mana normale,
+sans recharge dédiée, sans cumul ni renouvellement actif. Montre procédurale de 2 s et
+fondu partagé avec le soin. Plan documentaire uniquement, aucune nouvelle fonctionnalité
+implémentée. Prochain GO après validation de cette roadmap : GAMBITS-003.
+
+Les statuts antérieurs ci-dessous restent historiques ; la base clôturée est ARENA-001
+`15bf1f5cc21c1334491f3fa43e2cc04edd9f30bc` (706 fichiers vérifiés).
+
 # ARENA-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour l'arène épurée : Pause, quatre panneaux

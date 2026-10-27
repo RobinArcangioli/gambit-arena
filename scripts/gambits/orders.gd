@@ -27,8 +27,9 @@ static func evaluate(rows: Array, view: Dictionary) -> Dictionary:
 		var order = rows[index]
 		if not valid_order(order,view.get("key",&"")) or not order.enabled or StringName(order.skill) not in view.get("abilities",[]):continue
 		if mana+0.000001<Executor.cost(order.skill) or float(view.get("cooldowns",{}).get(order.skill,0.0))>0.0:continue
-		var target: Dictionary = Criteria.choose(order.criterion,view)
-		if target.is_empty():continue
+		var ranked: Array[Dictionary] = Criteria.candidates(order.criterion,view)
+		if ranked.is_empty():continue
+		var target: Dictionary = ranked[0]
 		# Capability availability cannot reorder the criterion's candidate ranking.
 		if order.skill=="heal" and target.health>=target.max_health:continue
 		return {"skill":order.skill,"target_id":target.id,"rule_index":index,"criterion":order.criterion}

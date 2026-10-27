@@ -6,24 +6,25 @@ var failures: int=0
 func check(ok: bool, message: String) -> void:
 	checks+=1
 	if not ok:failures+=1;push_error("TargetOrders: "+message)
-func row(id: int, hp: int, maximum: int, x: float) -> Dictionary:
-	return {"id":id,"health":hp,"max_health":maximum,"position":Vector2(x,0)}
+func row(id: int, hp: int, maximum: int, x: float, slot: int=-1) -> Dictionary:
+	return {"id":id,"team_slot":slot,"health":hp,"max_health":maximum,"position":Vector2(x,0)}
 func fixture() -> Dictionary:
-	return {"key":&"mako","source":row(1,100,180,0),"allies":[row(2,40,140,2)],"enemies":[row(3,80,100,1),row(4,120,300,5)],"mana":60.0,"abilities":[&"basic",&"lightning"],"cooldowns":{}}
+	return {"key":&"mako","source":row(1,100,180,0,0),"allies":[row(2,40,140,2,1)],"enemies":[row(3,80,100,1),row(4,120,300,5)],"mana":60.0,"abilities":[&"basic",&"lightning"],"cooldowns":{}}
 func order(criterion: String, skill: String="basic") -> Dictionary:
 	return {"enabled":true,"criterion":criterion,"skill":skill}
 func _ready() -> void:
-	check(Criteria.IDS.size()==10 and Criteria.label(&"self")=="Soi-même","ten named catalogue entries")
+	check(Criteria.IDS.size()==11 and Criteria.label(&"self")=="Soi-même","eleven named catalogue entries")
 	for hero in [&"anne",&"mako"]:
 		for id in Criteria.IDS:
 			for skill in Orders.PROFILES[hero].abilities:
 				check(Orders.valid_order(order(String(id),String(skill)),hero),"all criterion/capability pairs allowed")
-	var expected: Array=[1,2,2,2,2,-1,4,3,3,4];var view: Dictionary=fixture()
-	for index in range(10):
-		var selected: Dictionary=Criteria.choose(Criteria.IDS[index],view)
-		check(selected.get("id",-1)==expected[index],"criterion resolves exact fixture target")
+	var expected: Dictionary={&"self":1,&"ally_roster":1,&"ally_hp_lt_90":2,&"ally_hp_lt_70":2,&"ally_hp_lt_50":2,&"ally_hp_lt_30":2,&"ally_hp_lt_10":-1,&"enemy_hp_max":4,&"enemy_hp_min":3,&"enemy_near":3,&"enemy_far":4}
+	var view: Dictionary=fixture()
+	for id in Criteria.IDS:
+		var selected: Dictionary=Criteria.choose(id,view)
+		check(selected.get("id",-1)==expected[id],"criterion resolves exact fixture target by stable ID")
 		view.enemies.reverse();view.allies.reverse()
-		check(Criteria.choose(Criteria.IDS[index],view).get("id",-1)==expected[index],"result independent of array iteration")
+		check(Criteria.choose(id,view).get("id",-1)==expected[id],"result independent of array iteration")
 	for limit in [90,70,50,30,10]:
 		view=fixture();view.source.health=180;view.allies=[row(2,limit,100,2)]
 		check(Criteria.choose(StringName("ally_hp_lt_%d"%limit),view).is_empty(),"threshold equality excluded")

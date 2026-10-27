@@ -1,5 +1,6 @@
 extends Node
 ## Party coordinator: no artistic resources and no UI callbacks during a tick.
+const Roster = preload("res://scripts/party/party_roster.gd")
 const Unit = preload("res://scripts/party/party_unit.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
 const Clock = preload("res://scripts/core/game_clock.gd")
@@ -61,6 +62,7 @@ func reset() -> void:
 	for profile in [ANNE, MAKO]:
 		var unit := Unit.new()
 		unit.configure_party(profile)
+		unit.team_slot = Roster.rank(profile.actor_key)
 		unit.action.clock = clock
 		unit.action.unrestricted_targets = orders_enabled
 		unit.state.died.connect(_record_death.bind(unit))
@@ -92,6 +94,7 @@ func add_enemy(at: Vector2) -> bool:
 		if Executor.living(unit) and at.distance_to(unit.mover.ground_position) < Crowd.DIAMETER + 0.01: return false
 	var unit := Unit.new()
 	unit.configure_party(ENEMY)
+	unit.team_slot = spawned
 	unit.name = "Skeleton%d" % (spawned + 1)
 	unit.action.clock = clock
 	unit.action.unrestricted_targets = orders_enabled
@@ -168,7 +171,7 @@ func advance(delta: float, paused: bool = false) -> void:
 		unit.present()
 
 static func _row(unit: Unit) -> Dictionary:
-	return {"id": unit.combat_id, "health": unit.state.health, "max_health": unit.state.max_health, "position": unit.mover.ground_position}
+	return {"id": unit.combat_id, "team_slot": unit.team_slot, "health": unit.state.health, "max_health": unit.state.max_health, "position": unit.mover.ground_position}
 
 func snapshot(unit: Unit) -> Dictionary:
 	var allies: Array = []

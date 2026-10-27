@@ -9,6 +9,7 @@ var combat_id: int
 var actor_key: StringName
 var display_name: String
 var team: int
+var team_slot: int = -1
 var abilities: Array[StringName] = []
 var mana_capacity: int = 60
 var mana_regeneration: float = 5.0

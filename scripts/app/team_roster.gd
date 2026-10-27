@@ -1,6 +1,7 @@
 extends RefCounted
 ## Presentation order is independent of simulation/solver order.
-const SLOTS: Array[StringName] = [&"mako", &"anne", &"", &""]
+const Roster = preload("res://scripts/party/party_roster.gd")
+const SLOTS: Array[StringName] = Roster.SLOTS
 const PROFILES = {&"mako": preload("res://data/party/mako.tres"), &"anne": preload("res://data/party/anne.tres")}
 const APPEARANCES = {&"mako": preload("res://resources/presentation/characters/mako.tres"), &"anne": preload("res://resources/presentation/characters/anne.tres")}
 static func caption(id: StringName) -> String:
