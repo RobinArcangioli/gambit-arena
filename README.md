@@ -1,3 +1,42 @@
+# GRAPHICS-012 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les panneaux héros enrichis : textes
+blancs PV/mana et sort/temps restant, PV/mana en dix segments, incantation continue,
+portions vides renforcées. Panneaux Lumineux et barres flottantes B conservées.
+59 bancs / 4 030 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour cette clôture : code, scènes, profils, shader, configuration et
+les deux APK restent identiques à la livraison validée. Les tests ne sont pas relancés.
+Gambits conservés ; affichage et compte à rebours vérifiés, APK normal remis sur le Galaxy.
+APK normal 0.1.0-graphics012 (59), SHA-256
+`9aaa8c30283c291c8c7d8ca53fb68156b810bfe997dc83a3fc4be869dfe7d858`.
+APK laboratoire 0.1.0-graphics012-lab (59), SHA-256
+`5c43e9ed890ac77d61d6863a5c59719f505a485d5899614a7d946973a298e525`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : UI-005,
+qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# GRAPHICS-012 — Textes et segments des panneaux héros — en recette
+
+Demande du propriétaire après GRAPHICS-011 clôturée (`fdf9f6e3e5086861794bf1d546e4abcaee1e6f76`,
+766 fichiers vérifiés). Rendu Godot ajusté puis approuvé : panneaux en néon Lumineux,
+barres flottantes conservées en B. Textes blancs PV actuels / maximums, mana actuelle /
+maximum et nom du sort / secondes restantes. Espacement augmenté sans chevauchement.
+PV et mana divisés en dix segments, fractions conservées ; incantation continue.
+Les portions vides gardent la teinte de la barre, assombrie mais nettement visible.
+Longueurs inchangées. Aucune modification des valeurs ou de la logique de combat.
+
+59 bancs / 4 030 contrôles réussis sans erreur ni avertissement moteur, dont 29 nouveaux
+contrôles des textes, valeurs, espacement, styles et compte à rebours avec Booster.
+Aperçus GPU et recette native Galaxy A16 dans la livraison. Aucun nouveau benchmark FPS.
+APK normal 0.1.0-graphics012 (59), SHA-256
+`9aaa8c30283c291c8c7d8ca53fb68156b810bfe997dc83a3fc4be869dfe7d858`.
+APK laboratoire 0.1.0-graphics012-lab (59), SHA-256
+`5c43e9ed890ac77d61d6863a5c59719f505a485d5899614a7d946973a298e525`.
+F6 : `scenes/debug/neon_bars_lab.tscn` pour l'instantané et le combat avec ce rendu.
+Détails : [GRAPHICS-012](docs/steps/GRAPHICS-012.md). L'accord Godot concerne le rendu ;
+validation finale de l'étape attendue avant commit et sauvegarde de clôture.
+Après clôture et prochain GO : UI-005, puis STEP-029/030. Les états précédents sont historiques.
+
 # GRAPHICS-011 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » après le choix B — Fin et lisible : barres

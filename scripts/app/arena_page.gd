@@ -159,8 +159,8 @@ func _update_layout() -> void:
 	pause_button.add_theme_font_size_override("font_size",16)
 	var width: float=(safe_rect.size.x-32)*0.5
 	for i in range(hero_panels.size()):
-		hero_panels[i].position=Vector2(12+(i%2)*(width+8),72+int(i/2.0)*84)
-		hero_panels[i].size=Vector2(width,76)
+		hero_panels[i].position=Vector2(12+(i%2)*(width+8),72+int(i/2.0)*114)
+		hero_panels[i].size=Vector2(width,106)
 	if pause_layer!=null:
 		pause_layer.position=Vector2.ZERO;pause_layer.size=view.size
 		var card_size:=Vector2(minf(292,safe_rect.size.x-32),250)

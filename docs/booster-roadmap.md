@@ -1,3 +1,29 @@
+# GRAPHICS-012 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les panneaux héros enrichis : textes
+blancs PV/mana et sort/temps restant, PV/mana en dix segments, incantation continue,
+portions vides renforcées. Panneaux Lumineux et barres flottantes B conservées.
+59 bancs / 4 030 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour cette clôture : code, scènes, profils, shader, configuration et
+les deux APK restent identiques à la livraison validée. Les tests ne sont pas relancés.
+Gambits conservés ; affichage et compte à rebours vérifiés, APK normal remis sur le Galaxy.
+APK normal 0.1.0-graphics012 (59), SHA-256
+`9aaa8c30283c291c8c7d8ca53fb68156b810bfe997dc83a3fc4be869dfe7d858`.
+APK laboratoire 0.1.0-graphics012-lab (59), SHA-256
+`5c43e9ed890ac77d61d6863a5c59719f505a485d5899614a7d946973a298e525`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : UI-005,
+qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# Avancement — Panneaux héros enrichis avant UI-005
+
+GRAPHICS-011 clôturée au commit `fdf9f6e`, sauvegarde restaurée et vérifiée (766 fichiers).
+Nouvelle demande GRAPHICS-012 : textes blancs, PV/mana segmentés, portions vides renforcées,
+incantation continue avec nom et temps restant. Après ajustement, le propriétaire approuve
+le rendu Godot : panneaux Lumineux et barres flottantes B. Recette de l'étape en cours.
+Après validation et clôture : UI-005 intégrée, puis STEP-029/030. Les états antérieurs
+ci-dessous restent historiques ; les règles Allié / Booster / montre sont conservées.
+
 # GRAPHICS-011 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » après le choix B — Fin et lisible : barres

@@ -14,19 +14,17 @@ func _ready() -> void:
 	super._ready()
 	for i in range(3):
 		var profile: Resource = BarStyle.duplicate()
-		profile.world_height=[1.0,1.25,1.5][i];profile.panel_height=[1.6,1.9,2.2][i]
+		profile.world_height=[1.0,1.25,1.5][i];profile.panel_height=2.2
 		profile.glow_strength=[0.14,0.22,0.30][i];profile.glow_radius=[0.85,1.0,1.15][i]
 		trials.append(profile)
 	lab_panel=PanelContainer.new();add_child(lab_panel)
 	var paint:=StyleBoxFlat.new();paint.bg_color=Color("10182ff0");paint.border_color=Color("d9a64c")
 	paint.set_border_width_all(1);paint.set_content_margin_all(12);lab_panel.add_theme_stylebox_override("panel",paint)
 	var column:=VBoxContainer.new();lab_panel.add_child(column);caption=_label(column,16)
-	var row:=HBoxContainer.new();column.add_child(row)
-	for i in range(3):controls.append(_button(row,["A · Discret","B · Fin lisible","C · Lumineux"][i],choose_trial.bind(i)))
 	var actions:=HBoxContainer.new();column.add_child(actions)
 	controls.append(_button(actions,"Clair / sombre",switch_arena))
 	controls.append(_button(actions,"Animer / figer",toggle_motion))
-	var note:=_label(column,12);note.text="Héros et ennemis : longueur −30 %\nPanneaux : longueur conservée · instantané de démonstration"
+	var note:=_label(column,12);note.text="Modèles : B · panneaux : Lumineux\nPV / mana segmentés · sort continu · textes blancs"
 	_snapshot();switch_arena();choose_trial(1)
 
 func _snapshot() -> void:
@@ -78,7 +76,7 @@ func _process(delta: float) -> void:
 
 func _refresh_lab() -> void:
 	if caption==null:return
-	caption.text="GRAPHICS-011 · Barres %s\n%s"%[["A · Discret","B · Fin lisible","C · Lumineux"][selected],"Combat automatique" if running else "Vue figée · PV / mana / incantations visibles"]
+	caption.text="GRAPHICS-012 · Panneaux héros\nModèles B · panneaux Lumineux\n"+("Combat automatique" if running else "Vue figée · textes et segments")
 	var height:float=maxf(194,lab_panel.get_combined_minimum_size().y)
 	lab_panel.size=Vector2(safe_rect.size.x-24,height);lab_panel.position=safe_rect.position+Vector2(12,safe_rect.size.y-height-12)
 	for button in controls:button.disabled=paused or application_guard.blocked or _modal_open()

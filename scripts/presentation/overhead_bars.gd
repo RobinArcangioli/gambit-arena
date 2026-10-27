@@ -10,6 +10,9 @@ const WORLD_WIDTH_RATIO: float = 0.70
 @export var health_color := Color("e44949")
 @export var mana_color := Color("479fe7")
 @export var cast_color := Color("e6bc42")
+var segments: int = 0
+var segment_gap: float = 1.2
+var empty_brightness: float = 0.22
 var style_resource: Resource
 var glow_radius: float = 1.0
 var glow_strength: float = 0.22
@@ -26,10 +29,14 @@ func _init() -> void:
 	apply_style(DEFAULT_STYLE)
 
 func apply_style(profile: Resource, panel_mode: bool = false) -> void:
+	segments = profile.panel_segments if panel_mode else 0
+	segment_gap = profile.segment_gap
+	empty_brightness = profile.panel_empty_brightness
 	style_resource = profile
 	bar_height = profile.panel_height if panel_mode else profile.world_height
 	bar_gap = profile.panel_gap if panel_mode else profile.world_gap
-	glow_radius = profile.glow_radius;glow_strength = profile.glow_strength
+	glow_radius = profile.panel_glow_radius if panel_mode else profile.glow_radius
+	glow_strength = profile.panel_glow_strength if panel_mode else profile.glow_strength
 	health_color = profile.health_color;mana_color = profile.mana_color;cast_color = profile.cast_color
 	track_color = profile.track_color
 	queue_redraw()
@@ -44,6 +51,9 @@ func set_values(health: int, max_health: int, mana: float, max_mana: int, is_cas
 func _draw() -> void:
 	var paint := material as ShaderMaterial
 	if paint == null:return
+	paint.set_shader_parameter("segments",segments)
+	paint.set_shader_parameter("segment_gap",segment_gap)
+	paint.set_shader_parameter("empty_brightness",empty_brightness)
 	paint.set_shader_parameter("bar_width",maxf(0.1,bar_width))
 	paint.set_shader_parameter("bar_height",maxf(0.1,bar_height))
 	paint.set_shader_parameter("bar_gap",maxf(0.0,bar_gap))
