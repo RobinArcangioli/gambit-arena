@@ -1,3 +1,33 @@
+# UI-003 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les fiches de personnage, avec un correctif
+UX demandé pour la prochaine étape UI-004 : supprimer le surlignage et le texte de sélection
+sur Équipe, ainsi que leur persistance au retour. Les cartes deviennent de simples accès
+aux fiches ; l'identifiant du héros reste transmis pour ouvrir la bonne fiche et ses gambits.
+Ce correctif est planifié, pas appliqué dans la clôture de UI-003.
+APK normal 0.1.0-ui003 (46), SHA-256
+`2d10e45f9d5622a479def8ad64e4f2e38083527c3613ea010bcb5052b364d6f0`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 47 bancs / 2 920 contrôles déjà réussis ne sont pas
+relancés. Aucune nouvelle mesure FPS. Clôture par commit unique et sauvegarde vérifiée.
+UI-004 attend le prochain GO : gambits hors combat et correctif Équipe ci-dessus.
+GAMEPLAY-003 reste annulée. Les mentions de recette ci-dessous sont historiques.
+
+# UI-003 — Fiches de personnage en recette — 27 octobre 2026
+
+GO reçu après UI-002 clôturée au commit `2d3787fc1aeb50a69a6dfb77ae7744cce723573d`.
+F5 → Équipe → Mako/Anne : fiche du bon héros, PV/mana maximums, attaque, défense, vitesse,
+régénération et compétences de référence. Fond fourni et thème bleu nuit/or conservés.
+Défilement tactile, retour Équipe par bouton/Échap/Android, sélection retenue. Les aperçus
+Idle restent arrêtés derrière la fiche ; aucune simulation n'est créée pour sa lecture.
+Le bouton Gambits en bas est désactivé jusqu'à UI-004. Aucun éditeur hors combat livré ici.
+47 bancs / 2 920 contrôles réussis ; captures GPU PC et recette tactile native Galaxy A16.
+APK normal 0.1.0-ui003 (46), SHA-256 `2d10e45f9d5622a479def8ad64e4f2e38083527c3613ea010bcb5052b364d6f0`.
+Installé sans effacement des données ; téléphone laissé sur la fiche d'Anne.
+Voir docs/hero-page.md et docs/steps/UI-003.md. Étape non commitée, validation attendue.
+Après validation : commit et sauvegarde vérifiée ; prochain GO pour UI-004, puis UI-005,
+STEP-029 et STEP-030. GAMEPLAY-003 reste annulée. Les états suivants sont historiques.
+
 # UI-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la page Équipe : Mako/Anne en Idle,
@@ -283,8 +313,8 @@ leurs identifiants et se dérouleront après ce chantier.
 | GRAPHICS-008 | Validée — 27 octobre 2026 | Disques d’ombre translucides dimensionnés sur l’emprise au sol |
 | GRAPHICS-009 | Validée — 27 octobre 2026 | Soin vert fluo, deux anneaux concentriques tournants et fondu en une seconde |
 | UI-001 | Clôturée — 01481bad6e02 | Accueil, boutons sur fonds, thème nuit/or, arène aléatoire et abandon au retour |
-| UI-002 | Validée — 27 octobre 2026 | Équipe 2 × 2, Mako/Anne en Idle et deux places vides |
-| UI-003 | Plan proposé — après UI-002 | Fiches de référence et accès aux compétences |
+| UI-002 | Clôturée — 2d3787fc1aeb | Équipe 2 × 2, Mako/Anne en Idle et deux places vides |
+| UI-003 | Validée — 27 octobre 2026 | Fiches de référence et accès aux compétences |
 | UI-004 | Plan proposé — après UI-003 | Page Gambits du héros, indépendante du combat et sauvegarde préservée |
 | UI-005 | Plan proposé — après UI-004 | Recette du parcours complet sur PC et Android |
 | STEP-029 | Après UI-005 | Clone neuf, import, export et installation reproductibles |

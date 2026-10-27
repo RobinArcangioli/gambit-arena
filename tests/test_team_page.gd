@@ -24,8 +24,9 @@ func _ready() -> void:
 	check(page.cards[2].find_children('*','SubViewport',true,false).is_empty() and page.cards[3].find_children('*','SubViewport',true,false).is_empty(),"no hidden model or viewport under empty slots")
 	var emitted: Array[StringName]=[]
 	app.hero_selected.connect(func(id):emitted.append(id))
-	page.cards[0].pressed.emit();page.cards[1].pressed.emit()
-	check(emitted==[&"mako",&"anne"] and app.selected_hero_id==&"anne", "selection emits stable identity for the future sheet")
+	page.cards[0].pressed.emit();await settle();app.return_team();await settle()
+	page.cards[1].pressed.emit();await settle();app.return_team();await settle()
+	check(emitted==[&"mako",&"anne"] and app.selected_hero_id==&"anne", "selection emits stable identity and returns from each sheet")
 	check(page.cards[1].button_pressed and not page.cards[0].button_pressed,"selection has exclusive visual feedback")
 	var before: Array=[]
 	for portrait in page.portraits:

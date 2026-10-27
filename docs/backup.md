@@ -1,3 +1,31 @@
+# UI-003 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les fiches de personnage, avec un correctif
+UX demandé pour la prochaine étape UI-004 : supprimer le surlignage et le texte de sélection
+sur Équipe, ainsi que leur persistance au retour. Les cartes deviennent de simples accès
+aux fiches ; l'identifiant du héros reste transmis pour ouvrir la bonne fiche et ses gambits.
+Ce correctif est planifié, pas appliqué dans la clôture de UI-003.
+APK normal 0.1.0-ui003 (46), SHA-256
+`2d10e45f9d5622a479def8ad64e4f2e38083527c3613ea010bcb5052b364d6f0`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 47 bancs / 2 920 contrôles déjà réussis ne sont pas
+relancés. Aucune nouvelle mesure FPS. Clôture par commit unique et sauvegarde vérifiée.
+UI-004 attend le prochain GO : gambits hors combat et correctif Équipe ci-dessus.
+GAMEPLAY-003 reste annulée. Les mentions de recette ci-dessous sont historiques.
+
+# Checkpoint UI-002 vérifié — base de UI-003
+
+Commit 2d3787fc1aeb50a69a6dfb77ae7744cce723573d, parent 01481bad6e02514c2edc3758838a7b0ee81e8365.
+Archive gambit-arena-20261027-055314-2d3787fc1aeb.tar.gz, SHA-256
+873fdfef9a5e361e75d458eb53d7d9c479a1e964c916ab569c466f8480b4b390.
+Restauration sûre /tmp/ui002-checkpoint-restore-ka1dc31u : bundle verify, clone/fsck,
+HEAD/parent, arbre propre et 629 fichiers identiques au commit et à la sauvegarde.
+Livraison validée avec APK/preuves : gambit-arena-ui002-delivery-validated-aa221605.tar.gz,
+SHA-256 aa221605755e67863c2ac15406885185cb23cdaf561faf5ac3318422421ae9f3.
+Sauvegardes sous /home/arkhane/gambit-arena-backups. Aucun push de UI-002.
+UI-003 est livrée non commitée depuis une copie isolée ; attendre validation avant clôture.
+Les checkpoints suivants sont historiques.
+
 # UI-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la page Équipe : Mako/Anne en Idle,
