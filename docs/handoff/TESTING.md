@@ -1,3 +1,27 @@
+# UI-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour l'accueil, le thème, les retours et les
+arènes aléatoires. APK normal 0.1.0-ui001 (44), SHA-256
+`0c18f5936ca60e5bda292f364501a5a765c834f9827ff07b9b560cb33ee615fa`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 43 bancs / 2 718 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. Prochaine étape UI-002 :
+page Équipe avec Mako, Anne et deux places vides ; attendre un nouveau GO.
+GAMEPLAY-003 reste annulée. Les mentions de recette suivantes sont historiques.
+
+# UI-001 — accueil et arène en recette
+
+F5 ouvre l'accueil sur le fond fourni. Boutons bleu nuit/or sur les fonds, retour avec
+abandon du combat, nouveau tirage parmi huit arènes à l'entrée et Rejouer. Le bouton Équipe
+est visible mais désactivé jusqu'à UI-002 ; aucune fiche ou nouvelle page Gambits livrée ici.
+Combat, sauvegarde des gambits, modèles, gabarits et navigation conservés.
+43 bancs / 2 718 contrôles passent ; recette native des retours et du Rejouer effectuée.
+APK 0.1.0-ui001 (44) installé sur Galaxy A16, laissé sur l'accueil. Voir docs/steps/UI-001.md
+et docs/app-navigation.md. F6 scenes/app/app_root.tscn pour la nouvelle application ;
+F6 scenes/main.tscn pour le combat historique. Étape non commitée, attendre validation.
+Ensuite UI-002, UI-003, UI-004, UI-005, STEP-029 et STEP-030. Les sections suivantes sont historiques.
+
 # GRAPHICS-009 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le soin vert fluo à deux anneaux tournants.

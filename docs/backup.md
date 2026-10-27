@@ -1,3 +1,26 @@
+# UI-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour l'accueil, le thème, les retours et les
+arènes aléatoires. APK normal 0.1.0-ui001 (44), SHA-256
+`0c18f5936ca60e5bda292f364501a5a765c834f9827ff07b9b560cb33ee615fa`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 43 bancs / 2 718 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. Prochaine étape UI-002 :
+page Équipe avec Mako, Anne et deux places vides ; attendre un nouveau GO.
+GAMEPLAY-003 reste annulée. Les mentions de recette suivantes sont historiques.
+
+# Checkpoint GRAPHICS-009 vérifié
+
+Commit d632dfbfcce35cbe2d2bb7993347d0cb450b8d8e, parent e6885c6.
+Archive gambit-arena-20261027-033615-d632dfbfcce3.tar.gz, SHA-256
+b0300c8a29b8b82f22d45d1576b71c5c6f90193ea43fa9b72c8a0834173e878f.
+Restauration /tmp/graphics009-checkpoint-restore-w15wbs2p : bundle, clone/fsck, HEAD/parent,
+arbres propres et 586 fichiers conformes. Preuves et APK conservés dans les sauvegardes :
+gambit-arena-graphics009-delivery-validated-b895ab91.tar.gz,
+SHA-256 b895ab91c411cd902801b745ae7afea18c97622daaff5f4ca6da4812b0613338.
+Base de la roadmap UI-001 à UI-005, uniquement documentaire à ce stade. Aucun nouveau push.
+
 # GRAPHICS-009 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le soin vert fluo à deux anneaux tournants.

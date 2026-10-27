@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory(prefix='gambit-navigation-export-') as name:
     project = pathlib.Path(name) / 'project'
     shutil.copytree(source, project, ignore=shutil.ignore_patterns('.git', '.godot', '.agents', '.codex', '.aws', '__pycache__'))
     config = project / 'project.godot'
-    config.write_text(config.read_text().replace('run/main_scene="uid://do6vxhog253vu"', 'run/main_scene="res://scenes/debug/local_navigation_autorun.tscn"'))
+    config.write_text(re.sub(r'^run/main_scene="[^"]*"$', 'run/main_scene="res://scenes/debug/local_navigation_autorun.tscn"', config.read_text(), flags=re.MULTILINE))
     preset = project / 'export_presets.cfg'
     settings = re.sub(r'^version/code=\d+$', 'version/code=40', preset.read_text(), flags=re.MULTILINE)
     settings = re.sub(r'^version/name="[^"]*"$', 'version/name="0.1.0-gameplay002-lab"', settings, flags=re.MULTILINE)

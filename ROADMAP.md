@@ -1,3 +1,44 @@
+# UI-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour l'accueil, le thème, les retours et les
+arènes aléatoires. APK normal 0.1.0-ui001 (44), SHA-256
+`0c18f5936ca60e5bda292f364501a5a765c834f9827ff07b9b560cb33ee615fa`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 43 bancs / 2 718 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. Prochaine étape UI-002 :
+page Équipe avec Mako, Anne et deux places vides ; attendre un nouveau GO.
+GAMEPLAY-003 reste annulée. Les mentions de recette suivantes sont historiques.
+
+# UI-001 — accueil et arène en recette
+
+F5 ouvre l'accueil sur le fond fourni. Boutons bleu nuit/or sur les fonds, retour avec
+abandon du combat, nouveau tirage parmi huit arènes à l'entrée et Rejouer. Le bouton Équipe
+est visible mais désactivé jusqu'à UI-002 ; aucune fiche ou nouvelle page Gambits livrée ici.
+Combat, sauvegarde des gambits, modèles, gabarits et navigation conservés.
+43 bancs / 2 718 contrôles passent ; recette native des retours et du Rejouer effectuée.
+APK 0.1.0-ui001 (44) installé sur Galaxy A16, laissé sur l'accueil. Voir docs/steps/UI-001.md
+et docs/app-navigation.md. F6 scenes/app/app_root.tscn pour la nouvelle application ;
+F6 scenes/main.tscn pour le combat historique. Étape non commitée, attendre validation.
+Ensuite UI-002, UI-003, UI-004, UI-005, STEP-029 et STEP-030. Les sections suivantes sont historiques.
+
+Précisions du propriétaire (27 octobre 2026) : tous les boutons sont superposés aux fonds
+sur toutes les pages, avec thème bleu nuit/bleu profond et or/orange ambré. Chaque nouveau
+combat, y compris Rejouer, choisit une des huit arènes illustrées au hasard. UI-001 intègre
+ces exigences, UI-005 les recettera. Roadmap documentaire ; attendre GO avant implémentation.
+
+# Nouveau parcours proposé — accueil, équipe, fiches et gambits
+
+Roadmap préparée le 27 octobre 2026 : voir docs/app-pages-roadmap.md et docs/steps/UI-001.md
+à UI-005.md. Ce changement est documentaire, aucun nouvel écran n’est encore implémenté.
+Décisions du propriétaire : retour accueil depuis l’arène abandonne le combat ; nouvelle
+entrée = partie neuve ; équipe en grille 2 × 2 (Mako, Anne, Vide, Vide) ; fiches en valeurs
+de référence. Les gambits sauvegardés sont conservés. Fonds fournis pour accueil et équipe.
+Prochaine étape proposée : UI-001, après accord sur le plan et GO. Puis UI-002/003/004/005,
+STEP-029 (reproduction) et STEP-030 (recette finale élargie). GAMEPLAY-003 reste annulée.
+Base fonctionnelle : GRAPHICS-009 clôturée au commit d632dfb, sauvegarde restaurée/vérifiée.
+Les sections suivantes décrivent les étapes et états historiques.
+
 # GRAPHICS-009 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le soin vert fluo à deux anneaux tournants.
@@ -213,7 +254,12 @@ leurs identifiants et se dérouleront après ce chantier.
 | GAMEPLAY-003 | Annulée — 27 octobre 2026 | Tailles et contournements conservés à la demande du propriétaire |
 | GRAPHICS-008 | Validée — 27 octobre 2026 | Disques d’ombre translucides dimensionnés sur l’emprise au sol |
 | GRAPHICS-009 | Validée — 27 octobre 2026 | Soin vert fluo, deux anneaux concentriques tournants et fondu en une seconde |
-| STEP-029 | Après GRAPHICS-009 | Clone neuf, import, export et installation reproductibles |
+| UI-001 | Validée — 27 octobre 2026 | Accueil, boutons sur fonds, thème nuit/or, arène aléatoire et abandon au retour |
+| UI-002 | Plan proposé — après UI-001 | Équipe 2 × 2, Mako/Anne en Idle et deux places vides |
+| UI-003 | Plan proposé — après UI-002 | Fiches de référence et accès aux compétences |
+| UI-004 | Plan proposé — après UI-003 | Page Gambits du héros, indépendante du combat et sauvegarde préservée |
+| UI-005 | Plan proposé — après UI-004 | Recette du parcours complet sur PC et Android |
+| STEP-029 | Après UI-005 | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |
 
 Le [plan détaillé proposé](docs/handoff/NEXT_STEPS.md) prépare ces étapes ; il ne prétend

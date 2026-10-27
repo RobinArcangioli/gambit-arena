@@ -1,3 +1,41 @@
+# UI-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour l'accueil, le thème, les retours et les
+arènes aléatoires. APK normal 0.1.0-ui001 (44), SHA-256
+`0c18f5936ca60e5bda292f364501a5a765c834f9827ff07b9b560cb33ee615fa`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 43 bancs / 2 718 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. Prochaine étape UI-002 :
+page Équipe avec Mako, Anne et deux places vides ; attendre un nouveau GO.
+GAMEPLAY-003 reste annulée. Les mentions de recette suivantes sont historiques.
+
+# UI-001 — composition de l'application
+
+AppRoot possède l'accueil et une ArenaPage temporaire. La scène de combat historique reste
+inchangée ; la page produit en dérive pour sa composition, son thème et son tirage visuel.
+Arène est libérée au retour et recréée à l'entrée, avec les règles sauvegardées existantes.
+ArenaChoice a son propre RNG ; décor et caméra conservent leur calibration en plein écran.
+Le thème est centralisé dans resources/ui/night_gold.tres. Les deux fonds fournis sont sous
+assets/art/ui/. Équipe/Fiche/Gambits restent des routes futures, sans simulation cachée.
+Voir docs/app-navigation.md. Les sections suivantes sont historiques.
+
+Précisions du propriétaire (27 octobre 2026) : tous les boutons sont superposés aux fonds
+sur toutes les pages, avec thème bleu nuit/bleu profond et or/orange ambré. Chaque nouveau
+combat, y compris Rejouer, choisit une des huit arènes illustrées au hasard. UI-001 intègre
+ces exigences, UI-005 les recettera. Roadmap documentaire ; attendre GO avant implémentation.
+
+# Architecture proposée pour les pages (non implémentée)
+
+Voir docs/app-pages-roadmap.md. Une racine de navigation ouvrira l’accueil, l’équipe,
+la fiche, les gambits et le combat. Quitter l’arène détruira le combat ; y revenir en créera
+un nouveau avec les gambits sauvegardés. Les aperçus Idle utiliseront les vues passives,
+sans simulation de combat. Profils et métadonnées de compétences alimenteront les fiches
+en lecture seule. L’éditeur sera réutilisable par identifiant de héros, avec la validation
+et la sauvegarde existantes. L’ordre des cartes ne modifiera pas l’ordre logique des acteurs.
+Le point d’entrée F5 passera à l’accueil ; la scène/UID du combat existant restera préservée.
+Les sections suivantes décrivent l’architecture actuellement implémentée et son historique.
+
 # GRAPHICS-009 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le soin vert fluo à deux anneaux tournants.
