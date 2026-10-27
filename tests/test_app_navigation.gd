@@ -31,7 +31,7 @@ func _ready() -> void:
 	var app = App.instantiate();app.save_path=path;add_child(app)
 	await settle()
 	check(app.route==&"home" and app.combat==null and app.arena_choice.draws==0,"Home has no combat or arena draw")
-	check(app.background.get_rect().size==get_viewport().get_visible_rect().size and app.team_button.disabled,"full-page provided background and reserved team route")
+	check(app.background.get_rect().size==get_viewport().get_visible_rect().size and not app.team_button.disabled,"full-page provided background and enabled team entry")
 	app.open_arena();app.open_arena()
 	await settle()
 	var game = app.combat

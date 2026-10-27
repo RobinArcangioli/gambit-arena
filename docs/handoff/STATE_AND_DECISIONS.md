@@ -1,3 +1,31 @@
+# UI-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la page Équipe : Mako/Anne en Idle,
+deux places vides, sélection et retours. Validation globale sans détail supplémentaire.
+APK normal 0.1.0-ui002 (45), SHA-256
+`88d5de3adf6e6cdf4b686548418d14f4cd30047f0dbd15b8d51a38c11943ab04`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 45 bancs / 2 816 contrôles déjà réussis ne sont pas
+relancés. Aucune nouvelle mesure de performance. Clôture par commit unique et sauvegarde
+restaurée/vérifiée ; prochain GO : UI-003, fiches de personnage en valeurs de référence.
+Les fiches et les gambits hors combat ne sont pas encore implémentés. GAMEPLAY-003 reste
+annulée. Les mentions de recette ci-dessous décrivent les états historiques.
+
+# UI-002 — Équipe en recette — 27 octobre 2026
+
+GO reçu après clôture de UI-001 au commit `01481bad6e02514c2edc3758838a7b0ee81e8365`.
+F5 → Équipe : grille 2 × 2, Mako puis Anne animés en Idle et deux places « Vide ».
+Fond fourni et cartes/bouton Accueil en surimpression bleu nuit/or. Un appui sur le modèle
+ou sa carte sélectionne son identifiant stable et affiche son nom ; les fiches attendent UI-003.
+Deux aperçus passifs au plus, arrêtés en arrière-plan et libérés au retour. Aucune simulation
+sur Équipe ; ordre logique du combat et sauvegardes conservés. GAMEPLAY-003 reste annulée.
+45 bancs / 2 816 contrôles réussis ; captures PC et recette tactile native sur Galaxy A16.
+APK normal 0.1.0-ui002 (45), SHA-256 `88d5de3adf6e6cdf4b686548418d14f4cd30047f0dbd15b8d51a38c11943ab04`.
+Installation avec conservation des données ; téléphone laissé sur Équipe, Anne sélectionnée.
+Voir docs/team-page.md et docs/steps/UI-002.md. Étape non commitée, en attente de validation.
+Après validation : clôture et sauvegarde vérifiée, puis nouveau GO pour UI-003, UI-004,
+UI-005, STEP-029 et STEP-030. Les états précédents ci-dessous sont historiques.
+
 # UI-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour l'accueil, le thème, les retours et les

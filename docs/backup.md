@@ -1,3 +1,29 @@
+# UI-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la page Équipe : Mako/Anne en Idle,
+deux places vides, sélection et retours. Validation globale sans détail supplémentaire.
+APK normal 0.1.0-ui002 (45), SHA-256
+`88d5de3adf6e6cdf4b686548418d14f4cd30047f0dbd15b8d51a38c11943ab04`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 45 bancs / 2 816 contrôles déjà réussis ne sont pas
+relancés. Aucune nouvelle mesure de performance. Clôture par commit unique et sauvegarde
+restaurée/vérifiée ; prochain GO : UI-003, fiches de personnage en valeurs de référence.
+Les fiches et les gambits hors combat ne sont pas encore implémentés. GAMEPLAY-003 reste
+annulée. Les mentions de recette ci-dessous décrivent les états historiques.
+
+# Checkpoint UI-001 vérifié — base de UI-002
+
+Commit 01481bad6e02514c2edc3758838a7b0ee81e8365, parent d632dfbfcce35cbe2d2bb7993347d0cb450b8d8e.
+Archive gambit-arena-20261027-050934-01481bad6e02.tar.gz, SHA-256
+b929406c0c2f9fa47d745a423abb0026ace812a8b35643a485ecf7ed8e2d2c5e.
+Restauration sûre /tmp/ui001-checkpoint-restore-296_s55u : bundle verify, clone/fsck,
+HEAD/parent, arbre propre et 615 fichiers identiques au commit et à la sauvegarde.
+Livraison validée avec APK/preuves : gambit-arena-ui001-delivery-validated-8c321fcc.tar.gz,
+SHA-256 8c321fcce7bb35987773c2f0da5d23ac7ca9a2c6ea697d58b83ad6db73980e63.
+Sauvegardes sous /home/arkhane/gambit-arena-backups. Aucun push de UI-001.
+UI-002 travaille dans une copie isolée, livrée non commitée ; attendre validation avant clôture.
+Les checkpoints précédents ci-dessous sont historiques.
+
 # UI-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour l'accueil, le thème, les retours et les

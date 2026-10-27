@@ -1,5 +1,6 @@
 extends Control
 ## Routes own scene lifetime. No combat exists on Home; configuration remains in its file.
+const TeamPage = preload("res://scenes/app/team_page.tscn")
 const ArenaPage = preload("res://scenes/app/arena_page.tscn")
 const Choice = preload("res://scripts/app/arena_choice.gd")
 const Guard = preload("res://scripts/platform/application_guard.gd")
@@ -15,6 +16,9 @@ var home_page: Control
 var arena_button: Button
 var team_button: Button
 var combat
+var team_page
+var selected_hero_id: StringName
+signal hero_selected(hero_id: StringName)
 var route: StringName = &"home"
 var transitioning: bool = false
 var _last_back_msec: int = -10000
@@ -29,7 +33,7 @@ func _ready() -> void:
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
 	home_page = Control.new();home_page.mouse_filter = Control.MOUSE_FILTER_IGNORE;add_child(home_page)
-	team_button = _button("Équipe");team_button.disabled = true
+	team_button = _button("Équipe");team_button.pressed.connect(open_team)
 	arena_button = _button("Arène");arena_button.pressed.connect(open_arena)
 	add_child(guard)
 	get_viewport().size_changed.connect(_layout)
@@ -56,7 +60,7 @@ func _layout() -> void:
 	arena_button.position = team_button.position+Vector2(0,76);arena_button.size = Vector2(width,60)
 
 func open_arena() -> void:
-	if guard.blocked or transitioning or combat != null:return
+	if guard.blocked or transitioning or route!=&"home":return
 	transitioning = true
 	arena_button.disabled = true
 	guard.acknowledge_resume()
@@ -69,17 +73,22 @@ func open_arena() -> void:
 	call_deferred("_finish_transition")
 
 func return_home() -> void:
-	if guard.blocked or transitioning or combat == null:return
+	if guard.blocked or transitioning or route==&"home":return
 	transitioning = true
-	combat.touch_router.cancel_gesture()
-	combat.process_mode = Node.PROCESS_MODE_DISABLED
-	remove_child(combat);combat.queue_free();combat = null
+	if combat != null:
+		combat.touch_router.cancel_gesture()
+		combat.process_mode = Node.PROCESS_MODE_DISABLED
+		remove_child(combat);combat.queue_free();combat = null
+	if team_page != null:
+		team_page.set_active(false)
+		remove_child(team_page);team_page.queue_free();team_page = null
 	route = &"home";home_page.show();background.show()
 	call_deferred("_finish_transition")
 
 func _finish_transition() -> void:
 	transitioning = false
 	arena_button.disabled = guard.blocked
+	team_button.disabled = guard.blocked
 
 func go_back() -> void:
 	if guard.blocked or transitioning:return
@@ -88,20 +97,43 @@ func go_back() -> void:
 	var now: int = Time.get_ticks_msec()
 	if now - _last_back_msec < 180: return
 	_last_back_msec = now
-	if combat != null:
+	if team_page != null:
+		return_home()
+	elif combat != null:
 		if combat._modal_open():
 			if combat.arena_picker.visible:combat._close_arena_picker()
 			else:combat._close_modal()
 		else:return_home()
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE and combat != null:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE and route!=&"home":
 		go_back();get_viewport().set_input_as_handled()
 
 func _notification(what: int) -> void:
 	if guard == null:return
-	if guard.observe(what) and is_instance_valid(arena_button):arena_button.disabled = guard.blocked
+	if guard.observe(what) and is_instance_valid(arena_button):
+		arena_button.disabled = guard.blocked
+		team_button.disabled = guard.blocked
+		if team_page != null:team_page.set_active(not guard.blocked)
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
-		if combat != null:go_back()
+		if route!=&"home":go_back()
 		# Home is the root route: a repeated Android Back must not close the app.
 		# The OS Home gesture remains available for putting it in the background.
+
+func open_team() -> void:
+	if guard.blocked or transitioning or route!=&"home":return
+	transitioning = true
+	team_button.disabled = true
+	guard.acknowledge_resume()
+	team_page = TeamPage.instantiate()
+	team_page.selected_id = selected_hero_id
+	team_page.home_requested.connect(return_home)
+	team_page.hero_selected.connect(_select_team_hero)
+	add_child(team_page)
+	home_page.hide();background.hide();route = &"team"
+	call_deferred("_finish_transition")
+
+func _select_team_hero(id: StringName) -> void:
+	if guard.blocked or transitioning or route!=&"team" or not team_page.Roster.PROFILES.has(id):return
+	selected_hero_id = id
+	hero_selected.emit(id)
