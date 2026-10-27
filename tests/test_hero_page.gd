@@ -22,7 +22,7 @@ func _ready() -> void:
 			var skill: Dictionary = data.skills[i];var key: StringName = profile.abilities[i]
 			check(skill.id==key and skill.cost==Executor.cost(key) and skill.duration==Executor.cast_duration(key) and skill.cooldown==Executor.cooldown(key) and skill.reach==Executor.skill_reach(key),"metadata follows current executor")
 		data.skills.clear();data.health=1
-		check(Reference.read(id).skills.size()==2 and profile.max_health>1,"UI snapshot cannot mutate authored profile")
+		check(Reference.read(id).skills.size()==(3 if id==&"mako" else 2) and profile.max_health>1,"UI snapshot cannot mutate authored profile")
 	var app = App.instantiate();app.save_path="";add_child(app);await settle()
 	app.open_arena();await settle()
 	for actor in app.combat.simulation.heroes:
@@ -34,7 +34,7 @@ func _ready() -> void:
 		team._select(id);await settle();var page=app.hero_page
 		check(app.route==&"hero" and app.combat==null and page.hero_id==id and page.title.text==Roster.caption(id),"correct sheet without combat")
 		check(page.reference.health==Roster.PROFILES[id].max_health and page.health_bar.value==page.health_bar.max_value and page.mana_bar.value==60,"abandoned injuries and mana are not shown")
-		check(page.skill_panels.size()==2 and not page.gambits_button.disabled,"two skills and enabled Gambits button")
+		check(page.skill_panels.size()==(3 if id==&"mako" else 2) and not page.gambits_button.disabled,"owned skills and enabled Gambits button")
 		check(not team.visible and not team.active and team.portraits.all(func(p):return not p.active and p.viewport_3d.render_target_update_mode==SubViewport.UPDATE_DISABLED),"team worlds stop behind sheet")
 		app.notification(NOTIFICATION_APPLICATION_FOCUS_OUT);app.notification(NOTIFICATION_APPLICATION_PAUSED)
 		check(not page.active and page.back_button.disabled,"background blocks page input")

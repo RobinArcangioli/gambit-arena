@@ -84,7 +84,7 @@ func _rebuild() -> void:
 		fields.criterion.item_selected.connect(func(index: int):change(token,"criterion",String(Criteria.IDS[index])))
 		fields.skill = _picker(row,"Capacité")
 		var abilities: Array = Array(Orders.PROFILES[hero_id].abilities)
-		for id in abilities:fields.skill.add_item("Soin" if id==&"heal" else "Foudre" if id==&"lightning" else "Attaque")
+		for id in abilities:fields.skill.add_item("Booster" if id==&"booster" else "Soin" if id==&"heal" else "Foudre" if id==&"lightning" else "Attaque")
 		fields.skill.select(abilities.find(StringName(rows[i].skill)))
 		fields.skill.item_selected.connect(func(index: int):change(token,"skill",String(abilities[index])))
 		fields.delete = _icon(row,"delete","Supprimer l’ordre",remove_order.bind(token))

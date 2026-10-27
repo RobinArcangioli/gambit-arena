@@ -35,7 +35,7 @@ func _ready() -> void:
 	lab_buttons.append(_button(controls, "Repartir", restart_lab))
 	var note := _label(column, 12)
 	note.text = "Buff 60 s · mana normale · Pause en haut
-Aucun Booster ajouté aux compétences du jeu."
+Buff d’essai isolé · sorts de comparaison."
 	_refresh_lab()
 
 func apply_haste(key: StringName) -> void:

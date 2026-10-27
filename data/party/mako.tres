@@ -9,4 +9,4 @@ max_health = 180
 attack = 18
 defense = 4
 move_speed = 1.2
-abilities = Array[StringName]([&"basic", &"lightning"])
+abilities = Array[StringName]([&"basic", &"lightning", &"booster"])

@@ -85,7 +85,7 @@ func _ready() -> void:
 	app.return_home();await settle()
 	for cycle in range(10):
 		app.open_team();await settle();app.team_page._select(&"mako");await settle();app.open_gambits();await settle()
-		check(app.gambits_page.editor.rows.all(func(row):return row.skill in ["basic","lightning"]),"Mako abilities only")
+		check(app.gambits_page.editor.rows.all(func(row):return row.skill in ["basic","lightning","booster"]),"Mako abilities only")
 		app.return_home();await settle();check(app.gambits_page==null and app.hero_page==null and app.team_page==null,"nested pages freed")
 	app.queue_free();await settle()
 	var fresh=App.instantiate();fresh.save_path=path;add_child(fresh);await settle();fresh.open_team();await settle();fresh.team_page._select(&"anne");await settle();fresh.open_gambits();await settle()

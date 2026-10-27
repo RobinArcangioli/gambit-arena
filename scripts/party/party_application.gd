@@ -215,7 +215,7 @@ func _rebuild_footer() -> void:
 	_present()
 
 static func skill_name(skill: StringName) -> String:
-	return "Soin" if skill == &"heal" else "Foudre" if skill == &"lightning" else "Attaque"
+	return "Booster" if skill == &"booster" else "Soin" if skill == &"heal" else "Foudre" if skill == &"lightning" else "Attaque"
 
 func _command(skill: StringName) -> void:
 	if application_guard.blocked or _modal_open(): return

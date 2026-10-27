@@ -1,3 +1,46 @@
+# BUFFS-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour Booster dans les compétences et les
+Gambits de Mako : 20 mana, cast 1,5 s, ×1,30 pendant 60 s de combat normal, aucune
+recharge dédiée, sans cumul ni renouvellement. Allié cible Mako puis Anne en ignorant
+les porteurs du même buff ; mana insuffisante → gambit suivant. Débit au succès réel.
+57 bancs / 3 849 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour cette clôture : code, scènes, profils, configuration, assets et APK
+restent identiques à la livraison validée. Aucun nouveau test moteur nécessaire.
+Gambits du téléphone conservés ; laboratoire isolé disponible pour la séquence complète.
+APK normal 0.1.0-buffs002 (56), SHA-256
+`a53bc49cf29fc2f7e16a2331619055740863f56990c39f0b3a574302d9933ce5`.
+APK laboratoire 0.1.0-buffs002-lab (56), SHA-256
+`df954bbd424f0354d7a0396b7c7a697c42624173c5565360522cbb2ca5e9766f`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : GRAPHICS-010,
+montre dorée procédurale et fondu partagé avec le soin, puis UI-005.
+Les états précédents ci-dessous sont historiques.
+
+# BUFFS-002 — Booster jouable via les gambits — en recette
+
+GO reçu après clôture de BUFFS-001 `eac9a39eb14c040dde5d3fc4a3477809d8a4829b`
+(sauvegarde restaurée, 727 fichiers vérifiés). Mako possède Attaque, Foudre et Booster ;
+Anne conserve Attaque et Soin. Booster : 20 mana, cast 1,5 s, portée 4, récupération
+habituelle et aucune recharge dédiée, ×1,30 pendant 60 s de combat normal.
+Les critères classent les cibles ; le buff écarte celles qui portent déjà Booster, même
+si elles sont ennemies. Toute indisponibilité ou mana insuffisante fait passer au gambit
+suivant. Débit uniquement à la résolution réussie, jamais sur une annulation ou un doublon.
+
+57 bancs / 3 849 contrôles réussis sans erreur ni avertissement moteur, dont 118 contrôles
+dédiés à Booster. Aperçu GPU PC piloté : Duck, Mako puis Anne, 40 mana dépensés, fiche et
+contrôles libérés sans nœud orphelin. Recette Android et preuves dans la livraison.
+Aucun nouveau benchmark FPS. Pas de modification automatique des gambits sauvegardés.
+APK normal 0.1.0-buffs002 (56), SHA-256
+`a53bc49cf29fc2f7e16a2331619055740863f56990c39f0b3a574302d9933ce5`.
+APK laboratoire 0.1.0-buffs002-lab (56), SHA-256
+`df954bbd424f0354d7a0396b7c7a697c42624173c5565360522cbb2ca5e9766f`.
+F6 : `scenes/debug/booster_lab.tscn` ; le preset isolé place Allié → Booster avant les
+anciens ordres et journalise les vraies applications. Le jeu normal conserve les ordres
+existants ; programmer Booster depuis la fiche de Mako. Détails :
+[BUFFS-002](docs/steps/BUFFS-002.md). Validation utilisateur attendue avant commit et
+sauvegarde de clôture. Prochain GO après clôture : GRAPHICS-010, montre dorée procédurale
+et fondu partagé avec le soin ; puis UI-005. Les états précédents sont historiques.
+
 # BUFFS-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le socle des buffs et du temps personnel.

@@ -1,9 +1,14 @@
 extends "res://scripts/combat/attack_action.gd"
 ## Single commitment and impact path for party manual commands and gambits.
+const BuffCatalog = preload("res://scripts/buffs/buff_catalog.gd")
+const BuffState = preload("res://scripts/buffs/buff_state.gd")
 const Clock = preload("res://scripts/core/game_clock.gd")
 const SPELL_REACH: float = 4.0
 const HEAL_CAST: float = 1.5
 const LIGHTNING_CAST: float = 2.0
+const BOOSTER_CAST: float = 1.5
+var applied_buff: StringName
+var _target_buffs: BuffState
 var clock: Clock
 var actor
 var mana: float = 60.0
@@ -26,13 +31,13 @@ func _init(owner_actor = null) -> void:
 	actor = owner_actor
 
 static func cost(skill: StringName) -> int:
-	return 20 if skill == &"heal" else 30 if skill == &"lightning" else 0
+	return 20 if skill in [&"heal", &"booster"] else 30 if skill == &"lightning" else 0
 
 static func cast_duration(skill: StringName) -> float:
-	return HEAL_CAST if skill == &"heal" else LIGHTNING_CAST if skill == &"lightning" else WINDUP
+	return BOOSTER_CAST if skill == &"booster" else HEAL_CAST if skill == &"heal" else LIGHTNING_CAST if skill == &"lightning" else WINDUP
 
 static func skill_reach(skill: StringName) -> float:
-	return SPELL_REACH if skill in [&"heal", &"lightning"] else REACH
+	return SPELL_REACH if skill in [&"heal", &"lightning", &"booster"] else REACH
 
 static func cooldown(skill: StringName) -> float:
 	return 4.0 if skill == &"heal" else 6.0 if skill == &"lightning" else 0.0
@@ -50,13 +55,17 @@ func request(skill: StringName, target) -> int:
 	if _bound_state != null and actor.state != _bound_state:
 		retire()
 		return _reject("etat remplace")
-	if skill not in [&"basic", &"heal", &"lightning"] or skill not in actor.abilities:
+	if skill not in [&"basic", &"heal", &"lightning", &"booster"] or skill not in actor.abilities:
 		return _reject("competence indisponible")
 	if active: return _reject("occupe")
 	if not available(skill): return _reject("mana / delai")
 	if not living(target): return _reject("cible absente")
 	if skill == &"heal" and target.state.health >= target.state.max_health:
 		return _reject("PV pleins")
+	if BuffCatalog.is_buff(skill):
+		var target_buffs = target.get("buffs")
+		if not target_buffs is BuffState or not BuffCatalog.eligible(skill, target_buffs.snapshot()):
+			return _reject("buff indisponible")
 	_engaging = skill
 	var id: int = super.begin(actor, target)
 	_engaging = &""
@@ -65,6 +74,8 @@ func request(skill: StringName, target) -> int:
 	_bound_state = actor.state
 	accepted += 1
 	applied_healing = 0
+	applied_buff = &""
+	_target_buffs = target.get("buffs") if BuffCatalog.is_buff(skill) else null
 	cooldowns[skill] = cooldown(skill)
 	_record_visual(_visual_values("start"))
 	return id
@@ -94,12 +105,13 @@ func advance(dt: float, paused: bool = false, personal_dt: float = -1.0) -> void
 func _valid_pair(source: StatsActor, target: StatsActor) -> bool:
 	if unrestricted_targets:return true
 	var skill: StringName = _engaging if _engaging != &"" else last_skill
+	if skill == &"booster": return true
 	if skill == &"heal":
 		return source.get("team") == target.get("team")
 	return source != target and source.get("team") != target.get("team")
 
 func _participants_valid() -> bool:
-	return super._participants_valid() and _valid_pair(_source, _target)
+	return super._participants_valid() and _valid_pair(_source, _target) and (not BuffCatalog.is_buff(last_skill) or _target.get("buffs") == _target_buffs)
 
 func _apply_effect() -> int:
 	# AttackAction already latched this impact and revalidated participants and reach.
@@ -110,8 +122,17 @@ func _apply_effect() -> int:
 	if last_skill == &"heal" and _target_state.health >= _target_state.max_health:
 		outcome = "PV pleins"
 		return 0
+	if BuffCatalog.is_buff(last_skill):
+		# No callback between applying this value-only state and committing the debit.
+		if _target_buffs == null or not BuffCatalog.eligible(last_skill, _target_buffs.snapshot()) or not _target_buffs.apply(BuffCatalog.definition(last_skill)):
+			outcome = "buff deja actif"
+			return 0
+		applied_buff = last_skill
 	mana = maxf(0.0, mana - cost(last_skill))
 	spent += cost(last_skill)
+	if applied_buff != &"":
+		outcome = "booster"
+		return 0
 	if last_skill == &"heal":
 		applied_healing = _target_state.heal(30)
 		outcome = "soin" if applied_healing > 0 else "PV pleins"
@@ -126,7 +147,7 @@ func _reach() -> float:
 	return skill_reach(_engaging if _engaging != &"" else last_skill)
 
 func casting() -> bool:
-	return active and not resolved and last_skill in [&"heal", &"lightning"]
+	return active and not resolved and last_skill in [&"heal", &"lightning", &"booster"]
 
 func cast_progress() -> float:
 	return clampf(elapsed / cast_duration(last_skill), 0.0, 1.0) if casting() else 0.0
@@ -151,6 +172,12 @@ func try_impact(expected_id: int) -> bool:
 		values["healing"] = applied_healing
 		values["elapsed"] = elapsed
 		_record_visual(values)
+		if applied_buff != &"":
+			var applied: Dictionary = _visual_values("buff_applied")
+			applied["buff_id"] = String(applied_buff)
+			applied["buff_duration"] = BuffCatalog.BOOSTER_DURATION
+			applied["time_multiplier"] = BuffCatalog.BOOSTER_RATE
+			_record_visual(applied)
 	return success
 
 func cancel() -> void:

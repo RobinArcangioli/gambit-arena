@@ -1,3 +1,30 @@
+# BUFFS-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour Booster dans les compétences et les
+Gambits de Mako : 20 mana, cast 1,5 s, ×1,30 pendant 60 s de combat normal, aucune
+recharge dédiée, sans cumul ni renouvellement. Allié cible Mako puis Anne en ignorant
+les porteurs du même buff ; mana insuffisante → gambit suivant. Débit au succès réel.
+57 bancs / 3 849 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour cette clôture : code, scènes, profils, configuration, assets et APK
+restent identiques à la livraison validée. Aucun nouveau test moteur nécessaire.
+Gambits du téléphone conservés ; laboratoire isolé disponible pour la séquence complète.
+APK normal 0.1.0-buffs002 (56), SHA-256
+`a53bc49cf29fc2f7e16a2331619055740863f56990c39f0b3a574302d9933ce5`.
+APK laboratoire 0.1.0-buffs002-lab (56), SHA-256
+`df954bbd424f0354d7a0396b7c7a697c42624173c5565360522cbb2ca5e9766f`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : GRAPHICS-010,
+montre dorée procédurale et fondu partagé avec le soin, puis UI-005.
+Les états précédents ci-dessous sont historiques.
+
+# Avancement — BUFFS-002 en recette
+
+BUFFS-001 validée et clôturée au commit `eac9a39`, sauvegarde restaurée/vérifiée (727 fichiers).
+GO suivant reçu : Booster est maintenant jouable par Mako, filtré par éligibilité de buff,
+payé au succès, visible dans sa fiche et son éditeur. Laboratoire isolé de la séquence
+Mako → Anne et des réapplications après expiration. Les anciens ordres sont conservés.
+Après validation/clôture et prochain GO : GRAPHICS-010 (montre procédurale et fondu commun),
+puis UI-005. Les décisions du plan restent applicables ; ses anciens statuts sont historiques.
+
 # BUFFS-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le socle des buffs et du temps personnel.

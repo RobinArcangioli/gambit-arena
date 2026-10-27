@@ -162,10 +162,10 @@ func advance(delta: float, paused: bool = false) -> void:
 		if id > 0:
 			var offset: Vector3 = unit.desired_target.position - unit.position
 			if offset.length_squared() > 0.000001: unit.mover.facing = Vector2(offset.x, offset.z).normalized()
-			if unit.desired_skill != &"heal":
+			if unit.desired_skill not in [&"heal", &"booster"]:
 				unit.offensive_focus = unit.desired_target
 				unit.focus_state = unit.desired_target.state
-			if not unit.pending.is_empty(): feedback = "%s : %s lancee." % [unit.display_name, "Soin" if unit.desired_skill == &"heal" else "Foudre" if unit.desired_skill == &"lightning" else "Attaque"]
+			if not unit.pending.is_empty(): feedback = "%s : %s lancee." % [unit.display_name, "Booster" if unit.desired_skill == &"booster" else "Soin" if unit.desired_skill == &"heal" else "Foudre" if unit.desired_skill == &"lightning" else "Attaque"]
 			unit.pending.clear()
 	if wave.advance(dt, enemies.size()):
 		for attempt in range(20):
@@ -248,7 +248,7 @@ func request_manual(key: StringName, skill: StringName) -> bool:
 	if skill != &"heal" and Executor.living(unit.offensive_focus) and unit.offensive_focus in pool and unit.offensive_focus.state == unit.focus_state and Executor.distance_between(unit, unit.offensive_focus) <= Executor.REACH:
 		target = unit.offensive_focus
 	unit.pending = {"skill": skill, "target_id": target.combat_id, "target_state": target.state, "deadline": clock.elapsed + 3.0}
-	feedback = "%s : %s en attente." % [unit.display_name, "Soin" if skill == &"heal" else "Foudre" if skill == &"lightning" else "Attaque"]
+	feedback = "%s : %s en attente." % [unit.display_name, "Booster" if skill == &"booster" else "Soin" if skill == &"heal" else "Foudre" if skill == &"lightning" else "Attaque"]
 	return true
 
 func _move(dt: float, time_prepared: bool = false) -> void:

@@ -2,11 +2,12 @@ extends RefCounted
 ## Read-only adapter: profiles and executor metadata, never runtime actor state.
 const Roster = preload("res://scripts/app/team_roster.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
-const TITLES = {&"basic": "Attaque", &"heal": "Soin", &"lightning": "Foudre"}
+const TITLES = {&"basic": "Attaque", &"heal": "Soin", &"lightning": "Foudre", &"booster": "Booster"}
 const DESCRIPTIONS = {
 	&"basic": "Attaque la cible au corps à corps.",
 	&"heal": "Rend des PV à la cible choisie.",
-	&"lightning": "Frappe la cible choisie avec la foudre."}
+	&"lightning": "Frappe la cible choisie avec la foudre.",
+	&"booster": "Accélère les actions, déplacements, animations et recharges de 30 % pendant 60 s. La régénération de mana reste normale. Sans cumul ni renouvellement tant qu’actif."}
 static func read(id: StringName) -> Dictionary:
 	if not Roster.PROFILES.has(id):return {}
 	var profile = Roster.PROFILES[id]
