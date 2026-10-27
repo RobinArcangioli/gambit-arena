@@ -1,3 +1,29 @@
+# GRAPHICS-010 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » après le choix B — Équilibré : montre dorée
+procédurale translucide de 2 s, aiguilles accélérées, suivi de cible et fondu partagé.
+Le soin garde son rendu et sa durée de 1 s ; la logique des buffs reste inchangée.
+58 bancs / 4 001 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour cette clôture : code, scènes, ressources, configuration et deux APK
+restent identiques à la livraison validée. Les tests moteur ne sont pas relancés.
+Gambits du téléphone conservés ; réglage B vérifié sur le Galaxy et APK normal remis.
+APK normal 0.1.0-graphics010 (57), SHA-256
+`593592a564cd8b5b2493875f799c4aed43aed77cd039395ad65c43eff2c4417d`.
+APK essais 0.1.0-graphics010-lab (57), SHA-256
+`2f52538443d4f35d2a61c4ea01c1451522edc170d79a00116a14aa0032975eb9`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : UI-005,
+qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# Avancement — GRAPHICS-010 en recette
+
+BUFFS-002 validée et clôturée au commit `1d2d66a`, sauvegarde restaurée/vérifiée (738 fichiers).
+Le GO suivant autorise GRAPHICS-010 : montre procédurale, profil visuel B — Équilibré choisi
+par le propriétaire, et fondu commun au soin. Le buff jouable et ses règles restent inchangés.
+Après validation et clôture de cette étape, prochain GO : UI-005, qualification intégrée
+sur Android, puis STEP-029/030. Les décisions du plan restent les références ; ses anciens
+statuts ci-dessous sont historiques.
+
 # BUFFS-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour Booster dans les compétences et les

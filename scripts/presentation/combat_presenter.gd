@@ -2,6 +2,8 @@ extends Node3D
 ## One-way adapter. Bindings own presentation values/views, never ActorState or executors.
 const View = preload("res://scripts/presentation/character_view.gd")
 const Lightning = preload("res://scripts/presentation/lightning_presenter.gd")
+const Booster = preload("res://scripts/presentation/booster_presenter.gd")
+var booster := Booster.new()
 var lightning := Lightning.new()
 const MAX_GHOSTS: int = 12
 const MAX_HEAL_EFFECTS: int = 8
@@ -20,10 +22,13 @@ var deaths_played: int = 0
 func _init() -> void:
 	lightning.name = "LightningPresentation"
 	add_child(lightning)
+	booster.name = "BoosterPresentation"
+	add_child(booster)
 
 func reset_run(id: int) -> void:
 	if run_id == id: return
 	lightning.reset_run(id)
+	booster.reset_run(id)
 	for ghost in ghosts: _release_ghost(ghost)
 	ghosts.clear()
 	_clear_heals()
@@ -49,6 +54,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 	capture(units, id)
 	_advance_heals(dt)
 	lightning.advance_visual(bindings, dt)
+	booster.advance_visual(bindings, dt)
 	# Advance previously existing visuals first. New impacts/deaths begin at this tick's end.
 	for ghost in ghosts.duplicate():
 		var personal_dt: float = dt * float(ghost.get("time_scale", 1.0))
@@ -79,6 +85,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 		ghosts.clear()
 		_clear_heals()
 		lightning.clear_visuals()
+		booster.clear_visuals()
 	for actor_id in bindings.keys():
 		if not current.has(actor_id): bindings.erase(actor_id)
 
@@ -87,6 +94,7 @@ func consume(event: Dictionary) -> void:
 	var kind: String = event.get("kind", "")
 	if kind == "death":
 		lightning.consume(event)
+		booster.consume(event)
 		_death(int(event.actor_id), float(event.get("time_scale", 1.0)))
 		return
 	var source_id: int = int(event.get("source_id", 0))
@@ -94,6 +102,7 @@ func consume(event: Dictionary) -> void:
 	if sequence <= int(_sequences.get(source_id, 0)): return
 	_sequences[source_id] = sequence
 	lightning.consume(event)
+	booster.consume(event)
 	if kind == "resolve" and event.get("skill", "") == "heal" and int(event.get("healing", 0)) > 0:
 		_heal(event)
 	if kind == "resolve" and int(event.get("damage", 0)) > 0:

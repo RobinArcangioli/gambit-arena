@@ -1,5 +1,6 @@
 extends Resource
 ## Visual-only configuration. Replacing scene changes the art, never the spell.
+@export var fade: Resource = preload("res://resources/presentation/effects/common_fade.tres")
 @export var scene: PackedScene
 @export_range(0.1, 3.0) var duration: float = 1.0
 @export var color: Color = Color(0.04, 1.0, 0.16, 1.0)

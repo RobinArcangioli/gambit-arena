@@ -1,3 +1,46 @@
+# GRAPHICS-010 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » après le choix B — Équilibré : montre dorée
+procédurale translucide de 2 s, aiguilles accélérées, suivi de cible et fondu partagé.
+Le soin garde son rendu et sa durée de 1 s ; la logique des buffs reste inchangée.
+58 bancs / 4 001 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour cette clôture : code, scènes, ressources, configuration et deux APK
+restent identiques à la livraison validée. Les tests moteur ne sont pas relancés.
+Gambits du téléphone conservés ; réglage B vérifié sur le Galaxy et APK normal remis.
+APK normal 0.1.0-graphics010 (57), SHA-256
+`593592a564cd8b5b2493875f799c4aed43aed77cd039395ad65c43eff2c4417d`.
+APK essais 0.1.0-graphics010-lab (57), SHA-256
+`2f52538443d4f35d2a61c4ea01c1451522edc170d79a00116a14aa0032975eb9`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : UI-005,
+qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# GRAPHICS-010 — Montre Booster et fondu partagé — en recette
+
+GO reçu après BUFFS-002 clôturée `1d2d66a8a3e6356ae4867b0e1727776bb1b28d27`
+(sauvegarde restaurée, 738 fichiers vérifiés). Montre dorée procédurale translucide,
+deux aiguilles accélérant rapidement, durée de 2 s et fondu commun avec le soin.
+Le propriétaire choisit B — Équilibré dans le laboratoire A/B/C. Ce choix de rendu
+ne constitue pas encore la validation de clôture de GRAPHICS-010.
+
+La montre suit la cible et regarde la caméra ; elle apparaît uniquement sur un fait réel
+buff_applied réussi. Doublons, annulations, décès, disparition, pause et reset sont gérés.
+Les matériaux sont privés et le nombre d'effets borné. Le soin garde sa durée de 1 s,
+son intensité et ses anneaux : seule sa formule d'opacité est extraite, à résultat identique.
+Aucune logique de buff, de mana, de ciblage ou de temps personnel n'est modifiée.
+58 bancs / 4 001 contrôles réussis sans erreur ni avertissement moteur ; 152 contrôles
+dédiés au fondu et à la montre. Aperçus GPU PC et recette Android dans la livraison.
+Aucun nouveau benchmark FPS. Les gambits enregistrés restent conservés.
+APK normal 0.1.0-graphics010 (57), SHA-256
+`593592a564cd8b5b2493875f799c4aed43aed77cd039395ad65c43eff2c4417d`.
+APK laboratoire 0.1.0-graphics010-lab (57), SHA-256
+`2f52538443d4f35d2a61c4ea01c1451522edc170d79a00116a14aa0032975eb9`.
+F6 : `scenes/debug/booster_watch_lab.tscn` pour les essais visuels A/B/C, ou
+`scenes/debug/booster_lab.tscn` pour les vrais gambits Mako → Anne avec la montre.
+Détails : [GRAPHICS-010](docs/steps/GRAPHICS-010.md). Validation attendue avant commit et
+sauvegarde de clôture. Prochain GO après clôture : UI-005, qualification intégrée Android,
+puis STEP-029/030. Les descriptions précédentes sont historiques.
+
 # BUFFS-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour Booster dans les compétences et les

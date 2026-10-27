@@ -1,6 +1,8 @@
 extends Node3D
 ## Passive gyroscope: copied presentation values and explicitly accepted visual time only.
 const GlowShader = preload("res://shaders/presentation/heal_glow.gdshader")
+const DefaultFade = preload("res://resources/presentation/effects/common_fade.tres")
+var fade: Resource = DefaultFade
 var age: float = 0.0
 var duration: float = 1.0
 var amount: int = 0
@@ -21,6 +23,7 @@ var turns := Vector2.ZERO
 var opacity: float = 0.0
 
 func setup(profile: Resource, healed: int) -> void:
+	fade = profile.fade if profile.fade != null else DefaultFade
 	duration = maxf(0.1, profile.duration)
 	amount = healed
 	tint = profile.color
@@ -94,7 +97,7 @@ func advance_visual(dt: float) -> void:
 	if not is_finite(dt) or dt < 0.0: return
 	age = minf(duration, age + dt)
 	var progress: float = clampf(age / duration, 0.0, 1.0)
-	opacity = smoothstep(0.0, 0.06, progress) * (1.0 - smoothstep(0.36, 1.0, progress))
+	opacity = fade.sample(progress)
 	var rings: Array[MeshInstance3D] = [halo, inner_ring]
 	for index in range(2):
 		var tilt := Basis(Vector3.RIGHT if index == 0 else Vector3.FORWARD, 0.45 if index == 0 else 1.15)

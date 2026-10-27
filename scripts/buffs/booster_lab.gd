@@ -22,7 +22,7 @@ func _ready() -> void:
 	lab_buttons.append(_button(row,"Mana 0",empty_mana))
 	lab_buttons.append(_button(row,"Squelette",add_dummy_enemy))
 	var note := _label(column,12)
-	note.text = "20 mana · cast 1,5 s · ×1,30 pendant 60 s\nMontre prévue à l’étape graphique suivante."
+	note.text = "20 mana · cast 1,5 s · ×1,30 pendant 60 s\nMontre dorée 2 s · durée du buff indépendante."
 	_refresh_lab()
 
 func _reset() -> void:

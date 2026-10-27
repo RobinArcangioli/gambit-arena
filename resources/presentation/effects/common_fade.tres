@@ -1,0 +1,6 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/effect_fade.gd" id="1"]
+[resource]
+script = ExtResource("1")
+fade_in_end = 0.06
+fade_out_start = 0.36
