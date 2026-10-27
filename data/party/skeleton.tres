@@ -9,4 +9,6 @@ max_health = 60
 attack = 8
 defense = 1
 move_speed = 0.9
+mana_capacity = 0
+mana_regeneration = 0.0
 abilities = Array[StringName]([&"basic"])

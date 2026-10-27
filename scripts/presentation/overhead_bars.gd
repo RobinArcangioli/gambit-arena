@@ -19,6 +19,7 @@ var glow_strength: float = 0.22
 var track_color: Color
 var health_ratio: float = 1.0
 var mana_ratio: float = 1.0
+var mana_visible: bool = true
 var cast_ratio: float = 0.0
 var casting: bool = false
 var selected: bool = false
@@ -43,7 +44,8 @@ func apply_style(profile: Resource, panel_mode: bool = false) -> void:
 
 func set_values(health: int, max_health: int, mana: float, max_mana: int, is_casting: bool, progress: float) -> void:
 	health_ratio = clampf(float(health) / maxf(1, max_health), 0.0, 1.0)
-	mana_ratio = clampf(mana / maxf(1, max_mana), 0.0, 1.0)
+	mana_visible = max_mana > 0
+	mana_ratio = clampf(mana / maxf(1, max_mana), 0.0, 1.0) if mana_visible else 0.0
 	casting = is_casting
 	cast_ratio = clampf(progress, 0.0, 1.0)
 	queue_redraw()
@@ -60,11 +62,12 @@ func _draw() -> void:
 	paint.set_shader_parameter("glow_radius",glow_radius)
 	paint.set_shader_parameter("glow_strength",glow_strength)
 	paint.set_shader_parameter("ratios",Vector3(health_ratio,mana_ratio,cast_ratio))
+	paint.set_shader_parameter("mana_visible",mana_visible)
 	paint.set_shader_parameter("casting",casting);paint.set_shader_parameter("selected",selected)
 	paint.set_shader_parameter("health_color",health_color);paint.set_shader_parameter("mana_color",mana_color)
 	paint.set_shader_parameter("cast_color",cast_color);paint.set_shader_parameter("track_color",track_color)
 	var padding: float = ceilf(maxf(0.1,glow_radius)*3.0)+1.0
 	var top: float = minf(-padding,-8.0) if selected else -padding
-	var rows: int = 3 if casting else 2
+	var rows: int = 1 + int(mana_visible) + int(casting)
 	var bottom: float = rows*bar_height+(rows-1)*bar_gap+padding
 	draw_rect(Rect2(-bar_width*.5-padding,top,bar_width+padding*2,bottom-top),Color.WHITE)

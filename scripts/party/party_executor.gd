@@ -183,7 +183,11 @@ func try_impact(expected_id: int) -> bool:
 func cancel() -> void:
 	var was_active: bool = active
 	var values: Dictionary = _visual_values("cancel")
+	# Refund only the current unspent commitment. A lethal impact has already
+	# resolved and must keep its ordinary cooldown and recovery.
+	var refund_pending: bool = was_active and not resolved
 	super.cancel()
+	if refund_pending: cooldowns[last_skill] = 0.0
 	if was_active:
 		values["outcome"] = outcome
 		_record_visual(values)

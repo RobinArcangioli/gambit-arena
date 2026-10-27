@@ -36,8 +36,7 @@ func _snapshot() -> void:
 	anne.action.request(&"heal",anne);anne.action.elapsed=0.45
 	for at in [Vector2(1.8,1.4),Vector2(-1.8,-1.4)]:simulation.add_enemy(at)
 	for enemy_unit in simulation.enemies:
-		enemy_unit.state.damage(16);enemy_unit.action.mana=42
-		enemy_unit.abilities.append(&"booster");enemy_unit.action.request(&"booster",anne);enemy_unit.action.elapsed=0.95
+		enemy_unit.state.damage(16)
 	simulation.wave.cap=0
 	super._physics_process(0)
 	_apply_trial()

@@ -10,6 +10,7 @@ uniform float glow_radius = 1.0;
 uniform float glow_strength = 0.22;
 uniform vec3 ratios = vec3(1.0,1.0,0.0);
 uniform bool casting = false;
+uniform bool mana_visible = true;
 uniform bool selected = false;
 uniform vec4 health_color : source_color = vec4(1.0,0.27,0.27,1.0);
 uniform vec4 mana_color : source_color = vec4(0.22,0.62,1.0,1.0);
@@ -31,10 +32,11 @@ void fragment() {
 	vec4 modulation = COLOR;
 	vec4 result = vec4(0.0);
 	for (int i=0; i<3; i++) {
-		if (i==2 && !casting) { continue; }
+		if ((i==1 && !mana_visible) || (i==2 && !casting)) { continue; }
 		vec4 row = vec4(0.0);
 		vec4 tint = i==0 ? health_color : (i==1 ? mana_color : cast_color);
-		vec2 center = vec2(0.0,float(i)*(bar_height+bar_gap)+bar_height*0.5);
+		int visible_row = i - ((i==2 && !mana_visible) ? 1 : 0);
+		vec2 center = vec2(0.0,float(visible_row)*(bar_height+bar_gap)+bar_height*0.5);
 		float d = rounded_box(local_position-center,vec2(bar_width,bar_height)*0.5);
 		float aa = max(fwidth(d)*0.5,0.15);
 		vec4 empty = segments>0 ? vec4(tint.rgb*empty_brightness,0.92) : track_color;
