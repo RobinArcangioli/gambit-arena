@@ -2,6 +2,11 @@ extends "res://scripts/arena/arena.gd"
 ## Composition of independent party logic, models, bars, Android guard and touch-safe UI.
 const Presenter = preload("res://scripts/presentation/combat_presenter.gd")
 const Simulation = preload("res://scripts/party/party_simulation.gd")
+const Orders = preload("res://scripts/gambits/orders.gd")
+const Store = preload("res://scripts/gambits/configuration_store.gd")
+const OrdersEditor = preload("res://scripts/gambits/orders_editor.gd")
+@export var orders_enabled: bool = false
+var orders_editor: OrdersEditor
 const Rules = preload("res://scripts/party/party_rules.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
 const PartyUnit = preload("res://scripts/party/party_unit.gd")
@@ -64,7 +69,12 @@ func _ready() -> void:
 	world.add_child(action_presenter)
 	add_child(simulation)
 	simulation.configure(world)
-	if not save_path.is_empty():
+	simulation.orders_enabled = orders_enabled
+	if orders_enabled:
+		simulation.rules = Orders.defaults()
+		var store := Store.new(save_path)
+		if store.load_configuration()==OK:simulation.rules = store.configuration
+	elif not save_path.is_empty():
 		var stored: Dictionary = Rules.load_configuration(save_path)
 		if not stored.is_empty(): simulation.rules = stored
 	status = _label(hud, 15)
@@ -160,6 +170,7 @@ func _clear_children(parent: Node) -> void:
 
 func _rebuild_footer() -> void:
 	if not ready_ui: return
+	orders_editor = null
 	_clear_children(footer_content)
 	skill_buttons.clear()
 	rules_buttons.clear()
@@ -169,6 +180,11 @@ func _rebuild_footer() -> void:
 			var button := _button(footer_content, "", _command.bind(skill))
 			button.custom_minimum_size.y = 60
 			skill_buttons.append(button)
+	elif orders_enabled:
+		orders_editor = OrdersEditor.new();orders_editor.hero_id = selected_hero;orders_editor.save_path = save_path
+		orders_editor.configuration_changed.connect(func(config: Dictionary):simulation.rules = config)
+		footer_content.add_child(orders_editor)
+		footer_scroll.theme = orders_editor.theme
 	else:
 		var explanation := _label(footer_content, 15)
 		explanation.text = "Priorite de haut en bas / appui pour modifier"
@@ -445,6 +461,7 @@ func _close_modal() -> void:
 
 func _touch_scrollers() -> Array[ScrollContainer]:
 	if not ready_ui: return []
+	if is_instance_valid(orders_editor) and orders_editor.popup_open():return []
 	if arena_picker.visible: return [arena_picker.scroll]
 	if overlay.visible: return [modal_scroll]
 	return [footer_scroll]
@@ -454,9 +471,12 @@ func _notification(what: int) -> void:
 	if application_guard.observe(what) and application_guard.resume_required:
 		paused = true
 		if ready_ui:
+			if is_instance_valid(orders_editor):orders_editor.set_active(false)
 			touch_router.notification(what)
 			_update_buttons()
-	if ready_ui and what in [NOTIFICATION_APPLICATION_RESUMED, NOTIFICATION_APPLICATION_FOCUS_IN]: call_deferred("_update_layout")
+	if ready_ui and what in [NOTIFICATION_APPLICATION_RESUMED, NOTIFICATION_APPLICATION_FOCUS_IN]:
+		if is_instance_valid(orders_editor):orders_editor.set_active(not application_guard.blocked)
+		call_deferred("_update_layout")
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not ready_ui or not event is InputEventKey or not event.pressed or event.echo or application_guard.blocked: return

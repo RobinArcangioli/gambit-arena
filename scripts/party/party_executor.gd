@@ -14,6 +14,8 @@ var last_skill: StringName
 var last_rejection: String
 var cooldowns: Dictionary = {}
 var retired: bool = false
+# Legacy laboratories keep their original contracts; product orders choose any living target.
+var unrestricted_targets: bool = false
 var _engaging: StringName
 const MAX_VISUAL_EVENTS: int = 16
 var _visual_events: Array[Dictionary] = []
@@ -86,6 +88,7 @@ func advance(dt: float, paused: bool = false) -> void:
 	if was_active and not active and phase == "TERMINEE": _record_visual(_visual_values("end"))
 
 func _valid_pair(source: StatsActor, target: StatsActor) -> bool:
+	if unrestricted_targets:return true
 	var skill: StringName = _engaging if _engaging != &"" else last_skill
 	if skill == &"heal":
 		return source.get("team") == target.get("team")

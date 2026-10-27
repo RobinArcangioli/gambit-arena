@@ -37,7 +37,7 @@ func _ready() -> void:
 	var game = app.combat
 	game.set_process(false);game.set_physics_process(false)
 	check(app.route==&"arena" and app.arena_choice.draws==1,"double entry creates one combat and exactly one draw")
-	check(game.simulation.rules==configuration,"new arena loads preserved hero rules")
+	check(game.simulation.rules==preload("res://scripts/gambits/configuration_codec.gd").migrate(configuration).configuration,"new arena loads preserved hero rules")
 	check(game.render_box.position==Vector2.ZERO and game.render_box.size==get_viewport().get_visible_rect().size,"arena extends underneath every command")
 	check(not game.get_node('HUD/HeaderPanel').visible and not game.get_node('HUD/FooterPanel').visible,"no separate opaque button bands")
 	var initial_id: StringName=game.chosen_arena
@@ -47,12 +47,12 @@ func _ready() -> void:
 	check(app.arena_choice.draws==1,"pause and resume never redraw")
 	game._reset()
 	check(app.arena_choice.draws==2,"Replay makes exactly one new visual draw")
-	game._open_rule(0)
+	game._open_arena_picker()
 	var back_key:=InputEventKey.new();back_key.keycode=KEY_ESCAPE;back_key.pressed=true
 	get_viewport().push_input(back_key,true)
 	app.notification(NOTIFICATION_WM_GO_BACK_REQUEST)
-	check(app.combat==game and not game.overlay.visible,"key and native back pair closes only the top modal")
-	check(app.combat==game and not game.overlay.visible and game.paused,"Back closes modal before abandoning combat")
+	check(app.combat==game and not game.arena_picker.visible,"key and native back pair closes only the top modal")
+	check(app.combat==game and not game.arena_picker.visible and game.paused,"Back closes modal before abandoning combat")
 	app.notification(NOTIFICATION_APPLICATION_FOCUS_OUT)
 	app.return_home()
 	check(app.combat==game and game.paused,"background blocks route changes and freezes combat")
@@ -70,7 +70,7 @@ func _ready() -> void:
 	for run in range(20):
 		app.open_arena();await settle()
 		game=app.combat;game.set_process(false);game.set_physics_process(false)
-		check(game.simulation.rules==configuration and game.simulation.hero(&"anne").state.health==140 and game.simulation.hero(&"mako").state.health==180,"fresh party and preserved configuration on entry")
+		check(game.simulation.rules==preload("res://scripts/gambits/configuration_codec.gd").migrate(configuration).configuration and game.simulation.hero(&"anne").state.health==140 and game.simulation.hero(&"mako").state.health==180,"fresh party and preserved configuration on entry")
 		if run%2==0:
 			game.simulation.hero(&"mako").state.damage(150)
 			for tick in range(30):game._physics_process(1.0/60.0)

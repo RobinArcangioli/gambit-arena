@@ -8,6 +8,7 @@ var chosen_arena: StringName
 var back_button: Button
 
 func _ready() -> void:
+	orders_enabled = true
 	super._ready()
 	back_button = _button(hud, "‹ Accueil", _request_home)
 	toolbar[1].text = "Arènes"

@@ -4,9 +4,9 @@ const Roster = preload("res://scripts/app/team_roster.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
 const TITLES = {&"basic": "Attaque", &"heal": "Soin", &"lightning": "Foudre"}
 const DESCRIPTIONS = {
-	&"basic": "Attaque un ennemi au corps à corps.",
-	&"heal": "Rend des PV à un allié, soi-même compris.",
-	&"lightning": "Frappe un ennemi avec la foudre."}
+	&"basic": "Attaque la cible au corps à corps.",
+	&"heal": "Rend des PV à la cible choisie.",
+	&"lightning": "Frappe la cible choisie avec la foudre."}
 static func read(id: StringName) -> Dictionary:
 	if not Roster.PROFILES.has(id):return {}
 	var profile = Roster.PROFILES[id]

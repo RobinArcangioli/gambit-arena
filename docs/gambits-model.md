@@ -1,3 +1,24 @@
+# GAMBITS-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la refonte intégrée et sa passe stylistique.
+APK 0.1.0-gambits002 (49), SHA-256
+`8ca94f2f17f5624e9724f5225d3774932933d312d4ff22efb878c32a19e5a95f`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 53 bancs / 3 497 contrôles réussis ne sont pas
+relancés. Les essais Android couvrent les listes, l'autosauvegarde, 100 ordres et la reprise.
+Téléphone rendu à l'accueil avec les ordres d'origine migrés, dont Anne 80 % → 70 % ;
+copie v2 protégée conservée. Aucun nouveau benchmark FPS.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : UI-005,
+qualification intégrée prolongée Android, puis STEP-029/030. GAMEPLAY-003 reste annulée.
+Les états précédents ci-dessous sont historiques.
+
+# Intégration GAMBITS-002
+
+Le modèle décrit ici est maintenant utilisé dans le parcours produit F5 / APK.
+OrdersEditor partage l’édition et l’autosauvegarde entre fiche et combat.
+Le mode v2 est conservé uniquement dans les laboratoires historiques.
+Voir [GAMBITS-002](steps/GAMBITS-002.md) pour la migration, les tests et la recette.
+
 # GAMBITS-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le nouveau modèle et son laboratoire

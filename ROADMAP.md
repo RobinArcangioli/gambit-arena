@@ -1,3 +1,34 @@
+# GAMBITS-002 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour la refonte intégrée et sa passe stylistique.
+APK 0.1.0-gambits002 (49), SHA-256
+`8ca94f2f17f5624e9724f5225d3774932933d312d4ff22efb878c32a19e5a95f`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 53 bancs / 3 497 contrôles réussis ne sont pas
+relancés. Les essais Android couvrent les listes, l'autosauvegarde, 100 ordres et la reprise.
+Téléphone rendu à l'accueil avec les ordres d'origine migrés, dont Anne 80 % → 70 % ;
+copie v2 protégée conservée. Aucun nouveau benchmark FPS.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : UI-005,
+qualification intégrée prolongée Android, puis STEP-029/030. GAMEPLAY-003 reste annulée.
+Les états précédents ci-dessous sont historiques.
+
+# GAMBITS-002 — en recette — 27 octobre 2026
+
+Le jeu F5 utilise désormais le catalogue de dix critères de ciblage fixes et les capacités
+indépendantes. Éditeur partagé entre fiche et combat, 0–100 ordres par héros, sauvegarde
+immédiate de chaque changement, sans Appliquer/Annuler. Ligne unique : activation verte /
+croix rouge, chevrons, critère, capacité, corbeille. Ajouter et compteur sous la liste.
+Passe stylistique réalisée : bleu nuit, bordures or, menus ivoire/orange, sur le fond fourni.
+
+53 bancs / 3 497 contrôles réussis sans erreur ni avertissement moteur. Recette visuelle GPU
+PC et gestes Android documentés dans la livraison. Aucun nouveau benchmark FPS.
+APK 0.1.0-gambits002 (49), SHA-256 `8ca94f2f17f5624e9724f5225d3774932933d312d4ff22efb878c32a19e5a95f`.
+Base clôturée : GAMBITS-001 `307030fc500dbdf076adaee95b984edfbf3b6d16`, sauvegarde
+`gambit-arena-20261027-081032-307030fc500d.tar.gz`, restaurée et vérifiée (678 fichiers).
+Cette étape attend la validation utilisateur avant commit et sauvegarde de clôture.
+Ensuite : UI-005, qualification intégrée prolongée Android, puis STEP-029/030.
+GAMEPLAY-003 reste annulée. Les états précédents ci-dessous sont historiques.
+
 # GAMBITS-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le nouveau modèle et son laboratoire

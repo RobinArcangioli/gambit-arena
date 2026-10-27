@@ -107,12 +107,14 @@ func go_back() -> void:
 	if now - _last_back_msec < 180: return
 	_last_back_msec = now
 	if gambits_page != null:
+		if gambits_page.editor.close_popup():return
 		return_hero()
 	elif hero_page != null:
 		return_team()
 	elif team_page != null:
 		return_home()
 	elif combat != null:
+		if is_instance_valid(combat.orders_editor) and combat.orders_editor.close_popup():return
 		if combat._modal_open():
 			if combat.arena_picker.visible:combat._close_arena_picker()
 			else:combat._close_modal()

@@ -21,3 +21,36 @@ static func make() -> Theme:
 	result.set_color("font_outline_color","Label",Color("10182f"))
 	result.set_constant("outline_size","Label",4)
 	return result
+
+static func editor_theme() -> Theme:
+	var result: Theme = preload("res://resources/ui/night_gold.tres").duplicate(true)
+	for state in ["normal","hover","pressed","disabled","focus"]:
+		var style := result.get_stylebox(state,"Button").duplicate() as StyleBoxFlat
+		style.content_margin_left = 7;style.content_margin_right = 7
+		result.set_stylebox(state,"Button",style)
+		var option := style.duplicate() as StyleBoxFlat;option.content_margin_right = 23
+		result.set_stylebox(state,"OptionButton",option)
+	for key in ["font_color","font_hover_color","font_focus_color","font_pressed_color","font_disabled_color"]:
+		result.set_color(key,"OptionButton",result.get_color(key,"Button"))
+	result.set_color("arrow_color","OptionButton",Color("d9aa4c"))
+	var panel := result.get_stylebox("normal","Button").duplicate() as StyleBoxFlat
+	panel.bg_color = Color("10182f");panel.content_margin_top = 8;panel.content_margin_bottom = 8
+	result.set_stylebox("panel","PopupMenu",panel)
+	result.set_stylebox("hover","PopupMenu",result.get_stylebox("hover","Button"))
+	result.set_color("font_color","PopupMenu",Color("fff2d4"))
+	result.set_color("font_hover_color","PopupMenu",Color("ffd68a"))
+	result.set_constant("v_separation","PopupMenu",24)
+	result.set_font_size("font_size","PopupMenu",18)
+	for state in ["scroll","grabber","grabber_highlight","grabber_pressed"]:
+		var bar := StyleBoxFlat.new();bar.set_corner_radius_all(4)
+		bar.bg_color = Color("10182f99") if state=="scroll" else Color("8e754c") if state=="grabber" else Color("d9aa4c")
+		bar.content_margin_left=4;bar.content_margin_right=4;bar.content_margin_top=4;bar.content_margin_bottom=4
+		result.set_stylebox(state,"VScrollBar",bar)
+	result.set_icon("radio_checked","PopupMenu",_radio(true))
+	result.set_icon("radio_unchecked","PopupMenu",_radio(false))
+	return result
+
+static func _radio(checked: bool) -> Texture2D:
+	var svg: String = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><circle cx="9" cy="9" r="6" fill="none" stroke="#d9aa4c" stroke-width="1.5" opacity="%s"/>%s</svg>' % ["1" if checked else "0.5",'<circle cx="9" cy="9" r="3" fill="#ffd68a"/>' if checked else ""]
+	var image := Image.new();image.load_svg_from_string(svg)
+	return ImageTexture.create_from_image(image)

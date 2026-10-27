@@ -44,8 +44,8 @@ func _ready() -> void:
 		check(enclosed(view,game.back_button.get_global_rect()) and enclosed(view,game.pause_button.get_global_rect()),"navigation and resume fit without clipped text")
 		game._show_tab('rules');await settle()
 		var before: int=app.arena_choice.draws
-		game._open_rule(0);app.go_back()
-		check(app.combat==game and not game.overlay.visible and app.arena_choice.draws==before,"modal back neither abandons nor redraws")
+		game.orders_editor.controls[0].criterion.show_popup();app.go_back()
+		check(app.combat==game and not game.orders_editor.popup_open() and app.arena_choice.draws==before,"modal back neither abandons nor redraws")
 		tap(viewport,game.back_button.get_global_rect().get_center());await settle()
 		check(app.route==&"home" and app.combat==null,"real touch returns home and releases arena")
 		viewport.queue_free();await settle()

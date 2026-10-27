@@ -3,6 +3,8 @@ extends Node
 const Unit = preload("res://scripts/party/party_unit.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
 const Clock = preload("res://scripts/core/game_clock.gd")
+const Orders = preload("res://scripts/gambits/orders.gd")
+var orders_enabled: bool = false
 const Rules = preload("res://scripts/party/party_rules.gd")
 const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
 const Pattern = preload("res://scripts/enemies/enemy_director.gd")
@@ -60,6 +62,7 @@ func reset() -> void:
 		var unit := Unit.new()
 		unit.configure_party(profile)
 		unit.action.clock = clock
+		unit.action.unrestricted_targets = orders_enabled
 		unit.state.died.connect(_record_death.bind(unit))
 		unit.name = profile.display_name
 		world.add_child(unit)
@@ -91,6 +94,7 @@ func add_enemy(at: Vector2) -> bool:
 	unit.configure_party(ENEMY)
 	unit.name = "Skeleton%d" % (spawned + 1)
 	unit.action.clock = clock
+	unit.action.unrestricted_targets = orders_enabled
 	unit.state.died.connect(_record_death.bind(unit))
 	world.add_child(unit)
 	unit.place(at)
@@ -206,7 +210,7 @@ func _plan(unit: Unit) -> void:
 			return
 	var opposite: Array[Unit] = enemies if unit.team == 0 else living_heroes()
 	if unit.team == 0:
-		var choice: Dictionary = Rules.evaluate(rules[String(unit.actor_key)], snapshot(unit))
+		var choice: Dictionary = Orders.evaluate(rules[String(unit.actor_key)], snapshot(unit)) if orders_enabled else Rules.evaluate(rules[String(unit.actor_key)], snapshot(unit))
 		if choice.is_empty(): return
 		unit.desired_skill = choice.skill
 		unit.desired_target = _find(choice.target_id)
@@ -214,7 +218,7 @@ func _plan(unit: Unit) -> void:
 		unit.desired_skill = &"basic"
 		unit.desired_target = _nearest(unit, opposite)
 	# Preserve live offensive focus at attack range, including across an allied heal.
-	if unit.desired_skill != &"heal" and Executor.living(unit.offensive_focus) and unit.offensive_focus in opposite and unit.offensive_focus.state == unit.focus_state and Executor.distance_between(unit, unit.offensive_focus) <= Executor.REACH:
+	if (not orders_enabled or unit.team != 0) and unit.desired_skill != &"heal" and Executor.living(unit.offensive_focus) and unit.offensive_focus in opposite and unit.offensive_focus.state == unit.focus_state and Executor.distance_between(unit, unit.offensive_focus) <= Executor.REACH:
 		unit.desired_target = unit.offensive_focus
 	if Executor.living(unit.desired_target): unit.mover.set_target(unit.desired_target)
 
