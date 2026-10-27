@@ -3,6 +3,12 @@ extends "res://scripts/party/party_application.gd"
 signal home_requested
 const Choice = preload("res://scripts/app/arena_choice.gd")
 const HeroPanel = preload("res://scripts/presentation/hero_status_panel.gd")
+@export var infinite_mode: bool = false
+var rotation_chooser: Callable
+var wave_counter: Label
+var countdown: Label
+var _arena_epoch: int = 0
+var _history_wave: int = 0
 var chooser: Callable
 var fallback_choice := Choice.new()
 var chosen_arena: StringName
@@ -21,16 +27,21 @@ var action_pending: bool = false
 var exit_requested: bool = false
 
 func _ready() -> void:
+	simulation.infinite_mode=infinite_mode
 	orders_enabled=true
 	selected_hero=&""
 	super._ready()
 	# These inherited laboratory decorations are never part of the product HUD.
 	for child in hud.get_children():
-		if child!=pause_button and not child is HeroPanel:
+		if child!=pause_button and child!=wave_counter and not child is HeroPanel:
 			hud.remove_child(child);child.queue_free()
 	_update_layout();_present()
 
 func _build_party_controls() -> void:
+	if infinite_mode:
+		wave_counter=_mode_label(17);hud.add_child(wave_counter)
+		countdown=_mode_label(64);countdown.add_theme_constant_override("outline_size",6)
+		add_child(countdown);countdown.hide()
 	for id in [&"mako",&"anne",&"",&""]:
 		var panel:=HeroPanel.new();panel.hero_id=id;hud.add_child(panel);hero_panels.append(panel)
 
@@ -58,6 +69,7 @@ func _present() -> void:
 	if not ready_ui or simulation.heroes.is_empty():return
 	for panel in hero_panels:
 		if panel.hero_id!=&"":panel.show_actor(simulation.hero(panel.hero_id))
+	_present_infinite()
 	floor_canvas.feet.clear()
 	for unit in simulation.all_units():
 		if unit.state.alive:floor_canvas.feet.append(unit.position)
@@ -76,6 +88,7 @@ func _modal_open() -> bool:return pause_layer!=null and pause_layer.visible
 
 func _reset() -> void:
 	if not ready_ui or application_guard.blocked:return
+	_arena_epoch=0;_history_wave=0
 	var id: StringName=chooser.call() if chooser.is_valid() else fallback_choice.next()
 	if id==&"reference" or not Catalog.ENTRIES.has(id):id=&"colisee_solaire"
 	chosen_arena=id;arena_definition=Catalog.definition(id);floor_canvas.set_definition(arena_definition)
@@ -118,7 +131,7 @@ func _unlock_actions() -> void:
 	_update_buttons()
 func _refresh_pause_menu() -> void:
 	if pause_title==null:return
-	pause_title.text="Abandonner le combat ?" if confirming_abandon else "Pause"
+	pause_title.text="Abandonner le combat ?" if confirming_abandon else "Défaite" if infinite_mode and simulation.result=="DEFAITE" else "Pause"
 	pause_title.add_theme_font_size_override("font_size",19 if confirming_abandon else 22)
 	abandon_message.visible=confirming_abandon
 	for button in [resume_button,replay_button,abandon_button]:button.visible=not confirming_abandon
@@ -161,6 +174,8 @@ func _update_layout() -> void:
 	for i in range(hero_panels.size()):
 		hero_panels[i].position=Vector2(12+(i%2)*(width+8),72+int(i/2.0)*114)
 		hero_panels[i].size=Vector2(width,106)
+	if wave_counter!=null:
+		wave_counter.position=Vector2(12,300);wave_counter.size=Vector2(safe_rect.size.x-24,28)
 	if pause_layer!=null:
 		pause_layer.position=Vector2.ZERO;pause_layer.size=view.size
 		var card_size:=Vector2(minf(292,safe_rect.size.x-32),250)
@@ -182,3 +197,33 @@ func _sync_projection() -> void:
 	zoom = maxf(zoom,maxf(center.y/maxf(1,center.y-rect.position.y),(target.y-center.y)/maxf(1,rect.end.y-center.y)))
 	camera.size /= zoom * 1.002
 	floor_canvas.sync_view()
+
+func _mode_label(font_size: int) -> Label:
+	var label:=Label.new();label.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size",font_size)
+	label.add_theme_color_override("font_color",Color("ffd16a"))
+	label.add_theme_color_override("font_outline_color",Color("173a70"))
+	label.add_theme_constant_override("outline_size",3)
+	return label
+
+func _present_infinite() -> void:
+	if not infinite_mode or wave_counter==null:return
+	var epoch: int=floori((simulation.wave_number-1)/10.0)
+	if epoch!=_arena_epoch:
+		var id: StringName=rotation_chooser.call(chosen_arena) if rotation_chooser.is_valid() else fallback_choice.next_excluding(chosen_arena)
+		if id==chosen_arena or id==&"reference" or not Catalog.ENTRIES.has(id):id=fallback_choice.next_excluding(chosen_arena)
+		chosen_arena=id;arena_definition=Catalog.definition(id);floor_canvas.set_definition(arena_definition)
+		_arena_epoch=epoch;_sync_projection()
+	if _history_wave!=simulation.wave_number:
+		var retained: Dictionary={}
+		for unit in simulation.all_units():retained[unit.combat_id]=true
+		action_presenter.prune_history(retained)
+		_history_wave=simulation.wave_number
+	wave_counter.text=("Défaite · Vague %d" if simulation.result=="DEFAITE" else "Vague %d")%simulation.wave_number
+	countdown.visible=simulation.infinite.waiting and simulation.result=="EN COURS"
+	if countdown.visible:
+		countdown.text=str(maxi(1,ceili(simulation.infinite.remaining-0.000001)))
+		var center: Vector2=camera.unproject_position(Vector3.ZERO)*(render_box.size/Vector2(viewport_3d.size))
+		center.y=clampf(center.y,wave_counter.get_global_rect().end.y+62,safe_rect.end.y-62)
+		countdown.position=center-Vector2(80,54);countdown.size=Vector2(160,108)

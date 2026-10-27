@@ -9,5 +9,11 @@ func _init() -> void:
 		if id != &"reference": choices.append(id)
 	rng.randomize()
 func next() -> StringName:
+	return next_excluding(&"")
+
+func next_excluding(excluded: StringName) -> StringName:
 	draws += 1
-	return choices[rng.randi_range(0, choices.size() - 1)]
+	var pool: Array[StringName] = []
+	for id in choices:
+		if id != excluded: pool.append(id)
+	return pool[rng.randi_range(0, pool.size() - 1)]

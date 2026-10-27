@@ -190,3 +190,12 @@ func _heal_origin(target_id: int, at: Vector3) -> Vector3:
 		if snapshot.definition != null:
 			return at + snapshot.transform.basis * snapshot.definition.heal_effect_origin
 	return at
+
+func prune_history(retained: Dictionary) -> void:
+	# Actor IDs never repeat. Only finished lifetimes are forgotten, without
+	# resetting ongoing hero animations, effects or their deduplication state.
+	for actor_id in _sequences.keys():
+		if not retained.has(actor_id): _sequences.erase(actor_id)
+	for actor_id in _dead_ids.keys():
+		if not retained.has(actor_id): _dead_ids.erase(actor_id)
+	booster.prune_history(retained)

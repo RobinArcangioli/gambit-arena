@@ -41,7 +41,7 @@ func _ready() -> void:
 	home_lighting = HomeLighting.new();background.add_child(home_lighting)
 	home_page = Control.new();home_page.mouse_filter = Control.MOUSE_FILTER_IGNORE;add_child(home_page)
 	team_button = _button("Équipe");team_button.pressed.connect(open_team)
-	arena_button = _button("Arène");arena_button.pressed.connect(open_arena)
+	arena_button = _button("Mode Infini");arena_button.pressed.connect(open_arena)
 	add_child(guard)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
@@ -75,6 +75,8 @@ func open_arena() -> void:
 	combat = ArenaPage.instantiate()
 	combat.save_path = save_path
 	combat.chooser = arena_choice.next
+	combat.rotation_chooser = arena_choice.next_excluding
+	combat.infinite_mode = true
 	combat.home_requested.connect(return_home)
 	add_child(combat)
 	home_page.hide();background.hide();route = &"arena"

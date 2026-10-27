@@ -11,6 +11,9 @@ const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
 const Pattern = preload("res://scripts/enemies/enemy_director.gd")
 const Bounds = preload("res://scripts/arena/arena_bounds.gd")
 const Wave = preload("res://scripts/waves/wave_schedule.gd")
+const InfiniteSchedule = preload("res://scripts/waves/infinite_schedule.gd")
+var infinite_mode: bool = false
+var infinite := InfiniteSchedule.new()
 const ANNE = preload("res://data/party/anne.tres")
 const MAKO = preload("res://data/party/mako.tres")
 const ENEMY = preload("res://data/party/skeleton.tres")
@@ -58,7 +61,8 @@ func reset() -> void:
 	terminal_count = 0
 	wave_number = 1
 	feedback = ""
-	wave.reset(total_per_wave, max_alive)
+	infinite.reset()
+	wave.reset(InfiniteSchedule.SIZE if infinite_mode else total_per_wave, InfiniteSchedule.SIZE if infinite_mode else max_alive)
 	for profile in [ANNE, MAKO]:
 		var unit := Unit.new()
 		unit.configure_party(profile)
@@ -70,6 +74,8 @@ func reset() -> void:
 		world.add_child(unit)
 		unit.place(Vector2(-0.65, 0.65) if profile == ANNE else Vector2(0.65, -0.65))
 		heroes.append(unit)
+		if infinite_mode: unit.place(Vector2(-0.425 if profile == ANNE else 0.425, 1.7))
+	if infinite_mode: _spawn_infinite_wave()
 
 func living_heroes() -> Array[Unit]:
 	var alive: Array[Unit] = []
@@ -146,7 +152,19 @@ func advance(delta: float, paused: bool = false) -> void:
 	if living_heroes().is_empty():
 		_finish("DEFAITE")
 		return
-	if wave.issued >= wave.total and enemies.is_empty():
+	if infinite_mode:
+		if not infinite.waiting and wave.issued >= wave.total and enemies.is_empty():
+			infinite.begin_wait()
+		elif infinite.waiting and infinite.advance(dt):
+			wave_number += 1
+			wave.reset(InfiniteSchedule.SIZE, InfiniteSchedule.SIZE)
+			_spawn_infinite_wave()
+			# Completed enemy lifetimes must not accumulate in an endless run.
+			var keep: Dictionary = {}
+			for unit in heroes:
+				if _death_ids.has(unit.combat_id): keep[unit.combat_id] = true
+			_death_ids = keep
+	elif wave.issued >= wave.total and enemies.is_empty():
 		if wave_number >= wave_count:
 			_finish("VICTOIRE")
 			return
@@ -167,7 +185,7 @@ func advance(delta: float, paused: bool = false) -> void:
 				unit.focus_state = unit.desired_target.state
 			if not unit.pending.is_empty(): feedback = "%s : %s lancee." % [unit.display_name, "Booster" if unit.desired_skill == &"booster" else "Soin" if unit.desired_skill == &"heal" else "Foudre" if unit.desired_skill == &"lightning" else "Attaque"]
 			unit.pending.clear()
-	if wave.advance(dt, enemies.size()):
+	if not infinite_mode and wave.advance(dt, enemies.size()):
 		for attempt in range(20):
 			if add_enemy(Pattern.spawn_position((spawned + attempt) % 20)): break
 	_collect_visual_events(all_units())
@@ -380,3 +398,13 @@ func _collect_visual_events(units: Array[Unit]) -> void:
 			for values in unit.action.take_visual_events(): _append_visual_event(values)
 	for values in _pending_deaths: _append_visual_event(values)
 	_pending_deaths.clear()
+
+func _spawn_infinite_wave() -> void:
+	var occupied: Array[Vector2] = []
+	for unit in all_units():
+		if Executor.living(unit): occupied.append(unit.mover.ground_position)
+	var positions: Array[Vector2] = InfiniteSchedule.formation(occupied)
+	assert(positions.size() == InfiniteSchedule.SIZE, "Infinite wave needs six free NE slots")
+	for at in positions:
+		var accepted: bool = add_enemy(at)
+		assert(accepted, "Prevalidated infinite formation must spawn atomically")

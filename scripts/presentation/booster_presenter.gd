@@ -56,3 +56,9 @@ func _release(effect: Dictionary) -> void:
 
 func clear_visuals() -> void:
 	for effect in effects.duplicate():_release(effect)
+
+func prune_history(retained: Dictionary) -> void:
+	for id in _sequences.keys():
+		if not retained.has(id): _sequences.erase(id)
+	for id in _dead.keys():
+		if not retained.has(id): _dead.erase(id)
