@@ -1,6 +1,31 @@
 extends "res://scripts/combat/stats_actor.gd"
 const Navigator = preload("res://scripts/movement/local_navigator.gd")
 var navigation := Navigator.new()
+const BuffState = preload("res://scripts/buffs/buff_state.gd")
+var buffs := BuffState.new()
+var personal_elapsed: float = 0.0
+var personal_delta: float = 0.0
+var personal_step_scale: float = 1.0
+var death_time_scale: float = 1.0
+var _buff_actor_state
+
+func advance_time(combat_dt: float) -> float:
+	personal_delta = 0.0
+	if not is_finite(combat_dt) or combat_dt <= 0.0: return 0.0
+	if state != _buff_actor_state:
+		buffs.clear()
+		_buff_actor_state = state
+	if not state.alive:
+		buffs.clear()
+		return 0.0
+	personal_delta = buffs.advance(combat_dt)
+	personal_step_scale = personal_delta / combat_dt
+	personal_elapsed += personal_delta
+	return personal_delta
+
+func _clear_buffs_on_death() -> void:
+	death_time_scale = buffs.multiplier()
+	buffs.clear()
 const Mover = preload("res://scripts/movement/ground_mover.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
 const Profile = preload("res://scripts/party/party_profile.gd")
@@ -28,6 +53,13 @@ func _init() -> void:
 
 func configure_party(profile: Profile) -> void:
 	configure(profile)
+	buffs.clear()
+	_buff_actor_state = state
+	state.died.connect(_clear_buffs_on_death)
+	personal_elapsed = 0.0
+	personal_delta = 0.0
+	personal_step_scale = 1.0
+	death_time_scale = 1.0
 	actor_key = profile.actor_key
 	display_name = profile.display_name
 	team = profile.team

@@ -130,11 +130,15 @@ func advance(delta: float, paused: bool = false) -> void:
 		return
 	if paused or not clock.permits_gameplay() or not is_finite(delta) or delta <= 0.0: return
 	var dt: float = clock.step(delta)
+	# Freeze the accepted personal steps before effects: a buff received during this
+	# tick starts affecting the next tick, independent of actor processing order.
+	for unit in all_units():
+		if Executor.living(unit): unit.advance_time(dt)
 	# Stable order: Anne, Mako, then enemy creation order. Dead actors never retaliate.
 	for unit in all_units():
 		if not Executor.living(unit): continue
 		var resolved_before: bool = unit.action.resolved
-		unit.action.advance(dt)
+		unit.action.advance(dt, false, unit.personal_delta)
 		if not resolved_before and unit.action.resolved and unit.action.outcome in ["impact", "soin", "PV pleins", "hors portee"]:
 			if unit.action.applied_damage > 0: hits += 1
 	_collect_visual_events(all_units())
@@ -150,7 +154,7 @@ func advance(delta: float, paused: bool = false) -> void:
 		wave.reset(total_per_wave, max_alive)
 	for unit in all_units():
 		if Executor.living(unit): _plan(unit)
-	_move(dt)
+	_move(dt, true)
 	for unit in all_units():
 		if not Executor.living(unit) or unit.action.active or not Executor.living(unit.desired_target): continue
 		if Executor.distance_between(unit, unit.desired_target) > Executor.skill_reach(unit.desired_skill): continue
@@ -171,7 +175,7 @@ func advance(delta: float, paused: bool = false) -> void:
 		unit.present()
 
 static func _row(unit: Unit) -> Dictionary:
-	return {"id": unit.combat_id, "team_slot": unit.team_slot, "health": unit.state.health, "max_health": unit.state.max_health, "position": unit.mover.ground_position}
+	return {"id": unit.combat_id, "team_slot": unit.team_slot, "buffs": unit.buffs.snapshot(), "time_scale": unit.buffs.multiplier(), "health": unit.state.health, "max_health": unit.state.max_health, "position": unit.mover.ground_position}
 
 func snapshot(unit: Unit) -> Dictionary:
 	var allies: Array = []
@@ -247,22 +251,27 @@ func request_manual(key: StringName, skill: StringName) -> bool:
 	feedback = "%s : %s en attente." % [unit.display_name, "Soin" if skill == &"heal" else "Foudre" if skill == &"lightning" else "Attaque"]
 	return true
 
-func _move(dt: float) -> void:
+func _move(dt: float, time_prepared: bool = false) -> void:
 	if not is_finite(dt) or dt <= 0: return
 	var units: Array[Unit] = []
 	for unit in all_units():
-		if Executor.living(unit): units.append(unit)
+		if Executor.living(unit):
+			if not time_prepared: unit.advance_time(dt)
+			units.append(unit)
 	var points: Array[Vector2] = []
 	var requests: Array[Vector2] = []
 	var corrections: Array[bool] = []
+	var movement_limits: Array[float] = []
 	for unit in units:
 		points.append(unit.mover.ground_position)
 		requests.append(Vector2.ZERO)
 		corrections.append(unit.team != 0 and not unit.action.active)
+		movement_limits.append(unit.mover.speed * unit.personal_delta)
 	for point in navigation_obstacles:
 		points.append(point)
 		requests.append(Vector2.ZERO)
 		corrections.append(false)
+		movement_limits.append(0.0)
 	navigation_searches_last_tick = 0
 	for order in range(units.size()):
 		var index: int = (order + navigation_cursor) % units.size()
@@ -283,15 +292,15 @@ func _move(dt: float) -> void:
 			var destination := Vector2(unit.desired_target.position.x, unit.desired_target.position.z)
 			var before_searches: int = unit.navigation.searches
 			requests[index] = unit.navigation.request(start, destination, unit.desired_target.combat_id,
-				reach, unit.mover.speed, dt, obstacles, navigation_searches_last_tick < MAX_NAV_SEARCHES_PER_TICK)
+				reach, unit.mover.speed, unit.personal_delta, obstacles, navigation_searches_last_tick < MAX_NAV_SEARCHES_PER_TICK)
 			navigation_searches_last_tick += unit.navigation.searches - before_searches
 		else:
 			unit.mover.stopping_distance = maxf(0.1, reach - 0.2)
-			unit.mover.step(dt)
+			unit.mover.step(unit.personal_delta)
 			requests[index] = unit.mover.ground_position - start
 			unit.mover.ground_position = start
 	if not units.is_empty(): navigation_cursor = (navigation_cursor + 1) % units.size()
-	var positions: Array[Vector2] = Crowd.solve(points, requests, corrections, dt)
+	var positions: Array[Vector2] = Crowd.solve(points, requests, corrections, dt, movement_limits)
 	for i in range(units.size()):
 		var unit: Unit = units[i]
 		var movement: Vector2 = positions[i] - points[i]
@@ -307,7 +316,7 @@ func _move(dt: float) -> void:
 				unit.mover.state = unit.Mover.State.MOVING if movement.length_squared() > 0.0000000001 else unit.Mover.State.BLOCKED
 		else: unit.mover.state = unit.Mover.State.NO_TARGET
 		if movement.length_squared() > 0.00000001:
-			unit.gait += dt
+			unit.gait += unit.personal_delta
 			unit.mover.facing = movement.normalized()
 		unit.position = Vector3(positions[i].x, 0, positions[i].y)
 
@@ -327,6 +336,7 @@ func _finish(outcome: String) -> void:
 func _dispose(unit) -> void:
 	if not is_instance_valid(unit): return
 	unit.action.retire()
+	unit.buffs.clear()
 	_collect_visual_events([unit])
 	unit.pending.clear()
 	unit.clear_intention()
@@ -355,7 +365,8 @@ func _record_death(unit: Unit) -> void:
 	_pending_deaths.append({"kind": "death", "run_id": run_id, "actor_id": unit.combat_id,
 		"source_id": unit.combat_id, "target_id": unit.combat_id, "action_id": 0,
 		"skill": "", "outcome": "death", "damage": 0, "healing": 0,
-		"position": unit.position, "facing": unit.mover.facing, "game_time": clock.elapsed})
+		"position": unit.position, "facing": unit.mover.facing, "game_time": clock.elapsed,
+		"time_scale": unit.death_time_scale})
 
 func _append_visual_event(values: Dictionary) -> void:
 	if _events.size() >= MAX_VISUAL_EVENTS: _events.pop_front()

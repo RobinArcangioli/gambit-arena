@@ -73,18 +73,22 @@ func _reject(reason: String) -> int:
 	last_rejection = reason
 	return 0
 
-func advance(dt: float, paused: bool = false) -> void:
+func advance(dt: float, paused: bool = false, personal_dt: float = -1.0) -> void:
 	if retired or paused or clock == null or not clock.permits_gameplay() or not is_finite(dt) or dt <= 0.0:
 		return
 	if not living(actor) or (_bound_state != null and actor.state != _bound_state):
 		retire()
 		return
+	# Coordinators prepare all personal clocks before any actor resolves an effect.
+	# Direct executor laboratories can still supply combat time through this adapter.
+	var local_dt: float = actor.advance_time(dt) if personal_dt < 0.0 else personal_dt
+	if not is_finite(local_dt) or local_dt < 0.0: return
 	for skill in cooldowns.keys():
-		var left: float = maxf(0.0, cooldowns[skill] - dt)
+		var left: float = maxf(0.0, cooldowns[skill] - local_dt)
 		cooldowns[skill] = 0.0 if left < 0.000001 else left
 	mana = minf(actor.mana_capacity, mana + actor.mana_regeneration * dt)
 	var was_active: bool = active
-	super.advance(dt)
+	super.advance(local_dt)
 	if was_active and not active and phase == "TERMINEE": _record_visual(_visual_values("end"))
 
 func _valid_pair(source: StatsActor, target: StatsActor) -> bool:

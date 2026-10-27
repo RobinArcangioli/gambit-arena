@@ -13,8 +13,9 @@ static func safe_delta(delta: float) -> float:
 	return clampf(delta, 0.0, MAX_DELTA)
 
 static func solve(points: Array[Vector2], requests: Array[Vector2],
-		correction_enabled: Array[bool], delta: float) -> Array[Vector2]:
+		correction_enabled: Array[bool], delta: float, movement_limits: Array[float] = []) -> Array[Vector2]:
 	assert(points.size() == requests.size() and points.size() == correction_enabled.size())
+	assert(movement_limits.is_empty() or movement_limits.size() == points.size())
 	var result: Array[Vector2] = points.duplicate()
 	var dt: float = safe_delta(delta)
 	if dt <= 0.0:
@@ -33,7 +34,9 @@ static func solve(points: Array[Vector2], requests: Array[Vector2],
 					correction += normal * (DIAMETER - distance) * 0.5
 			correction = correction.limit_length(SEPARATION_SPEED * dt)
 			result[index] = _sweep(index, result, correction)
-		result[index] = _sweep(index, result, requests[index].limit_length(1.2 * dt))
+		var limit: float = 1.2 * dt if movement_limits.is_empty() else movement_limits[index]
+		if not is_finite(limit) or limit < 0.0: limit = 0.0
+		result[index] = _sweep(index, result, requests[index].limit_length(limit))
 	return result
 
 static func _tie_normal(index: int, other: int) -> Vector2:

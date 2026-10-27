@@ -41,7 +41,7 @@ func capture(units: Array, id: int) -> void:
 		bindings[unit.combat_id] = {"view": unit.visual,
 			"transform": unit.visual.global_transform if is_instance_valid(unit.visual) else unit.global_transform,
 			"definition": unit.appearance, "position": unit.position, "facing": unit.mover.facing,
-			"alive": unit.state.alive, "casting": unit.action.casting(), "action_id": unit.action.action_id,
+			"time_scale": unit.buffs.multiplier(), "alive": unit.state.alive, "casting": unit.action.casting(), "action_id": unit.action.action_id,
 			"skill": String(unit.action.last_skill), "elapsed": unit.action.elapsed, "windup": unit.action._windup()}
 
 func present(units: Array, values: Array[Dictionary], dt: float, id: int, terminal: bool = false) -> void:
@@ -51,10 +51,11 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 	lightning.advance_visual(bindings, dt)
 	# Advance previously existing visuals first. New impacts/deaths begin at this tick's end.
 	for ghost in ghosts.duplicate():
-		ghost.age += dt
+		var personal_dt: float = dt * float(ghost.get("time_scale", 1.0))
+		ghost.age += personal_dt
 		var view: Node3D = ghost.view
 		if is_instance_valid(view):
-			if view is View: view.advance_visual(dt)
+			if view is View: view.advance_visual(personal_dt)
 			else:
 				view.transform = ghost.transform
 				view.rotate_x(minf(1.0, ghost.age / 0.75) * PI * 0.5)
@@ -67,7 +68,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 	for unit in units:
 		if not unit.state.alive or not is_instance_valid(unit.visual): continue
 		current[unit.combat_id] = true
-		unit.advance_visual(dt)
+		unit.advance_visual(dt * unit.personal_step_scale)
 		if unit.visual is View:
 			var action = unit.action
 			unit.visual.sync_action(enabled and action.active, action.last_skill, action.action_id, action.elapsed, action._windup(), action._recovery(), enabled and terminal)
@@ -86,7 +87,7 @@ func consume(event: Dictionary) -> void:
 	var kind: String = event.get("kind", "")
 	if kind == "death":
 		lightning.consume(event)
-		_death(int(event.actor_id))
+		_death(int(event.actor_id), float(event.get("time_scale", 1.0)))
 		return
 	var source_id: int = int(event.get("source_id", 0))
 	var sequence: int = int(event.get("sequence", 0))
@@ -103,7 +104,7 @@ func consume(event: Dictionary) -> void:
 			view.react_hit()
 			reactions_played += 1
 
-func _death(actor_id: int) -> void:
+func _death(actor_id: int, time_scale: float = 1.0) -> void:
 	if _dead_ids.has(actor_id): return
 	_dead_ids[actor_id] = true
 	for effect in heal_effects.duplicate():
@@ -127,7 +128,7 @@ func _death(actor_id: int) -> void:
 	if ghosts.size() >= MAX_GHOSTS:
 		var oldest: Dictionary = ghosts.pop_front()
 		_release_ghost(oldest)
-	ghosts.append({"view": view, "age": 0.0, "duration": duration, "transform": view.transform, "actor_id": actor_id})
+	ghosts.append({"view": view, "age": 0.0, "duration": duration, "transform": view.transform, "actor_id": actor_id, "time_scale": time_scale})
 	bindings.erase(actor_id)
 	deaths_played += 1
 

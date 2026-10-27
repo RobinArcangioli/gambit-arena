@@ -1,3 +1,43 @@
+# BUFFS-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour le socle des buffs et du temps personnel.
+Attaques, incantations, récupération, recharges, déplacements et modèles utilisent le
+pas propre à chaque acteur ; mana, durée des buffs et effets autonomes gardent le temps
+normal. Laboratoire isolé conservé ; aucune nouvelle compétence dans le jeu à cette étape.
+56 bancs / 3 719 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour la clôture, sans relancer les tests : code, scènes, configuration,
+assets et APK demeurent identiques à la livraison validée. Gambits Android conservés.
+APK normal 0.1.0-buffs001 (55), SHA-256
+`5a13e0b27641d448bd6a5ce7ffd4e3a54fe432cea0693a80f8c97c39c09c0851`.
+APK laboratoire 0.1.0-buffs001-lab (55), SHA-256
+`5efb3f08aeaf0cc3a314b08e2ab30ab6256173b2d5021a54e1c184e0af880d78`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : BUFFS-002,
+Booster dans les compétences de Mako et les gambits, puis GRAPHICS-010 et UI-005.
+Les états précédents ci-dessous sont historiques.
+
+# BUFFS-001 — États de buffs et temps personnel — en recette
+
+GO reçu après clôture de GAMBITS-003 `6b527253c086861f8d8108e75498487169230817`
+(sauvegarde restaurée, 716 fichiers vérifiés). Buffs de combat séparés des définitions,
+horloge propre à chaque participant, expiration sur le temps normal du combat.
+Attaques, incantations, récupération, recharges, déplacement et animations suivent
+le temps personnel ; mana, vagues, collisions et VFX autonomes gardent leur temps normal.
+Aucun buff appliqué par défaut dans le jeu, aucune nouvelle compétence à cette étape.
+Booster jouable et son filtrage des cibles appartiennent à BUFFS-002 ; montre à GRAPHICS-010.
+
+56 bancs / 3 719 contrôles réussis sans erreur ni avertissement moteur, dont 75 nouveaux.
+Aperçu GPU PC piloté et recette tactile Galaxy A16 : comparaison des casts, mana,
+pause figée et reprise explicite au retour d'arrière-plan. Aucun benchmark FPS.
+APK normal 0.1.0-buffs001 (55), SHA-256
+`5a13e0b27641d448bd6a5ce7ffd4e3a54fe432cea0693a80f8c97c39c09c0851`.
+APK laboratoire 0.1.0-buffs001-lab (55), SHA-256
+`5efb3f08aeaf0cc3a314b08e2ab30ab6256173b2d5021a54e1c184e0af880d78`.
+L'APK normal est remis sur le téléphone, gambits d'origine identiques octet pour octet.
+F6 : `scenes/debug/personal_time_lab.tscn` ; recette et architecture détaillées dans
+[BUFFS-001](docs/steps/BUFFS-001.md). Étape en attente de validation avant commit et
+sauvegarde de clôture. Prochain GO après clôture : BUFFS-002, puis GRAPHICS-010 et UI-005.
+Les descriptions précédentes ci-dessous sont historiques.
+
 # GAMBITS-003 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » : critère Allié sans condition, ordre

@@ -1,3 +1,28 @@
+# BUFFS-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour le socle des buffs et du temps personnel.
+Attaques, incantations, récupération, recharges, déplacements et modèles utilisent le
+pas propre à chaque acteur ; mana, durée des buffs et effets autonomes gardent le temps
+normal. Laboratoire isolé conservé ; aucune nouvelle compétence dans le jeu à cette étape.
+56 bancs / 3 719 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour la clôture, sans relancer les tests : code, scènes, configuration,
+assets et APK demeurent identiques à la livraison validée. Gambits Android conservés.
+APK normal 0.1.0-buffs001 (55), SHA-256
+`5a13e0b27641d448bd6a5ce7ffd4e3a54fe432cea0693a80f8c97c39c09c0851`.
+APK laboratoire 0.1.0-buffs001-lab (55), SHA-256
+`5efb3f08aeaf0cc3a314b08e2ab30ab6256173b2d5021a54e1c184e0af880d78`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : BUFFS-002,
+Booster dans les compétences de Mako et les gambits, puis GRAPHICS-010 et UI-005.
+Les états précédents ci-dessous sont historiques.
+
+# Avancement — BUFFS-001 en recette
+
+GAMBITS-003 validée et clôturée au commit `6b52725`, sauvegarde restaurée et vérifiée
+(716 fichiers). Le GO suivant autorise BUFFS-001, maintenant implémentée et en recette :
+états de buffs, temps personnel et laboratoire isolé. Booster jouable (BUFFS-002) et
+montre (GRAPHICS-010) restent à réaliser après validation et GO de chaque étape.
+Les décisions du plan ci-dessous restent applicables ; ses anciens statuts sont historiques.
+
 # Roadmap validée — GAMBITS-003 en recette
 
 Le GO du 27 octobre 2026 valide ce plan et autorise GAMBITS-003, maintenant implémentée.
