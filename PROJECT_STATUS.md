@@ -1,3 +1,43 @@
+# GRAPHICS-011 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » après le choix B — Fin et lisible : barres
+néon fines, largeur monde 42 → 29,4 (−30 %), panneaux à longueur inchangée avec un trait
+légèrement plus épais. Profil visuel commun et glow discret, sans scintillement.
+58 bancs / 4 001 contrôles et recette tactile Galaxy A16 déjà réussis. Seuls les documents
+sont actualisés pour cette clôture : code, scènes, ressources, shader, configuration et
+les deux APK restent identiques à la livraison validée. Les tests ne sont pas relancés.
+Gambits conservés ; rendu clair/sombre et combat vérifiés sur le Galaxy, APK normal remis.
+APK normal 0.1.0-graphics011 (58), SHA-256
+`937951eb510873159c201e43eed516e4dc88d59793e914e32c23b06bc571f887`.
+APK essais 0.1.0-graphics011-lab (58), SHA-256
+`8ead02ad9e147bd7afe99d5845e53f3f56bc3076dab76459b3196fb10c4d8e49`.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : UI-005,
+qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# GRAPHICS-011 — Barres néon fines — en recette
+
+Demande directe du propriétaire après GRAPHICS-010 clôturée (`eec1310a599051e5391740efcedd733c575e3078`,
+756 fichiers vérifiés). Nouvelle étape visuelle avant UI-005. Le propriétaire choisit
+B — Fin et lisible parmi les trois essais Godot ; ce choix ne vaut pas encore clôture.
+Barres au-dessus de tous les héros et ennemis : longueur 42 → 29,4 (−30 %), trait de
+1,25 au lieu de 3,5. Panneaux : même rendu, trait de 1,9 au lieu de 5, longueur inchangée.
+PV rouges, mana bleue et incantation dorée facultative, léger glow local sans scintillement.
+Profil visuel commun, sans modification des valeurs, de la logique ou du HUD hors combat.
+
+58 bancs / 4 001 contrôles existants réussis sans erreur ni avertissement moteur.
+Captures GPU A/B/C sur arènes claire et sombre : quatre barres de monde à 29,4 et deux
+panneaux conservant leur largeur de 171 sur le viewport 540×960. Aucun nœud orphelin.
+Recette Android et preuves dans la livraison ; aucun nouveau benchmark FPS.
+APK normal 0.1.0-graphics011 (58), SHA-256
+`937951eb510873159c201e43eed516e4dc88d59793e914e32c23b06bc571f887`.
+APK laboratoire 0.1.0-graphics011-lab (58), SHA-256
+`8ead02ad9e147bd7afe99d5845e53f3f56bc3076dab76459b3196fb10c4d8e49`.
+F6 : `scenes/debug/neon_bars_lab.tscn` pour comparer A/B/C, arène claire/sombre et combat.
+Détails : [GRAPHICS-011](docs/steps/GRAPHICS-011.md). Validation utilisateur attendue avant
+commit et sauvegarde de clôture. Prochain GO après clôture : UI-005, puis STEP-029/030.
+Les descriptions précédentes ci-dessous sont historiques.
+
 # GRAPHICS-010 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » après le choix B — Équilibré : montre dorée

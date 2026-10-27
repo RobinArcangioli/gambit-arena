@@ -20,7 +20,7 @@ func _ready() -> void:
 		portrait=TextureRect.new();portrait.texture=PORTRAITS[hero_id]
 		portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		portrait.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(portrait)
-		bars=Bars.new();bars.bar_height=5;bars.bar_gap=4;content.add_child(bars)
+		bars=Bars.new();bars.apply_style(Bars.DEFAULT_STYLE,true);content.add_child(bars)
 	resized.connect(_layout);_layout()
 func _layout() -> void:
 	if caption==null:return
