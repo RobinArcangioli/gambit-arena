@@ -1,3 +1,34 @@
+# UI-004 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les gambits hors combat et le correctif
+Équipe : cartes en accès direct, sans sélection persistante. Validation globale sans
+précisions supplémentaires. APK normal 0.1.0-ui004 (47), SHA-256
+`527b5cb468049fef6bd421ec4b756d85edc0c6cf950278085f957024b13f74b7`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 49 bancs / 3 028 contrôles déjà réussis ne sont pas
+relancés. Aucune nouvelle mesure FPS. Les réglages Android initiaux restent conservés.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. UI-005, recette intégrée du
+parcours complet PC/Android, attend le prochain GO ; puis STEP-029 et STEP-030.
+GAMEPLAY-003 reste annulée. Les mentions de recette ci-dessous sont historiques.
+
+# UI-004 — Gambits hors combat et correctif Équipe en recette — 27 octobre 2026
+
+GO reçu après UI-003 clôturée au commit `c8497aac5760bc4672c80cdff7f80745749e3a49`.
+F5 → Équipe → héros → Gambits : trois règles éditables, activation, ordre, compétence,
+condition et seuil. Appliquer enregistre et revient à la même fiche ; Annuler/Retour
+abandonnent le brouillon. Même fichier party_rules_v2.json et validation que le combat.
+L'arène recharge ces règles ; les modifications d'un héros préservent celles de l'autre.
+Correctif demandé : plus de texte, surlignage ou état de sélection persistant dans Équipe.
+Les cartes ouvrent directement leur fiche ; le retour libère leur focus. Identité conservée
+uniquement pour router la bonne fiche et les gambits. Fonds et thème nuit/or conservés.
+49 bancs / 3 028 contrôles réussis ; captures GPU PC et recette native Galaxy A16.
+APK 0.1.0-ui004 (47), SHA-256 `527b5cb468049fef6bd421ec4b756d85edc0c6cf950278085f957024b13f74b7`.
+Téléphone laissé sur les gambits d'Anne ; réglages Android initiaux rétablis à l'identique
+après essais de sauvegarde/annulation/relance. Aucun changement de logique de combat.
+Voir docs/gambits-page.md et docs/steps/UI-004.md. Validation attendue, aucun commit UI-004.
+Après validation : commit et sauvegarde vérifiée ; GO suivant pour UI-005, puis STEP-029/030.
+GAMEPLAY-003 reste annulée. Les états précédents ci-dessous sont historiques.
+
 # UI-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la page Équipe : Mako/Anne en Idle,

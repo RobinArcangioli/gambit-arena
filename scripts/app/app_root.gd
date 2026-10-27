@@ -1,5 +1,6 @@
 extends Control
 ## Routes own scene lifetime. No combat exists on Home; configuration remains in its file.
+const GambitsPage = preload("res://scenes/app/gambits_page.tscn")
 const HeroPage = preload("res://scenes/app/hero_page.tscn")
 const TeamPage = preload("res://scenes/app/team_page.tscn")
 const ArenaPage = preload("res://scenes/app/arena_page.tscn")
@@ -19,6 +20,7 @@ var team_button: Button
 var combat
 var team_page
 var hero_page
+var gambits_page
 var selected_hero_id: StringName
 signal hero_selected(hero_id: StringName)
 var route: StringName = &"home"
@@ -81,6 +83,8 @@ func return_home() -> void:
 		combat.touch_router.cancel_gesture()
 		combat.process_mode = Node.PROCESS_MODE_DISABLED
 		remove_child(combat);combat.queue_free();combat = null
+	if gambits_page != null:
+		gambits_page.set_active(false);remove_child(gambits_page);gambits_page.queue_free();gambits_page = null
 	if hero_page != null:
 		hero_page.set_active(false)
 		remove_child(hero_page);hero_page.queue_free();hero_page = null
@@ -102,7 +106,9 @@ func go_back() -> void:
 	var now: int = Time.get_ticks_msec()
 	if now - _last_back_msec < 180: return
 	_last_back_msec = now
-	if hero_page != null:
+	if gambits_page != null:
+		return_hero()
+	elif hero_page != null:
 		return_team()
 	elif team_page != null:
 		return_home()
@@ -122,7 +128,8 @@ func _notification(what: int) -> void:
 		arena_button.disabled = guard.blocked
 		team_button.disabled = guard.blocked
 		if team_page != null:team_page.set_active(not guard.blocked and route==&"team")
-		if hero_page != null:hero_page.set_active(not guard.blocked)
+		if hero_page != null:hero_page.set_active(not guard.blocked and route==&"hero")
+		if gambits_page != null:gambits_page.set_active(not guard.blocked)
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		if route!=&"home":go_back()
 		# Home is the root route: a repeated Android Back must not close the app.
@@ -134,7 +141,6 @@ func open_team() -> void:
 	team_button.disabled = true
 	guard.acknowledge_resume()
 	team_page = TeamPage.instantiate()
-	team_page.selected_id = selected_hero_id
 	team_page.home_requested.connect(return_home)
 	team_page.hero_selected.connect(_select_team_hero)
 	add_child(team_page)
@@ -147,7 +153,7 @@ func _select_team_hero(id: StringName) -> void:
 	transitioning = true
 	team_page.set_active(false);team_page.hide()
 	hero_page = HeroPage.instantiate();hero_page.hero_id = id
-	hero_page.team_requested.connect(return_team);add_child(hero_page)
+	hero_page.team_requested.connect(return_team);hero_page.gambits_requested.connect(open_gambits);add_child(hero_page)
 	route = &"hero"
 	hero_selected.emit(id)
 	call_deferred("_finish_transition")
@@ -157,4 +163,19 @@ func return_team() -> void:
 	transitioning = true
 	hero_page.set_active(false);remove_child(hero_page);hero_page.queue_free();hero_page = null
 	team_page.show();team_page.set_active(true);route = &"team"
+	call_deferred("_finish_transition")
+
+func open_gambits() -> void:
+	if guard.blocked or transitioning or route!=&"hero":return
+	transitioning = true
+	hero_page.set_active(false);hero_page.hide()
+	gambits_page = GambitsPage.instantiate();gambits_page.hero_id = selected_hero_id;gambits_page.save_path = save_path
+	gambits_page.hero_requested.connect(return_hero);add_child(gambits_page);route = &"gambits"
+	call_deferred("_finish_transition")
+
+func return_hero() -> void:
+	if guard.blocked or transitioning or route!=&"gambits":return
+	transitioning = true
+	gambits_page.set_active(false);remove_child(gambits_page);gambits_page.queue_free();gambits_page = null
+	hero_page.show();hero_page.set_active(true);route = &"hero"
 	call_deferred("_finish_transition")

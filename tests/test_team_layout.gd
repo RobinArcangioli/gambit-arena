@@ -23,7 +23,7 @@ func _ready() -> void:
 		check(page.background.get_rect()==view and view.encloses(page.back_button.get_global_rect()),"provided background fills page and return is safe")
 		for card in page.cards:check(view.encloses(card.get_global_rect()),"each slot fits portrait screen")
 		check(not page.cards[0].get_rect().intersects(page.cards[1].get_rect()) and not page.cards[0].get_rect().intersects(page.cards[2].get_rect()),"grid cells never overlap")
-		check(view.encloses(page.feedback.get_global_rect()),"selection feedback fits screen")
+		check(page.find_children("*","Label",true,false).all(func(l):return not l.text.begins_with("Sélection") and not l.text.begins_with("Choisissez")),"no misleading selection feedback")
 		var selected: Array[StringName]=[];app.hero_selected.connect(func(id):selected.append(id))
 		tap(viewport,page.portraits[0].get_global_rect().get_center());await settle()
 		check(selected==[&"mako"] and app.selected_hero_id==&"mako","touch on rendered model passes through to Mako card once")

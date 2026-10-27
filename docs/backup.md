@@ -1,3 +1,29 @@
+# UI-004 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les gambits hors combat et le correctif
+Équipe : cartes en accès direct, sans sélection persistante. Validation globale sans
+précisions supplémentaires. APK normal 0.1.0-ui004 (47), SHA-256
+`527b5cb468049fef6bd421ec4b756d85edc0c6cf950278085f957024b13f74b7`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 49 bancs / 3 028 contrôles déjà réussis ne sont pas
+relancés. Aucune nouvelle mesure FPS. Les réglages Android initiaux restent conservés.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. UI-005, recette intégrée du
+parcours complet PC/Android, attend le prochain GO ; puis STEP-029 et STEP-030.
+GAMEPLAY-003 reste annulée. Les mentions de recette ci-dessous sont historiques.
+
+# Checkpoint UI-003 vérifié — base de UI-004
+
+Commit c8497aac5760bc4672c80cdff7f80745749e3a49, parent 2d3787fc1aeb50a69a6dfb77ae7744cce723573d.
+Archive gambit-arena-20261027-061311-c8497aac5760.tar.gz, SHA-256
+88ebee540cfaf9a68ecc7a1e4aa96c3cc1be88637f7c7912debac8ce3dc46ee5.
+Restauration sûre /tmp/ui003-checkpoint-restore-z84ouerv : bundle verify, clone/fsck,
+HEAD/parent, arbre propre et 641 fichiers identiques au commit et à la sauvegarde.
+Livraison validée avec APK/preuves : gambit-arena-ui003-delivery-validated-bf5d85a2.tar.gz,
+SHA-256 bf5d85a237abed3b490f654129a4a82706ff34837a0e7c71a503be4063ecf00f.
+Sauvegardes sous /home/arkhane/gambit-arena-backups. Aucun push de UI-003.
+UI-004 est livrée non commitée depuis une copie isolée ; attendre validation avant clôture.
+Les checkpoints suivants sont historiques.
+
 # UI-003 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour les fiches de personnage, avec un correctif

@@ -11,11 +11,9 @@ var background: TextureRect
 var content: Control
 var back_button: Button
 var title: Label
-var feedback: Label
 var cards: Array[Button] = []
 var names: Array[Label] = []
 var portraits: Array[Portrait] = []
-var selected_id: StringName
 var active: bool = true
 var discard_next_step: bool = true
 var visual_time: float = 0
@@ -31,9 +29,9 @@ func _ready() -> void:
 	back_button = Button.new();back_button.text = "‹ Accueil";content.add_child(back_button)
 	back_button.pressed.connect(func():
 		if active:home_requested.emit())
-	title = _label("Équipe",28);feedback = _label("Choisissez un héros",17)
+	title = _label("Équipe",28)
 	for id in Roster.SLOTS:
-		var card := Button.new();card.toggle_mode = id!=&""
+		var card := Button.new();card.toggle_mode = false
 		card.focus_mode = Control.FOCUS_ALL if id!=&"" else Control.FOCUS_NONE
 		card.disabled = id==&""
 		content.add_child(card);cards.append(card)
@@ -52,7 +50,7 @@ func _ready() -> void:
 			portrait.ground_radius = Body.RADIUS;card.add_child(portrait);portraits.append(portrait)
 			card.pressed.connect(_select.bind(id))
 	get_viewport().size_changed.connect(_layout)
-	_layout();_show_selection();set_active(active)
+	_layout();set_active(active)
 
 func _label(text: String, font_size: int) -> Label:
 	var label := Label.new();label.text = text;label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -60,11 +58,7 @@ func _label(text: String, font_size: int) -> Label:
 
 func _select(id: StringName) -> void:
 	if not active or not Roster.PROFILES.has(id):return
-	selected_id = id;_show_selection();hero_selected.emit(id)
-
-func _show_selection() -> void:
-	for i in range(cards.size()):cards[i].set_pressed_no_signal(Roster.SLOTS[i]!=&"" and Roster.SLOTS[i]==selected_id)
-	if feedback != null:feedback.text = "Sélection : "+Roster.caption(selected_id) if selected_id!=&"" else "Choisissez un héros"
+	hero_selected.emit(id)
 
 func _layout() -> void:
 	if background == null:return
@@ -87,12 +81,12 @@ func _layout() -> void:
 			portraits[i].position = Vector2(8,52);portraits[i].size = Vector2(width-16,maxf(1,height-64))
 		else:
 			names[i].position = Vector2(10,(height-40)*0.5);names[i].size = Vector2(width-20,40)
-	feedback.position = Vector2(24,top+height*2+gap+18);feedback.size = Vector2(safe.size.x-48,32)
-	feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 func set_active(enabled: bool) -> void:
 	if active != enabled:discard_next_step = true
 	active = enabled
+	if enabled:
+		for card in cards:card.release_focus()
 	for portrait in portraits:portrait.set_active(enabled)
 	for i in range(cards.size()):cards[i].disabled = not enabled or Roster.SLOTS[i]==&""
 	if back_button != null:back_button.disabled = not enabled

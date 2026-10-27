@@ -34,7 +34,7 @@ func _ready() -> void:
 		team._select(id);await settle();var page=app.hero_page
 		check(app.route==&"hero" and app.combat==null and page.hero_id==id and page.title.text==Roster.caption(id),"correct sheet without combat")
 		check(page.reference.health==Roster.PROFILES[id].max_health and page.health_bar.value==page.health_bar.max_value and page.mana_bar.value==60,"abandoned injuries and mana are not shown")
-		check(page.skill_panels.size()==2 and page.gambits_button.disabled,"two skills and prepared Gambits button")
+		check(page.skill_panels.size()==2 and not page.gambits_button.disabled,"two skills and enabled Gambits button")
 		check(not team.visible and not team.active and team.portraits.all(func(p):return not p.active and p.viewport_3d.render_target_update_mode==SubViewport.UPDATE_DISABLED),"team worlds stop behind sheet")
 		app.notification(NOTIFICATION_APPLICATION_FOCUS_OUT);app.notification(NOTIFICATION_APPLICATION_PAUSED)
 		check(not page.active and page.back_button.disabled,"background blocks page input")
@@ -43,7 +43,7 @@ func _ready() -> void:
 		app.notification(NOTIFICATION_APPLICATION_FOCUS_IN)
 		check(page.active and not team.active,"resume enables only current page")
 		app.return_team();app.return_team();await settle()
-		check(not is_instance_valid(page) and app.hero_page==null and app.route==&"team" and team.active and team.visible and team.selected_id==id,"return keeps selection and frees only sheet")
+		check(not is_instance_valid(page) and app.hero_page==null and app.route==&"team" and team.active and team.visible and team.cards.all(func(c):return not c.button_pressed and not c.has_focus()),"return clears card focus and frees only sheet")
 	for cycle in range(12):
 		app.team_page._select(&"mako" if cycle%2==0 else &"anne");await settle()
 		app.return_team();await settle()

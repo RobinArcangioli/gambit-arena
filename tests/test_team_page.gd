@@ -27,7 +27,7 @@ func _ready() -> void:
 	page.cards[0].pressed.emit();await settle();app.return_team();await settle()
 	page.cards[1].pressed.emit();await settle();app.return_team();await settle()
 	check(emitted==[&"mako",&"anne"] and app.selected_hero_id==&"anne", "selection emits stable identity and returns from each sheet")
-	check(page.cards[1].button_pressed and not page.cards[0].button_pressed,"selection has exclusive visual feedback")
+	check(page.cards.all(func(c):return not c.toggle_mode and not c.button_pressed),"cards are direct links without persistent selection")
 	var before: Array=[]
 	for portrait in page.portraits:
 		check(portrait.character.valid and portrait.character.active_clip==portrait.definition.idle_clip,"actual imported idle is selected")
@@ -53,7 +53,7 @@ func _ready() -> void:
 	check(not is_instance_valid(page) and app.team_page==null and app.combat==null,"Home frees both portrait worlds")
 	for cycle in range(20):
 		app.open_team();await settle()
-		check(app.team_page.selected_id==&"anne" and app.arena_choice.draws==0,"selection survives menu cycles without arena draws")
+		check(app.team_page.cards.all(func(c):return not c.button_pressed) and app.arena_choice.draws==0,"menu cycles leave no selected card or arena draw")
 		app.return_home();await settle()
 		check(app.team_page==null and count_simulations(app)==0,"twenty team visits leave no active preview or simulation")
 	app.open_arena();await settle()

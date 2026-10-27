@@ -1,4 +1,5 @@
 extends Control
+signal gambits_requested
 signal team_requested
 const Reference = preload("res://scripts/app/hero_reference.gd")
 const Router = preload("res://scripts/ui/touch_scroll_router.gd")
@@ -95,8 +96,10 @@ func _build_reference() -> void:
 			_label(box,"Incantation : %s s   ·   Recharge : %s s" % [Reference.number(skill.duration),Reference.number(skill.cooldown)])
 		if skill.id!=&"basic":_label(box,"Mana dépensée à la résolution du sort.",16)
 	gambits_button = Button.new();gambits_button.text = "Gambits"
-	gambits_button.custom_minimum_size.y = 56;gambits_button.disabled = true
-	gambits_button.tooltip_text = "Bientôt disponible";column.add_child(gambits_button)
+	gambits_button.custom_minimum_size.y = 56;gambits_button.disabled = false
+	gambits_button.pressed.connect(func():
+		if active:gambits_requested.emit())
+	column.add_child(gambits_button)
 
 func _layout() -> void:
 	if background == null:return
@@ -114,3 +117,4 @@ func set_active(enabled: bool) -> void:
 	active = enabled
 	if not enabled:touch_router.cancel_gesture()
 	if back_button != null:back_button.disabled = not enabled
+	if gambits_button != null:gambits_button.disabled = not enabled
