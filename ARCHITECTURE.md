@@ -1,3 +1,25 @@
+# GRAPHICS-008 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les disques d'ombre indiquant le gabarit.
+APK 0.1.0-graphics008 (42), SHA-256
+`3cb968ff960280aece6b1636edd06f34fd33120eb7c429a89f5806011f11d8cc`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 40 bancs / 2 541 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. GAMEPLAY-003 reste annulée :
+tailles et contournements conservés. STEP-029 attend un nouveau GO, puis viendra STEP-030.
+Les mentions de recette et de réduction des gabarits suivantes sont historiques.
+
+# GRAPHICS-008 — empreinte de présentation
+
+StatsActor fournit GroundCrowd.RADIUS à CharacterView. La vue crée un FootprintShadow,
+un PlaneMesh dont le shader ne conserve qu'un disque translucide de diamètre 2 × rayon.
+Le modèle et le disque sont des enfants distincts : le modèle peut changer d'échelle ou de
+pose sans fausser l'emprise physique indiquée au sol. Style dans CharacterDefinition,
+shader et composant isolés ; pas de nouvelle collision ni de callback de simulation.
+GAMEPLAY-003 est annulée : gabarits et navigation de GAMEPLAY-002 conservés.
+Voir docs/ground-shadows.md. Les sections suivantes sont historiques.
+
 # GAMEPLAY-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.

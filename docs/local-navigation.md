@@ -1,3 +1,8 @@
+Mise à jour du 27 octobre 2026 : GAMEPLAY-003 est complètement annulée à la demande du
+propriétaire. Les tailles et contournements de GAMEPLAY-002 sont conservés. GRAPHICS-008
+ajoute uniquement des disques d'ombre correspondant au corps au sol. Les mentions de
+réduction ci-dessous retracent l'ancien plan et ne sont plus des étapes à réaliser.
+
 # GAMEPLAY-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.

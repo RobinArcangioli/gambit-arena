@@ -1,5 +1,6 @@
 extends Node3D
 ## Logical actor. The optional child view owns every mesh, rig and animation.
+const GroundBody = preload("res://scripts/crowd/ground_crowd.gd")
 const ActorState = preload("res://scripts/combat/actor_state.gd")
 const ActorProfile = preload("res://scripts/combat/actor_profile.gd")
 const Mannequin = preload("res://scripts/hybrid/proxy_actor.gd")
@@ -37,6 +38,7 @@ func set_appearance(profile: CharacterDefinition, enabled: bool = true) -> void:
 	if profile != null:
 		var candidate := CharacterView.new()
 		candidate.definition = profile
+		candidate.ground_radius = GroundBody.RADIUS
 		add_child(candidate)
 		if candidate.valid:
 			visual = candidate

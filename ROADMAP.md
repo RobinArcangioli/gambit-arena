@@ -1,3 +1,26 @@
+# GRAPHICS-008 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les disques d'ombre indiquant le gabarit.
+APK 0.1.0-graphics008 (42), SHA-256
+`3cb968ff960280aece6b1636edd06f34fd33120eb7c429a89f5806011f11d8cc`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 40 bancs / 2 541 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. GAMEPLAY-003 reste annulée :
+tailles et contournements conservés. STEP-029 attend un nouveau GO, puis viendra STEP-030.
+Les mentions de recette et de réduction des gabarits suivantes sont historiques.
+
+# GRAPHICS-008 — disques d'ombre en recette
+
+GAMEPLAY-003 est complètement annulée à la demande du propriétaire : tailles et
+contournements sont conservés (rayon 0,35, diamètre 0,70, échelle artistique 0,65).
+Chaque personnage possède désormais un disque sombre translucide dimensionné selon
+son corps de collision. Le style est réglable dans la présentation. Voir docs/ground-shadows.md
+et docs/steps/GRAPHICS-008.md. 40 bancs / 2 541 contrôles passent ; 18 captures PC inspectées.
+F6 : scenes/debug/footprint_shadow_lab.tscn ; F8/F5 : Main. APK 0.1.0-graphics008 (42), installé sur Galaxy A16 et laissé en pause.
+Étape non commitée ; attendre validation avant clôture, puis STEP-029 et STEP-030.
+Les mentions de réduction des tailles et de recette ci-dessous sont historiques.
+
 # GAMEPLAY-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.
@@ -164,8 +187,9 @@ leurs identifiants et se dérouleront après ce chantier.
 | GRAPHICS-006 | Clôturée localement — 834f532, sauvegarde vérifiée | Éclair descendant et glow, préparation et impact sur cible réelle |
 | GRAPHICS-007 | Clôturée localement — 440829b, sauvegarde vérifiée | Qualification graphique et facilité de remplacement |
 | GAMEPLAY-002 | Validée — 27 octobre 2026 | Contournement local partagé héros/ennemis aux dimensions actuelles |
-| GAMEPLAY-003 | Plan préparé — après GAMEPLAY-002 | Emprise au sol et modèles plus petits, paramètres cohérents et parcours comparés |
-| STEP-029 | Après GAMEPLAY-003 | Clone neuf, import, export et installation reproductibles |
+| GAMEPLAY-003 | Annulée — 27 octobre 2026 | Tailles et contournements conservés à la demande du propriétaire |
+| GRAPHICS-008 | Validée — 27 octobre 2026 | Disques d’ombre translucides dimensionnés sur l’emprise au sol |
+| STEP-029 | Après GRAPHICS-008 | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |
 
 Le [plan détaillé proposé](docs/handoff/NEXT_STEPS.md) prépare ces étapes ; il ne prétend

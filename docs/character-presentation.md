@@ -1,3 +1,10 @@
+# Extension GRAPHICS-008 — disques au sol
+
+CharacterView possède désormais un disque translucide indépendant du modèle et de ses
+animations. Le rayon est fourni par le corps logique, le style par CharacterDefinition.
+Voir ground-shadows.md. Tailles et contournements conservés ; GAMEPLAY-003 annulée.
+Les descriptions suivantes retracent les premières étapes graphiques.
+
 # Présentation des personnages — GRAPHICS-003
 
 `StatsActor` est un Node3D logique contenant ActorState. Son enfant `Presentation` est

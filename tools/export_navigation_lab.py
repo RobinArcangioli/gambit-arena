@@ -2,6 +2,7 @@
 """Export the navigation lab from an isolated copy; leave Main untouched."""
 import argparse
 import pathlib
+import re
 import shutil
 import subprocess
 import tempfile
@@ -18,7 +19,9 @@ with tempfile.TemporaryDirectory(prefix='gambit-navigation-export-') as name:
     config = project / 'project.godot'
     config.write_text(config.read_text().replace('run/main_scene="uid://do6vxhog253vu"', 'run/main_scene="res://scenes/debug/local_navigation_autorun.tscn"'))
     preset = project / 'export_presets.cfg'
-    preset.write_text(preset.read_text().replace('version/code=41', 'version/code=40').replace('version/name="0.1.0-gameplay002"', 'version/name="0.1.0-gameplay002-lab"'))
+    settings = re.sub(r'^version/code=\d+$', 'version/code=40', preset.read_text(), flags=re.MULTILINE)
+    settings = re.sub(r'^version/name="[^"]*"$', 'version/name="0.1.0-gameplay002-lab"', settings, flags=re.MULTILINE)
+    preset.write_text(settings)
     subprocess.run([args.godot, '--headless', '--path', str(project), '--editor', '--import', '--quit'], check=True)
     subprocess.run([args.godot, '--headless', '--path', str(project), '--export-debug', 'Android Debug', str(output)], check=True)
 print(output)

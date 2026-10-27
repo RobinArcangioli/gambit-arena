@@ -26,3 +26,8 @@ extends Resource
 @export var heal_effect_origin: Vector3 = Vector3.ZERO
 
 @export var lightning_cast_origin: Vector3 = Vector3(0, 0.7, 0)
+
+# Appearance only. The owning actor supplies the physical ground radius separately.
+@export var ground_shadow_enabled: bool = true
+@export var ground_shadow_color: Color = Color(0.035, 0.028, 0.02, 0.26)
+@export_range(0.001, 0.25) var ground_shadow_feather: float = 0.04

@@ -2,6 +2,9 @@ extends Node3D
 ## Passive animation sampler. Every input is a value or accepted visual time; no gameplay calls.
 const CLIP_END_MARGIN: float = 0.0001
 const Definition = preload("res://scripts/presentation/character_definition.gd")
+const FootprintShadow = preload("res://scripts/presentation/footprint_shadow.gd")
+var ground_radius: float = 0.0
+var ground_shadow: FootprintShadow
 var definition: Definition
 var model: Node3D
 var player: AnimationPlayer
@@ -71,6 +74,11 @@ func _ready() -> void:
 	_flash.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_flash.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	_flash.albedo_color = Color(1.0, 0.88, 0.60, 0.40)
+	if definition.ground_shadow_enabled and ground_radius > 0.0:
+		ground_shadow = FootprintShadow.new()
+		ground_shadow.name = "GroundFootprint"
+		ground_shadow.configure(ground_radius, definition.ground_shadow_color, definition.ground_shadow_feather)
+		add_child(ground_shadow)
 	valid = true
 	pose(0.0, false, Vector2.ZERO)
 

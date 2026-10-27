@@ -1,3 +1,27 @@
+# GRAPHICS-008 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour les disques d'ombre indiquant le gabarit.
+APK 0.1.0-graphics008 (42), SHA-256
+`3cb968ff960280aece6b1636edd06f34fd33120eb7c429a89f5806011f11d8cc`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 40 bancs / 2 541 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. GAMEPLAY-003 reste annulée :
+tailles et contournements conservés. STEP-029 attend un nouveau GO, puis viendra STEP-030.
+Les mentions de recette et de réduction des gabarits suivantes sont historiques.
+
+# Checkpoint GAMEPLAY-002 vérifié
+
+Commit d3ff7df9125bf3acd9511b6c10d51a4a531739f7, parent 440829bfca597654a520897f488cf97ea24fb1f4.
+Archive gambit-arena-20261027-005100-d3ff7df9125b.tar.gz, SHA-256
+7550e5378e4799f93f7ad2aab09434ea0090319a1d27ad6384d12ccda23f392e.
+Restauration /tmp/gameplay002-checkpoint-restore-mvaa8vcw : bundle valide, clone/fsck,
+HEAD/parent, arbres propres et 568 fichiers conformes. Preuves et APK conservés dans
+les sauvegardes : gambit-arena-gameplay002-delivery-validated-89a6afcc.tar.gz,
+SHA-256 89a6afccb2a4bb80fc56bba869c736a15af92e2e10dbb7834bccc639447eefd2.
+Base de GRAPHICS-008 ; GAMEPLAY-003 est annulée, pas de changement de gabarit.
+Aucun nouveau push réalisé.
+
 # GAMEPLAY-002 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour la livraison du contournement local partagé.
