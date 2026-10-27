@@ -1,3 +1,34 @@
+# ARENA-001 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour l'arène épurée : Pause, quatre panneaux
+passifs Mako / Anne / Vide / Vide, portraits et barres, suppression des anciennes commandes
+et de la sélection. Menu Reprendre / Rejouer / Abandonner, confirmation avant l'accueil.
+APK 0.1.0-arena001 (53), SHA-256
+`08b675affdafd61effb941737381e0458792705796807bf64978b1f921651293`.
+Seuls les documents sont actualisés ; code, scènes, assets, configuration et APK restent
+identiques à la livraison validée. Les 54 bancs / 3 592 contrôles déjà réussis ne sont pas
+relancés. Recette tactile Android réussie, pause visuellement figée et gambits inchangés.
+Clôture par commit unique et sauvegarde restaurée/vérifiée. Prochain GO : UI-005,
+qualification intégrée prolongée Android, puis STEP-029/030. GAMEPLAY-003 reste annulée.
+Les états précédents ci-dessous sont historiques.
+
+# ARENA-001 — Arène épurée et menu Pause — en recette
+
+GO reçu pour retirer les commandes et informations de combat, sauf Pause et quatre panneaux
+passifs en haut. Grille Mako / Anne puis Vide / Vide, portraits fixes et barres PV rouges,
+mana bleue et incantation dorée lorsqu'un sort est en cours. Barres au-dessus des acteurs
+conservées, pastille jaune de sélection supprimée. Bas de l'écran dégagé.
+Pause suspend le combat et propose Reprendre, Rejouer, Abandonner ; l'abandon exige une
+confirmation avant l'accueil. Retour Android ouvre Pause, puis revient d'abord au menu
+si une confirmation est affichée. Les gambits se programment depuis la fiche hors combat.
+54 bancs / 3 592 contrôles réussis sans erreur ni avertissement moteur ; recette GPU PC et
+native Android dans la livraison. Aucune nouvelle mesure FPS.
+APK 0.1.0-arena001 (53), SHA-256 `08b675affdafd61effb941737381e0458792705796807bf64978b1f921651293`.
+Base validée : HOME-001 `5d08abec22a8513c10447a6d5ec5b5233e76d7e8`, sauvegarde restaurée
+et vérifiée (696 fichiers). ARENA-001 attend validation avant commit et sauvegarde de clôture.
+Après clôture et prochain GO : UI-005, qualification intégrée, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
 # HOME-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » après le choix de l'essai C et la recette Android.

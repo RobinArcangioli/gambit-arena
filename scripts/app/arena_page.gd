@@ -1,75 +1,174 @@
 extends "res://scripts/party/party_application.gd"
-## Product composition only. The original combat and diagnostic scene keep their layout.
+## Sparse product HUD. Legacy diagnostics keep their controls through the base hooks.
 signal home_requested
 const Choice = preload("res://scripts/app/arena_choice.gd")
+const HeroPanel = preload("res://scripts/presentation/hero_status_panel.gd")
 var chooser: Callable
 var fallback_choice := Choice.new()
 var chosen_arena: StringName
-var back_button: Button
+var hero_panels: Array[HeroPanel] = []
+var pause_layer: Control
+var pause_card: PanelContainer
+var pause_title: Label
+var abandon_message: Label
+var resume_button: Button
+var replay_button: Button
+var abandon_button: Button
+var cancel_abandon_button: Button
+var confirm_abandon_button: Button
+var confirming_abandon: bool = false
+var action_pending: bool = false
+var exit_requested: bool = false
 
 func _ready() -> void:
-	orders_enabled = true
+	orders_enabled=true
+	selected_hero=&""
 	super._ready()
-	back_button = _button(hud, "‹ Accueil", _request_home)
-	toolbar[1].text = "Arènes"
-	toolbar[2].text = "Compétences"
-	$HUD/HeaderPanel.hide();$HUD/FooterPanel.hide()
-	overlay.color.a = 0.88
-	arena_picker.color.a = 0.88
-	arena_picker.cards[&"reference"].hide()
-	_update_layout()
+	# These inherited laboratory decorations are never part of the product HUD.
+	for child in hud.get_children():
+		if child!=pause_button and not child is HeroPanel:
+			hud.remove_child(child);child.queue_free()
+	_update_layout();_present()
+
+func _build_party_controls() -> void:
+	for id in [&"mako",&"anne",&"",&""]:
+		var panel:=HeroPanel.new();panel.hero_id=id;hud.add_child(panel);hero_panels.append(panel)
+
+func _build_party_overlays() -> void:
+	pause_layer=Control.new();pause_layer.mouse_filter=Control.MOUSE_FILTER_STOP;add_child(pause_layer)
+	var shade:=ColorRect.new();shade.color=Color(0.02,0.03,0.07,0.48)
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);pause_layer.add_child(shade)
+	pause_card=PanelContainer.new();pause_layer.add_child(pause_card)
+	var style:=get_theme_stylebox("normal","Button").duplicate() as StyleBoxFlat
+	style.bg_color=Color("10182ff5");style.set_content_margin_all(18)
+	pause_card.add_theme_stylebox_override("panel",style)
+	var column:=VBoxContainer.new();column.add_theme_constant_override("separation",10);pause_card.add_child(column)
+	pause_title=_label(column,22);pause_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	abandon_message=_label(column,15);abandon_message.text="Le combat en cours sera perdu."
+	abandon_message.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	resume_button=_button(column,"Reprendre",_resume_combat)
+	replay_button=_button(column,"Rejouer",_replay_combat)
+	abandon_button=_button(column,"Abandonner",_ask_abandon)
+	cancel_abandon_button=_button(column,"Annuler",_cancel_abandon)
+	confirm_abandon_button=_button(column,"Abandonner",_confirm_abandon)
+	pause_layer.hide();_refresh_pause_menu()
+
+func _present() -> void:
+	if not is_inside_tree():return
+	if not ready_ui or simulation.heroes.is_empty():return
+	for panel in hero_panels:
+		if panel.hero_id!=&"":panel.show_actor(simulation.hero(panel.hero_id))
+	floor_canvas.feet.clear()
+	for unit in simulation.all_units():
+		if unit.state.alive:floor_canvas.feet.append(unit.position)
+	floor_canvas.queue_redraw();_update_bars()
+	if pause_layer!=null and pause_layer.visible:_refresh_pause_menu()
+
+func _rebuild_footer() -> void:
+	_present()
+func _select_hero(_key: StringName) -> void:pass
+func _command(_skill: StringName) -> void:pass
+func _show_tab(_tab: String) -> void:pass
+func _open_arena_picker() -> void:pass
+func _open_rule(_index: int) -> void:pass
+func _touch_scrollers() -> Array[ScrollContainer]:return []
+func _modal_open() -> bool:return pause_layer!=null and pause_layer.visible
 
 func _reset() -> void:
-	if not ready_ui or application_guard.blocked: return
-	var id: StringName = chooser.call() if chooser.is_valid() else fallback_choice.next()
-	if id == &"reference" or not Catalog.ENTRIES.has(id): id = &"colisee_solaire"
-	chosen_arena = id
-	arena_definition = Catalog.definition(id)
-	floor_canvas.set_definition(arena_definition)
-	super._reset()
-	if OS.is_debug_build(): print("UI001 arena ", chosen_arena, " run ", simulation.run_id)
-	_sync_projection()
+	if not ready_ui or application_guard.blocked:return
+	var id: StringName=chooser.call() if chooser.is_valid() else fallback_choice.next()
+	if id==&"reference" or not Catalog.ENTRIES.has(id):id=&"colisee_solaire"
+	chosen_arena=id;arena_definition=Catalog.definition(id);floor_canvas.set_definition(arena_definition)
+	super._reset();_sync_projection()
 
-func _request_home() -> void:
-	if application_guard.blocked or _modal_open(): return
-	touch_router.cancel_gesture()
-	home_requested.emit()
+func _toggle_pause() -> void:
+	if not ready_ui or application_guard.blocked or action_pending:return
+	paused=true;simulation.clock.paused=true;confirming_abandon=false
+	pause_layer.show();_refresh_pause_menu();_update_layout();_update_buttons()
 
+func _resume_combat() -> void:
+	if application_guard.blocked or action_pending or confirming_abandon or not _modal_open() or simulation.result!="EN COURS":return
+	_lock_actions();pause_layer.hide();paused=false
+	application_guard.acknowledge_resume();simulation.clock.paused=false;_update_buttons()
+
+func _replay_combat() -> void:
+	if application_guard.blocked or action_pending or confirming_abandon or not _modal_open():return
+	_lock_actions();pause_layer.hide();paused=false;application_guard.acknowledge_resume()
+	_reset();_update_buttons()
+
+func _ask_abandon() -> void:
+	if application_guard.blocked or action_pending or not _modal_open():return
+	confirming_abandon=true;_refresh_pause_menu();_update_layout()
+func _cancel_abandon() -> void:
+	if application_guard.blocked or action_pending:return
+	confirming_abandon=false;_refresh_pause_menu();_update_layout()
+func _confirm_abandon() -> void:
+	if application_guard.blocked or action_pending or not confirming_abandon or exit_requested:return
+	exit_requested=true;_lock_actions();home_requested.emit()
+func _request_home() -> void:_ask_abandon()
+func handle_back() -> void:
+	if application_guard.blocked or action_pending:return
+	if confirming_abandon:_cancel_abandon()
+	elif _modal_open():_resume_combat()
+	else:_toggle_pause()
+func _lock_actions() -> void:
+	action_pending=true;call_deferred("_unlock_actions")
+func _unlock_actions() -> void:
+	if not exit_requested:action_pending=false
+	_update_buttons()
+func _refresh_pause_menu() -> void:
+	if pause_title==null:return
+	pause_title.text="Abandonner le combat ?" if confirming_abandon else "Pause"
+	pause_title.add_theme_font_size_override("font_size",19 if confirming_abandon else 22)
+	abandon_message.visible=confirming_abandon
+	for button in [resume_button,replay_button,abandon_button]:button.visible=not confirming_abandon
+	for button in [cancel_abandon_button,confirm_abandon_button]:button.visible=confirming_abandon
+	for button in [resume_button,replay_button,abandon_button,cancel_abandon_button,confirm_abandon_button]:
+		button.disabled=application_guard.blocked or action_pending or exit_requested
+	resume_button.disabled=resume_button.disabled or simulation.result!="EN COURS"
 func _update_buttons() -> void:
-	super._update_buttons()
-	if is_instance_valid(back_button): back_button.disabled = application_guard.blocked or _modal_open()
+	if not is_inside_tree():return
+	if not ready_ui:
+		super._update_buttons();return
+	pause_button.text="Pause";pause_button.disabled=application_guard.blocked or _modal_open() or action_pending or exit_requested
+	simulation.clock.paused=paused;_refresh_pause_menu()
+func _notification(what: int) -> void:
+	if not ready_ui or pause_layer==null:return
+	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT,NOTIFICATION_APPLICATION_PAUSED]:
+		paused=true;simulation.clock.paused=true;pause_layer.show()
+	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT,NOTIFICATION_APPLICATION_PAUSED,NOTIFICATION_APPLICATION_FOCUS_IN,NOTIFICATION_APPLICATION_RESUMED]:
+		call_deferred("_update_buttons")
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode==KEY_SPACE:
+		if _modal_open():_resume_combat()
+		else:_toggle_pause()
+		get_viewport().set_input_as_handled()
 
 func _update_layout() -> void:
-	super._update_layout()
-	if not ready_ui: return
-	$HUD/HeaderPanel.hide();$HUD/FooterPanel.hide()
-	var view: Rect2 = get_viewport_rect()
-	render_box.position = Vector2.ZERO; render_box.size = view.size
-	floor_canvas.position = Vector2.ZERO
-	bars_layer.position = Vector2.ZERO;bars_layer.size = view.size
-	$HUD/Title.position = Vector2(132, 18)
-	$HUD/Title.add_theme_font_size_override("font_size",17)
-	$HUD/Description.position = Vector2(24, 68)
-	pause_button.position = Vector2(safe_rect.size.x - 120, 12)
-	pause_button.size = Vector2(108,48)
+	if not is_inside_tree():return
+	if not ready_ui:
+		super._update_layout();return
+	var view: Rect2=get_viewport_rect()
+	var candidate: Rect2=safe_area_override
+	if not candidate.has_area() and OS.get_name()=="Android":candidate=get_viewport().get_screen_transform().affine_inverse()*Rect2(DisplayServer.get_display_safe_area())
+	safe_rect=Layout.usable_rect(view,candidate)
+	$Backdrop.size=view.size;hud.position=safe_rect.position;hud.size=safe_rect.size
+	render_box.position=Vector2.ZERO;render_box.size=view.size;floor_canvas.position=Vector2.ZERO
+	bars_layer.position=Vector2.ZERO;bars_layer.size=view.size;bars_layer.clip_contents=true
+	pause_button.position=Vector2(safe_rect.size.x-116,12);pause_button.size=Vector2(104,48)
 	pause_button.add_theme_font_size_override("font_size",16)
-	if is_instance_valid(back_button):
-		back_button.position = Vector2(12,12);back_button.size = Vector2(108,48)
-	var half: float = (safe_rect.size.x - 56) * 0.5
-	for i in range(2):
-		hero_buttons[i].position = Vector2(24+i*(half+8),96)
-		hero_buttons[i].size = Vector2(half,48)
-	status.position = Vector2(24,151)
-	var footer_height: float = minf(252, safe_rect.size.y * 0.29)
-	var y: float = safe_rect.size.y - footer_height - 12
-	for i in range(4):
-		toolbar[i].position = Vector2(24+(i%2)*(half+8),y+int(i/2.0)*56)
-		toolbar[i].size = Vector2(half,48)
-	footer_scroll.position = Vector2(24,y+116)
-	footer_scroll.size = Vector2(safe_rect.size.x-48,footer_height-116)
+	var width: float=(safe_rect.size.x-32)*0.5
+	for i in range(hero_panels.size()):
+		hero_panels[i].position=Vector2(12+(i%2)*(width+8),72+int(i/2.0)*84)
+		hero_panels[i].size=Vector2(width,76)
+	if pause_layer!=null:
+		pause_layer.position=Vector2.ZERO;pause_layer.size=view.size
+		var card_size:=Vector2(minf(292,safe_rect.size.x-32),250)
+		pause_card.position=safe_rect.position+(safe_rect.size-card_size)*0.5;pause_card.size=card_size
 	call_deferred("_sync_projection")
 
 func _sync_projection() -> void:
+	if not is_inside_tree():return
 	super._sync_projection()
 	if not ready_ui or not is_instance_valid(floor_canvas.active_view): return
 	var art = floor_canvas.active_view

@@ -77,6 +77,21 @@ func _ready() -> void:
 	elif not save_path.is_empty():
 		var stored: Dictionary = Rules.load_configuration(save_path)
 		if not stored.is_empty(): simulation.rules = stored
+	_build_party_controls()
+	bars_layer = Control.new()
+	bars_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(bars_layer)
+	move_child(bars_layer, hud.get_index())
+	_build_party_overlays()
+	touch_router.active_scrollers = _touch_scrollers
+	add_child(touch_router)
+	# Raw input guard must remain last for reverse depth-first dispatch.
+	add_child(application_guard)
+	ready_ui = true
+	_update_layout()
+	_reset()
+
+func _build_party_controls() -> void:
 	status = _label(hud, 15)
 	for key in [&"anne", &"mako"]:
 		var button := _button(hud, String(key).capitalize(), _select_hero.bind(key))
@@ -89,10 +104,8 @@ func _ready() -> void:
 	var skills_button := _button(hud, "Competences", _show_tab.bind("skills"))
 	var rules_button := _button(hud, "Gambits", _show_tab.bind("rules"))
 	toolbar = [replay_button, arena_button, skills_button, rules_button]
-	bars_layer = Control.new()
-	bars_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bars_layer)
-	move_child(bars_layer, hud.get_index())
+
+func _build_party_overlays() -> void:
 	overlay = ColorRect.new()
 	overlay.color = Color(0.035, 0.055, 0.09, 0.98)
 	overlay.hide()
@@ -104,13 +117,6 @@ func _ready() -> void:
 	add_child(arena_picker)
 	arena_picker.arena_selected.connect(_choose_arena)
 	arena_picker.close_requested.connect(_close_arena_picker)
-	touch_router.active_scrollers = _touch_scrollers
-	add_child(touch_router)
-	# Raw input guard must remain last for reverse depth-first dispatch.
-	add_child(application_guard)
-	ready_ui = true
-	_update_layout()
-	_reset()
 
 func _compose_actor(node: Node) -> void:
 	if node is PartyUnit:

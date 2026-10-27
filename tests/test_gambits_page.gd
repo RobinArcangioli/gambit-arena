@@ -62,13 +62,12 @@ func _ready() -> void:
 	check(app.team_page.cards.all(func(c):return not c.toggle_mode and not c.button_pressed and not c.has_focus()),"no persistent team selection")
 	app.return_home();await settle();app.open_arena();await settle()
 	check(app.combat.simulation.rules==read(path) and app.combat.simulation.orders_enabled,"arena reloads v3")
-	app.combat._select_hero(&"anne");app.combat._show_tab("rules");await settle()
-	editor=app.combat.orders_editor;editor.toggle(editor.tokens[0]);await settle()
-	check(app.combat.simulation.rules==read(path),"same immediate component publishes combat changes")
+	app.combat._select_hero(&"anne");app.combat._show_tab("rules");app.combat._command(&"heal");await settle()
+	check(app.combat.orders_editor==null and app.combat.selected_hero==&"" and app.combat.simulation.rules==read(path),"sparse combat offers no editor, hero selection or manual skill")
 	saved=read(path).anne.duplicate(true)
 	app.return_home();await settle();app.open_team();await settle();app.team_page._select(&"anne");await settle();app.open_gambits();await settle()
 	editor=app.gambits_page.editor
-	check(editor.rows==saved,"menu reloads combat changes")
+	check(editor.rows==saved,"menu retains configuration after readonly combat")
 	# Load a meaningful 99-row fixture then exercise both bounds through UI mutations.
 	var config: Dictionary=read(path);config.anne=[]
 	for i in range(99):config.anne.append(Orders.create())

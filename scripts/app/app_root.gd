@@ -120,11 +120,7 @@ func go_back() -> void:
 	elif team_page != null:
 		return_home()
 	elif combat != null:
-		if is_instance_valid(combat.orders_editor) and combat.orders_editor.close_popup():return
-		if combat._modal_open():
-			if combat.arena_picker.visible:combat._close_arena_picker()
-			else:combat._close_modal()
-		else:return_home()
+		combat.handle_back()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE and route!=&"home":
