@@ -1,3 +1,26 @@
+# GRAPHICS-009 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour le soin vert fluo à deux anneaux tournants.
+APK normal 0.1.0-graphics009 (43), SHA-256
+`fc84f63d53b40a9246b3d7466a32833026545ef8c4968b668fbe16881be16fc9`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 41 bancs / 2 574 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. GAMEPLAY-003 reste annulée :
+tailles et contournements conservés. STEP-029 attend un nouveau GO, puis viendra STEP-030.
+Les mentions de recette suivantes retracent les états historiques.
+
+# Checkpoint GRAPHICS-008 vérifié
+
+Commit e6885c698041b3f89cf5a734bc858e1f97cf07c3, parent d3ff7df.
+Archive gambit-arena-20261027-015553-e6885c698041.tar.gz, SHA-256
+66b4eb9f33f3df7a1a6ce27320ffae19b31b9ca77dfce927c3aefa83792f2d4c.
+Restauration /tmp/graphics008-checkpoint-restore-guvpmc_f : bundle/clone/fsck valides,
+HEAD/parent et arbres propres, 580 fichiers identiques. Preuves et APK conservés dans
+les sauvegardes : gambit-arena-graphics008-delivery-validated-fc79d037.tar.gz,
+SHA-256 fc79d0378dc97d54d21f2eef4ea44bda2cec9f284b64d332a2e1df282fc0f1e0.
+Base de GRAPHICS-009 ; aucun nouveau push.
+
 # GRAPHICS-008 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour les disques d'ombre indiquant le gabarit.

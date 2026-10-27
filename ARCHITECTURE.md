@@ -1,3 +1,24 @@
+# GRAPHICS-009 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour le soin vert fluo à deux anneaux tournants.
+APK normal 0.1.0-graphics009 (43), SHA-256
+`fc84f63d53b40a9246b3d7466a32833026545ef8c4968b668fbe16881be16fc9`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 41 bancs / 2 574 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. GAMEPLAY-003 reste annulée :
+tailles et contournements conservés. STEP-029 attend un nouveau GO, puis viendra STEP-030.
+Les mentions de recette suivantes retracent les états historiques.
+
+# GRAPHICS-009 — remplacement du visuel de soin
+
+HealEffect conserve son contrat passif setup(profile, healed) / advance_visual(dt).
+Deux anneaux concentriques à axes distincts, coques et aura de glow additif composent
+l'effet d'une seconde ; toutes les composantes suivent le temps accepté et le fondu.
+HealEffectDefinition contient le style, les tailles et les rotations. CombatPresenter,
+la cible réelle, le moteur de jeu, les gabarits et les ombres ne changent pas.
+Voir docs/heal-presentation.md. Les sections suivantes sont historiques.
+
 # GRAPHICS-008 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour les disques d'ombre indiquant le gabarit.

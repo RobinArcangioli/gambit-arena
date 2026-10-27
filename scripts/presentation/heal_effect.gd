@@ -1,15 +1,24 @@
 extends Node3D
-## Passive visual: only the presenter supplies time and the already applied heal value.
+## Passive gyroscope: copied presentation values and explicitly accepted visual time only.
+const GlowShader = preload("res://shaders/presentation/heal_glow.gdshader")
 var age: float = 0.0
-var duration: float = 0.85
+var duration: float = 1.0
 var amount: int = 0
 var tint: Color
 var radius: float
 var halo: MeshInstance3D
-var material: StandardMaterial3D
+var inner_ring: MeshInstance3D
+var aura: MeshInstance3D
 var amount_label: Label3D
-var motes: Array[Label3D] = []
 var amount_height: float
+var center_height: float
+var ring_materials: Array[StandardMaterial3D] = []
+var ring_colors: Array[Color] = []
+var glow_materials: Array[ShaderMaterial] = []
+var glow_shells: Array[MeshInstance3D] = []
+var spin_axes: Array[Vector3] = []
+var turns := Vector2.ZERO
+var opacity: float = 0.0
 
 func setup(profile: Resource, healed: int) -> void:
 	duration = maxf(0.1, profile.duration)
@@ -17,48 +26,86 @@ func setup(profile: Resource, healed: int) -> void:
 	tint = profile.color
 	radius = profile.radius
 	amount_height = profile.amount_height
-	material = StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.albedo_color = tint
-	material.no_depth_test = false
-	halo = MeshInstance3D.new()
-	var ring := TorusMesh.new()
-	ring.inner_radius = radius * 0.89
-	ring.outer_radius = radius
-	ring.rings = 24
-	ring.ring_segments = 6
-	halo.mesh = ring
-	halo.material_override = material
-	halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	add_child(halo)
-	amount_label = _label("+%d" % amount, 48)
-	for i in range(4): motes.append(_label("+", 32))
+	center_height = profile.center_height
+	turns = profile.turns
+	spin_axes = [_axis(profile.outer_spin_axis, Vector3.RIGHT), _axis(profile.inner_spin_axis, Vector3.FORWARD)]
+	for index in range(2):
+		var outer_radius: float = radius * (1.0 if index == 0 else profile.inner_radius_ratio)
+		var thickness: float = 0.04 if index == 0 else 0.032
+		var paint := StandardMaterial3D.new()
+		paint.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		paint.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		paint.albedo_color = profile.ring_color if index == 0 else profile.inner_ring_color
+		ring_materials.append(paint)
+		ring_colors.append(paint.albedo_color)
+		var ring: MeshInstance3D = _torus(outer_radius, thickness, paint)
+		if index == 0: halo = ring
+		else: inner_ring = ring
+		var glow := _glow_material(true)
+		glow_materials.append(glow)
+		glow_shells.append(_torus(outer_radius + 0.055, thickness + 0.11, glow))
+	var aura_paint := _glow_material(false)
+	glow_materials.append(aura_paint)
+	aura = MeshInstance3D.new()
+	var quad := QuadMesh.new()
+	quad.size = Vector2.ONE * radius * 2.8
+	aura.mesh = quad
+	aura.material_override = aura_paint
+	aura.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(aura)
+	aura.position.y = center_height
+	var camera: Camera3D = get_viewport().get_camera_3d()
+	if camera != null: aura.global_basis = camera.global_basis
+	amount_label = Label3D.new()
+	amount_label.text = "+%d" % amount
+	amount_label.font_size = 48
+	amount_label.pixel_size = 0.006
+	amount_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	amount_label.outline_modulate = Color(0.025, 0.14, 0.045, 1)
+	amount_label.outline_size = 5
+	add_child(amount_label)
 	advance_visual(0.0)
 
-func _label(text: String, size: int) -> Label3D:
-	var label := Label3D.new()
-	label.text = text
-	label.font_size = size
-	label.pixel_size = 0.006
-	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	label.modulate = tint
-	label.outline_modulate = Color(0.04, 0.17, 0.10, 1)
-	label.outline_size = 5
-	label.no_depth_test = false
-	add_child(label)
-	return label
+func _glow_material(tube: bool) -> ShaderMaterial:
+	var paint := ShaderMaterial.new()
+	paint.shader = GlowShader
+	paint.set_shader_parameter("glow_color", tint)
+	paint.set_shader_parameter("tube", tube)
+	return paint
+
+func _torus(outer_radius: float, thickness: float, paint: Material) -> MeshInstance3D:
+	var ring := TorusMesh.new()
+	ring.outer_radius = outer_radius
+	ring.inner_radius = maxf(0.01, outer_radius - thickness)
+	ring.rings = 64
+	ring.ring_segments = 8
+	var instance := MeshInstance3D.new()
+	instance.mesh = ring
+	instance.material_override = paint
+	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	instance.position.y = center_height
+	add_child(instance)
+	return instance
+
+static func _axis(value: Vector3, fallback: Vector3) -> Vector3:
+	return value.normalized() if value.is_finite() and value.length_squared() > 0.000001 else fallback
 
 func advance_visual(dt: float) -> void:
-	age = minf(duration, age + maxf(0.0, dt))
+	if not is_finite(dt) or dt < 0.0: return
+	age = minf(duration, age + dt)
 	var progress: float = clampf(age / duration, 0.0, 1.0)
-	var opacity: float = 1.0 - smoothstep(0.4, 1.0, progress)
-	material.albedo_color = Color(tint, opacity * 0.75)
-	halo.scale = Vector3.ONE * lerpf(0.7, 1.3, progress)
-	halo.position.y = 0.035
-	amount_label.position = Vector3(0, amount_height + progress * 0.35, 0)
-	amount_label.modulate = Color(tint, opacity)
-	for i in range(motes.size()):
-		var angle: float = TAU * i / motes.size() + 0.35
-		motes[i].position = Vector3(cos(angle) * radius, 0.22 + progress * 0.65 + (i % 2) * 0.12, sin(angle) * radius)
-		motes[i].modulate = Color(tint, opacity * 0.85)
+	opacity = smoothstep(0.0, 0.06, progress) * (1.0 - smoothstep(0.36, 1.0, progress))
+	var rings: Array[MeshInstance3D] = [halo, inner_ring]
+	for index in range(2):
+		var tilt := Basis(Vector3.RIGHT if index == 0 else Vector3.FORWARD, 0.45 if index == 0 else 1.15)
+		var orientation := Basis(spin_axes[index], TAU * progress * turns[index]) * tilt
+		rings[index].basis = orientation
+		glow_shells[index].basis = orientation
+		# Keep the white/mint core translucent; the surrounding additive shell provides glow.
+		var color: Color = ring_colors[index]
+		color.a *= opacity
+		ring_materials[index].albedo_color = color
+	for paint in glow_materials: paint.set_shader_parameter("visibility", opacity)
+	amount_label.position = Vector3(0, amount_height + progress * 0.24, 0)
+	amount_label.modulate = Color(0.72, 1.0, 0.80, opacity)
+	amount_label.outline_modulate = Color(0.025, 0.14, 0.045, opacity)

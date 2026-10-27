@@ -1,3 +1,26 @@
+# GRAPHICS-009 validée — 27 octobre 2026
+
+Le propriétaire confirme « Step validée. » pour le soin vert fluo à deux anneaux tournants.
+APK normal 0.1.0-graphics009 (43), SHA-256
+`fc84f63d53b40a9246b3d7466a32833026545ef8c4968b668fbe16881be16fc9`.
+Validation globale, sans détail supplémentaire ni nouvelle mesure de performance.
+Code, scènes, assets, configuration et APK identiques à la livraison validée ; seuls les
+documents sont actualisés. Les 41 bancs / 2 574 contrôles déjà réussis ne sont pas relancés.
+Clôture par un commit unique puis sauvegarde restaurée/vérifiée. GAMEPLAY-003 reste annulée :
+tailles et contournements conservés. STEP-029 attend un nouveau GO, puis viendra STEP-030.
+Les mentions de recette suivantes retracent les états historiques.
+
+# GRAPHICS-009 — soin à deux anneaux en recette
+
+Glow vert fluo et deux anneaux blanc/vert clair translucides, concentriques et tournant
+sur deux axes distincts. Effet de réussite de 1,0 s avec fondu complet ; incantation 1,5 s,
+règles et cibles inchangées. Voir docs/heal-presentation.md et docs/steps/GRAPHICS-009.md.
+APK normal 0.1.0-graphics009 (43), installé sur Galaxy A16 et laissé en pause.
+41 bancs / 2 574 contrôles passent. F6 : scenes/debug/heal_lab.tscn, « Soin (demo) ».
+GAMEPLAY-003 reste annulée ; tailles, navigation et disques d'ombre conservés.
+Étape non commitée ; attendre validation puis clôture avant STEP-029 et STEP-030.
+Les états et durées visuelles suivants retracent les étapes historiques.
+
 # GRAPHICS-008 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour les disques d'ombre indiquant le gabarit.
@@ -189,7 +212,8 @@ leurs identifiants et se dérouleront après ce chantier.
 | GAMEPLAY-002 | Validée — 27 octobre 2026 | Contournement local partagé héros/ennemis aux dimensions actuelles |
 | GAMEPLAY-003 | Annulée — 27 octobre 2026 | Tailles et contournements conservés à la demande du propriétaire |
 | GRAPHICS-008 | Validée — 27 octobre 2026 | Disques d’ombre translucides dimensionnés sur l’emprise au sol |
-| STEP-029 | Après GRAPHICS-008 | Clone neuf, import, export et installation reproductibles |
+| GRAPHICS-009 | Validée — 27 octobre 2026 | Soin vert fluo, deux anneaux concentriques tournants et fondu en une seconde |
+| STEP-029 | Après GRAPHICS-009 | Clone neuf, import, export et installation reproductibles |
 | STEP-030 | À faire | Recette finale MVP sur APK identifié |
 
 Le [plan détaillé proposé](docs/handoff/NEXT_STEPS.md) prépare ces étapes ; il ne prétend

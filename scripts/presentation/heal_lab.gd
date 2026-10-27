@@ -10,8 +10,8 @@ func _ready() -> void:
 	for connection in slots[1].pressed.get_connections(): slots[1].pressed.disconnect(connection.callable)
 	slots[1].text = "Soin (demo)"
 	slots[1].pressed.connect(_heal_preview)
-	$HUD/Title.text = "GRAPHICS-005 / SOIN"
-	$HUD/Description.text = "Soin (demo) : Duck puis halo +30\nAucune modification des PV / mana"
+	$HUD/Title.text = "GRAPHICS-009 / SOIN"
+	$HUD/Description.text = "Soin (demo) : Duck puis anneaux +30 / 1 s\nAucune modification des PV / mana"
 
 func _heal_preview() -> void:
 	if gallery_guard.blocked: return
