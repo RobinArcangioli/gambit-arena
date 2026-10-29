@@ -1,5 +1,6 @@
 extends Node3D
 ## Passive gyroscope: copied presentation values and explicitly accepted visual time only.
+const FloatingText=preload("res://scripts/presentation/floating_combat_text.gd")
 const GlowShader = preload("res://shaders/presentation/heal_glow.gdshader")
 const DefaultFade = preload("res://resources/presentation/effects/common_fade.tres")
 var fade: Resource = DefaultFade
@@ -11,7 +12,7 @@ var radius: float
 var halo: MeshInstance3D
 var inner_ring: MeshInstance3D
 var aura: MeshInstance3D
-var amount_label: Label3D
+var amount_label: FloatingText
 var amount_height: float
 var center_height: float
 var ring_materials: Array[StandardMaterial3D] = []
@@ -59,14 +60,9 @@ func setup(profile: Resource, healed: int) -> void:
 	aura.position.y = center_height
 	var camera: Camera3D = get_viewport().get_camera_3d()
 	if camera != null: aura.global_basis = camera.global_basis
-	amount_label = Label3D.new()
-	amount_label.text = "+%d" % amount
-	amount_label.font_size = 48
-	amount_label.pixel_size = 0.006
-	amount_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	amount_label.outline_modulate = Color(0.025, 0.14, 0.045, 1)
-	amount_label.outline_size = 5
+	amount_label = FloatingText.new()
 	add_child(amount_label)
+	amount_label.setup("+%d"%amount,Color(.72,1,.8),Color(.025,.14,.045),duration,amount_height,fade)
 	advance_visual(0.0)
 
 func _glow_material(tube: bool) -> ShaderMaterial:
@@ -109,6 +105,4 @@ func advance_visual(dt: float) -> void:
 		color.a *= opacity
 		ring_materials[index].albedo_color = color
 	for paint in glow_materials: paint.set_shader_parameter("visibility", opacity)
-	amount_label.position = Vector3(0, amount_height + progress * 0.24, 0)
-	amount_label.modulate = Color(0.72, 1.0, 0.80, opacity)
-	amount_label.outline_modulate = Color(0.025, 0.14, 0.045, opacity)
+	amount_label.advance_visual(dt)

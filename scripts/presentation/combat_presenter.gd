@@ -8,6 +8,13 @@ var lightning := Lightning.new()
 const CastingEnergy = preload("res://scripts/presentation/casting_energy.gd")
 var casting_effects: Dictionary = {}
 var casting_strength: float = 0.65
+const FloatingText=preload("res://scripts/presentation/floating_combat_text.gd")
+const TextProfile=preload("res://resources/presentation/effects/heal.tres")
+const MAX_DAMAGE_TEXTS:int=48
+var damage_texts:Array[Dictionary]=[]
+var outgoing_text:bool=true
+var incoming_text:bool=true
+var healing_text:bool=true
 const MAX_GHOSTS: int = 12
 const MAX_HEAL_EFFECTS: int = 8
 @export var heal_definition: Resource = preload("res://resources/presentation/effects/heal.tres")
@@ -36,6 +43,7 @@ func reset_run(id: int) -> void:
 	for ghost in ghosts: _release_ghost(ghost)
 	ghosts.clear()
 	_clear_heals()
+	_clear_damage_texts()
 	heals_played = 0
 	bindings.clear()
 	_sequences.clear()
@@ -50,7 +58,7 @@ func capture(units: Array, id: int) -> void:
 		bindings[unit.combat_id] = {"view": unit.visual,
 			"transform": unit.visual.global_transform if is_instance_valid(unit.visual) else unit.global_transform,
 			"definition": unit.appearance, "position": unit.position, "facing": unit.mover.facing,
-			"time_scale": unit.buffs.multiplier(), "alive": unit.state.alive, "casting": unit.action.casting(), "action_id": unit.action.action_id,
+			"team": unit.team, "time_scale": unit.buffs.multiplier(), "alive": unit.state.alive, "casting": unit.action.casting(), "action_id": unit.action.action_id,
 			"skill": String(unit.action.last_skill), "elapsed": unit.action.elapsed, "windup": unit.action._windup()}
 
 func present(units: Array, values: Array[Dictionary], dt: float, id: int, terminal: bool = false) -> void:
@@ -58,6 +66,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 	capture(units, id)
 	_sync_casting(units, dt, terminal)
 	_advance_heals(dt)
+	_advance_damage_texts(dt)
 	lightning.advance_visual(bindings, dt)
 	booster.advance_visual(bindings, dt)
 	# Advance previously existing visuals first. New impacts/deaths begin at this tick's end.
@@ -89,6 +98,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 		for ghost in ghosts: _release_ghost(ghost)
 		ghosts.clear()
 		_clear_heals()
+		_clear_damage_texts()
 		lightning.clear_visuals()
 		booster.clear_visuals()
 	for actor_id in bindings.keys():
@@ -111,6 +121,7 @@ func consume(event: Dictionary) -> void:
 	if kind == "resolve" and event.get("skill", "") == "heal" and int(event.get("healing", 0)) > 0:
 		_heal(event)
 	if kind == "resolve" and int(event.get("damage", 0)) > 0:
+		_damage_text(event)
 		var target_id: int = int(event.get("target_id", 0))
 		if _dead_ids.has(target_id) or not bindings.has(target_id): return
 		var view = bindings[target_id].view
@@ -166,6 +177,7 @@ func _heal(event: Dictionary) -> void:
 	add_child(view)
 	view.position = origin
 	view.setup(heal_definition, int(event.healing))
+	view.amount_label.visible=healing_text
 	heal_effects.append({"view": view, "age": 0.0, "duration": maxf(0.1, heal_definition.duration), "target_id": target_id})
 	heals_played += 1
 
@@ -231,3 +243,40 @@ func _clear_casting() -> void:
 	for actor_id in casting_effects.keys():_release_casting(actor_id)
 	for snapshot in bindings.values():
 		if is_instance_valid(snapshot.view) and snapshot.view is View:snapshot.view.set_casting_energy(false)
+
+func set_text_preferences(outgoing:bool,incoming:bool,healing:bool) -> void:
+	if [outgoing_text,incoming_text,healing_text]==[outgoing,incoming,healing]:return
+	outgoing_text=outgoing;incoming_text=incoming;healing_text=healing
+	for effect in damage_texts:
+		if is_instance_valid(effect.view):effect.view.visible=incoming if effect.team==0 else outgoing
+	for effect in heal_effects:
+		if is_instance_valid(effect.view):effect.view.amount_label.visible=healing
+
+func _damage_text(event:Dictionary) -> void:
+	var target_id:int=int(event.get("target_id",0))
+	if _dead_ids.has(target_id):return
+	var team:int=int(bindings[target_id].get("team",event.get("target_team",1))) if bindings.has(target_id) else int(event.get("target_team",1))
+	if not (incoming_text if team==0 else outgoing_text):return
+	if damage_texts.size()>=MAX_DAMAGE_TEXTS:_release_damage_text(damage_texts[0])
+	var count:int=0
+	for previous in damage_texts:
+		if previous.target_id==target_id:count+=1
+	# A small fan separates successive hits; the upward/fade animation stays identical.
+	var offset:=Vector3([0.0,.22,-.22][count%3],.12*count,0)
+	var view:=FloatingText.new();add_child(view)
+	var profile:Resource=heal_definition if heal_definition!=null else TextProfile
+	view.origin=_heal_origin(target_id,event.get("target_position",Vector3.ZERO))+offset
+	view.setup(str(int(event.damage)),Color("e44949") if team==0 else Color.WHITE,Color("10182f"),profile.duration,profile.amount_height,profile.fade)
+	damage_texts.append({"view":view,"target_id":target_id,"team":team,"offset":offset})
+func _advance_damage_texts(dt:float) -> void:
+	for effect in damage_texts.duplicate():
+		if not is_instance_valid(effect.view):_release_damage_text(effect);continue
+		if bindings.has(effect.target_id):effect.view.origin=_heal_origin(effect.target_id,bindings[effect.target_id].position)+effect.offset
+		effect.view.advance_visual(dt)
+		if effect.view.age>=effect.view.duration:_release_damage_text(effect)
+func _release_damage_text(effect:Dictionary) -> void:
+	if is_instance_valid(effect.view):
+		effect.view.hide();remove_child(effect.view);effect.view.queue_free()
+	damage_texts.erase(effect)
+func _clear_damage_texts() -> void:
+	for effect in damage_texts.duplicate():_release_damage_text(effect)

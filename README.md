@@ -1,3 +1,37 @@
+# ARENA-004 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les dégâts
+flottants blancs sur les ennemis, rouges sur les héros et les soins verts inchangés.
+Animation commune du soin, trois options indépendantes et mémorisées, encart compact
+« Textes flottants » avec fond noir à 25 % d’opacité. Le combat continue dans les réglages.
+Les 66 scènes / 4 501 contrôles et la recette Android avaient déjà réussi ; les deux
+bancs initialement en dépassement de délai ont réussi leur relance isolée.
+Clôture documentaire uniquement : code, ressources, configuration et APK identiques
+à la livraison validée. Aucune nouvelle exécution des tests ni mesure de performances.
+APK installé : `0.1.0-arena004-layout` (74), SHA-256
+`8f4231a9e1b35767b1be019b622516014db95068272c0f2043310abccf8a1d2a`.
+Gambits conservés octet pour octet ; préférences initiales rétablies après la recette.
+Clôture par commit et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# ARENA-004 — Textes flottants — en recette
+
+Base ARENA-003 clôturée : `6799b58dc47381601dc4dafbf16bfeb243dafeae`.
+Dégâts effectifs affichés en blanc au-dessus des ennemis et en rouge au-dessus des
+héros ; soins verts inchangés. Animation commune extraite du nombre de soin validé :
+une seconde, montée de 0,24 unité et même fondu. Un coup fatal reste visible.
+Réglages : encart « Textes flottants » noir à 25 % d’opacité, trois cases
+rapprochées « Dégâts infligés », « Dégâts reçus », « Soins ». Actives par défaut,
+indépendantes et sauvegardées immédiatement. Masquer le texte ne masque pas le soin
+visuel. Le combat continue ; les options défilent sur les petits écrans.
+66 scènes / 4 501 contrôles réussis, dont 50 dédiés ; recette GPU et Galaxy A16.
+APK `arena-004-layout-debug.apk`, `0.1.0-arena004-layout` (74), SHA-256 :
+`8f4231a9e1b35767b1be019b622516014db95068272c0f2043310abccf8a1d2a`.
+Détails : `docs/steps/ARENA-004.md`. Validation propriétaire attendue avant commit.
+Après clôture : UI-005, qualification intégrée Android, puis STEP-029/030.
+Aucun push automatique. Les états précédents ci-dessous sont historiques.
+
 # ARENA-003 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les statistiques,

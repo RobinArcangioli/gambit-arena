@@ -1,3 +1,43 @@
+# ARENA-004 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les dégâts
+flottants blancs sur les ennemis, rouges sur les héros et les soins verts inchangés.
+Animation commune du soin, trois options indépendantes et mémorisées, encart compact
+« Textes flottants » avec fond noir à 25 % d’opacité. Le combat continue dans les réglages.
+Les 66 scènes / 4 501 contrôles et la recette Android avaient déjà réussi ; les deux
+bancs initialement en dépassement de délai ont réussi leur relance isolée.
+Clôture documentaire uniquement : code, ressources, configuration et APK identiques
+à la livraison validée. Aucune nouvelle exécution des tests ni mesure de performances.
+APK installé : `0.1.0-arena004-layout` (74), SHA-256
+`8f4231a9e1b35767b1be019b622516014db95068272c0f2043310abccf8a1d2a`.
+Gambits conservés octet pour octet ; préférences initiales rétablies après la recette.
+Clôture par commit et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# ARENA-004 — Textes de combat passifs et réglages
+
+`floating_combat_text.gd` extrait la présentation du nombre de soin : Label3D,
+police 48, pixel_size 0,006, contour 5, progression acceptée et enveloppe commune.
+HealEffect utilise ce composant sans modifier ses anneaux ni son glow. CombatPresenter
+consomme les impacts déjà résolus et les PV réellement perdus : couleur selon le
+camp de la cible, jamais selon le lanceur. Les bindings copient désormais aussi le
+camp. Aucun appel vers les acteurs/exécuteurs depuis ces textes.
+Les nombres de dégâts suivent la position graphique de leur cible puis restent au
+dernier emplacement si elle meurt ; durée 1 s, dérive 0,24 unité et fondu identiques
+au soin. Léger décalage des impacts successifs pour les distinguer. Au plus 48 nombres
+de dégâts simultanés ; nettoyage à expiration, désactivation de la présentation et
+nouveau combat. Aucun effet sur les statistiques, le journal, les coûts ou les PV.
+CombatSettings ajoute trois booléens au groupe floating_text du ConfigFile existant.
+Types invalides ou clés absentes : true. L’interface reflète les cinq options sans
+émettre de changement. Les réglages des textes émettent un signal séparé des barres.
+L’encart compact fait partie de la liste défilante ; titre et OK restent accessibles.
+TouchScrollRouter reçoit ce scroller quand les réglages sont ouverts et continue de
+supprimer les taps issus d’un swipe ou de la copie souris d’un événement tactile.
+Les textes actifs sont masqués immédiatement par leur option sans supprimer le soin
+visuel ; les textes masqués continuent de vieillir. Les préférences survivent au replay.
+Les descriptions précédentes ci-dessous sont historiques.
+
 # ARENA-003 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les statistiques,

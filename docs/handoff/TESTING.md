@@ -1,3 +1,28 @@
+# ARENA-004 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les dégâts
+flottants blancs sur les ennemis, rouges sur les héros et les soins verts inchangés.
+Animation commune du soin, trois options indépendantes et mémorisées, encart compact
+« Textes flottants » avec fond noir à 25 % d’opacité. Le combat continue dans les réglages.
+Les 66 scènes / 4 501 contrôles et la recette Android avaient déjà réussi ; les deux
+bancs initialement en dépassement de délai ont réussi leur relance isolée.
+Clôture documentaire uniquement : code, ressources, configuration et APK identiques
+à la livraison validée. Aucune nouvelle exécution des tests ni mesure de performances.
+APK installé : `0.1.0-arena004-layout` (74), SHA-256
+`8f4231a9e1b35767b1be019b622516014db95068272c0f2043310abccf8a1d2a`.
+Gambits conservés octet pour octet ; préférences initiales rétablies après la recette.
+Clôture par commit et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+## ARENA-004 — Banc supplémentaire
+
+scenes/tests/floating_text_tests.tscn : 50 contrôles sur les nombres blancs/rouges/verts,
+animation commune du soin, pause, coup fatal, vie et nettoyage bornés, paramètres
+persistants et gestes tactiles. Suite : 66 scènes / 4 501 contrôles après relance de
+deux bancs initialement en dépassement de délai. Rendu GPU/Android distinct des tests.
+Voir docs/steps/ARENA-004.md. Validation utilisateur attendue.
+
 # ARENA-003 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les statistiques,

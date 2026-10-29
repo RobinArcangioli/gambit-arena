@@ -47,6 +47,7 @@ func _ready() -> void:
 	orders_enabled=true
 	selected_hero=&""
 	super._ready()
+	_apply_text_preferences()
 	# These inherited laboratory decorations are never part of the product HUD.
 	for child in hud.get_children():
 		if child!=pause_button and child!=wave_counter and child!=settings_button and child!=statistics_button and child!=journal_button and not child is HeroPanel:
@@ -91,8 +92,9 @@ func _build_party_overlays() -> void:
 	confirm_abandon_button=_button(column,"Abandonner",_confirm_abandon)
 	pause_layer.hide();_refresh_pause_menu()
 	settings_menu=SettingsMenu.new();add_child(settings_menu)
+	settings_menu.text_display_changed.connect(_change_text_settings)
 	settings_menu.display_changed.connect(_change_settings);settings_menu.closed.connect(_close_settings)
-	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars);settings_menu.hide()
+	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars,combat_settings.damage_dealt_text,combat_settings.damage_received_text,combat_settings.healing_text);settings_menu.hide()
 	statistics_menu=StatisticsMenu.new();add_child(statistics_menu)
 	statistics_menu.playback_requested.connect(_toggle_journal_pause)
 
@@ -116,7 +118,9 @@ func _command(_skill: StringName) -> void:pass
 func _show_tab(_tab: String) -> void:pass
 func _open_arena_picker() -> void:pass
 func _open_rule(_index: int) -> void:pass
-func _touch_scrollers() -> Array[ScrollContainer]:return statistics_menu.scrollers() if statistics_menu!=null else []
+func _touch_scrollers() -> Array[ScrollContainer]:
+	if settings_menu!=null and settings_menu.visible:return [settings_menu.scroller]
+	return statistics_menu.scrollers() if statistics_menu!=null else []
 func _modal_open() -> bool:return (pause_layer!=null and pause_layer.visible) or (settings_menu!=null and settings_menu.visible) or (statistics_menu!=null and statistics_menu.visible)
 
 func _reset() -> void:
@@ -231,8 +235,8 @@ func _update_layout() -> void:
 		statistics_menu.position=Vector2(combat_rect.position.x,combat_rect.position.y+60)
 		statistics_menu.size=Vector2(combat_rect.size.x,maxf(160,safe_rect.position.y+grid_top-12-statistics_menu.position.y))
 	if settings_menu!=null:
-		settings_menu.size=Vector2(minf(304,combat_rect.size.x-16),0)
-		settings_menu.position=Vector2(combat_rect.end.x-settings_menu.size.x-8,minf(combat_rect.position.y+60,combat_rect.end.y-settings_menu.get_combined_minimum_size().y-8))
+		settings_menu.position=Vector2(combat_rect.end.x-minf(304,combat_rect.size.x-16)-8,combat_rect.position.y+60)
+		settings_menu.size=Vector2(minf(304,combat_rect.size.x-16),minf(settings_menu.preferred_height(),combat_rect.size.y-68))
 	for i in range(hero_panels.size()):
 		hero_panels[i].position=Vector2(12+(i%2)*(width+8),grid_top+int(i/2.0)*(icon_style.panel_height+8))
 		hero_panels[i].size=Vector2(width,icon_style.panel_height)
@@ -319,7 +323,7 @@ func _projected_combat_bounds() -> Rect2:
 func _open_settings() -> void:
 	if not ready_ui or application_guard.blocked or action_pending or pause_layer.visible:return
 	touch_router.cancel_gesture();_close_statistics()
-	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars)
+	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars,combat_settings.damage_dealt_text,combat_settings.damage_received_text,combat_settings.healing_text)
 	settings_menu.visible=not settings_menu.visible
 	_update_layout();_update_buttons()
 func _close_settings() -> void:
@@ -355,3 +359,12 @@ func _toggle_journal_pause() -> void:
 	if not paused:application_guard.acknowledge_resume()
 	simulation.report.system(simulation.clock.elapsed,"Combat en pause." if paused else "Combat repris.")
 	statistics_menu.sync_playback(paused,true);_update_buttons()
+
+func _apply_text_preferences() -> void:
+	action_presenter.set_text_preferences(combat_settings.damage_dealt_text,combat_settings.damage_received_text,combat_settings.healing_text)
+func _change_text_settings(outgoing:bool,incoming:bool,healing:bool) -> void:
+	if application_guard.blocked:return
+	combat_settings.damage_dealt_text=outgoing;combat_settings.damage_received_text=incoming;combat_settings.healing_text=healing
+	_apply_text_preferences()
+	var result:Error=combat_settings.save_preferences()
+	settings_menu.status.text="Enregistrement indisponible" if result!=OK else "";settings_menu.status.visible=result!=OK
