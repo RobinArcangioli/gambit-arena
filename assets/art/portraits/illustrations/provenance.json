@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-29",
+  "origin": "User-provided PNG files, copied byte for byte. Display-only aspect-preserving focal crops.",
+  "assets": [
+    {
+      "id": "anne",
+      "source": "Anne_portrait.png",
+      "asset": "assets/art/portraits/illustrations/anne.png",
+      "sha256": "ff89c0af44375085a9e5efeee4fb75638890e2e436f548c9c7549fc29d3086d2",
+      "source_size": [
+        941,
+        1672
+      ]
+    },
+    {
+      "id": "mako",
+      "source": "Mako_portrait.png",
+      "asset": "assets/art/portraits/illustrations/mako.png",
+      "sha256": "ef9ce88abf22b746e088bb9a7493d04ab4c5d45744d13a8f67f013e5ad283302",
+      "source_size": [
+        941,
+        1672
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ extends Control
 signal home_requested
 signal hero_selected(hero_id: StringName)
 const Roster = preload("res://scripts/app/team_roster.gd")
+const Illustration = preload("res://scripts/presentation/hero_illustration.gd")
 const Portrait = preload("res://scripts/presentation/hero_portrait.gd")
 const Body = preload("res://scripts/crowd/ground_crowd.gd")
 const Layout = preload("res://scripts/ui/hud_layout.gd")
@@ -14,6 +15,8 @@ var title: Label
 var cards: Array[Button] = []
 var names: Array[Label] = []
 var portraits: Array[Portrait] = []
+var illustrations:Array[Illustration]=[]
+var idle_frames:Array[PanelContainer]=[]
 var active: bool = true
 var discard_next_step: bool = true
 var visual_time: float = 0
@@ -46,8 +49,20 @@ func _ready() -> void:
 		name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		card.add_child(name_label);names.append(name_label)
 		if id!=&"":
+			for state in ["normal","hover","pressed","focus"]:card.add_theme_stylebox_override(state,StyleBoxEmpty.new())
+			var illustration:=Illustration.new();illustration.hero_id=id
+			card.add_child(illustration);illustrations.append(illustration)
+			var frame:=PanelContainer.new();frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			var paint:=StyleBoxFlat.new();paint.bg_color=Color("10182fed");paint.border_color=Color("a68349")
+			paint.set_border_width_all(1);paint.set_corner_radius_all(6);paint.set_content_margin_all(2)
+			paint.shadow_color=Color(0,0,0,.45);paint.shadow_size=4
+			frame.add_theme_stylebox_override("panel",paint);card.add_child(frame);idle_frames.append(frame)
+			var window:=Control.new();window.mouse_filter=Control.MOUSE_FILTER_IGNORE;window.clip_contents=true;frame.add_child(window)
 			var portrait := Portrait.new();portrait.definition = Roster.APPEARANCES[id]
-			portrait.ground_radius = Body.RADIUS;card.add_child(portrait);portraits.append(portrait)
+			portrait.ground_radius = Body.RADIUS;window.add_child(portrait);portraits.append(portrait)
+			card.move_child(name_label,-1)
+			var name_paint:=StyleBoxFlat.new();name_paint.bg_color=Color("10182fcf");name_paint.set_corner_radius_all(4)
+			name_label.add_theme_stylebox_override("normal",name_paint);name_label.add_theme_color_override("font_color",Color("ffd16a"))
 			card.pressed.connect(_select.bind(id))
 	get_viewport().size_changed.connect(_layout)
 	_layout();set_active(active)
@@ -77,8 +92,14 @@ func _layout() -> void:
 		cards[i].position = Vector2(24+(i%2)*(width+gap),top+int(i/2.0)*(height+gap))
 		cards[i].size = Vector2(width,height)
 		if i<2:
-			names[i].position = Vector2(10,14);names[i].size = Vector2(width-20,34)
-			portraits[i].position = Vector2(8,52);portraits[i].size = Vector2(width-16,maxf(1,height-64))
+			illustrations[i].position=Vector2.ZERO;illustrations[i].size=Vector2(width-12,height-12)
+			names[i].position=Vector2(10,10);names[i].size=Vector2(width-32,32)
+			var original_size:=Vector2(clampf(width*.4,64,96),clampf(height*.36,88,132))
+			var idle_size:Vector2=(original_size*Vector2(.74,.72)).ceil()
+			idle_frames[i].position=Vector2(width,height)-idle_size;idle_frames[i].size=idle_size
+			# Crop the former viewport, preserving its projection and on-screen model size.
+			portraits[i].size=original_size-Vector2.ONE*6
+			portraits[i].position=(idle_size-Vector2.ONE*4-portraits[i].size)*.5-Vector2(0,original_size.y*.1)
 		else:
 			names[i].position = Vector2(10,(height-40)*0.5);names[i].size = Vector2(width-20,40)
 

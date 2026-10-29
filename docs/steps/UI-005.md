@@ -1,3 +1,37 @@
+# PORTRAITS-001 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, étape validée » pour la version
+corrigée : Mako remonté dans Équipe et Combat, Anne inchangée, cadres Idle plus petits
+avec modèles conservés à leur taille initiale et buffs horizontaux au bas des panneaux.
+Les PNG fournis sont intacts. Les cadrages et fenêtres de présentation sont indépendants
+de la logique de jeu. Les 69 scènes / 5 105 contrôles et la recette tactile Android
+avaient réussi. Gambits et réglages sont conservés octet pour octet ; pause vérifiée.
+Clôture documentaire uniquement : code, ressources, configuration et APK identiques
+à la livraison validée. Aucun nouveau test ni mesure de performances à cette clôture.
+APK installé : `0.1.0-portraits001-layout` (80), SHA-256
+`fd47a9d30effb17185507dac7b3739c71693efd4fcb8630bdfe9d227deb44ad6`.
+Clôture par commit local et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# PORTRAITS-001 — Illustrations des héros — en recette
+
+Base ARENA-005 clôturée : `0ee76d488ba1dc8d12c8b99c513a464c161604ec`.
+Mako et Anne utilisent les PNG fournis à l’identique. La page Équipe présente chaque
+illustration avec son petit cadre 3D Idle superposé à l’angle inférieur droit,
+débordant de 12 px à droite et en bas de l’image, dans l’emplacement de carte réservé.
+Les cadres Idle sont resserrés par clipping du viewport initial : aucune modification
+de la projection ni de la taille des modèles à l’écran. Mako est remonté dans les deux
+cadrages 2D ; le cadrage d’Anne reste celui de la première proposition.
+En combat, un portrait rapproché occupe la colonne gauche ; les buffs s’alignent
+horizontalement sous les barres. Les quatre panneaux mesurent 110 px de haut pour
+garder une vraie marge sous les buffs. Présentation partagée, sans changement de combat.
+69 scènes / 5 105 contrôles réussis. Validation visuelle Android attendue avant commit.
+APK `0.1.0-portraits001-layout` (80), `portraits-001-layout-debug.apk`, SHA-256 :
+`fd47a9d30effb17185507dac7b3739c71693efd4fcb8630bdfe9d227deb44ad6`.
+Détails : `docs/steps/PORTRAITS-001.md`. Après clôture : UI-005, qualification intégrée Android.
+Les états précédents ci-dessous sont historiques.
+
 # ARENA-005 validée — 29 octobre 2026
 
 Le propriétaire confirme : « Step validée. » après installation sur Galaxy A16.

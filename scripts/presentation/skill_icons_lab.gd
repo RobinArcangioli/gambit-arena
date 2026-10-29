@@ -20,7 +20,7 @@ func _ready() -> void:
 		var profile:Resource=HeroPanel.Icons.DEFAULT_STYLE.duplicate()
 		profile.cast_size=[16,20,24][i];profile.buff_size=[14,18,22][i]
 		profile.reference_size=[40,48,56][i];profile.picker_size=[16,20,24][i]
-		profile.panel_height=106;trials.append(profile)
+		profile.panel_height=96+profile.buff_size;trials.append(profile)
 	icon_style=trials[selected]
 	Codec.save(save_path,Orders.defaults())
 	super._ready();set_physics_process(false)

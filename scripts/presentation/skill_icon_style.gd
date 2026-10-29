@@ -4,4 +4,4 @@ extends Resource
 @export var buff_size: float = 18.0
 @export var reference_size: float = 48.0
 @export var picker_size: int = 20
-@export var panel_height: float = 106.0
+@export var panel_height: float = 110.0
