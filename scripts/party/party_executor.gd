@@ -165,12 +165,15 @@ func _on_source_lost() -> void:
 func try_impact(expected_id: int) -> bool:
 	var pending: bool = not resolved
 	var values: Dictionary = _visual_values("resolve")
+	var spent_before:int=spent
 	var success: bool = super.try_impact(expected_id)
 	if pending and resolved and phase == "RECUPERATION":
 		values["outcome"] = outcome
 		values["damage"] = applied_damage
 		values["healing"] = applied_healing
 		values["elapsed"] = elapsed
+		values["mana_paid"] = spent-spent_before
+		values["mana_after"] = mana
 		_record_visual(values)
 		if applied_buff != &"":
 			var applied: Dictionary = _visual_values("buff_applied")
@@ -193,7 +196,8 @@ func cancel() -> void:
 		_record_visual(values)
 
 func _visual_values(kind: String) -> Dictionary:
-	return {"kind": kind, "source_id": actor.get("combat_id") if is_instance_valid(actor) else 0,
+	return {"was_preparing":not resolved,"source_alive":living(actor),"target_alive":living(_target),
+		"kind": kind, "source_id": actor.get("combat_id") if is_instance_valid(actor) else 0,
 		"target_id": _target.get("combat_id") if is_instance_valid(_target) else 0,
 		"action_id": action_id, "skill": String(last_skill), "elapsed": elapsed,
 		"windup": _windup(), "recovery": _recovery(), "outcome": outcome,

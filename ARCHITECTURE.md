@@ -1,3 +1,46 @@
+# ARENA-003 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les statistiques,
+le MVP et le journal. Deux boutons indépendants sans chevron ; menus pleine largeur,
+statistiques en colonnes Héros / Ennemis. Bordures alignées sur les panneaux héros,
+espace inférieur de 12 px. MVP magenta, score dégâts effectifs + soins effectifs.
+Journal continu des 1 000 dernières entrées en RAM, Direct et pause/lecture intégrée.
+Horodatages mm:ss.mmm, mentions de non-paiement retirées et récupération d’Attaque omise.
+Les 65 scènes / 4 451 contrôles et la recette Android avaient déjà réussi.
+Clôture documentaire seule : code, ressources, configuration et APK identiques à
+la livraison validée ; aucune nouvelle exécution des tests ni mesure de performances.
+APK installé : `0.1.0-arena003-journal` (70), SHA-256
+`0d33882137b374f25164d328a33f5642b28e6b66510982666002221af2e225dc`.
+Gambits conservés octet pour octet ; pause et scroll du journal vérifiés sur Galaxy.
+Clôture par commit et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# ARENA-003 — Observation de combat et deux menus indépendants
+
+`CombatReport` est un RefCounted à valeurs, sans référence d’acteur ni ressource de
+présentation. PartySimulation lui transmet les faits immuables déjà produits par
+PartyExecutor : identifiants, séquences, PV réellement modifiés, PM réellement payés,
+états de cible/lanceur et durées. La validation/paiement reste dans l’exécuteur.
+Les expirations de buffs sont détectées autour de l’avancement de leur état réel.
+Les révisions séparent les données statistiques et les entrées du journal.
+Deux héros et les six ennemis courants sont conservés ; la nouvelle vague supprime
+seulement les fiches ennemies. Le journal est un cache RAM FIFO fixé à 1 000 entrées,
+effacé au nouveau combat. Aucun fichier, ConfigFile ou archivage du journal.
+`CombatStatisticsMenu` compose deux panneaux exclusifs commandés chacun par son bouton
+ArenaPage. Statistiques pleine largeur, deux colonnes avec scrolls indépendants et
+dessin virtualisé. Le journal pleine largeur utilise un ScrollContainer et un
+RichTextLabel continu : ajout des nouvelles entrées et retrait des paragraphes évincés.
+Direct suit la fin ; une remontée manuelle suspend le suivi. Le bouton pause/lecture
+émet une demande à ArenaPage, qui conserve les gardes d’application et la pause de
+simulation sans afficher le menu Pause. Les deux vues restent hors des panneaux héros.
+Le journal omet la récupération de l’attaque et les mentions de non-paiement ;
+son horodatage de présentation utilise mm:ss.mmm. Aucun temps de simulation modifié.
+Les boutons/tablette, feuille, pause et lecture sont des SVG locaux de présentation.
+MVP : PV effectifs infligés + PV effectifs soignés ; égalité départagée par dégâts,
+puis ordre d’équipe. Aucun score si tous les héros sont à zéro. Badge magenta #ff00ff.
+Les descriptions précédentes ci-dessous sont historiques.
+
 # ARENA-002 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les réglages de

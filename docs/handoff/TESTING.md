@@ -1,3 +1,30 @@
+# ARENA-003 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les statistiques,
+le MVP et le journal. Deux boutons indépendants sans chevron ; menus pleine largeur,
+statistiques en colonnes Héros / Ennemis. Bordures alignées sur les panneaux héros,
+espace inférieur de 12 px. MVP magenta, score dégâts effectifs + soins effectifs.
+Journal continu des 1 000 dernières entrées en RAM, Direct et pause/lecture intégrée.
+Horodatages mm:ss.mmm, mentions de non-paiement retirées et récupération d’Attaque omise.
+Les 65 scènes / 4 451 contrôles et la recette Android avaient déjà réussi.
+Clôture documentaire seule : code, ressources, configuration et APK identiques à
+la livraison validée ; aucune nouvelle exécution des tests ni mesure de performances.
+APK installé : `0.1.0-arena003-journal` (70), SHA-256
+`0d33882137b374f25164d328a33f5642b28e6b66510982666002221af2e225dc`.
+Gambits conservés octet pour octet ; pause et scroll du journal vérifiés sur Galaxy.
+Clôture par commit et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+## ARENA-003 — Banc supplémentaire
+
+`scenes/tests/combat_statistics_tests.tscn` : 130 contrôles sur statistiques effectives,
+MVP, cache RAM 1 000 entrées, reset vague/combat, journal continu, deux boutons sans
+chevron et menus pleine largeur, colonnes indépendantes, pause/lecture et scroll tactile
+540×960 / 360×640. Suite totale exécutée : 65 scènes / 4 451 contrôles, zéro échec.
+Rendu GPU et recette Galaxy séparés des tests headless : voir docs/steps/ARENA-003.md.
+Validation propriétaire attendue. Aucun journal joueur sur disque.
+
 # GAMBITS-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le nouveau modèle et son laboratoire

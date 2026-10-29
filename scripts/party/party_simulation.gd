@@ -1,5 +1,7 @@
 extends Node
 ## Party coordinator: no artistic resources and no UI callbacks during a tick.
+const CombatReport = preload("res://scripts/party/combat_report.gd")
+var report := CombatReport.new()
 const Roster = preload("res://scripts/party/party_roster.gd")
 const Unit = preload("res://scripts/party/party_unit.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
@@ -53,6 +55,7 @@ func configure(parent_world: Node3D) -> void:
 func reset() -> void:
 	clear()
 	run_id += 1
+	report.begin(run_id)
 	result = "EN COURS"
 	clock.reset()
 	spawned = 0
@@ -74,6 +77,7 @@ func reset() -> void:
 		world.add_child(unit)
 		unit.place(Vector2(-0.65, 0.65) if profile == ANNE else Vector2(0.65, -0.65))
 		heroes.append(unit)
+		report.register_actor(unit.combat_id,unit.display_name,unit.team,unit.team_slot,unit.state.health,unit.mana_capacity,clock.elapsed)
 		if infinite_mode: unit.place(Vector2(-0.425 if profile == ANNE else 0.425, 1.7))
 	if infinite_mode: _spawn_infinite_wave()
 
@@ -109,6 +113,7 @@ func add_enemy(at: Vector2) -> bool:
 	unit.place(at)
 	enemies.append(unit)
 	spawned += 1
+	report.register_actor(unit.combat_id,"%s #%d"%[unit.display_name,spawned],unit.team,unit.team_slot,unit.state.health,unit.mana_capacity,clock.elapsed)
 	wave.confirm_spawn()
 	return true
 
@@ -139,7 +144,11 @@ func advance(delta: float, paused: bool = false) -> void:
 	# Freeze the accepted personal steps before effects: a buff received during this
 	# tick starts affecting the next tick, independent of actor processing order.
 	for unit in all_units():
-		if Executor.living(unit): unit.advance_time(dt)
+		if Executor.living(unit):
+			var previous:Dictionary=unit.buffs.snapshot() if report.enabled else {}
+			unit.advance_time(dt)
+			for buff_id in previous:
+				if not unit.buffs.has(buff_id):report.expire(unit.combat_id,String(buff_id),clock.elapsed-dt+float(previous[buff_id].remaining))
 	# Stable order: Anne, Mako, then enemy creation order. Dead actors never retaliate.
 	for unit in all_units():
 		if not Executor.living(unit): continue
@@ -155,6 +164,7 @@ func advance(delta: float, paused: bool = false) -> void:
 	if infinite_mode:
 		if not infinite.waiting and wave.issued >= wave.total and enemies.is_empty():
 			infinite.begin_wait()
+			report.system(clock.elapsed,"Vague %d terminée. Prochaine vague dans 3 s."%wave_number)
 		elif infinite.waiting and infinite.advance(dt):
 			wave_number += 1
 			wave.reset(InfiniteSchedule.SIZE, InfiniteSchedule.SIZE)
@@ -350,6 +360,7 @@ func _finish(outcome: String) -> void:
 		unit.navigation.clear()
 		unit.present()
 	_collect_visual_events(all_units())
+	report.system(clock.elapsed,"Défaite : tous les héros sont vaincus." if outcome=="DEFAITE" else "Victoire !")
 
 func _dispose(unit) -> void:
 	if not is_instance_valid(unit): return
@@ -389,6 +400,7 @@ func _record_death(unit: Unit) -> void:
 func _append_visual_event(values: Dictionary) -> void:
 	if _events.size() >= MAX_VISUAL_EVENTS: _events.pop_front()
 	values["run_id"] = run_id
+	report.consume(values)
 	values.make_read_only()
 	_events.append(values)
 
@@ -400,6 +412,7 @@ func _collect_visual_events(units: Array[Unit]) -> void:
 	_pending_deaths.clear()
 
 func _spawn_infinite_wave() -> void:
+	report.begin_wave(wave_number,clock.elapsed)
 	var occupied: Array[Vector2] = []
 	for unit in all_units():
 		if Executor.living(unit): occupied.append(unit.mover.ground_position)

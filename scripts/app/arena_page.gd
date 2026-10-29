@@ -2,6 +2,10 @@ extends "res://scripts/party/party_application.gd"
 ## Sparse product HUD. Legacy diagnostics keep their controls through the base hooks.
 signal home_requested
 const CombatSettings = preload("res://scripts/app/combat_settings.gd")
+const StatisticsMenu=preload("res://scripts/ui/combat_statistics_menu.gd")
+var statistics_button:Button
+var journal_button:Button
+var statistics_menu:Control
 const SettingsMenu = preload("res://scripts/ui/combat_settings_menu.gd")
 @export var settings_path: String = ""
 var combat_settings: RefCounted
@@ -38,22 +42,29 @@ var exit_requested: bool = false
 
 func _ready() -> void:
 	combat_settings=CombatSettings.new(settings_path);combat_settings.load_preferences()
+	simulation.report.enabled=true
 	simulation.infinite_mode=infinite_mode
 	orders_enabled=true
 	selected_hero=&""
 	super._ready()
 	# These inherited laboratory decorations are never part of the product HUD.
 	for child in hud.get_children():
-		if child!=pause_button and child!=wave_counter and child!=settings_button and not child is HeroPanel:
+		if child!=pause_button and child!=wave_counter and child!=settings_button and child!=statistics_button and child!=journal_button and not child is HeroPanel:
 			hud.remove_child(child);child.queue_free()
 	_update_layout();_present()
 
 func _build_party_controls() -> void:
 	settings_button=_button(hud,"",_open_settings)
-	settings_button.icon=preload("res://assets/ui/combat_settings_gear.svg")
+	settings_button.icon=preload("res://assets/ui/combat_settings_gear.svg");settings_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	settings_button.tooltip_text="Réglages de combat"
 	for state in ["normal","hover","pressed","focus","disabled"]:
 		settings_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
+	statistics_button=_button(hud,"",_open_statistics)
+	statistics_button.icon=preload("res://assets/ui/combat_statistics.svg");statistics_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;statistics_button.tooltip_text="Statistiques"
+	for state in ["normal","hover","pressed","focus","disabled"]:statistics_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
+	journal_button=_button(hud,"",_open_journal)
+	journal_button.icon=preload("res://assets/ui/combat_journal.svg");journal_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;journal_button.tooltip_text="Journal de combat"
+	for state in ["normal","hover","pressed","focus","disabled"]:journal_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 	if infinite_mode:
 		wave_counter=_mode_label(22);hud.add_child(wave_counter)
 		countdown=_mode_label(64);countdown.add_theme_constant_override("outline_size",6)
@@ -82,6 +93,8 @@ func _build_party_overlays() -> void:
 	settings_menu=SettingsMenu.new();add_child(settings_menu)
 	settings_menu.display_changed.connect(_change_settings);settings_menu.closed.connect(_close_settings)
 	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars);settings_menu.hide()
+	statistics_menu=StatisticsMenu.new();add_child(statistics_menu)
+	statistics_menu.playback_requested.connect(_toggle_journal_pause)
 
 func _present() -> void:
 	if not is_inside_tree():return
@@ -93,6 +106,7 @@ func _present() -> void:
 	for unit in simulation.all_units():
 		if unit.state.alive:floor_canvas.feet.append(unit.position)
 	floor_canvas.queue_redraw();_update_bars()
+	if statistics_menu!=null:statistics_menu.sync_playback(paused,simulation.result=="EN COURS")
 	if pause_layer!=null and pause_layer.visible:_refresh_pause_menu()
 
 func _rebuild_footer() -> void:
@@ -102,11 +116,12 @@ func _command(_skill: StringName) -> void:pass
 func _show_tab(_tab: String) -> void:pass
 func _open_arena_picker() -> void:pass
 func _open_rule(_index: int) -> void:pass
-func _touch_scrollers() -> Array[ScrollContainer]:return []
-func _modal_open() -> bool:return (pause_layer!=null and pause_layer.visible) or (settings_menu!=null and settings_menu.visible)
+func _touch_scrollers() -> Array[ScrollContainer]:return statistics_menu.scrollers() if statistics_menu!=null else []
+func _modal_open() -> bool:return (pause_layer!=null and pause_layer.visible) or (settings_menu!=null and settings_menu.visible) or (statistics_menu!=null and statistics_menu.visible)
 
 func _reset() -> void:
 	if not ready_ui or application_guard.blocked:return
+	_close_statistics()
 	_arena_epoch=0;_history_wave=0
 	var id: StringName=chooser.call() if chooser.is_valid() else fallback_choice.next()
 	if id==&"reference" or not Catalog.ENTRIES.has(id):id=&"colisee_solaire"
@@ -115,13 +130,15 @@ func _reset() -> void:
 
 func _toggle_pause() -> void:
 	if not ready_ui or application_guard.blocked or action_pending:return
-	_close_settings()
+	_close_settings();_close_statistics()
+	if not paused:simulation.report.system(simulation.clock.elapsed,"Combat en pause.")
 	paused=true;simulation.clock.paused=true;confirming_abandon=false
 	pause_layer.show();_refresh_pause_menu();_update_layout();_update_buttons()
 
 func _resume_combat() -> void:
 	if application_guard.blocked or action_pending or confirming_abandon or not pause_layer.visible or simulation.result!="EN COURS":return
 	_lock_actions();pause_layer.hide();paused=false
+	simulation.report.system(simulation.clock.elapsed,"Combat repris.")
 	application_guard.acknowledge_resume();simulation.clock.paused=false;_update_buttons()
 
 func _replay_combat() -> void:
@@ -137,11 +154,13 @@ func _cancel_abandon() -> void:
 	confirming_abandon=false;_refresh_pause_menu();_update_layout()
 func _confirm_abandon() -> void:
 	if application_guard.blocked or action_pending or not confirming_abandon or exit_requested:return
+	simulation.report.system(simulation.clock.elapsed,"Combat abandonné.")
 	exit_requested=true;_lock_actions();home_requested.emit()
 func _request_home() -> void:_ask_abandon()
 func handle_back() -> void:
 	if application_guard.blocked or action_pending:return
-	if settings_menu.visible:_close_settings()
+	if statistics_menu.visible:_close_statistics()
+	elif settings_menu.visible:_close_settings()
 	elif confirming_abandon:_cancel_abandon()
 	elif _modal_open():_resume_combat()
 	else:_toggle_pause()
@@ -167,17 +186,23 @@ func _update_buttons() -> void:
 	pause_button.text="Pause";pause_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
 	if settings_button!=null:settings_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
 	if settings_menu!=null:settings_menu.set_blocked(application_guard.blocked or action_pending or exit_requested)
+	if journal_button!=null:journal_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
+	if wave_counter!=null:wave_counter.visible=statistics_menu==null or not statistics_menu.visible
+	if statistics_button!=null:statistics_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
+	if statistics_menu!=null:statistics_menu.set_blocked(application_guard.blocked or action_pending or exit_requested)
 	simulation.clock.paused=paused;_refresh_pause_menu()
 func _notification(what: int) -> void:
 	if not ready_ui or pause_layer==null:return
 	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT,NOTIFICATION_APPLICATION_PAUSED]:
-		_close_settings()
+		_close_settings();_close_statistics()
+		if not paused:simulation.report.system(simulation.clock.elapsed,"Combat en pause : application en arrière-plan.")
 		paused=true;simulation.clock.paused=true;pause_layer.show()
 	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT,NOTIFICATION_APPLICATION_PAUSED,NOTIFICATION_APPLICATION_FOCUS_IN,NOTIFICATION_APPLICATION_RESUMED]:
 		call_deferred("_update_buttons")
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode==KEY_SPACE:
-		if settings_menu.visible:_close_settings()
+		if statistics_menu.visible:_close_statistics()
+		elif settings_menu.visible:_close_settings()
 		elif _modal_open():_resume_combat()
 		else:_toggle_pause()
 		get_viewport().set_input_as_handled()
@@ -200,6 +225,11 @@ func _update_layout() -> void:
 	combat_rect=Rect2(safe_rect.position+Vector2(12,72),Vector2(safe_rect.size.x-24,maxf(110,grid_top-120)))
 	settings_button.position=combat_rect.position-safe_rect.position+Vector2(combat_rect.size.x-48,8)
 	settings_button.size=Vector2(48,48)
+	statistics_button.position=combat_rect.position-safe_rect.position+Vector2(0,8);statistics_button.size=Vector2(48,48)
+	journal_button.position=statistics_button.position+Vector2(48,0);journal_button.size=Vector2(48,48)
+	if statistics_menu!=null:
+		statistics_menu.position=Vector2(combat_rect.position.x,combat_rect.position.y+60)
+		statistics_menu.size=Vector2(combat_rect.size.x,maxf(160,safe_rect.position.y+grid_top-12-statistics_menu.position.y))
 	if settings_menu!=null:
 		settings_menu.size=Vector2(minf(304,combat_rect.size.x-16),0)
 		settings_menu.position=Vector2(combat_rect.end.x-settings_menu.size.x-8,minf(combat_rect.position.y+60,combat_rect.end.y-settings_menu.get_combined_minimum_size().y-8))
@@ -288,7 +318,7 @@ func _projected_combat_bounds() -> Rect2:
 
 func _open_settings() -> void:
 	if not ready_ui or application_guard.blocked or action_pending or pause_layer.visible:return
-	touch_router.cancel_gesture()
+	touch_router.cancel_gesture();_close_statistics()
 	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars)
 	settings_menu.visible=not settings_menu.visible
 	_update_layout();_update_buttons()
@@ -307,3 +337,21 @@ func _update_bars() -> void:
 	for unit in simulation.all_units():
 		var show_bars:bool=combat_settings.hero_bars if unit.team==0 else combat_settings.enemy_bars
 		if overhead.has(unit.combat_id) and not show_bars:overhead[unit.combat_id].hide()
+
+func _open_statistics() -> void:_open_report(false)
+func _open_journal() -> void:_open_report(true)
+func _open_report(journal:bool) -> void:
+	if not ready_ui or application_guard.blocked or action_pending or pause_layer.visible:return
+	touch_router.cancel_gesture();_close_settings()
+	if statistics_menu.visible and statistics_menu.journal_mode==journal:statistics_menu.hide()
+	else:statistics_menu.open(simulation.report,journal)
+	_update_layout();_update_buttons()
+func _close_statistics() -> void:
+	if statistics_menu!=null:statistics_menu.hide()
+	if wave_counter!=null:wave_counter.show()
+func _toggle_journal_pause() -> void:
+	if application_guard.blocked or action_pending or simulation.result!="EN COURS" or not statistics_menu.visible or not statistics_menu.journal_mode:return
+	_lock_actions();paused=not paused;simulation.clock.paused=paused
+	if not paused:application_guard.acknowledge_resume()
+	simulation.report.system(simulation.clock.elapsed,"Combat en pause." if paused else "Combat repris.")
+	statistics_menu.sync_playback(paused,true);_update_buttons()

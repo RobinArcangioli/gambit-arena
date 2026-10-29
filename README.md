@@ -1,3 +1,42 @@
+# ARENA-003 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les statistiques,
+le MVP et le journal. Deux boutons indépendants sans chevron ; menus pleine largeur,
+statistiques en colonnes Héros / Ennemis. Bordures alignées sur les panneaux héros,
+espace inférieur de 12 px. MVP magenta, score dégâts effectifs + soins effectifs.
+Journal continu des 1 000 dernières entrées en RAM, Direct et pause/lecture intégrée.
+Horodatages mm:ss.mmm, mentions de non-paiement retirées et récupération d’Attaque omise.
+Les 65 scènes / 4 451 contrôles et la recette Android avaient déjà réussi.
+Clôture documentaire seule : code, ressources, configuration et APK identiques à
+la livraison validée ; aucune nouvelle exécution des tests ni mesure de performances.
+APK installé : `0.1.0-arena003-journal` (70), SHA-256
+`0d33882137b374f25164d328a33f5642b28e6b66510982666002221af2e225dc`.
+Gambits conservés octet pour octet ; pause et scroll du journal vérifiés sur Galaxy.
+Clôture par commit et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# ARENA-003 — Statistiques et journal de combat — en recette
+
+Base ARENA-002 clôturée : `b2fb882500355a85633d08101fd746f1f5ecfd55`.
+Deux boutons indépendants dans le bandeau central : statistiques à gauche, journal
+immédiatement à droite, engrenage à l’autre bord. Aucun chevron. Chaque menu occupe
+la largeur disponible et s’arrête juste au-dessus des quatre panneaux héros ; le
+compteur de vagues est masqué pendant leur consultation. Statistiques sur deux colonnes
+Héros / Ennemis, triées séparément par dégâts infligés décroissants. Trois barres par
+acteur : dégâts infligés, reçus et soins effectifs. Totaux héros conservés sur le combat,
+ennemis de la vague courante seulement. MVP magenta : dégâts effectifs + soins effectifs.
+Journal joueur continu des 1 000 dernières entrées, en RAM uniquement, sans pagination
+ni réglage. Direct suit les dernières actions ; pause/lecture intégrée fige/reprend
+le combat sans ouvrir le menu de pause et laisse le journal défiler.
+65 scènes / 4 451 contrôles réussis, dont 130 dédiés. Rendu GPU et recette Galaxy A16.
+APK normal `0.1.0-arena003-journal` (70), `arena-003-journal-debug.apk`, SHA-256 :
+`0d33882137b374f25164d328a33f5642b28e6b66510982666002221af2e225dc`.
+Détails et limites de validation : `docs/steps/ARENA-003.md`.
+Validation utilisateur attendue avant commit et sauvegarde de clôture. Aucun push.
+Après clôture : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
 # ARENA-002 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les réglages de
