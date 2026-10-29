@@ -31,6 +31,10 @@ var dying: bool = false
 var death_elapsed: float = 0.0
 var _meshes: Array[MeshInstance3D] = []
 var _skeletons: Array[Skeleton3D] = []
+var energy_active: bool = false
+var energy_strength: float = 0.65
+var _energy_materials: Array[ShaderMaterial] = []
+var _energy_shells: Array[MeshInstance3D] = []
 var _flash: StandardMaterial3D
 
 func _ready() -> void:
@@ -130,6 +134,7 @@ func react_hit() -> void:
 	_sample()
 
 func start_death() -> void:
+	set_casting_energy(false)
 	dying = true
 	death_elapsed = 0.0
 	action_active = false
@@ -203,5 +208,30 @@ func _sample() -> void:
 	player.seek(clip_time, true)
 	_apply_flash()
 
+func _ensure_energy_shells() -> void:
+	if not _energy_shells.is_empty():return
+	# Shells share the existing skin and skeleton, but own their presentation material.
+	for layer in range(2):
+		var paint := ShaderMaterial.new()
+		paint.shader = preload("res://shaders/presentation/casting_rim.gdshader")
+		paint.set_shader_parameter("width", 0.00025 if layer == 0 else 0.00065)
+		paint.set_shader_parameter("layer_opacity", 0.65 if layer == 0 else 0.15)
+		_energy_materials.append(paint)
+		for mesh in _meshes:
+			var shell := MeshInstance3D.new()
+			shell.mesh = mesh.mesh;shell.skin = mesh.skin;shell.skeleton = mesh.skeleton
+			shell.transform = mesh.transform;shell.material_override = paint
+			shell.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			mesh.get_parent().add_child(shell)
+			shell.hide();_energy_shells.append(shell)
+
+func set_casting_energy(active: bool, strength: float = 0.65) -> void:
+	energy_active = active and not dying
+	if energy_active:_ensure_energy_shells()
+	energy_strength = clampf(strength, 0.0, 1.0)
+	_apply_flash()
+
 func _apply_flash() -> void:
-	for mesh in _meshes: mesh.material_overlay = _flash if flash_remaining > 0.0 else null
+	for paint in _energy_materials:paint.set_shader_parameter("strength", energy_strength)
+	for shell in _energy_shells:shell.visible = energy_active
+	for mesh in _meshes:mesh.material_overlay = _flash if flash_remaining > 0.0 else null

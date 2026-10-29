@@ -1,3 +1,34 @@
+# GRAPHICS-014 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Android : « Oui, step validée » pour le réglage B —
+Équilibré. Le fin contour bleu et les huit particules attirées vers le lanceur sont
+validés pendant l’incantation de Soin, Foudre et Booster. La présentation reste isolée
+de la logique ; elle s’arrête à la résolution, à l’annulation, à la mort et au reset.
+Les 63 bancs / 4 215 contrôles et la recette Galaxy A16 avaient déjà réussi.
+Clôture documentaire uniquement : code, ressources, configuration et les deux APK
+restent identiques à la livraison validée. Pas de nouvelle exécution des tests.
+APK normal installé : `0.1.0-graphics014` (64), SHA-256
+`b6f76cc9754ad40ff2813894904d475e60bc780c774378b640694e835d37a68e`.
+Gambits conservés octet pour octet ; gel de la pause vérifié sur le téléphone.
+Laboratoire A/B/C exporté séparément, non installé sur Android.
+Clôture par commit et sauvegarde complète restaurée/vérifiée.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Aucun push automatique. Les états précédents ci-dessous sont historiques.
+
+# GRAPHICS-014 — Énergie d’incantation — en recette
+
+GRAPHICS-013 clôturée : `b497548d283849af42aa821a52ed9a51711eb095`.
+Le 29 octobre 2026, ajout d’un fin contour bleu sur la silhouette des héros pendant
+l’incantation et de huit particules flottantes attirées vers le lanceur. Choix validé
+dans le laboratoire Godot : B — Équilibré (intensité 0,65). Fin immédiate à la résolution,
+à l’annulation, à la mort ou à la fin du combat ; aucun effet pendant la récupération.
+Présentation seule : aucun changement de ciblage, coûts, durées ou états de combat.
+63 bancs / 4 215 contrôles réussis, dont 24 sur le cycle de vie de cette présentation.
+APK normal `0.1.0-graphics014` (64) ; laboratoire séparé exporté. APK installé sur Galaxy A16, gambits inchangés et gel de la pause vérifiés.
+Validation complète de l’étape attendue avant commit et sauvegarde de clôture.
+Prochain GO après clôture : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
 # GRAPHICS-013 validée — 29 octobre 2026
 
 Le propriétaire confirme « Step validée. » après approbation du cadrage sur Galaxy A16.

@@ -5,6 +5,9 @@ const Lightning = preload("res://scripts/presentation/lightning_presenter.gd")
 const Booster = preload("res://scripts/presentation/booster_presenter.gd")
 var booster := Booster.new()
 var lightning := Lightning.new()
+const CastingEnergy = preload("res://scripts/presentation/casting_energy.gd")
+var casting_effects: Dictionary = {}
+var casting_strength: float = 0.65
 const MAX_GHOSTS: int = 12
 const MAX_HEAL_EFFECTS: int = 8
 @export var heal_definition: Resource = preload("res://resources/presentation/effects/heal.tres")
@@ -27,6 +30,7 @@ func _init() -> void:
 
 func reset_run(id: int) -> void:
 	if run_id == id: return
+	_clear_casting()
 	lightning.reset_run(id)
 	booster.reset_run(id)
 	for ghost in ghosts: _release_ghost(ghost)
@@ -52,6 +56,7 @@ func capture(units: Array, id: int) -> void:
 func present(units: Array, values: Array[Dictionary], dt: float, id: int, terminal: bool = false) -> void:
 	reset_run(id)
 	capture(units, id)
+	_sync_casting(units, dt, terminal)
 	_advance_heals(dt)
 	lightning.advance_visual(bindings, dt)
 	booster.advance_visual(bindings, dt)
@@ -199,3 +204,30 @@ func prune_history(retained: Dictionary) -> void:
 	for actor_id in _dead_ids.keys():
 		if not retained.has(actor_id): _dead_ids.erase(actor_id)
 	booster.prune_history(retained)
+
+func _sync_casting(units: Array, dt: float, terminal: bool) -> void:
+	var retained: Dictionary = {}
+	for unit in units:
+		var active: bool = enabled and not terminal and unit.team == 0 and unit.state.alive and unit.action.casting()
+		if is_instance_valid(unit.visual) and unit.visual is View:
+			unit.visual.set_casting_energy(active, casting_strength)
+		if not active:continue
+		var actor_id: int = unit.combat_id
+		retained[actor_id] = true
+		if not casting_effects.has(actor_id):
+			var effect := CastingEnergy.new();add_child(effect);casting_effects[actor_id] = effect
+		var effect: Node3D = casting_effects[actor_id]
+		effect.position = unit.position
+		effect.strength = casting_strength
+		effect.advance_visual(dt * unit.personal_step_scale)
+	for actor_id in casting_effects.keys():
+		if not retained.has(actor_id):_release_casting(actor_id)
+
+func _release_casting(actor_id: int) -> void:
+	var effect: Node3D = casting_effects[actor_id]
+	effect.hide();remove_child(effect);effect.queue_free();casting_effects.erase(actor_id)
+
+func _clear_casting() -> void:
+	for actor_id in casting_effects.keys():_release_casting(actor_id)
+	for snapshot in bindings.values():
+		if is_instance_valid(snapshot.view) and snapshot.view is View:snapshot.view.set_casting_energy(false)
