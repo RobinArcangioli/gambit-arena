@@ -14,7 +14,7 @@ func _ready() -> void:
 	touch_router.active_scrollers = func():return [scroll] if active and is_visible_in_tree() and not editor.popup_open() else []
 func _build_reference() -> void:
 	_label(column,"Priorité de haut en bas · Allié inclut le héros",16)
-	editor = Editor.new();editor.hero_id = hero_id;editor.save_path = save_path;column.add_child(editor)
+	editor = Editor.new();editor.hero_id = hero_id;editor.icon_style = icon_style;editor.save_path = save_path;column.add_child(editor)
 func set_active(enabled: bool) -> void:
 	super.set_active(enabled)
 	if editor!=null:editor.set_active(enabled)

@@ -4,6 +4,8 @@ signal configuration_changed(configuration: Dictionary)
 const Store = preload("res://scripts/gambits/configuration_store.gd")
 const Orders = preload("res://scripts/gambits/orders.gd")
 const Criteria = preload("res://scripts/gambits/target_criteria.gd")
+const SkillIcons = preload("res://scripts/presentation/skill_icons.gd")
+var icon_style: Resource = SkillIcons.DEFAULT_STYLE
 const Icon = preload("res://scripts/gambits/order_icon.gd")
 const Palette = preload("res://scripts/app/app_theme.gd")
 var hero_id: StringName = &"anne"
@@ -83,8 +85,15 @@ func _rebuild() -> void:
 		fields.criterion.select(Criteria.IDS.find(StringName(rows[i].criterion)))
 		fields.criterion.item_selected.connect(func(index: int):change(token,"criterion",String(Criteria.IDS[index])))
 		fields.skill = _picker(row,"Capacité")
+		fields.skill.custom_minimum_size.x=132 if get_viewport_rect().size.x>=450 else 65
 		var abilities: Array = Array(Orders.PROFILES[hero_id].abilities)
-		for id in abilities:fields.skill.add_item("Booster" if id==&"booster" else "Soin" if id==&"heal" else "Foudre" if id==&"lightning" else "Attaque")
+		fields.skill.add_theme_constant_override("icon_max_width",icon_style.picker_size)
+		for id in abilities:
+			var caption:String="Booster" if id==&"booster" else "Soin" if id==&"heal" else "Foudre" if id==&"lightning" else "Attaque"
+			var texture:Texture2D=SkillIcons.texture(id)
+			if texture!=null:fields.skill.add_icon_item(texture,caption)
+			else:fields.skill.add_item(caption)
+			fields.skill.get_popup().set_item_icon_max_width(fields.skill.item_count-1,icon_style.picker_size)
 		fields.skill.select(abilities.find(StringName(rows[i].skill)))
 		fields.skill.item_selected.connect(func(index: int):change(token,"skill",String(abilities[index])))
 		fields.delete = _icon(row,"delete","Supprimer l’ordre",remove_order.bind(token))

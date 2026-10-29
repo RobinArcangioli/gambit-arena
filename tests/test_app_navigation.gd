@@ -38,7 +38,7 @@ func _ready() -> void:
 	game.set_process(false);game.set_physics_process(false)
 	check(app.route==&"arena" and app.arena_choice.draws==1,"double entry creates one combat and exactly one draw")
 	check(game.simulation.rules==preload("res://scripts/gambits/configuration_codec.gd").migrate(configuration).configuration,"new arena loads preserved hero rules")
-	check(game.render_box.position==Vector2.ZERO and game.render_box.size==get_viewport().get_visible_rect().size,"arena extends underneath every command")
+	check(game.render_box.position==game.floor_canvas.position and game.render_box.size==get_viewport().get_visible_rect().size,"arena extends underneath every command")
 	check(game.get_node_or_null('HUD/HeaderPanel')==null and game.get_node_or_null('HUD/FooterPanel')==null,"no separate opaque button bands")
 	var initial_id: StringName=game.chosen_arena
 	for tick in range(120):game._physics_process(1.0/60.0)

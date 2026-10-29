@@ -8,6 +8,7 @@ extends "res://scripts/presentation/arena_view.gd"
 @export var framing_half_extent: float = 3.0
 @export_range(0.1, 1.0) var framing_fill: float = 0.88
 var show_calibration: bool = false
+var opaque_backdrop: bool = true
 var image_rect := Rect2()
 
 func sync_projection(source_camera: Camera3D, size_value: Vector2) -> void:
@@ -40,7 +41,7 @@ func _draw_texture_clipped(texture: Texture2D) -> void:
 	draw_texture_rect_region(texture, clipped, Rect2((clipped.position - image_rect.position) * ratio, clipped.size * ratio))
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, view_size), Color("14212a"))
+	if opaque_backdrop:draw_rect(Rect2(Vector2.ZERO, view_size), Color("14212a"))
 	_draw_texture_clipped(background)
 	if show_calibration:
 		_draw_texture_clipped(calibration_overlay)

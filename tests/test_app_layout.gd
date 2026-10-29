@@ -33,13 +33,13 @@ func _ready() -> void:
 		for id in app.arena_choice.choices:
 			game.chooser=func():return id
 			game._reset();await settle();game._sync_projection()
-			check(enclosed(game.floor_canvas.active_view.image_rect,view),"calibrated illustration covers every control at %s / %s"%[resolution,id])
+			check(enclosed(game.get_node("Backdrop").get_rect(),view) and game.arena_backdrop!=null,"calibrated arena with full background covers every control at %s / %s"%[resolution,id])
 			var safe: bool=true
 			for x in [-2.65,2.65]:
 				for z in [-2.65,2.65]:
 					for angle in range(8):
 						var offset:=Vector3(cos(TAU*angle/8)*0.35,0,sin(TAU*angle/8)*0.35)
-						safe=safe and view.has_point(game.camera.unproject_position(Vector3(x,0,z)+offset))
+						safe=safe and game.combat_rect.grow(1).has_point(game.render_box.position+game.camera.unproject_position(Vector3(x,0,z)+offset))
 			check(safe,"logical body at all four bounds remains visible")
 		check(enclosed(view,game.pause_button.get_global_rect()) and game.hero_panels.all(func(panel):return enclosed(view,panel.get_global_rect())),"navigation and resume fit without clipped text")
 		game._toggle_pause();await settle()

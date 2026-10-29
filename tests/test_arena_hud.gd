@@ -39,7 +39,7 @@ func _ready() -> void:
 		var safe: Rect2=game.safe_area_override
 		check(safe.encloses(game.pause_button.get_global_rect()) and game.hero_panels.all(func(panel):return safe.encloses(panel.get_global_rect())),"panels and Pause respect safe area")
 		check(game.hero_panels[0].position.y==game.hero_panels[1].position.y and game.hero_panels[2].position.y>game.hero_panels[0].position.y,"two panel rows")
-		check(game.hero_panels[3].get_global_rect().end.y<resolution.y*.5,"lower half remains free of HUD")
+		check(game.hero_panels[0].get_global_rect().position.y>resolution.y*.5,"hero grid occupies bottom of screen")
 		var anne=game.simulation.hero(&"anne");var mako=game.simulation.hero(&"mako")
 		anne.place(Vector2.ZERO);mako.place(Vector2(.8,0));mako.state.damage(110)
 		check(anne.action.request(&"heal",mako)>0,"real cast fixture")

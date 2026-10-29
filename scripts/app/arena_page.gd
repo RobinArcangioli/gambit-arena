@@ -5,10 +5,14 @@ const Choice = preload("res://scripts/app/arena_choice.gd")
 const HeroPanel = preload("res://scripts/presentation/hero_status_panel.gd")
 @export var infinite_mode: bool = false
 var rotation_chooser: Callable
+var icon_style: Resource = HeroPanel.Icons.DEFAULT_STYLE
 var wave_counter: Label
 var countdown: Label
 var _arena_epoch: int = 0
 var _history_wave: int = 0
+var combat_rect := Rect2()
+var arena_backdrop: ShaderMaterial
+const ARENA_ZOOM_OUT: float = 1.08
 var chooser: Callable
 var fallback_choice := Choice.new()
 var chosen_arena: StringName
@@ -43,7 +47,7 @@ func _build_party_controls() -> void:
 		countdown=_mode_label(64);countdown.add_theme_constant_override("outline_size",6)
 		add_child(countdown);countdown.hide()
 	for id in [&"mako",&"anne",&"",&""]:
-		var panel:=HeroPanel.new();panel.hero_id=id;hud.add_child(panel);hero_panels.append(panel)
+		var panel:=HeroPanel.new();panel.hero_id=id;panel.icon_style=icon_style;hud.add_child(panel);hero_panels.append(panel)
 
 func _build_party_overlays() -> void:
 	pause_layer=Control.new();pause_layer.mouse_filter=Control.MOUSE_FILTER_STOP;add_child(pause_layer)
@@ -171,11 +175,13 @@ func _update_layout() -> void:
 	pause_button.position=Vector2(safe_rect.size.x-116,12);pause_button.size=Vector2(104,48)
 	pause_button.add_theme_font_size_override("font_size",16)
 	var width: float=(safe_rect.size.x-32)*0.5
+	var grid_top:float=safe_rect.size.y-12-(2*icon_style.panel_height+8)
+	combat_rect=Rect2(safe_rect.position+Vector2(12,72),Vector2(safe_rect.size.x-24,maxf(110,grid_top-120)))
 	for i in range(hero_panels.size()):
-		hero_panels[i].position=Vector2(12+(i%2)*(width+8),72+int(i/2.0)*114)
-		hero_panels[i].size=Vector2(width,106)
+		hero_panels[i].position=Vector2(12+(i%2)*(width+8),grid_top+int(i/2.0)*(icon_style.panel_height+8))
+		hero_panels[i].size=Vector2(width,icon_style.panel_height)
 	if wave_counter!=null:
-		wave_counter.position=Vector2(12,300);wave_counter.size=Vector2(safe_rect.size.x-24,28)
+		wave_counter.position=Vector2(12,grid_top-36);wave_counter.size=Vector2(safe_rect.size.x-24,28)
 	if pause_layer!=null:
 		pause_layer.position=Vector2.ZERO;pause_layer.size=view.size
 		var card_size:=Vector2(minf(292,safe_rect.size.x-32),250)
@@ -195,8 +201,27 @@ func _sync_projection() -> void:
 	var target: Vector2 = Vector2(viewport_3d.size)
 	var zoom: float = maxf(1, maxf(center.x/maxf(1,center.x-rect.position.x),(target.x-center.x)/maxf(1,rect.end.x-center.x)))
 	zoom = maxf(zoom,maxf(center.y/maxf(1,center.y-rect.position.y),(target.y-center.y)/maxf(1,rect.end.y-center.y)))
-	camera.size /= zoom * 1.002
+	camera.size = camera.size / (zoom * 1.002) * ARENA_ZOOM_OUT
+	# Fit the complete logical ground and character height above the footer.
+	var bounds:Rect2=_projected_combat_bounds()
+	var fit:float=minf(1.0,minf(combat_rect.size.x/maxf(1,bounds.size.x),combat_rect.size.y/maxf(1,bounds.size.y)))
+	camera.size/=maxf(0.1,fit)
+	bounds=_projected_combat_bounds()
+	var offset:Vector2=combat_rect.get_center()-bounds.get_center()
+	# Horizontal origin remains centered; only vertical framing changes.
+	offset.x=0
+	render_box.position=offset;floor_canvas.position=offset;bars_layer.position=offset
 	floor_canvas.sync_view()
+	# Extend only the photograph's outer edge outside its calibrated rectangle.
+	# Ground pixels and models continue using precisely the same projection.
+	if "background" in art and art.background!=null:
+		art.opaque_backdrop=false;art.queue_redraw()
+		if arena_backdrop==null:
+			arena_backdrop=ShaderMaterial.new();arena_backdrop.shader=preload("res://shaders/presentation/arena_edge_fill.gdshader")
+			$Backdrop.material=arena_backdrop
+		arena_backdrop.set_shader_parameter("image_texture",art.background)
+		arena_backdrop.set_shader_parameter("image_origin",art.image_rect.position+offset)
+		arena_backdrop.set_shader_parameter("image_size",art.image_rect.size)
 
 func _mode_label(font_size: int) -> Label:
 	var label:=Label.new();label.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -224,6 +249,13 @@ func _present_infinite() -> void:
 	countdown.visible=simulation.infinite.waiting and simulation.result=="EN COURS"
 	if countdown.visible:
 		countdown.text=str(maxi(1,ceili(simulation.infinite.remaining-0.000001)))
-		var center: Vector2=camera.unproject_position(Vector3.ZERO)*(render_box.size/Vector2(viewport_3d.size))
-		center.y=clampf(center.y,wave_counter.get_global_rect().end.y+62,safe_rect.end.y-62)
+		var center: Vector2=render_box.position+camera.unproject_position(Vector3.ZERO)*(render_box.size/Vector2(viewport_3d.size))
+		center.y=clampf(center.y,combat_rect.position.y+54,combat_rect.end.y-54)
 		countdown.position=center-Vector2(80,54);countdown.size=Vector2(160,108)
+
+func _projected_combat_bounds() -> Rect2:
+	var result:=Rect2(camera.unproject_position(Vector3(-3,0,-3)),Vector2.ZERO)
+	for x in [-3.0,3.0]:
+		for z in [-3.0,3.0]:
+			for height in [0.0,1.6]:result=result.expand(camera.unproject_position(Vector3(x,height,z)))
+	return result

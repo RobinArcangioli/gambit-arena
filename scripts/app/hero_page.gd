@@ -1,6 +1,8 @@
 extends Control
 signal gambits_requested
 signal team_requested
+const Icons = preload("res://scripts/presentation/skill_icons.gd")
+var icon_style: Resource = Icons.DEFAULT_STYLE
 const Reference = preload("res://scripts/app/hero_reference.gd")
 const Router = preload("res://scripts/ui/touch_scroll_router.gd")
 const Layout = preload("res://scripts/ui/hud_layout.gd")
@@ -87,7 +89,9 @@ func _build_reference() -> void:
 	_label(column,"Compétences",24)
 	for skill in reference.skills:
 		var box := _panel();skill_panels.append(box.get_parent())
-		_label(box,skill.name,22)
+		var heading:=HBoxContainer.new();heading.add_theme_constant_override("separation",12);box.add_child(heading)
+		if Icons.texture(skill.id)!=null:heading.add_child(Icons.rect(skill.id,icon_style.reference_size))
+		var name_label:=_label(heading,skill.name,22);name_label.size_flags_vertical=Control.SIZE_SHRINK_CENTER;name_label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		_label(box,skill.description)
 		_label(box,"Mana : %d   ·   Portée : %s" % [skill.cost,Reference.number(skill.reach)])
 		if skill.id==&"basic":
