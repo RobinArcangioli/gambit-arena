@@ -1,3 +1,18 @@
+# MATERIALS-001 validée — 30 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, étape validée » pour le profil
+C « Peint contrasté », choisi dans Godot puis installé en version 82.
+Héros, ennemis et miniatures Idle partagent les matériaux mats et l’éclairage
+bleuté/chaud. Les textures et GLB restent intacts ; le profil est isolé de la logique.
+14 scènes ciblées / 937 contrôles avaient réussi, dont 80 dédiés.
+La clôture actualise seulement les documents : code, ressources, configuration
+et APK identiques à la livraison validée. Aucune nouvelle mesure FPS ni relance des tests.
+APK `0.1.0-materials001` (82), SHA-256
+`f58a09e0ed0cd9fe0986e2ec2aaaaf51c161a2858de9d4e3c21f6df49be9102c`.
+Clôture par commit local et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Détails : `docs/steps/MATERIALS-001.md`. Prochain GO : UI-005, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
 # ATTACK-BARS-001 validée — 29 octobre 2026
 
 Le propriétaire confirme : « Étape validée. » après installation de la version 81

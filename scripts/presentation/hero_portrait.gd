@@ -28,6 +28,7 @@ func _ready() -> void:
 	environment_node.environment = environment;world.add_child(environment_node)
 	var light := DirectionalLight3D.new();light.rotation_degrees = Vector3(-45,-30,0)
 	light.light_energy = 0.9;light.shadow_enabled = false;world.add_child(light)
+	View.SurfaceProfile.apply_lighting(world)
 	camera = Camera3D.new();camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.keep_aspect = Camera3D.KEEP_HEIGHT
 	camera.position = Vector3(2.8,1.65,4.0)

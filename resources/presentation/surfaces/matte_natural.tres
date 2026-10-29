@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/character_surface_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+display_name = "A — Mat naturel"
+roughness = 0.8
+metallic = 0.0
+specular = 0.25
+ambient_color = Color(1, 1, 1, 1)
+ambient_energy = 0.65
+light_color = Color(1, 1, 1, 1)
+light_energy = 0.9

@@ -38,6 +38,7 @@ func _ready() -> void:
 	light.light_energy = 0.9
 	light.shadow_enabled = false
 	world.add_child(light)
+	preload("res://resources/presentation/surfaces/painted_contrast.tres").apply_lighting(world)
 	floor_canvas.camera = camera
 	floor_canvas.set_definition(arena_definition)
 	for index in range(6):

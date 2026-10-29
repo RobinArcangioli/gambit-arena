@@ -3,6 +3,9 @@ extends Node3D
 const CLIP_END_MARGIN: float = 0.0001
 const Definition = preload("res://scripts/presentation/character_definition.gd")
 const FootprintShadow = preload("res://scripts/presentation/footprint_shadow.gd")
+const SurfaceProfile = preload("res://resources/presentation/surfaces/painted_contrast.tres")
+@export var surface_profile: Resource = SurfaceProfile
+var _source_materials: Dictionary = {}
 var ground_radius: float = 0.0
 var ground_shadow: FootprintShadow
 var definition: Definition
@@ -73,6 +76,7 @@ func _ready() -> void:
 	for mesh in model.find_children("*", "MeshInstance3D", true, false):
 		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_meshes.append(mesh)
+	apply_surface_profile(surface_profile)
 	for skeleton in model.find_children("*", "Skeleton3D", true, false): _skeletons.append(skeleton)
 	_flash = StandardMaterial3D.new()
 	_flash.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -85,6 +89,32 @@ func _ready() -> void:
 		add_child(ground_shadow)
 	valid = true
 	pose(0.0, false, Vector2.ZERO)
+
+func apply_surface_profile(profile: Resource) -> void:
+	surface_profile=profile
+	# Keep originals so switching presets never accumulates tint or alters imported resources.
+	var copies: Dictionary = {}
+	for mesh in _meshes:
+		if mesh.mesh==null:continue
+		for surface in range(mesh.mesh.get_surface_count()):
+			var key: String = "%d:%d"%[mesh.get_instance_id(),surface]
+			if not _source_materials.has(key):_source_materials[key]=mesh.get_active_material(surface)
+			var source: Material = _source_materials[key]
+			if source==null:continue
+			if not copies.has(source):copies[source]=profile.make_material(source)
+			mesh.set_surface_override_material(surface,copies[source])
+
+func _enter_tree() -> void:
+	# Death presentation detaches and reattaches the same visual.
+	if not _meshes.is_empty():apply_surface_profile(surface_profile)
+
+func _exit_tree() -> void:
+	# Release private paints while their mesh instances and imported materials still exist.
+	for mesh in _meshes:
+		if not is_instance_valid(mesh) or mesh.mesh==null:continue
+		for surface in range(mesh.mesh.get_surface_count()):
+			var key: String = "%d:%d"%[mesh.get_instance_id(),surface]
+			if _source_materials.has(key):mesh.set_surface_override_material(surface,_source_materials[key])
 
 func pose(_gait: float, moving: bool, facing: Vector2) -> void:
 	if dying: return

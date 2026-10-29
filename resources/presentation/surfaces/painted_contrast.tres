@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/character_surface_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+display_name = "C — Peint contrasté"
+roughness = 0.95
+metallic = 0.0
+specular = 0.05
+diffuse_mode = 1
+ambient_color = Color(0.69, 0.76, 0.9, 1)
+ambient_energy = 0.32
+light_color = Color(1, 0.92, 0.8, 1)
+light_energy = 1.05
