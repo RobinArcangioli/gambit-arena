@@ -1,3 +1,40 @@
+# ARENA-002 validée — 29 octobre 2026
+
+Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les réglages de
+combat et les huit arènes sans quadrillage blanc. Engrenage de 30 px, intérieur bleu
+nuit, contour or, sans cadre, zone tactile de 48 px alignée au bord droit central.
+Menu translucide, titre or, options PV / PM / Incantation indépendantes pour héros et
+ennemis, actives par défaut et mémorisées immédiatement. OK compact et combat continu.
+Compteur agrandi à 22 px, texte strict « Vague N », y compris après une défaite.
+Les 64 bancs / 4 321 contrôles et la recette Android avaient déjà réussi.
+Clôture documentaire uniquement : code, ressources, configuration et APK restent
+identiques à la livraison validée. Pas de nouvelle exécution des tests.
+APK normal installé : `0.1.0-arena002-layout` (66), SHA-256
+`4e3f7734f3135fa32210e318b0dcb46efdaa66854626512c082f8b39364a5ef8`.
+Gambits conservés octet pour octet ; réglages persistants et gel de la pause vérifiés.
+Clôture par commit et sauvegarde complète restaurée/vérifiée.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Aucun push automatique. Les états précédents ci-dessous sont historiques.
+
+# ARENA-002 — Réglages de combat et décors sans grille — en recette
+
+Base GRAPHICS-014 clôturée : `62cc34bfc23249b96c5e1cc38684dabc9e8326e0`.
+Le 29 octobre 2026, engrenage seul agrandi à 30 px, zone tactile 48 px alignée au bord
+droit du rectangle central, sans marge supplémentaire.
+Intérieur bleu nuit, contour or, extérieur transparent ; aucun fond ni cadre de bouton.
+Menu translucide assorti aux panneaux héros, deux cases indépendantes pour les barres
+flottantes des héros et des ennemis, actives par défaut, effet et sauvegarde immédiats.
+Combat maintenu en cours ; bouton OK compact, centré, ajusté au texte, qui ferme le menu.
+Options libellées PV / PM / Incantation ; titre « Réglages de combat » en or #ffd16a.
+Compteur de vagues agrandi à 22 px : texte strict « Vague N », même après une défaite.
+Les panneaux bas et leurs barres restent visibles. Menu absent hors arène.
+Les huit fonds et miniatures sont remplacés par des variantes sans quadrillage blanc,
+créées avec imagegen intégré. Aucune option de grille. Joints naturels conservés,
+caméra et coordonnées de jeu inchangées. Qualification dans `docs/steps/ARENA-002.md`.
+Validation complète de l’étape attendue avant commit et sauvegarde de clôture.
+Prochain GO après clôture : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
 # GRAPHICS-014 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Android : « Oui, step validée » pour le réglage B —

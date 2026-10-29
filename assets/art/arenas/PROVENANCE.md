@@ -1,3 +1,17 @@
+# État courant — ARENA-002 (29 octobre 2026)
+
+Le propriétaire retire définitivement le quadrillage blanc et son option. Les huit
+fonds aux chemins historiques sont remplacés par leurs variantes sans grille créées
+avec l’outil intégré image_gen.imagegen (compétence imagegen). Les miniatures sont
+régénérées. Les fichiers d’origine restent récupérables dans les sauvegardes et
+l’historique Git antérieurs, sans être chargés par le jeu.
+Consignes exactes, sorties de génération et empreintes finales : `generation.json`.
+Les sorties sont normalisées au canevas d’origine 540 × 960 avec ImageMagick, sans
+recadrage. La caméra, les repères du sol et les placements restent inchangés.
+La reconstruction peut introduire de légères différences de texture. Les joints
+naturels du dallage restent présents ; les lignes blanches tactiques sont retirées.
+La fiche de fourniture ci-dessous décrit les originaux historiques avant remplacement.
+
 # Fonds d'arène fournis — GRAPHICS-002
 
 Source : archive `arenes_isometriques_540x960.zip` fournie par le propriétaire le

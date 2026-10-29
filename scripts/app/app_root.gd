@@ -12,6 +12,7 @@ const Home = preload("res://assets/art/ui/home.png")
 const AppTheme = preload("res://resources/ui/night_gold.tres")
 const ROUTES = [&"home", &"arena", &"team", &"hero", &"gambits"]
 @export var save_path: String = "user://party_rules_v2.json"
+@export var combat_settings_path: String = "user://combat_settings.cfg"
 var arena_choice := Choice.new()
 var guard := Guard.new()
 var background: TextureRect
@@ -74,6 +75,7 @@ func open_arena() -> void:
 	guard.acknowledge_resume()
 	combat = ArenaPage.instantiate()
 	combat.save_path = save_path
+	combat.settings_path = combat_settings_path
 	combat.chooser = arena_choice.next
 	combat.rotation_chooser = arena_choice.next_excluding
 	combat.infinite_mode = true

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Rebuild small catalogue thumbnails from the unchanged original PNG files.
+# Rebuild small catalogue thumbnails from the current grid-free arena PNG files.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p assets/art/arenas/previews

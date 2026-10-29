@@ -101,6 +101,8 @@ func _ready() -> void:
 		kill_wave(page.simulation);wait_wave(page.simulation);page._present()
 		check(page.chosen_arena!=initial and app.arena_choice.draws==draws+2,"rotation repeats at wave twenty-one")
 		check(page.action_presenter._sequences.size()<=8 and page.action_presenter._dead_ids.size()<=2 and page.action_presenter.booster._dead.size()<=2,"presentation history retires completed enemy lifetimes")
+		page.simulation._finish("DEFAITE");page._present()
+		check(page.wave_counter.text=="Vague 21","defeat cannot add a prefix or suffix to wave caption")
 		page._toggle_pause();page._replay_combat();await settle()
 		check(page.simulation.wave_number==1 and page.simulation.enemies.size()==6 and not page.countdown.visible,"product Replay restarts mode and countdown")
 		page._toggle_pause();page._ask_abandon();page._confirm_abandon();await settle()

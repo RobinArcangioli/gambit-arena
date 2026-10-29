@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-29",
+  "tool": "built-in image_gen.imagegen",
+  "intent": "edit",
+  "source": "Derived from user-provided arena archive; originals retained in prior Git history and backups, replaced in current game by grid-free variants",
+  "assets": [
+    {
+      "id": "chaos_vert_toxique",
+      "original": "assets/art/arenas/chaos_vert_toxique/chaos_vert_toxique.png",
+      "generated": "assets/art/arenas/chaos_vert_toxique/chaos_vert_toxique.png",
+      "source_output_filename": "exec-6fc34670-ae38-432b-ae8e-7f57cb88b5fa.png",
+      "prompt": "Use case: precise-object-edit. Edit target: attached portrait isometric game arena chaos_vert_toxique. Remove ONLY the thin artificial bright WHITE tactical diamond grid overlay drawn across the floor. Restore the original natural floor texture beneath those white lines. Preserve the natural dark paving seams, cracks, magical gold/green ornament or central grate, ice/snow/moss/lava details. Keep camera angle, exact framing and floor boundaries, ALL architecture, stairs, props, colors, light and shadows IDENTICAL to the original. This image will be toggled against the original in a game: no crop, no zoom, no rearrangement, no redesign. Keep portrait 9:16 aspect ratio. Remove all white straight tactical grid lines including near floor edges. Do not remove real floor seams or thematic ornament. No text or UI. Return exactly one clean background.",
+      "raw_generated_sha256": "3d34c79789c9f73df8cd67efc5d67c0ece4f85fdc0a12a7973b49c17f9a77a78",
+      "normalization": "ImageMagick resize to original 540x960 canvas; no crop",
+      "sha256": "09a9e4bf690eb155e796344425ad255a0ea0ebe87636d1bf6e801cf8d50f1186"
+    },
+    {
+      "id": "colisee_solaire",
+      "original": "assets/art/arenas/colisee_solaire/colisee_solaire.png",
+      "generated": "assets/art/arenas/colisee_solaire/colisee_solaire.png",
+      "source_output_filename": "exec-0fdb9020-c6a0-402c-b23b-650546d75592.png",
+      "prompt": "Use case: precise-object-edit. Edit target: the attached portrait isometric game arena image. Remove ONLY the thin bright WHITE tactical diamond grid drawn across the central arena floor. Reconstruct the original natural sandy stone floor texture under those white lines. Keep ALL natural stone paving seams, cracks, shadows and debris intact. Keep camera angle, framing, exact arena boundaries, architecture, stairs, statues, banners, crowds, braziers and lighting IDENTICAL to the input. Do not redesign, move, add, crop, zoom or recolor anything. This must align with the original image when toggled in a game. Preserve portrait 9:16 composition, ideally exact 540x960 dimensions. No tactical grid, no white straight grid overlay, no interface, no text. Deliver one clean background image.",
+      "raw_generated_sha256": "fe6874cac3e2ff9c3b3609a6dbd6148ddfa624e791a0dc2624237d21b3d960f8",
+      "normalization": "ImageMagick resize to original 540x960 canvas; no crop",
+      "sha256": "7982190e8adabc7bb993d9b03f5b0288f66168f60622b786a1bc08934d06811c"
+    },
+    {
+      "id": "sanctuaire_polaire",
+      "original": "assets/art/arenas/sanctuaire_polaire/sanctuaire_polaire.png",
+      "generated": "assets/art/arenas/sanctuaire_polaire/sanctuaire_polaire.png",
+      "source_output_filename": "exec-03219914-2472-4f67-bbbd-50026a1b5b38.png",
+      "prompt": "Use case: precise-object-edit. Edit target: attached portrait isometric game arena sanctuaire_polaire. Remove ONLY the thin artificial bright WHITE tactical diamond grid overlay drawn across the floor. Restore the original natural floor texture beneath those white lines. Preserve the natural dark paving seams, cracks, magical gold/green ornament or central grate, ice/snow/moss/lava details. Keep camera angle, exact framing and floor boundaries, ALL architecture, stairs, props, colors, light and shadows IDENTICAL to the original. This image will be toggled against the original in a game: no crop, no zoom, no rearrangement, no redesign. Keep portrait 9:16 aspect ratio. Remove all white straight tactical grid lines including near floor edges. Do not remove real floor seams or thematic ornament. No text or UI. Return exactly one clean background.",
+      "raw_generated_sha256": "a1e57fd91a85663a9627f71629a8368e8474c9f025dd75c4a72acb0dabc4f36a",
+      "normalization": "ImageMagick resize to original 540x960 canvas; no crop",
+      "sha256": "24da074bff0b734771c1c8b8e79f4e770615f3b8d539c10e71f99b561cd2040c"
+    },
+    {
+      "id": "forteresse_volcanique",
+      "original": "assets/art/arenas/forteresse_volcanique/forteresse_volcanique.png",
+      "generated": "assets/art/arenas/forteresse_volcanique/forteresse_volcanique.png",
+      "source_output_filename": "exec-c5f982e9-540c-42d5-a5c7-abf28af376c1.png",
+      "prompt": "Use case: precise-object-edit. Edit target: attached portrait isometric game arena forteresse_volcanique. Remove ONLY the thin artificial bright WHITE tactical diamond grid overlay drawn across the floor. Restore the original natural floor texture beneath those white lines. Preserve the natural dark paving seams, cracks, magical gold/green ornament or central grate, ice/snow/moss/lava details. Keep camera angle, exact framing and floor boundaries, ALL architecture, stairs, props, colors, light and shadows IDENTICAL to the original. This image will be toggled against the original in a game: no crop, no zoom, no rearrangement, no redesign. Keep portrait 9:16 aspect ratio. Remove all white straight tactical grid lines including near floor edges. Do not remove real floor seams or thematic ornament. No text or UI. Return exactly one clean background.",
+      "raw_generated_sha256": "f222b4e2c76f2ce2d950569ec063a5189aa9fecf16492d7c543e67402f8fb26d",
+      "normalization": "ImageMagick resize to original 540x960 canvas; no crop",
+      "sha256": "571126e4ccf7a50d7b583017cbb048148604da1259f20fbb283cbd8db74d29ee"
+    },
+    {
+      "id": "temple_sylvestre",
+      "original": "assets/art/arenas/temple_sylvestre/temple_sylvestre.png",
+      "generated": "assets/art/arenas/temple_sylvestre/temple_sylvestre.png",
+      "source_output_filename": "exec-da5332bb-ec24-4f8a-93c2-abccd9b4c4b5.png",
+      "prompt": "Use case: precise-object-edit. Edit target: attached portrait isometric game arena temple_sylvestre. Remove ONLY the thin artificial bright WHITE tactical diamond grid overlay drawn across the floor. Restore the original natural floor texture beneath those white lines. Preserve the natural dark paving seams, cracks, magical gold/green ornament or central grate, ice/snow/moss/lava details. Keep camera angle, exact framing and floor boundaries, ALL architecture, stairs, props, colors, light and shadows IDENTICAL to the original. This image will be toggled against the original in a game: no crop, no zoom, no rearrangement, no redesign. Keep portrait 9:16 aspect ratio. Remove all white straight tactical grid lines including near floor edges. Do not remove real floor seams or thematic ornament. No text or UI. Return exactly one clean background.",
+      "raw_generated_sha256": "685005bfaf44eb1540dec7742104d8e970967d9d81f16221daec3e420401bf1c",
+      "normalization": "ImageMagick resize to original 540x960 canvas; no crop",
+      "sha256": "eff9be7a2c9814b71cbd2a94d75f27f946bc4192235bf229c5298ea985959485"
+    },
+    {
+      "id": "arcane_bleu_sombre",
+      "original": "assets/art/arenas/arcane_bleu_sombre/arcane_bleu_sombre.png",
+      "generated": "assets/art/arenas/arcane_bleu_sombre/arcane_bleu_sombre.png",
+      "source_output_filename": "exec-3d249126-65ef-4753-927c-933e370dfb06.png",
+      "prompt": "Use case: precise-object-edit. Edit target: attached portrait isometric game arena arcane_bleu_sombre. Remove ONLY the thin artificial bright WHITE tactical diamond grid overlay drawn across the floor. Restore the original natural floor texture beneath those white lines. Preserve the natural dark paving seams, cracks, magical gold/green ornament or central grate, ice/snow/moss/lava details. Keep camera angle, exact framing and floor boundaries, ALL architecture, stairs, props, colors, light and shadows IDENTICAL to the original. This image will be toggled against the original in a game: no crop, no zoom, no rearrangement, no redesign. Keep portrait 9:16 aspect ratio. Remove all white straight tactical grid lines including near floor edges. Do not remove real floor seams or thematic ornament. No text or UI. Return exactly one clean background.",
+      "raw_generated_sha256": "2e1b45e8294ff02d0c7cc643c5ffcd16f6f97d40a7f76f5ba28eae700afcd7f9",
+      "normalization": "ImageMagick resize to original 540x960 canvas; no crop",
+      "sha256": "73be5bb36de6ffe98e5530d2ef2b554a295e8003860455e7ab1ee7450f2b1c47"
+    },
+    {
+      "id": "lumiere_angelique",
+      "original": "assets/art/arenas/lumiere_angelique/lumiere_angelique.png",
+      "generated": "assets/art/arenas/lumiere_angelique/lumiere_angelique.png",
+      "source_output_filename": "exec-ff90729f-c3d5-453f-85e2-d2e6f30d4528.png",
+      "prompt": "Use case: precise-object-edit. Edit target: attached portrait isometric game arena lumiere_angelique. Remove ONLY the thin artificial bright WHITE tactical diamond grid overlay drawn across the floor. Restore the original natural floor texture beneath those white lines. Preserve the natural dark paving seams, cracks, magical gold/green ornament or central grate, ice/snow/moss/lava details. Keep camera angle, exact framing and floor boundaries, ALL architecture, stairs, props, colors, light and shadows IDENTICAL to the original. This image will be toggled against the original in a game: no crop, no zoom, no rearrangement, no redesign. Keep portrait 9:16 aspect ratio. Remove all white straight tactical grid lines including near floor edges. Do not remove real floor seams or thematic ornament. No text or UI. Return exactly one clean background.",
+      "raw_generated_sha256": "9ee916ae1b88a89a2ffef83acb175034b67023f057969cd5b753a5efe10ed888",
+      "normalization": "ImageMagick resize to original 540x960 canvas; no crop",
+      "sha256": "77697312fc64bfcaa5bc567c0bbb81fc5d63a90534ec85cff0c373ca7c65ed46"
+    },
+    {
+      "id": "pirates_fantomes",
+      "original": "assets/art/arenas/pirates_fantomes/pirates_fantomes.png",
+      "generated": "assets/art/arenas/pirates_fantomes/pirates_fantomes.png",
+      "source_output_filename": "exec-b9748bcb-a753-4592-a589-83f9673046b9.png",
+      "prompt": "Use case: precise-object-edit. Edit target: attached portrait isometric game arena pirates_fantomes. Remove ONLY the thin artificial bright WHITE tactical diamond grid overlay drawn across the floor. Restore the original natural floor texture beneath those white lines. Preserve the natural dark paving seams, cracks, magical gold/green ornament or central grate, ice/snow/moss/lava details. Keep camera angle, exact framing and floor boundaries, ALL architecture, stairs, props, colors, light and shadows IDENTICAL to the original. This image will be toggled against the original in a game: no crop, no zoom, no rearrangement, no redesign. Keep portrait 9:16 aspect ratio. Remove all white straight tactical grid lines including near floor edges. Do not remove real floor seams or thematic ornament. No text or UI. Return exactly one clean background.",
+      "raw_generated_sha256": "b17d004e1c08af8a4ee70d13bec286a2c223f4312d810eae15fe39b112057380",
+      "normalization": "ImageMagick resize to original 540x960 canvas; no crop",
+      "sha256": "1613ad17054efec9676134c92e817d72f64e7c2c13fb985c4aaaec649af5ed25"
+    }
+  ]
+}
