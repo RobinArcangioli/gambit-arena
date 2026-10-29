@@ -60,7 +60,7 @@ func _ready() -> void:
 		tap(viewport,game.settings_button);await settle()
 		check(game.settings_menu.visible and not game.paused,"settings do not pause combat")
 		check(game.combat_rect.encloses(game.settings_menu.get_global_rect()),"settings stay inside central arena even on small portrait")
-		check(game.settings_menu.find_children("*","CheckBox",true,false).size()==5,"two bar options and three floating options")
+		check(game.settings_menu.find_children("*","CheckBox",true,false).size()==6,"grid, two bar options and three floating options")
 		var prefs=game.combat_settings
 		check(prefs.damage_dealt_text and prefs.damage_received_text and prefs.healing_text,"all floating options default on")
 		game.settings_menu.scroller.scroll_vertical=0;await settle()

@@ -1,3 +1,13 @@
+# ARENA-005 — Deux illustrations supplémentaires fournies — 29 octobre 2026
+
+Ville d’Alexandrie et Ombres de Beherit sont copiées à l’identique depuis les PNG
+fournis par le propriétaire, en 540×960. Aucune retouche ni génération d’image.
+Empreintes, noms de fourniture et repères de calibration : supplied_additions.json.
+Miniatures techniques 108×192 via le même procédé ImageMagick que le catalogue.
+Les SVG de calibration sont des surimpressions techniques locales, désactivées dans
+le produit. Les huit variantes sans quadrillage précédentes restent inchangées.
+Les sections suivantes décrivent les étapes antérieures.
+
 # État courant — ARENA-002 (29 octobre 2026)
 
 Le propriétaire retire définitivement le quadrillage blanc et son option. Les huit

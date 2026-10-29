@@ -19,7 +19,8 @@ func _ready() -> void:
 	var director := EnemyDirector.new()
 	add_child(director)
 	director.configure(world, hero)
-	var expected: Array[Vector2] = [Vector2(-2.65, 0), Vector2(0, -2.65), Vector2(2.65, 0), Vector2(0, 2.65)]
+	var edge:float=Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN
+	var expected: Array[Vector2] = [Vector2(-edge, 0), Vector2(0, -edge), Vector2(edge, 0), Vector2(0, edge)]
 	for index in range(4):
 		director.advance(1.0)
 		_check(director.actors.size() == index + 1, "spawn count")

@@ -55,7 +55,7 @@ func tap(at: Vector2) -> void:
 
 func _ready() -> void:
 	var initial_orphans: int = int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
-	check(Catalog.ids().size() == 9, "eight supplied arenas plus diagnostic reference")
+	check(Catalog.ids().size() == 11, "ten supplied arenas plus diagnostic reference")
 	check(Catalog.definition(&"missing").arena_id == &"reference", "unknown ID has stable reference fallback")
 	for arena_id in Catalog.ids():
 		var definition = Catalog.definition(arena_id)

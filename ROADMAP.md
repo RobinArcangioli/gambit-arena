@@ -1,3 +1,43 @@
+# ARENA-005 validée — 29 octobre 2026
+
+Le propriétaire confirme : « Step validée. » après installation sur Galaxy A16.
+Les dix arènes partagent un octogone central fixe, une caméra commune à 45° et les
+mêmes limites physiques. Seuls le zoom uniforme et le décalage des fonds s’adaptent.
+Ville d’Alexandrie et Ombres de Beherit sont ajoutées à partir des PNG fournis intacts.
+Les formations apparaissent au sud/nord avec marge de gabarit ; les héros conservent
+positions et états entre vagues. Le contrôle des silhouettes sur les flancs a conduit
+à ajouter une réserve visuelle par zoom de 18 % des fonds, sans changer l’octogone.
+La case « Afficher grille » des réglages montre le quadrillage clippé sous les modèles,
+sans pause ; elle est désactivée par défaut et son choix est mémorisé immédiatement.
+Les 68 scènes / 5 027 contrôles et la recette tactile Android ont réussi, y compris
+la mémorisation de la grille après relance. Gambits et réglages initiaux préservés.
+Clôture documentaire uniquement : code, ressources, configuration et APK identiques
+à la livraison validée. Aucun nouveau test ni mesure de performances à cette clôture.
+APK installé : `0.1.0-arena005-grid` (78), SHA-256
+`8ea6c9963a40c1ec94bc00b9d8226de410db7f21eab529217e521703a8de8b5e`.
+Clôture par commit local et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# ARENA-005 — Octogone central fixe et dix décors — en recette
+
+Base ARENA-004 clôturée : `1a0baa9da71b9cea0e2862a671acd27a5b362e78`.
+Ville d’Alexandrie et Ombres de Beherit sont ajoutées, PNG fournis copiés à l’identique.
+Le catalogue et les tirages du mode Infini comprennent dix arènes jouables.
+Un seul octogone central détermine le terrain, le déplacement et le contournement.
+Sa forme, sa taille et sa position à l’écran sont identiques sur les dix décors pour
+un même viewport. Caméra fixe à 45° ; seuls le zoom uniforme et le décalage des fonds
+sont propres à chaque image. Aucune déformation des PNG ni inclinaison par décor.
+Héros au bord sud au premier combat, six ennemis au nord à chaque vague, avec marge
+physique 0,35. Positions et états des héros conservés entre vagues. Grille technique
+clippée à l’octogone, masquée par défaut et affichable via les réglages de combat.
+68 scènes / 5 027 contrôles réussis : 216 sur les décors, 257 sur l’octogone et le routage.
+APK normal `0.1.0-arena005-grid` (78), `arena-005-grid-debug.apk`, SHA-256 :
+`8ea6c9963a40c1ec94bc00b9d8226de410db7f21eab529217e521703a8de8b5e`.
+Détails : `docs/steps/ARENA-005.md`. Validation utilisateur attendue avant commit.
+Aucun push automatique. Après clôture : UI-005, qualification Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
 # ARENA-004 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les dégâts

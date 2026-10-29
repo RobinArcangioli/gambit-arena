@@ -1,7 +1,9 @@
 extends PanelContainer
 signal display_changed(hero_bars: bool, enemy_bars: bool)
 signal text_display_changed(outgoing:bool,incoming:bool,healing:bool)
+signal grid_display_changed(enabled:bool)
 signal closed
+var grid_box:CheckBox
 var bars_box: CheckBox
 var enemy_bars_box: CheckBox
 var outgoing_box:CheckBox
@@ -19,6 +21,8 @@ func _ready() -> void:
 	var title:=Label.new();title.text="Réglages de combat";title.add_theme_font_size_override("font_size",18);title.add_theme_color_override("font_color",Color("ffd16a"));column.add_child(title)
 	scroller=ScrollContainer.new();scroller.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;scroller.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(scroller)
 	options=VBoxContainer.new();options.size_flags_horizontal=Control.SIZE_EXPAND_FILL;options.add_theme_constant_override("separation",8);scroller.add_child(options)
+	grid_box=_checkbox(options,"Afficher grille")
+	grid_box.toggled.connect(func(enabled:bool):grid_display_changed.emit(enabled))
 	bars_box=_checkbox(options,"Afficher les barres des héros
 PV / PM / Incantation")
 	enemy_bars_box=_checkbox(options,"Afficher les barres des ennemis\nPV / PM / Incantation")
@@ -45,12 +49,13 @@ func _checkbox(parent: Node, caption: String) -> CheckBox:
 	focus.border_color=Color("d9aa4c");focus.set_border_width_all(1);focus.set_corner_radius_all(4)
 	box.add_theme_stylebox_override("focus",focus)
 	parent.add_child(box);return box
-func reflect(hero_bars: bool, enemy_bars: bool, outgoing:bool=true,incoming:bool=true,healing:bool=true) -> void:
+func reflect(hero_bars: bool, enemy_bars: bool, outgoing:bool=true,incoming:bool=true,healing:bool=true,grid:bool=false) -> void:
+	grid_box.set_pressed_no_signal(grid)
 	bars_box.set_pressed_no_signal(hero_bars);enemy_bars_box.set_pressed_no_signal(enemy_bars)
 	outgoing_box.set_pressed_no_signal(outgoing);incoming_box.set_pressed_no_signal(incoming);healing_box.set_pressed_no_signal(healing)
 func _changed(_value: bool) -> void:display_changed.emit(bars_box.button_pressed,enemy_bars_box.button_pressed)
 func set_blocked(blocked: bool) -> void:
-	for button in [bars_box,enemy_bars_box,outgoing_box,incoming_box,healing_box,ok_button]:button.disabled=blocked
+	for button in [grid_box,bars_box,enemy_bars_box,outgoing_box,incoming_box,healing_box,ok_button]:button.disabled=blocked
 
 func _texts_changed(_value:bool) -> void:text_display_changed.emit(outgoing_box.button_pressed,incoming_box.button_pressed,healing_box.button_pressed)
 func preferred_height() -> float:return get_combined_minimum_size().y+options.get_combined_minimum_size().y

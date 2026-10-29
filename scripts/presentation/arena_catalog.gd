@@ -10,6 +10,8 @@ const ENTRIES: Dictionary = {
 	&"chaos_vert_toxique": "Chaos vert toxique",
 	&"lumiere_angelique": "Lumiere angelique",
 	&"pirates_fantomes": "Pirates fantomes",
+	&"ville_alexandrie": "Ville d’Alexandrie",
+	&"ombres_beherit": "Ombres de Beherit",
 	&"reference": "Terrain de reference",
 }
 

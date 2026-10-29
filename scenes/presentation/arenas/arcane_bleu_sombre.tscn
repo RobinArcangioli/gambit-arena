@@ -1,8 +1,11 @@
 [gd_scene load_steps=4 format=3]
 [ext_resource type="Script" path="res://scripts/presentation/illustrated_arena_view.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/art/arenas/arcane_bleu_sombre/arcane_bleu_sombre.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/art/arenas/calibration/grille_8x8.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/art/arenas/calibration/arcane_bleu_sombre.svg" id="3"]
 [node name="IllustratedArenaView" type="Node2D"]
 script = ExtResource("1")
 background = ExtResource("2")
 calibration_overlay = ExtResource("3")
+image_center = Vector2(270, 470)
+grid_half_size = Vector2(194.915254237, 161.016949153)
+framing_fill = 1.0

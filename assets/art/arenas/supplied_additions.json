@@ -1,0 +1,126 @@
+{
+  "date": "2026-10-29",
+  "source": "User-provided PNG files, copied byte-identically; no retouch or generation",
+  "assets": [
+    {
+      "id": "ville_alexandrie",
+      "title": "Ville d’Alexandrie",
+      "supplied_filename": "09_ville_alexandrie_540x960.png",
+      "asset": "assets/art/arenas/ville_alexandrie/ville_alexandrie.png",
+      "sha256": "0e3d8c8e56517f63d70abee119214fc926718a5eb6594cc3ac073645bf3c2d80",
+      "image_center": [
+        270,
+        484
+      ],
+      "grid_half_size": [
+        190.67796610169492,
+        118.64406779661017
+      ],
+      "floor_polygon_px": [
+        [
+          35,
+          415.2405486460662
+        ],
+        [
+          172.65981284232265,
+          318
+        ],
+        [
+          367.34018715767735,
+          318
+        ],
+        [
+          505,
+          415.2405486460662
+        ],
+        [
+          505,
+          552.7594513539339
+        ],
+        [
+          367.34018715767735,
+          650
+        ],
+        [
+          172.65981284232265,
+          650
+        ],
+        [
+          35,
+          552.7594513539339
+        ]
+      ],
+      "calibration": "assets/art/arenas/calibration/ville_alexandrie.svg",
+      "logical_grid_half_extents_px": [
+        167.78804977307905,
+        118.64406779661017
+      ],
+      "canvas_px": [
+        540,
+        960
+      ],
+      "framing_fill": 1.0,
+      "edge_safety_zoom": 1.18
+    },
+    {
+      "id": "ombres_beherit",
+      "title": "Ombres de Beherit",
+      "supplied_filename": "10_ombres_beherit_540x960.png",
+      "asset": "assets/art/arenas/ombres_beherit/ombres_beherit.png",
+      "sha256": "2db82dacdeaaa7f664f66f77db41951cbcf54c52c5b0ccbf272015b77084a134",
+      "image_center": [
+        270,
+        552
+      ],
+      "grid_half_size": [
+        186.4406779661017,
+        122.88135593220339
+      ],
+      "floor_polygon_px": [
+        [
+          40,
+          489.0395385192895
+        ],
+        [
+          174.73088065418813,
+          400
+        ],
+        [
+          365.2691193458119,
+          400
+        ],
+        [
+          500,
+          489.0395385192895
+        ],
+        [
+          500,
+          614.9604614807105
+        ],
+        [
+          365.2691193458119,
+          704
+        ],
+        [
+          174.73088065418813,
+          704
+        ],
+        [
+          40,
+          614.9604614807105
+        ]
+      ],
+      "calibration": "assets/art/arenas/calibration/ombres_beherit.svg",
+      "logical_grid_half_extents_px": [
+        173.7804801221176,
+        122.88135593220339
+      ],
+      "canvas_px": [
+        540,
+        960
+      ],
+      "framing_fill": 1.0,
+      "edge_safety_zoom": 1.18
+    }
+  ]
+}

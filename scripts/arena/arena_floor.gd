@@ -6,6 +6,7 @@ const View = preload("res://scripts/presentation/arena_view.gd")
 const REFERENCE = preload("res://resources/presentation/arenas/reference.tres")
 var camera: Camera3D
 var view_size := Vector2(508, 572)
+var show_grid:bool=false
 var show_marks: bool = false
 var feet: Array[Vector3] = []
 var definition: Definition
@@ -59,11 +60,20 @@ func _outline(points: PackedVector2Array, color: Color, width: float) -> void:
 func _draw() -> void:
 	if not is_instance_valid(camera):
 		return
+	if show_grid and presentation_enabled:
+		for segment in ArenaBounds.grid_segments():
+			draw_line(_project(segment[0]),_project(segment[1]),Color(.35,.95,1,.65),1.0,true)
+		_outline(_octagon(0.0),Color("ffd16a"),1.0)
 	if show_marks and presentation_enabled:
-		_outline(_square(ArenaBounds.HALF_EXTENT - ArenaBounds.ACTOR_MARGIN), Color("78d0d2"), 1.0)
+		_outline(_octagon(ArenaBounds.ACTOR_MARGIN), Color("78d0d2"), 1.0)
 		draw_line(_project(Vector2.ZERO), _project(Vector2(1, 0)), Color("f3bd67"), 2.0)
 		draw_line(_project(Vector2.ZERO), _project(Vector2(0, 1)), Color("77c9ef"), 2.0)
 		for foot in feet:
 			var point: Vector2 = camera.unproject_position(foot)
 			draw_line(point - Vector2(5, 0), point + Vector2(5, 0), Color("fff2bb"), 1.5)
 			draw_line(point - Vector2(0, 4), point + Vector2(0, 4), Color("fff2bb"), 1.5)
+
+func _octagon(margin:float=0) -> PackedVector2Array:
+	var points:=PackedVector2Array()
+	for point in ArenaBounds.polygon(margin):points.append(_project(point))
+	return points

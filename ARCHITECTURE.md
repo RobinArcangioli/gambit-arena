@@ -1,3 +1,53 @@
+# ARENA-005 validée — 29 octobre 2026
+
+Le propriétaire confirme : « Step validée. » après installation sur Galaxy A16.
+Les dix arènes partagent un octogone central fixe, une caméra commune à 45° et les
+mêmes limites physiques. Seuls le zoom uniforme et le décalage des fonds s’adaptent.
+Ville d’Alexandrie et Ombres de Beherit sont ajoutées à partir des PNG fournis intacts.
+Les formations apparaissent au sud/nord avec marge de gabarit ; les héros conservent
+positions et états entre vagues. Le contrôle des silhouettes sur les flancs a conduit
+à ajouter une réserve visuelle par zoom de 18 % des fonds, sans changer l’octogone.
+La case « Afficher grille » des réglages montre le quadrillage clippé sous les modèles,
+sans pause ; elle est désactivée par défaut et son choix est mémorisé immédiatement.
+Les 68 scènes / 5 027 contrôles et la recette tactile Android ont réussi, y compris
+la mémorisation de la grille après relance. Gambits et réglages initiaux préservés.
+Clôture documentaire uniquement : code, ressources, configuration et APK identiques
+à la livraison validée. Aucun nouveau test ni mesure de performances à cette clôture.
+APK installé : `0.1.0-arena005-grid` (78), SHA-256
+`8ea6c9963a40c1ec94bc00b9d8226de410db7f21eab529217e521703a8de8b5e`.
+Clôture par commit local et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+# ARENA-005 — Domaine octogonal commun et calage des images
+
+ArenaBounds définit le même octogone convexe pour tous les acteurs et tous les décors.
+Huit plans de support et une projection sur les huit segments bornent les déplacements.
+L’inrayon de 3√2 conserve l’emprise projetée de la zone agrandie précédente ; la marge
+0,35 est retirée de chaque plan pour protéger le disque complet du personnage.
+GroundMover et GroundCrowd utilisent ce domaine commun. LocalNavigator utilise une
+AStarGrid2D interne 39×39 à pas 0,2, dont les cellules hors octogone érodé sont solides.
+Les extrémités des raccourcis sont validées ; la convexité garantit tout le segment.
+Les budgets de recherche par tick, intervalle de replanification et règles d’obstacles
+entre personnages restent inchangés. Les coins de la boîte englobante sont inaccessibles.
+Arena.gd fixe la caméra à 45°. ArenaPage cadre seulement le domaine et la hauteur des
+modèles dans la zone centrale. Aucun calcul de taille ou position de caméra ne dépend
+du fond. IllustratedArenaView n’agit plus sur la caméra : image_center et grid_half_size
+produisent uniquement un décalage et une échelle uniforme du PNG. Le ratio reste 9:16.
+ArenaCatalog ajoute les deux profils et miniatures sans précharger les grands fonds.
+ArenaChoice conserve son RNG visuel indépendant. Les dix images restent intactes.
+La calibration des fonds est dans calibration/arena_calibration.json. Les SVG et le
+laboratoire projettent la même géométrie et coupent la grille à l’octogone. Aucun réglage
+de grille n’apparaît dans le produit. Les vues techniques de référence suivent aussi
+le contour commun.
+InfiniteSchedule place les héros sur le bord sud érodé, Mako à gauche, Anne à droite.
+Les six ennemis préfèrent deux rangées de trois au nord, puis les premiers points
+libres du demi-terrain nord si des héros les occupent. Les six places sont validées
+avant spawn atomique. Les héros conservent leurs positions et états entre vagues.
+Les anciennes fixtures d’icônes et d’abandon placent explicitement une cible à portée,
+indépendamment du nouveau placement de départ. La fixture EnemyDirector suit les
+nouveaux bords du domaine commun. Les sections suivantes sont historiques.
+
 # ARENA-004 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les dégâts

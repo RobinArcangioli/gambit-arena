@@ -3,8 +3,8 @@ extends RefCounted
 const Bounds = preload("res://scripts/arena/arena_bounds.gd")
 const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
 const CELL: float = 0.2
-const SIDE: int = 27
-const OFFSET := Vector2(-2.6, -2.6)
+const SIDE: int = 39
+const OFFSET := Vector2(-3.8, -3.8)
 const GRID_PADDING: float = 0.025
 const SEGMENT_PADDING: float = 0.006
 const REPLAN_INTERVAL: float = 0.35
@@ -109,7 +109,7 @@ func observe(before: Vector2, after: Vector2, requested: Vector2, dt: float) -> 
 	else: blocked_time = 0
 
 static func segment_clear(start: Vector2, finish: Vector2, obstacles: Array[Vector2]) -> bool:
-	if not Bounds.contains_ground(finish): return false
+	if not Bounds.contains_ground(start) or not Bounds.contains_ground(finish): return false
 	var movement: Vector2 = finish - start
 	var length_squared: float = movement.length_squared()
 	var clearance: float = Crowd.DIAMETER + SEGMENT_PADDING
@@ -139,6 +139,7 @@ func _search(origin: Vector2, destination: Vector2, reach: float, obstacles: Arr
 		for x in range(SIDE):
 			var cell := Vector2i(x, y)
 			var world: Vector2 = _world(cell)
+			if not Bounds.contains_ground(world):_grid.set_point_solid(cell)
 			var penalty: float = clampf(-direction.cross(world - origin) * preferred_side, 0, 0.6) * 0.05
 			_grid.set_point_weight_scale(cell, 1.0 + penalty)
 	var radius: float = Crowd.DIAMETER + GRID_PADDING

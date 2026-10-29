@@ -47,6 +47,7 @@ func _ready() -> void:
 	orders_enabled=true
 	selected_hero=&""
 	super._ready()
+	floor_canvas.show_grid=combat_settings.grid
 	_apply_text_preferences()
 	# These inherited laboratory decorations are never part of the product HUD.
 	for child in hud.get_children():
@@ -92,9 +93,10 @@ func _build_party_overlays() -> void:
 	confirm_abandon_button=_button(column,"Abandonner",_confirm_abandon)
 	pause_layer.hide();_refresh_pause_menu()
 	settings_menu=SettingsMenu.new();add_child(settings_menu)
+	settings_menu.grid_display_changed.connect(_change_grid_settings)
 	settings_menu.text_display_changed.connect(_change_text_settings)
 	settings_menu.display_changed.connect(_change_settings);settings_menu.closed.connect(_close_settings)
-	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars,combat_settings.damage_dealt_text,combat_settings.damage_received_text,combat_settings.healing_text);settings_menu.hide()
+	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars,combat_settings.damage_dealt_text,combat_settings.damage_received_text,combat_settings.healing_text,combat_settings.grid);settings_menu.hide()
 	statistics_menu=StatisticsMenu.new();add_child(statistics_menu)
 	statistics_menu.playback_requested.connect(_toggle_journal_pause)
 
@@ -253,18 +255,10 @@ func _sync_projection() -> void:
 	super._sync_projection()
 	if not ready_ui or not is_instance_valid(floor_canvas.active_view): return
 	var art = floor_canvas.active_view
-	if not "image_rect" in art: return
-	# Zoom the calibrated image AND camera together, around their common ground origin.
-	# No independent stretch of the floor: feet and the illustrated floor stay aligned.
-	var center: Vector2 = camera.unproject_position(Vector3.ZERO)
-	var rect: Rect2 = art.image_rect
-	var target: Vector2 = Vector2(viewport_3d.size)
-	var zoom: float = maxf(1, maxf(center.x/maxf(1,center.x-rect.position.x),(target.x-center.x)/maxf(1,rect.end.x-center.x)))
-	zoom = maxf(zoom,maxf(center.y/maxf(1,center.y-rect.position.y),(target.y-center.y)/maxf(1,rect.end.y-center.y)))
-	camera.size = camera.size / (zoom * 1.002) * ARENA_ZOOM_OUT
+	# The canonical rig depends only on the viewport and the shared domain.
 	# Fit the complete logical ground and character height above the footer.
 	var bounds:Rect2=_projected_combat_bounds()
-	var fit:float=minf(1.0,minf(combat_rect.size.x/maxf(1,bounds.size.x),combat_rect.size.y/maxf(1,bounds.size.y)))
+	var fit:float=minf(combat_rect.size.x/maxf(1,bounds.size.x),combat_rect.size.y/maxf(1,bounds.size.y))/ARENA_ZOOM_OUT
 	camera.size/=maxf(0.1,fit)
 	bounds=_projected_combat_bounds()
 	var offset:Vector2=combat_rect.get_center()-bounds.get_center()
@@ -314,16 +308,15 @@ func _present_infinite() -> void:
 		countdown.position=center-Vector2(80,54);countdown.size=Vector2(160,108)
 
 func _projected_combat_bounds() -> Rect2:
-	var result:=Rect2(camera.unproject_position(Vector3(-3,0,-3)),Vector2.ZERO)
-	for x in [-3.0,3.0]:
-		for z in [-3.0,3.0]:
-			for height in [0.0,1.6]:result=result.expand(camera.unproject_position(Vector3(x,height,z)))
+	var result:=Rect2(camera.unproject_position(Vector3.ZERO),Vector2.ZERO)
+	for point in preload("res://scripts/arena/arena_bounds.gd").polygon():
+		for height in [0.0,1.6]:result=result.expand(camera.unproject_position(Vector3(point.x,height,point.y)))
 	return result
 
 func _open_settings() -> void:
 	if not ready_ui or application_guard.blocked or action_pending or pause_layer.visible:return
 	touch_router.cancel_gesture();_close_statistics()
-	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars,combat_settings.damage_dealt_text,combat_settings.damage_received_text,combat_settings.healing_text)
+	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars,combat_settings.damage_dealt_text,combat_settings.damage_received_text,combat_settings.healing_text,combat_settings.grid)
 	settings_menu.visible=not settings_menu.visible
 	_update_layout();_update_buttons()
 func _close_settings() -> void:
@@ -368,3 +361,11 @@ func _change_text_settings(outgoing:bool,incoming:bool,healing:bool) -> void:
 	_apply_text_preferences()
 	var result:Error=combat_settings.save_preferences()
 	settings_menu.status.text="Enregistrement indisponible" if result!=OK else "";settings_menu.status.visible=result!=OK
+
+func _change_grid_settings(enabled:bool) -> void:
+	if application_guard.blocked:return
+	combat_settings.grid=enabled
+	floor_canvas.show_grid=enabled;floor_canvas.queue_redraw()
+	var result:Error=combat_settings.save_preferences()
+	settings_menu.status.text="Enregistrement indisponible" if result!=OK else ""
+	settings_menu.status.visible=result!=OK

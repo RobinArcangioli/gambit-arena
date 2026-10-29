@@ -23,7 +23,7 @@ var paused: bool = false
 var placement_index: int = 0
 
 func _ready() -> void:
-	camera.position = Vector3(10, sqrt(200.0 / 3.0), 10)
+	camera.position = Vector3(10, sqrt(200.0), 10)
 	camera.look_at(Vector3.ZERO, Vector3.UP)
 	var environment_node := WorldEnvironment.new()
 	var environment := Environment.new()

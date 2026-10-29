@@ -37,7 +37,7 @@ func _ready() -> void:
 		for point in [Vector2.ZERO, Vector2(-3, -3), Vector2(3, -3), Vector2(3, 3), Vector2(-3, 3)]:
 			inside = inside and illustrated.inside_calibration(point)
 		check(inside, "logical center and all terrain corners stay inside supplied calibration diamond at %s" % size_value)
-		check(illustrated.ground_to_image(Vector2.ZERO).is_equal_approx(Vector2(270, 455)), "visual grid center aligned with logical origin")
+		check(illustrated.ground_to_image(Vector2.ZERO).is_equal_approx(Vector2(270, 475)), "visual grid center aligned with logical origin")
 	gallery._toggle_calibration()
 	check(illustrated.show_calibration, "grid overlay is independent from game state")
 	gallery.floor_canvas.set_definition(Definition.new())

@@ -24,8 +24,8 @@ func _ready() -> void:
 	sim.infinite_mode=true; sim.orders_enabled=true; sim.rules={"mako":[],"anne":[]}; sim.reset()
 	var mako=sim.hero(&"mako");var anne=sim.hero(&"anne")
 	check(sim.wave_number==1 and sim.enemies.size()==6 and sim.wave.issued==6,"six enemies appear together at the initial wave")
-	check(sim.heroes.all(func(h):return h.position.z>absf(h.position.x)),"heroes start southwest in the isometric camera")
-	check(sim.enemies.all(func(e):return e.position.x>=e.position.z and e.position.x+e.position.z<=0),"enemies start northeast")
+	check(sim.heroes.all(func(h):return Bounds.contains_ground(Vector2(h.position.x,h.position.z)) and near(h.position.x+h.position.z,(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO)),"heroes start at the screen-south corner with minimum physical margin")
+	check(sim.enemies.all(func(e):return e.position.x+e.position.z<=-(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO+1.10001),"enemies start in the three screen-north layers")
 	var rng:=RandomNumberGenerator.new();rng.seed=8192
 	var formations_ok:bool=true
 	for sample in range(100):
@@ -33,11 +33,11 @@ func _ready() -> void:
 		var group:Array[Vector2]=Schedule.formation(occupied)
 		formations_ok=formations_ok and group.size()==6
 		for p in group:
-			formations_ok=formations_ok and Bounds.contains_ground(p) and p.x>=p.y and p.x+p.y<=0.00001
+			formations_ok=formations_ok and Bounds.contains_ground(p) and p.x+p.y<=0.00001
 			for q in occupied: formations_ok=formations_ok and p.distance_to(q)>=0.71
 			for q in group:
 				if q!=p: formations_ok=formations_ok and p.distance_to(q)>=0.71
-	check(formations_ok,"six safe NE slots remain available even when heroes occupy the spawn area")
+	check(formations_ok,"six safe north slots remain available even when heroes occupy the spawn area")
 	# No new arrivals while any of the six enemies is still alive.
 	for e in sim.enemies: e.abilities.clear();e.mover.speed=0
 	for i in range(5): sim.enemies[i].state.damage(100000)

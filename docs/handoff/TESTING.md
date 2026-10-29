@@ -1,3 +1,33 @@
+# ARENA-005 validée — 29 octobre 2026
+
+Le propriétaire confirme : « Step validée. » après installation sur Galaxy A16.
+Les dix arènes partagent un octogone central fixe, une caméra commune à 45° et les
+mêmes limites physiques. Seuls le zoom uniforme et le décalage des fonds s’adaptent.
+Ville d’Alexandrie et Ombres de Beherit sont ajoutées à partir des PNG fournis intacts.
+Les formations apparaissent au sud/nord avec marge de gabarit ; les héros conservent
+positions et états entre vagues. Le contrôle des silhouettes sur les flancs a conduit
+à ajouter une réserve visuelle par zoom de 18 % des fonds, sans changer l’octogone.
+La case « Afficher grille » des réglages montre le quadrillage clippé sous les modèles,
+sans pause ; elle est désactivée par défaut et son choix est mémorisé immédiatement.
+Les 68 scènes / 5 027 contrôles et la recette tactile Android ont réussi, y compris
+la mémorisation de la grille après relance. Gambits et réglages initiaux préservés.
+Clôture documentaire uniquement : code, ressources, configuration et APK identiques
+à la livraison validée. Aucun nouveau test ni mesure de performances à cette clôture.
+APK installé : `0.1.0-arena005-grid` (78), SHA-256
+`8ea6c9963a40c1ec94bc00b9d8226de410db7f21eab529217e521703a8de8b5e`.
+Clôture par commit local et sauvegarde complète restaurée/vérifiée. Aucun push automatique.
+Prochain GO : UI-005, qualification intégrée Android, puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
+## ARENA-005 — Octogone commun et dix fonds
+
+scenes/tests/new_arenas_tests.tscn : 216 contrôles sur trois formats, les PNG et les
+calages, dont l’identité des huit sommets projetés sur les dix décors.
+scenes/tests/octagon_bounds_tests.tscn : 257 contrôles sur clamps, gabarits, grille
+clippée, cellules interdites, vraie route, mouvement au bord et formations d’arrivée.
+Suite : 68 scènes / 5 027 contrôles après actualisation des anciennes attentes de bords.
+Rendu GPU et recette Android distincts : docs/steps/ARENA-005.md. Validation attendue.
+
 # ARENA-004 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, step validée » pour les dégâts

@@ -78,7 +78,7 @@ func reset() -> void:
 		unit.place(Vector2(-0.65, 0.65) if profile == ANNE else Vector2(0.65, -0.65))
 		heroes.append(unit)
 		report.register_actor(unit.combat_id,unit.display_name,unit.team,unit.team_slot,unit.state.health,unit.mana_capacity,clock.elapsed)
-		if infinite_mode: unit.place(Vector2(-0.425 if profile == ANNE else 0.425, 1.7))
+		if infinite_mode: unit.place(InfiniteSchedule.hero_position(unit.team_slot))
 	if infinite_mode: _spawn_infinite_wave()
 
 func living_heroes() -> Array[Unit]:
@@ -417,7 +417,7 @@ func _spawn_infinite_wave() -> void:
 	for unit in all_units():
 		if Executor.living(unit): occupied.append(unit.mover.ground_position)
 	var positions: Array[Vector2] = InfiniteSchedule.formation(occupied)
-	assert(positions.size() == InfiniteSchedule.SIZE, "Infinite wave needs six free NE slots")
+	assert(positions.size() == InfiniteSchedule.SIZE, "Infinite wave needs six free north slots")
 	for at in positions:
 		var accepted: bool = add_enemy(at)
 		assert(accepted, "Prevalidated infinite formation must spawn atomically")

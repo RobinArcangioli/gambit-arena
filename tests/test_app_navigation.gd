@@ -23,7 +23,7 @@ func _ready() -> void:
 	for i in range(256):
 		var id: StringName = choices.next();observed[id]=true
 		deterministic = deterministic and id==other.next() and id!=&"reference"
-	check(deterministic and observed.size()==8,"eight eligible visual arenas, independent seeded selection and reference excluded")
+	check(deterministic and observed.size()==10,"ten eligible visual arenas, independent seeded selection and reference excluded")
 	var path: String = "user://ui001-rules-test.json"
 	var configuration: Dictionary = {"anne":Rules.defaults(&"anne"),"mako":Rules.defaults(&"mako")}
 	configuration.anne[0].threshold = 37
@@ -80,7 +80,7 @@ func _ready() -> void:
 			for tick in range(30):game._physics_process(1.0/60.0)
 			check(game.simulation.hero(&"anne").action.casting(),"abandon is exercised during an actual heal cast")
 		else:
-			game.simulation.add_enemy(Vector2(2,0))
+			game.simulation.enemies[0].place(game.simulation.hero(&"mako").mover.ground_position-Vector2(0,1.5))
 			for tick in range(30):game._physics_process(1.0/60.0)
 			check(game.simulation.hero(&"mako").action.casting(),"abandon is exercised during an actual lightning cast")
 		app.return_home();await settle()

@@ -38,6 +38,8 @@ func _ready() -> void:
 func _snapshot() -> void:
 	simulation.reset();simulation.rules={"mako":[],"anne":[]};action_presenter.reset_run(simulation.run_id)
 	var mako=simulation.hero(&"mako");var anne=simulation.hero(&"anne")
+	# This fixed icon fixture needs an in-range target, independently of production spawns.
+	simulation.enemies[3].place(mako.mover.ground_position-Vector2(0,.85))
 	mako.state.damage(50);anne.state.damage(65)
 	mako.action.mana=42;anne.action.mana=38
 	mako.buffs.apply(BuffCatalog.definition(&"booster"));mako.buffs.advance(15.0)

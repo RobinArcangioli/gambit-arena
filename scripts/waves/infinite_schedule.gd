@@ -1,5 +1,6 @@
 extends RefCounted
-## Combat-time intermission and camera-relative NE formation; no art or scene ownership.
+## Combat-time intermission and camera-relative north formation; no art or scene ownership.
+const Bounds=preload("res://scripts/arena/arena_bounds.gd")
 const SIZE: int = 6
 const DELAY: float = 3.0
 var waiting: bool = false
@@ -14,21 +15,26 @@ func advance(dt: float) -> bool:
 	remaining = maxf(0.0, remaining - dt)
 	if remaining > 0.000001: return false
 	reset(); return true
-static func formation(occupied: Array[Vector2]) -> Array[Vector2]:
-	# All slots are mutually 0.85 apart, inside the ground bounds. At most two
-	# heroes can block eight of these sixteen slots; six arrivals always fit.
-	var pool: Array[Vector2] = []
-	for z in [-2.55, -1.7]:
-		for x in [-0.85, 0.0, 0.85]: pool.append(Vector2(x, z))
-	for z in [-2.55, -1.7, -0.85, 0.0]:
-		for x in [-2.55, -1.7, -0.85, 0.0, 0.85, 1.7, 2.55]:
-			var at := Vector2(x, z)
-			if x >= z and x + z <= 0.00001 and not at in pool: pool.append(at)
-	var result: Array[Vector2] = []
+static func hero_position(slot:int) -> Vector2:
+	var south:float=(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO
+	return Vector2((south-.6)*.5,(south+.6)*.5) if slot==0 else Vector2((south+.6)*.5,(south-.6)*.5)
+static func formation(occupied:Array[Vector2]) -> Array[Vector2]:
+	var north:float=-(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO
+	var spacing:float=1.1;var pool:Array[Vector2]=[]
+	# Prefer two centered rows of three; complete the northern half for occupied arrivals.
+	for row in range(2):
+		for column in [0,-1,1]:pool.append(Vector2((north+row*spacing+column*spacing)*.5,(north+row*spacing-column*spacing)*.5))
+	for row in range(ceili(-north/spacing)):
+		for magnitude in range(ceili(-north/spacing)+1):
+			for sign_value in ([1] if magnitude==0 else [-1,1]):
+				var column:int=magnitude*sign_value
+				var at:=Vector2((north+row*spacing+column*spacing)*.5,(north+row*spacing-column*spacing)*.5)
+				if Bounds.contains_ground(at) and not at in pool:pool.append(at)
+	var result:Array[Vector2]=[]
 	for at in pool:
-		var free: bool = true
+		var free:bool=Bounds.contains_ground(at)
 		for other in occupied:
-			if at.distance_to(other) < 0.71: free = false; break
-		if free: result.append(at)
-		if result.size() == SIZE: return result
+			if at.distance_to(other)<.71:free=false;break
+		if free:result.append(at)
+		if result.size()==SIZE:return result
 	return []

@@ -61,7 +61,7 @@ func _ready() -> void:
 	mover.set_target(outside)
 	for frame in range(600):
 		mover.step(1.0 / 60.0)
-	_check(mover.ground_position.is_equal_approx(Vector2(2.65, 2.65)), "arena boundary violated")
+	_check(mover.ground_position.is_equal_approx(preload("res://scripts/arena/arena_bounds.gd").clamp_ground(Vector2(4.5,4.5))), "arena boundary violated")
 	_check(mover.state == GroundMover.State.BLOCKED, "outside target reported as arrived")
 	var lost: Node3D = _target(Vector2(2, 0))
 	mover.reset(Vector2.ZERO)
