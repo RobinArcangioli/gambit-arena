@@ -263,6 +263,7 @@ func _update_bars() -> void:
 		var bar: Bars = overhead[unit.combat_id]
 		bar.selected = unit.actor_key == selected_hero
 		bar.set_values(unit.state.health, unit.state.max_health, unit.action.mana, unit.mana_capacity, unit.action.casting(), unit.action.cast_progress())
+		bar.set_attack(unit.action.active and unit.action.last_skill==&"basic",unit.action.elapsed,unit.action._windup(),unit.action._recovery())
 		var height: float = unit.appearance.overhead_height if unit.appearance != null else 1.3
 		var projected: Vector2 = camera.unproject_position(unit.position + Vector3(0, height, 0))
 		var ratio: Vector2 = render_box.size / Vector2(viewport_3d.size)

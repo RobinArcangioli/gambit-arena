@@ -1,3 +1,19 @@
+# ATTACK-BARS-001 validée — 29 octobre 2026
+
+Le propriétaire confirme : « Étape validée. » après installation de la version 81
+sur Galaxy A16. L’attaque normale expose sa préparation dorée et sa récupération
+argentée dans la ligne d’incantation des panneaux et au-dessus des unités.
+L’épée fixe sépare les phases au moment exact du coup : 0,6 s / 0,4 s de temps
+personnel. La progression suit Booster et la pause. Les réglages d’affichage
+des barres s’appliquent aussi à cette jauge. La logique de combat reste inchangée.
+70 scènes / 5 166 contrôles réussis, dont 61 dédiés. Rendu Android vérifié et
+validé par le propriétaire. Aucun nouveau relevé FPS.
+APK installé : `0.1.0-attackbars001` (81), SHA-256
+`e9a2ba7ada291e539640b227e39543ef30f4bcff93b62edb688ce698913e7a87`.
+Clôture par commit local et sauvegarde restaurée/vérifiée. Aucun push automatique.
+Détails : `docs/steps/ATTACK-BARS-001.md`. Prochain GO : UI-005 puis STEP-029/030.
+Les états précédents ci-dessous sont historiques.
+
 # PORTRAITS-001 validée — 29 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, étape validée » pour la version

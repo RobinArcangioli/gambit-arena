@@ -59,7 +59,7 @@ func _layout() -> void:
 	var cast_y:float=bars.position.y+2*row_pitch+bars.bar_height*.5
 	cast_icon.custom_minimum_size=Vector2.ONE*icon_style.cast_size;cast_icon.size=cast_icon.custom_minimum_size
 	cast_icon.position=Vector2(50+bars.bar_width-icon_style.cast_size,cast_y-icon_style.cast_size*.5)
-	cast_text.size.x=maxf(1,bars.bar_width-icon_style.cast_size-4)
+	cast_text.size.x=bars.bar_width if bars.attacking else maxf(1,bars.bar_width-icon_style.cast_size-4)
 	portrait.position=Vector2.ZERO;portrait.size=Vector2(42,76)
 	buff_tray.position=Vector2(0,80);buff_tray.size=Vector2(maxf(1,size.x-28),icon_style.buff_size)
 	buff_row.position=Vector2.ZERO
@@ -71,11 +71,12 @@ func show_actor(actor) -> void:
 	if bars==null or not is_instance_valid(actor):return
 	bars.selected=false
 	bars.set_values(actor.state.health,actor.state.max_health,actor.action.mana,actor.mana_capacity,actor.action.casting(),actor.action.cast_progress())
+	bars.set_attack(actor.action.active and actor.action.last_skill==&"basic",actor.action.elapsed,actor.action._windup(),actor.action._recovery())
 	health_text.text="%d / %d"%[actor.state.health,actor.state.max_health]
 	mana_text.text="%d / %d"%[floori(actor.action.mana),actor.mana_capacity]
-	cast_text.visible=actor.action.casting()
+	cast_text.visible=actor.action.casting() or bars.attacking
 	cast_icon.texture=Icons.texture(actor.action.last_skill)
-	cast_icon.visible=cast_text.visible and cast_icon.texture!=null
+	cast_icon.visible=actor.action.casting() and cast_icon.texture!=null
 	var statuses:Dictionary=actor.buffs.snapshot()
 	for id in buff_icons.keys():
 		if not statuses.has(id):
@@ -86,7 +87,11 @@ func show_actor(actor) -> void:
 			var icon:TextureRect=Icons.rect(id,icon_style.buff_size);icon.size_flags_horizontal=Control.SIZE_SHRINK_BEGIN;buff_row.add_child(icon);buff_icons[id]=icon
 		buff_icons[id].tooltip_text="%s · %d s"%[String(id).capitalize(),ceili(statuses[id].remaining)]
 	buff_row.visible=not buff_icons.is_empty()
-	if cast_text.visible:
+	if bars.attacking:
+		var phase_left:float=maxf(0,(actor.action._windup()+actor.action._recovery() if actor.action.resolved else actor.action._windup())-actor.action.elapsed)
+		var attack_seconds:float=remaining_cast_seconds(phase_left,actor.buffs.snapshot())
+		cast_text.text="%s : %ss"%["Récup." if actor.action.resolved else "Attaque",("%.1f"%(ceilf(attack_seconds*10-0.000001)/10)).replace(".",",")]
+	elif cast_text.visible:
 		var names:Dictionary={&"heal":"Soin",&"lightning":"Foudre",&"booster":"Booster"}
 		var local_left:float=maxf(0,actor.action.cast_duration(actor.action.last_skill)-actor.action.elapsed)
 		var seconds:float=remaining_cast_seconds(local_left,actor.buffs.snapshot())

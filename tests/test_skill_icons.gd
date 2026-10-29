@@ -35,7 +35,7 @@ func _ready() -> void:
 		check(panel.buff_tray.position.y>panel.bars.position.y+2*(panel.bars.bar_height+panel.bars.bar_gap)+panel.bars.bar_height and panel.get_global_rect().encloses(panel.buff_icons[&"booster"].get_global_rect()),"buff row sits below cast bar and stays inside panel")
 		check(panel.get_global_rect().encloses(panel.cast_icon.get_global_rect()),"cast icon is contained in panel")
 		check(is_equal_approx(panel.bars.bar_width,171) and lab.overhead.values().all(func(bar):return is_equal_approx(bar.bar_width,29.4)),"panel and overhead bar lengths unchanged")
-		check(lab.overhead.values().all(func(bar):return bar.find_children("*","TextureRect",true,false).is_empty()),"no cast or buff icons added above models")
+		check(lab.overhead.values().all(func(bar):return bar.find_children("*","TextureRect",true,false).all(func(icon):return icon.texture==bar.ATTACK_ICON)),"only the normal-attack marker can appear above models")
 	lab.choose_trial(1)
 	mako.buffs.apply(Definition.create(&"heal",30.0,1.0));mako.buffs.apply(Definition.create(&"lightning",30.0,1.0))
 	panel.show_actor(mako);await settle()
