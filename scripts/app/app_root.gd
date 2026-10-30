@@ -14,7 +14,7 @@ const Styles=preload("res://scripts/presentation/interface_styles.gd")
 const AppearancePreferences=preload("res://scripts/app/appearance_preferences.gd")
 @export var appearance_path:String="user://appearance.cfg"
 var appearance_preferences:AppearancePreferences
-var interface_style:Resource=Styles.get_style(&"arcane")
+var interface_style:Resource=Styles.get_style(&"berserk")
 var style_button:Button
 var style_status:Label
 var switch_icon:Texture2D=preload("res://assets/ui/appearance_crystal.svg")
@@ -69,7 +69,7 @@ func _ready() -> void:
 	style_status=Label.new();style_status.add_theme_font_size_override("font_size",13)
 	style_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;style_status.mouse_filter=Control.MOUSE_FILTER_IGNORE;home_page.add_child(style_status);style_status.hide()
 	_apply_interface_style()
-	if appearance_load!=OK:style_status.text="Style non chargé. Arcane affiché.";style_status.show()
+	if appearance_load!=OK:style_status.text="Style non chargé. Berserk affiché.";style_status.show()
 	if configuration_error!=OK:
 		var warning:=Label.new();warning.text="Configuration illisible ou migration impossible.\nLes sauvegardes ont été conservées."
 		warning.position=Vector2(24,120);warning.size=Vector2(480,100);warning.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
@@ -106,7 +106,7 @@ func open_arena() -> void:
 	transitioning = true
 	arena_button.disabled = true
 	guard.acknowledge_resume()
-	combat = ArenaPage.instantiate()
+	combat = ArenaPage.instantiate();combat.theme=interface_style.palette;combat.hud_style=interface_style.arena_hud
 	combat.save_path = save_path
 	combat.settings_path = combat_settings_path
 	combat.chooser = arena_choice.next

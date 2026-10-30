@@ -1,0 +1,24 @@
+[gd_resource type="Resource" load_steps=7 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/interface_style.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/styles/berserk_home.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/styles/berserk_team.png" id="3"]
+[ext_resource type="Theme" path="res://resources/ui/styles/palette_blood.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/presentation/home_lights_berserk.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/ui/styles/arena_blood.tres" id="6"]
+[resource]
+script = ExtResource("1")
+id = &"berserk"
+display_name = "Rouge et noir"
+home_background = ExtResource("2")
+page_background = ExtResource("3")
+palette = ExtResource("4")
+home_lights = ExtResource("5")
+frame_color = Color(0.70588235, 0.10980392, 0.16078431, 1.00000000)
+accent = Color(1.00000000, 0.34117647, 0.36078431, 1.00000000)
+icon_tint = Color(1.00000000, 0.20000000, 0.23137255, 1.00000000)
+label_background = Color(0.04313725, 0.03529412, 0.03921569, 0.81176471)
+idle_background = Color(0.04313725, 0.03529412, 0.03921569, 0.92941176)
+bar_background = Color(0.04313725, 0.03529412, 0.03921569, 0.90196078)
+editor_accent = Color(1.00000000, 0.20000000, 0.23137255, 1.00000000)
+editor_background = Color(0.04313725, 0.03529412, 0.03921569, 1.00000000)
+arena_hud = ExtResource("6")

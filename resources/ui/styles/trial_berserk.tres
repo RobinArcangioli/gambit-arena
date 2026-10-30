@@ -1,0 +1,24 @@
+[gd_resource type="Resource" load_steps=7 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/interface_style.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/styles/berserk_home.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/styles/berserk_team.png" id="3"]
+[ext_resource type="Theme" path="res://resources/ui/berserk.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/presentation/home_lights_berserk.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/ui/styles/arena_berserk.tres" id="6"]
+[resource]
+script = ExtResource("1")
+id = &"berserk"
+display_name = "Berserk actuel"
+home_background = ExtResource("2")
+page_background = ExtResource("3")
+palette = ExtResource("4")
+home_lights = ExtResource("5")
+frame_color = Color(0.64, 0.23, 0.19, 1)
+accent = Color(1, 0.56, 0.45, 1)
+icon_tint = Color(0.94, 0.50, 0.40, 1)
+label_background = Color(0.10, 0.025, 0.035, 0.81)
+idle_background = Color(0.10, 0.025, 0.035, 0.93)
+bar_background = Color(0.06, 0.025, 0.035, 0.9)
+editor_accent = Color(0.78, 0.32, 0.25, 1)
+editor_background = Color(0.10, 0.025, 0.035, 1)
+arena_hud = ExtResource("6")

@@ -1,5 +1,5 @@
 extends Resource
-## Replaceable out-of-combat art only. No combat or configuration rules.
+## Replaceable interface art and palettes. No simulation or configuration rules.
 @export var id:StringName=&"arcane"
 @export var display_name:String="Arcane"
 @export var home_background:Texture2D
@@ -14,3 +14,4 @@ extends Resource
 @export var bar_background:Color=Color(.03,.05,.1,.9)
 @export var editor_accent:Color=Color("d9aa4c")
 @export var editor_background:Color=Color("10182f")
+@export var arena_hud:Resource=preload("res://resources/ui/arena_hud.tres")

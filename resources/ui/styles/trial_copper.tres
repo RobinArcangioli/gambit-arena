@@ -1,0 +1,24 @@
+[gd_resource type="Resource" load_steps=7 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/interface_style.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/styles/berserk_home.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/styles/berserk_team.png" id="3"]
+[ext_resource type="Theme" path="res://resources/ui/styles/palette_copper.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/presentation/home_lights_berserk.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/ui/styles/arena_copper.tres" id="6"]
+[resource]
+script = ExtResource("1")
+id = &"berserk"
+display_name = "Obsidienne cuivrée"
+home_background = ExtResource("2")
+page_background = ExtResource("3")
+palette = ExtResource("4")
+home_lights = ExtResource("5")
+frame_color = Color(0.66666667, 0.47058824, 0.37647059, 1.00000000)
+accent = Color(1.00000000, 0.76470588, 0.58039216, 1.00000000)
+icon_tint = Color(0.91372549, 0.67843137, 0.50196078, 1.00000000)
+label_background = Color(0.06274510, 0.09019608, 0.10588235, 0.81176471)
+idle_background = Color(0.06274510, 0.09019608, 0.10588235, 0.92941176)
+bar_background = Color(0.06274510, 0.09019608, 0.10588235, 0.90196078)
+editor_accent = Color(0.91372549, 0.67843137, 0.50196078, 1.00000000)
+editor_background = Color(0.06274510, 0.09019608, 0.10588235, 1.00000000)
+arena_hud = ExtResource("6")

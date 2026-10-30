@@ -77,7 +77,7 @@ func _ready() -> void:
 		check(page.portraits.size()==3 and page.names[2].text=="Nassau" and page.names[3].text=="Vide","team has three illustrated Idle heroes and one empty")
 		check(page.cards[3].get_theme_stylebox("disabled") is StyleBoxEmpty and page.cards[0].get_theme_stylebox("normal") is StyleBoxEmpty,"no second rounded panel around occupied or empty cards")
 		check(page.illustrations[0].position==Vector2.ZERO and page.illustrations[0].size==page.cards[0].size-Vector2(12,12),"approved occupied-card image placement preserved")
-		check(page.empty_frames[3].size==page.illustrations[0].size and page.empty_frames[3].get_theme_stylebox("panel").border_color==Color("a68349"),"empty uses same thin gold rectangular frame and dimensions")
+		check(page.empty_frames[3].size==page.illustrations[0].size and page.empty_frames[3].get_theme_stylebox("panel").border_color==page.illustrations[0].frame_color,"empty uses matching thin rectangular frame and dimensions")
 		var portrait=page.portraits[2]
 		check(is_equal_approx(portrait.definition.team_idle_vertical_bias,.04) and is_equal_approx(page.portraits[0].definition.team_idle_vertical_bias,.1) and is_equal_approx(page.portraits[1].definition.team_idle_vertical_bias,.1),"only Nassau Idle shifts slightly down at unchanged model size")
 		check(portrait.character.valid and portrait.character.active_clip==portrait.definition.idle_clip,"Nassau real rig and Idle imported")

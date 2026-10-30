@@ -1,3 +1,18 @@
+# STYLE-002 validée — 30 octobre 2026
+
+Choix Godot : **C — Rouge et noir**, appliqué à Berserk dans l’arène et hors combat.
+Bandeau, fonds des héros, menus, réglages, statistiques, journal, icônes avec intérieur
+assorti et bordures utilisent les mêmes rôles de couleur. Géométrie et couleurs
+fonctionnelles des PV/PM/incantations, attaques, soins et statistiques conservées.
+Berserk devient le défaut sans préférence ; Arcane et les choix mémorisés sont respectés.
+80 scènes / 5 948 contrôles consolidés réussis ; captures GPU des quatre propositions.
+APK v91 installé sur Galaxy A16 et validé : « Oui, STYLE-002 validée ».
+Gambits, équipe et réglages conservés, vérifiés par empreinte avant/après installation.
+Clôture documentaire uniquement : code et APK identiques à la recette validée.
+Commit local et sauvegarde complète restaurée/vérifiée ; aucun push automatique.
+Prochain GO : UI-005. Détails : docs/steps/STYLE-002.md.
+Les états ci-dessous sont historiques.
+
 # STYLE-001 validée — 30 octobre 2026
 
 Styles Arcane/Berserk hors combat : fonds fournis et palette noir/bordeaux/rouge.

@@ -1,6 +1,7 @@
 extends PanelContainer
 ## Passive value view: illustrated portrait gutter and a bottom row of active buffs.
 const Illustration=preload("res://scripts/presentation/hero_illustration.gd")
+var palette:Resource=preload("res://resources/ui/arena_hud.tres")
 var portrait:Illustration
 const Icons = preload("res://scripts/presentation/skill_icons.gd")
 var icon_style: Resource = Icons.DEFAULT_STYLE
@@ -20,7 +21,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style := get_theme_stylebox("normal","Button").duplicate() as StyleBoxFlat
 	style.bg_color.a=0.72 if hero_id!=&"" else 0.38;style.set_corner_radius_all(8)
-	style.border_color=Color("a68349") if hero_id!=&"" else Color("605a4c")
+	style.border_color=palette.frame if hero_id!=&"" else Color("605a4c")
 	if shared_surface:
 		style.bg_color=Color.TRANSPARENT;style.set_border_width_all(0);style.set_corner_radius_all(0)
 		style.shadow_size=0;style.shadow_color=Color.TRANSPARENT
@@ -30,7 +31,7 @@ func _ready() -> void:
 	caption.add_theme_font_size_override("font_size",16);caption.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	content.add_child(caption)
 	if hero_id!=&"":
-		portrait=Illustration.new();portrait.hero_id=hero_id;portrait.close_up=true;content.add_child(portrait)
+		portrait=Illustration.new();portrait.hero_id=hero_id;portrait.close_up=true;portrait.frame_color=palette.frame;content.add_child(portrait)
 		bars=Bars.new();bars.apply_style(Bars.DEFAULT_STYLE,true);content.add_child(bars)
 		for key in ["health","mana","cast"]:
 			var value:=Label.new();value.mouse_filter=Control.MOUSE_FILTER_IGNORE

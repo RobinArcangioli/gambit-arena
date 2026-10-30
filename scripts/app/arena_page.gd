@@ -1,6 +1,7 @@
 extends "res://scripts/party/party_application.gd"
 ## Sparse product HUD. Legacy diagnostics keep their controls through the base hooks.
 signal home_requested
+const PaletteIcons=preload("res://scripts/ui/palette_icons.gd")
 const CombatSettings = preload("res://scripts/app/combat_settings.gd")
 const StatisticsMenu=preload("res://scripts/ui/combat_statistics_menu.gd")
 const SharedSurface=preload("res://scripts/ui/arena_shared_surface.gd")
@@ -63,33 +64,33 @@ func _ready() -> void:
 func _build_party_controls() -> void:
 	header_surface=SharedSurface.new();header_surface.profile=hud_style;hud.add_child(header_surface);hud.move_child(header_surface,0)
 	hero_surface=SharedSurface.new();hero_surface.profile=hud_style;hero_surface.separators=true;hud.add_child(hero_surface);hud.move_child(hero_surface,0)
-	pause_button.text="";pause_button.icon=hud_style.menu_icon;pause_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;pause_button.tooltip_text="Menu"
+	pause_button.text="";pause_button.icon=PaletteIcons.icon(hud_style.menu_icon,hud_style);pause_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;pause_button.tooltip_text="Menu"
 	for state in ["normal","hover","pressed","focus","disabled"]:pause_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 	settings_button=_button(hud,"",_open_settings)
-	settings_button.icon=preload("res://assets/ui/combat_settings_gear.svg");settings_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	settings_button.icon=PaletteIcons.icon(preload("res://assets/ui/combat_settings_gear.svg"),hud_style);settings_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	settings_button.tooltip_text="Réglages de combat"
 	for state in ["normal","hover","pressed","focus","disabled"]:
 		settings_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 	statistics_button=_button(hud,"",_open_statistics)
-	statistics_button.icon=preload("res://assets/ui/combat_statistics.svg");statistics_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;statistics_button.tooltip_text="Statistiques"
+	statistics_button.icon=PaletteIcons.icon(preload("res://assets/ui/combat_statistics.svg"),hud_style);statistics_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;statistics_button.tooltip_text="Statistiques"
 	for state in ["normal","hover","pressed","focus","disabled"]:statistics_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 	journal_button=_button(hud,"",_open_journal)
-	journal_button.icon=preload("res://assets/ui/combat_journal.svg");journal_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;journal_button.tooltip_text="Journal de combat"
+	journal_button.icon=PaletteIcons.icon(preload("res://assets/ui/combat_journal.svg"),hud_style);journal_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;journal_button.tooltip_text="Journal de combat"
 	for state in ["normal","hover","pressed","focus","disabled"]:journal_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 	if infinite_mode:
 		wave_counter=_mode_label(22);hud.add_child(wave_counter)
 		countdown=_mode_label(64);countdown.add_theme_constant_override("outline_size",6)
 		add_child(countdown);countdown.hide()
 	for id in team_slots:
-		var panel:=HeroPanel.new();panel.hero_id=id;panel.shared_surface=true;panel.icon_style=icon_style;hud.add_child(panel);hero_panels.append(panel)
+		var panel:=HeroPanel.new();panel.hero_id=id;panel.palette=hud_style;panel.shared_surface=true;panel.icon_style=icon_style;hud.add_child(panel);hero_panels.append(panel)
 
 func _build_party_overlays() -> void:
 	pause_layer=Control.new();pause_layer.mouse_filter=Control.MOUSE_FILTER_STOP;add_child(pause_layer)
-	var shade:=ColorRect.new();shade.color=Color(0.02,0.03,0.07,0.48)
+	var shade:=ColorRect.new();shade.color=hud_style.shade
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);pause_layer.add_child(shade)
 	pause_card=PanelContainer.new();pause_layer.add_child(pause_card)
 	var style:=get_theme_stylebox("normal","Button").duplicate() as StyleBoxFlat
-	style.bg_color=Color("10182ff5");style.set_content_margin_all(18)
+	style.bg_color=hud_style.modal;style.set_content_margin_all(18)
 	pause_card.add_theme_stylebox_override("panel",style)
 	var column:=VBoxContainer.new();column.add_theme_constant_override("separation",10);pause_card.add_child(column)
 	pause_title=_label(column,22);pause_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -101,13 +102,13 @@ func _build_party_overlays() -> void:
 	cancel_abandon_button=_button(column,"Annuler",_cancel_abandon)
 	confirm_abandon_button=_button(column,"Abandonner",_confirm_abandon)
 	pause_layer.hide();_refresh_pause_menu()
-	settings_menu=SettingsMenu.new();add_child(settings_menu)
+	settings_menu=SettingsMenu.new();settings_menu.palette=hud_style;add_child(settings_menu)
 	settings_menu.grid_display_changed.connect(_change_grid_settings)
 	settings_menu.area_display_changed.connect(_change_area_settings)
 	settings_menu.text_display_changed.connect(_change_text_settings)
 	settings_menu.display_changed.connect(_change_settings);settings_menu.closed.connect(_close_settings)
 	settings_menu.reflect(combat_settings.hero_bars,combat_settings.enemy_bars,combat_settings.damage_dealt_text,combat_settings.damage_received_text,combat_settings.healing_text,combat_settings.grid,combat_settings.aoe_zone);settings_menu.hide()
-	statistics_menu=StatisticsMenu.new();add_child(statistics_menu)
+	statistics_menu=StatisticsMenu.new();statistics_menu.palette=hud_style;add_child(statistics_menu)
 	statistics_menu.playback_requested.connect(_toggle_journal_pause)
 
 func _present() -> void:
@@ -294,8 +295,8 @@ func _mode_label(font_size: int) -> Label:
 	var label:=Label.new();label.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size",font_size)
-	label.add_theme_color_override("font_color",Color("ffd16a"))
-	label.add_theme_color_override("font_outline_color",Color("173a70"))
+	label.add_theme_color_override("font_color",hud_style.title)
+	label.add_theme_color_override("font_outline_color",hud_style.outline)
 	label.add_theme_constant_override("outline_size",3)
 	return label
 
@@ -394,4 +395,4 @@ func apply_hud_style(profile:Resource) -> void:
 	hud_style=profile
 	if header_surface!=null:header_surface.apply_style(profile)
 	if hero_surface!=null:hero_surface.apply_style(profile)
-	if pause_button!=null:pause_button.icon=profile.menu_icon
+	if pause_button!=null:pause_button.icon=PaletteIcons.icon(profile.menu_icon,profile)

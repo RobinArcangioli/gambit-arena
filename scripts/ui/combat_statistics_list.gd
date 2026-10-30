@@ -1,5 +1,6 @@
 extends Control
 ## Virtual drawing: one Control for all participants, only visible rows are painted.
+var palette:Resource=preload("res://resources/ui/arena_hud.tres")
 const COLORS:Array[Color]=[Color("ffd16a"),Color("e44949"),Color(0.72,1,0.8)]
 var entries:Array[Dictionary]=[]
 var offsets:Array[float]=[]
@@ -28,13 +29,13 @@ func _draw() -> void:
 	while index<entries.size() and offsets[index]<last:
 		var row:Dictionary=entries[index];var y:float=offsets[index]
 		if row.has("heading"):
-			draw_string(font,Vector2(0,y+18),row.heading,HORIZONTAL_ALIGNMENT_LEFT,size.x,14,Color("ffd16a"))
+			draw_string(font,Vector2(0,y+18),row.heading,HORIZONTAL_ALIGNMENT_LEFT,size.x,14,palette.title)
 		else:
 			var is_mvp:bool=int(row.id)==mvp
 			var text:String=str(row.name)+(" †" if not row.alive else "")
 			var font_size:int=12 if size.x<160 else 14
 			while text.length()>4 and font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>size.x-(35 if is_mvp else 0):text=text.left(-2)+"…"
-			draw_string(font,Vector2(0,y+15),text,HORIZONTAL_ALIGNMENT_LEFT,size.x,font_size,Color("e3e9f5") if row.alive else Color("a4adbd"))
+			draw_string(font,Vector2(0,y+15),text,HORIZONTAL_ALIGNMENT_LEFT,size.x,font_size,palette.stat_text if row.alive else palette.muted)
 			if is_mvp:draw_string(font,Vector2(font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x+6,y+15),"MVP",HORIZONTAL_ALIGNMENT_LEFT,31,11,Color("ff00ff"))
 			for metric in range(3):
 				var value:int=int(row[["dealt","received","healed"][metric]])
@@ -43,10 +44,10 @@ func _draw() -> void:
 				draw_style_box(_track(color),Rect2(at,Vector2(size.x,13)))
 				if value>0:draw_style_box(_fill(color),Rect2(at,Vector2(size.x*clampf(float(value)/peaks[metric],0,1),13)))
 				var caption:String=["Infligés","Reçus","Soins"][metric]
-				draw_string_outline(font,at+Vector2(3,10),caption,HORIZONTAL_ALIGNMENT_LEFT,-1,10,2,Color("10182f"))
+				draw_string_outline(font,at+Vector2(3,10),caption,HORIZONTAL_ALIGNMENT_LEFT,-1,10,2,palette.icon_fill)
 				draw_string(font,at+Vector2(3,10),caption,HORIZONTAL_ALIGNMENT_LEFT,-1,10,Color.WHITE)
 				var number:String=str(value);var width:float=font.get_string_size(number,HORIZONTAL_ALIGNMENT_LEFT,-1,10).x
-				draw_string_outline(font,at+Vector2(size.x-width-3,10),number,HORIZONTAL_ALIGNMENT_LEFT,-1,10,2,Color("10182f"))
+				draw_string_outline(font,at+Vector2(size.x-width-3,10),number,HORIZONTAL_ALIGNMENT_LEFT,-1,10,2,palette.icon_fill)
 				draw_string(font,at+Vector2(size.x-width-3,10),number,HORIZONTAL_ALIGNMENT_LEFT,-1,10,Color.WHITE)
 		index+=1
 func _track(color:Color) -> StyleBoxFlat:

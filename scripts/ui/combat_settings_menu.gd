@@ -1,4 +1,6 @@
 extends PanelContainer
+var palette:Resource=preload("res://resources/ui/arena_hud.tres")
+const PaletteIcons=preload("res://scripts/ui/palette_icons.gd")
 signal display_changed(hero_bars: bool, enemy_bars: bool)
 signal text_display_changed(outgoing:bool,incoming:bool,healing:bool)
 signal grid_display_changed(enabled:bool)
@@ -17,10 +19,10 @@ var ok_button: Button
 var status: Label
 func _ready() -> void:
 	var style:=get_theme_stylebox("normal","Button").duplicate() as StyleBoxFlat
-	style.bg_color.a=0.72;style.set_corner_radius_all(8);style.border_color=Color("a68349")
+	style.bg_color=palette.backdrop;style.set_corner_radius_all(8);style.border_color=palette.frame
 	add_theme_stylebox_override("panel",style)
 	var column:=VBoxContainer.new();column.add_theme_constant_override("separation",8);add_child(column)
-	var title:=Label.new();title.text="Réglages de combat";title.add_theme_font_size_override("font_size",18);title.add_theme_color_override("font_color",Color("ffd16a"));column.add_child(title)
+	var title:=Label.new();title.text="Réglages de combat";title.add_theme_font_size_override("font_size",18);title.add_theme_color_override("font_color",palette.title);column.add_child(title)
 	scroller=ScrollContainer.new();scroller.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;scroller.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(scroller)
 	options=VBoxContainer.new();options.size_flags_horizontal=Control.SIZE_EXPAND_FILL;options.add_theme_constant_override("separation",8);scroller.add_child(options)
 	grid_box=_checkbox(options,"Afficher grille")
@@ -33,7 +35,7 @@ PV / PM / Incantation")
 	var group_panel:=PanelContainer.new();options.add_child(group_panel)
 	var group_style:=StyleBoxFlat.new();group_style.bg_color=Color(0,0,0,.25);group_style.set_corner_radius_all(6);group_style.set_content_margin_all(8);group_panel.add_theme_stylebox_override("panel",group_style)
 	var group:=VBoxContainer.new();group.add_theme_constant_override("separation",2);group_panel.add_child(group)
-	var section:=Label.new();section.text="Textes flottants";section.custom_minimum_size.y=22;section.add_theme_font_size_override("font_size",14);section.add_theme_color_override("font_color",Color("ffd16a"));group.add_child(section)
+	var section:=Label.new();section.text="Textes flottants";section.custom_minimum_size.y=22;section.add_theme_font_size_override("font_size",14);section.add_theme_color_override("font_color",palette.title);group.add_child(section)
 	outgoing_box=_checkbox(group,"Dégâts infligés")
 	incoming_box=_checkbox(group,"Dégâts reçus")
 	healing_box=_checkbox(group,"Soins")
@@ -45,12 +47,12 @@ PV / PM / Incantation")
 func _checkbox(parent: Node, caption: String) -> CheckBox:
 	var box:=CheckBox.new();box.text=caption;box.custom_minimum_size.y=44
 	box.add_theme_font_size_override("font_size",14)
-	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:box.add_theme_color_override(state,Color("fff2d4"))
-	box.add_theme_icon_override("checked",preload("res://assets/ui/settings_checked.svg"))
-	box.add_theme_icon_override("unchecked",preload("res://assets/ui/settings_unchecked.svg"))
+	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:box.add_theme_color_override(state,palette.text)
+	box.add_theme_icon_override("checked",PaletteIcons.checkbox(true,palette))
+	box.add_theme_icon_override("unchecked",PaletteIcons.checkbox(false,palette))
 	for state in ["normal","hover","pressed","disabled"]:box.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 	var focus:=StyleBoxFlat.new();focus.bg_color=Color(0,0,0,0)
-	focus.border_color=Color("d9aa4c");focus.set_border_width_all(1);focus.set_corner_radius_all(4)
+	focus.border_color=palette.gold;focus.set_border_width_all(1);focus.set_corner_radius_all(4)
 	box.add_theme_stylebox_override("focus",focus)
 	parent.add_child(box);return box
 func reflect(hero_bars: bool, enemy_bars: bool, outgoing:bool=true,incoming:bool=true,healing:bool=true,grid:bool=false,aoe_zone:bool=true) -> void:

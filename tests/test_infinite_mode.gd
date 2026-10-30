@@ -90,7 +90,7 @@ func _ready() -> void:
 		check(page.chosen_arena==initial and app.arena_choice.draws==draws,"same arena is retained through wave ten")
 		kill_wave(page.simulation);page._present();await settle()
 		check(page.countdown.visible and page.countdown.text=="3" and page.countdown.get_global_rect().position.y>page.wave_counter.get_global_rect().end.y,"gold countdown is visible in arena below wave counter")
-		check(page.countdown.get_theme_color("font_color")==Color("ffd16a") and page.countdown.get_theme_color("font_outline_color")==Color("173a70"),"countdown respects gold and blue palette")
+		check(page.countdown.get_theme_color("font_color")==page.hud_style.title and page.countdown.get_theme_color("font_outline_color")==page.hud_style.outline,"countdown respects selected interface palette")
 		page._toggle_pause();var left:float=page.simulation.infinite.remaining
 		page._physics_process(3);check(page.simulation.infinite.remaining==left,"product pause freezes wave countdown")
 		page._resume_combat();await settle();page.application_guard.consume_return_step()

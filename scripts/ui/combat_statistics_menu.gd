@@ -1,5 +1,7 @@
 extends Control
 ## One cached continuous journal. Menus observe facts; playback is requested from the arena.
+var palette:Resource=preload("res://resources/ui/arena_hud.tres")
+const PaletteIcons=preload("res://scripts/ui/palette_icons.gd")
 signal playback_requested
 const StatsList=preload("res://scripts/ui/combat_statistics_list.gd")
 const PauseIcon=preload("res://assets/ui/journal_pause.svg")
@@ -49,18 +51,18 @@ func _ready() -> void:
 	console.add_theme_font_size_override("normal_font_size",12);journal_scroll.add_child(console)
 	var navigation:=HBoxContainer.new();navigation.add_theme_constant_override("separation",8);journal_column.add_child(navigation)
 	playback=_button(navigation,"","Mettre le combat en pause",func():playback_requested.emit())
-	playback.custom_minimum_size=Vector2(36,36);playback.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;playback.icon=PauseIcon
+	playback.custom_minimum_size=Vector2(36,36);playback.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;playback.icon=PaletteIcons.icon(PauseIcon,palette)
 	direct=_button(navigation,"Direct","Revenir aux dernières actions",_direct)
 	resized.connect(_layout);_layout();hide()
 
 func _panel() -> PanelContainer:
 	var panel:=PanelContainer.new()
 	var style:=get_theme_stylebox("normal","Button").duplicate() as StyleBoxFlat
-	style.bg_color.a=.72;style.border_color=Color("a68349");style.set_corner_radius_all(8)
+	style.bg_color=palette.backdrop;style.border_color=palette.frame;style.set_corner_radius_all(8)
 	panel.add_theme_stylebox_override("panel",style);return panel
 func _title(parent:Node,text:String) -> Label:
 	var label:=Label.new();label.text=text;label.clip_text=true
-	label.add_theme_font_size_override("font_size",18);label.add_theme_color_override("font_color",Color("ffd16a"));parent.add_child(label);return label
+	label.add_theme_font_size_override("font_size",18);label.add_theme_color_override("font_color",palette.title);parent.add_child(label);return label
 func _scroll(parent:Node) -> ScrollContainer:
 	var scroll:=ScrollContainer.new();scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL;scroll.size_flags_horizontal=Control.SIZE_EXPAND_FILL
@@ -77,7 +79,7 @@ func _group(parent:Node,text:String) -> VBoxContainer:
 	var heading:=_title(group,text);heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;heading.add_theme_font_size_override("font_size",16)
 	return group
 func _list(scroll:ScrollContainer) -> Control:
-	var list:=StatsList.new();list.show_headings=false;list.scroller=scroll;scroll.add_child(list)
+	var list:=StatsList.new();list.palette=palette;list.show_headings=false;list.scroller=scroll;scroll.add_child(list)
 	scroll.get_v_scroll_bar().value_changed.connect(func(_value:float):list.queue_redraw())
 	return list
 func open(values:RefCounted,journal:bool=false) -> void:
@@ -121,7 +123,7 @@ func _sync_console() -> void:
 		for entry in lines:
 			if int(entry.id)<=_shown_last:continue
 			var stamp:String=timestamp(float(entry.time))
-			console.push_color(Color("8b9bb5"));console.add_text(stamp+"  ");console.pop()
+			console.push_color(palette.muted);console.add_text(stamp+"  ");console.pop()
 			console.push_color(Color(entry.color));console.add_text(str(entry.text)+"\n");console.pop()
 			_shown_last=int(entry.id)
 	_scroll_token+=1;call_deferred("_settle_scroll",_scroll_token,-1 if follow_live else maxi(0,wanted-roundi(removed_height)))
@@ -146,7 +148,7 @@ func set_blocked(blocked:bool) -> void:
 	playback.disabled=blocked or not _can_play
 func sync_playback(paused:bool,can_play:bool) -> void:
 	playback_paused=paused;_can_play=can_play
-	playback.icon=PlayIcon if paused else PauseIcon
+	playback.icon=PaletteIcons.icon(PlayIcon if paused else PauseIcon,palette)
 	playback.tooltip_text="Reprendre le combat" if paused else "Mettre le combat en pause"
 	playback.disabled=_blocked or not can_play
 func _journal_scrolled(value:float) -> void:
