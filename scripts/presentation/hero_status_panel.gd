@@ -95,12 +95,12 @@ func show_actor(actor) -> void:
 	if bars.attacking:
 		var phase_left:float=maxf(0,(actor.action._windup()+actor.action._recovery() if actor.action.resolved else actor.action._windup())-actor.action.elapsed)
 		var attack_seconds:float=remaining_cast_seconds(phase_left,actor.buffs.snapshot())
-		cast_text.text="%s : %ss"%["Récup." if actor.action.resolved else "Attaque",("%.1f"%(ceilf(attack_seconds*10-0.000001)/10)).replace(".",",")]
+		cast_text.text="%s : %ss"%["Récup." if actor.action.resolved else "Attaque",("%.1f"%(ceili(maxf(0,attack_seconds*10-0.000001))/10.0)).replace(".",",")]
 	elif cast_text.visible:
-		var names:Dictionary={&"heal":"Soin",&"lightning":"Foudre",&"booster":"Booster",&"meteor":"Météore"}
+		var names:Dictionary={&"heal":"Soin",&"lightning":"Foudre",&"booster":"Booster",&"meteor":"Météore", &"ice_bolts":"Traits de glace"}
 		var local_left:float=maxf(0,actor.action.cast_duration(actor.action.last_skill)-actor.action.elapsed)
 		var seconds:float=remaining_cast_seconds(local_left,actor.buffs.snapshot())
-		cast_text.text="%s : %ss"%[names.get(actor.action.last_skill,String(actor.action.last_skill)),("%.1f"%(ceilf(seconds*10-0.000001)/10)).replace(".",",")]
+		cast_text.text="%s : %ss"%[names.get(actor.action.last_skill,String(actor.action.last_skill)),("%.1f"%(ceili(maxf(0,seconds*10-0.000001))/10.0)).replace(".",",")]
 	caption.modulate=Color.WHITE if actor.state.alive else Color(0.5,0.5,0.5,0.75)
 
 static func remaining_cast_seconds(personal_left: float, statuses: Dictionary) -> float:

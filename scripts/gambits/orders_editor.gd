@@ -91,7 +91,7 @@ func _rebuild() -> void:
 		var abilities: Array = Array(Orders.PROFILES[hero_id].abilities)
 		fields.skill.add_theme_constant_override("icon_max_width",icon_style.picker_size)
 		for id in abilities:
-			var caption:String="Météore" if id==&"meteor" else "Booster" if id==&"booster" else "Soin" if id==&"heal" else "Foudre" if id==&"lightning" else "Attaque"
+			var caption:String="Traits de glace" if id==&"ice_bolts" else "Météore" if id==&"meteor" else "Booster" if id==&"booster" else "Soin" if id==&"heal" else "Foudre" if id==&"lightning" else "Attaque"
 			var texture:Texture2D=SkillIcons.texture(id)
 			if texture!=null:fields.skill.add_icon_item(texture,caption)
 			else:fields.skill.add_item(caption)

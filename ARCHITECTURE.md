@@ -1,3 +1,21 @@
+# MULTI-001 validée — 30 octobre 2026
+
+Traits de glace pour Mako : 20 PM, 30 dégâts fixes par victime, cast 1,5 s,
+recharge 3 s, portée 4, trois victimes maximum dans une portée multi de 2,5.
+Seuils de gambits 2/3/4 : population globale >= m, k=min(n,m), principale la plus
+proche permettant k victimes, sans maximisation. Approche réévaluée et interruptible.
+Victimes verrouillées à la fin du cast ; dégâts à l’impact et aucun remplacement
+d’une victime morte en vol. Annulation gratuite si principale morte/perdue/hors portée.
+Choix Godot **B — Givre lumineux**, confirmé sur Galaxy A16 en v93 :
+« Oui, MULTI-001 validée ». Icône fournie et animation entièrement procédurale.
+81 scènes / 6 029 contrôles consolidés réussis ; captures GPU et recette Android.
+Gambit seuil 2 ajouté explicitement en tête chez Mako ; autres ordres, équipe et
+réglages conservés. Clôture documentaire sans changement du code/APK validés.
+Commit local et sauvegarde complète restaurée/vérifiée, aucun push automatique.
+Les fichiers non suivis préexistants dans output/ restent intacts.
+Suite : UI-005 après un nouveau GO. Détails : docs/steps/MULTI-001.md.
+Les états ci-dessous sont historiques.
+
 # LOGO-001 validée — 30 octobre 2026
 
 Logo Beherit retenu pour l’icône et le démarrage uniquement, accueil conservé.

@@ -1,10 +1,14 @@
 extends RefCounted
 ## Immutable catalogue; no condition value belongs to an editable order.
-const IDS: Array[StringName] = [&"self",&"ally_roster",&"ally_hp_lt_90",&"ally_hp_lt_70",&"ally_hp_lt_50",&"ally_hp_lt_30",&"ally_hp_lt_10",&"enemy_hp_max",&"enemy_hp_min",&"enemy_near",&"enemy_far",&"enemy_group_3"]
+const IDS: Array[StringName] = [&"self",&"ally_roster",&"ally_hp_lt_90",&"ally_hp_lt_70",&"ally_hp_lt_50",&"ally_hp_lt_30",&"ally_hp_lt_10",&"enemy_hp_max",&"enemy_hp_min",&"enemy_near",&"enemy_far",&"enemy_group_3",&"enemy_group_2",&"enemy_group_4"]
 const LABELS = {&"self":"Soi-même",&"ally_roster":"Allié",&"ally_hp_lt_90":"Allié — PV < 90 %",&"ally_hp_lt_70":"Allié — PV < 70 %",&"ally_hp_lt_50":"Allié — PV < 50 %",&"ally_hp_lt_30":"Allié — PV < 30 %",&"ally_hp_lt_10":"Allié — PV < 10 %",&"enemy_hp_max":"Ennemi — le plus de PV",&"enemy_hp_min":"Ennemi — le moins de PV",&"enemy_near":"Ennemi proche",&"enemy_far":"Ennemi lointain"}
 const THRESHOLDS = {&"ally_hp_lt_90":90,&"ally_hp_lt_70":70,&"ally_hp_lt_50":50,&"ally_hp_lt_30":30,&"ally_hp_lt_10":10}
 static func has(id: StringName) -> bool:return id in IDS
-static func label(id: StringName) -> String:return "Groupe de 3 ou plus" if id==&"enemy_group_3" else LABELS.get(id,"")
+static func group_minimum(id: StringName) -> int:
+	return {&"enemy_group_2":2, &"enemy_group_3":3, &"enemy_group_4":4}.get(id, 0)
+static func label(id: StringName) -> String:
+	var count: int = group_minimum(id)
+	return "%d ennemis ou plus" % count if count > 0 else LABELS.get(id, "")
 static func threshold(id: StringName) -> int:return THRESHOLDS.get(id,0)
 static func living(row: Variant) -> bool:
 	return row is Dictionary and typeof(row.get("id"))==TYPE_INT and typeof(row.get("health"))==TYPE_INT and typeof(row.get("max_health"))==TYPE_INT and row.health>0 and row.max_health>0 and row.get("position") is Vector2 and row.position.is_finite()
@@ -17,7 +21,7 @@ static func candidates(id: StringName, view: Dictionary) -> Array[Dictionary]:
 	var ranked: Array[Dictionary] = []
 	var source = view.get("source",{})
 	if not has(id) or not living(source):return ranked
-	if id==&"enemy_group_3":return ranked # Requires a skill radius; Orders evaluates the pair.
+	if group_minimum(id)>0:return ranked # Requires a skill radius; Orders evaluates the pair.
 	if id==&"self":
 		ranked.append(source.duplicate(true));return ranked
 	var allies: bool = id==&"ally_roster" or THRESHOLDS.has(id)

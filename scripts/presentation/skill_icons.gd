@@ -2,6 +2,7 @@ extends RefCounted
 ## One replaceable art catalogue shared by skills, orders, casts and active buffs.
 const DEFAULT_STYLE = preload("res://resources/presentation/skill_icons/standard.tres")
 const TEXTURES = {
+	&"ice_bolts": preload("res://assets/art/skills/ice_bolts.png"),
 	&"meteor": preload("res://assets/art/skills/meteor.png"),
 	&"heal": preload("res://assets/art/skills/heal.png"),
 	&"lightning": preload("res://assets/art/skills/lightning.png"),

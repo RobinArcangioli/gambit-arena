@@ -165,7 +165,7 @@ func advance(delta: float, paused: bool = false) -> void:
 	# Released spells use normal combat time, even when their caster has died.
 	projectiles.advance(dt,all_units(),clock.elapsed)
 	for event in projectiles.take_events():
-		if event.kind=="area_impact" and int(event.area_total)>0:hits+=1
+		if (event.kind=="area_impact" and int(event.area_total)>0) or (event.kind=="multi_hit" and int(event.damage)>0):hits+=1
 		_append_visual_event(event)
 	# Stable order: Anne, Mako, then enemy creation order. Dead actors never retaliate.
 	for unit in all_units():
@@ -215,6 +215,7 @@ func advance(delta: float, paused: bool = false) -> void:
 					var toward:Vector2=unit.desired_point-unit.mover.ground_position
 					if toward.length_squared()>.000001:unit.mover.facing=toward.normalized()
 			if unit.ground_intention:continue
+		if Executor.living(unit) and not unit.action.active and Executor.Multi.has(unit.desired_skill): _plan(unit)
 		if not Executor.living(unit) or unit.action.active or not Executor.living(unit.desired_target): continue
 		if Executor.distance_between(unit, unit.desired_target) > Executor.skill_reach(unit.desired_skill): continue
 		var id: int = unit.action.request(unit.desired_skill, unit.desired_target)

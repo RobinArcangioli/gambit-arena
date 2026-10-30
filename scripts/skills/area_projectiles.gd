@@ -1,6 +1,7 @@
 extends RefCounted
 ## Combat-owned released spells. No presentation resources or caster lifetime dependency.
 const Actor=preload("res://scripts/combat/attack_action.gd")
+const Multi=preload("res://scripts/skills/multi_skills.gd")
 const Area=preload("res://scripts/skills/area_skills.gd")
 var pending:Array[Dictionary]=[]
 var events:Array[Dictionary]=[]
@@ -11,6 +12,36 @@ func launch(values:Dictionary,team:int) -> void:
 	flight.source_team=team
 	flight.remaining=float(Area.DEFINITIONS[StringName(values.skill)].flight)
 	pending.append(flight)
+func launch_multi(values: Dictionary, victims: Array) -> Dictionary:
+	var launch: Dictionary = values.duplicate(true)
+	launch.victims = []
+	launch.orbit_duration = Multi.ORBIT
+	launch.flight_duration = Multi.FLIGHT
+	for index in range(victims.size()):
+		var victim = victims[index]
+		var row: Dictionary = {"target_id":victim.combat_id,"target_position":victim.position,"target_team":victim.team,"projectile_index":index}
+		launch.victims.append(row)
+		var flight: Dictionary = values.duplicate(true)
+		flight.merge(row, true)
+		flight.multi = true
+		flight.actor = weakref(victim)
+		flight.state = victim.state
+		flight.remaining = Multi.ORBIT + Multi.FLIGHT
+		pending.append(flight)
+	return launch
+func _advance_multi(flight: Dictionary, time: float, epoch: int) -> void:
+	var target = flight.actor.get_ref()
+	if is_instance_valid(target): flight.target_position = target.position
+	if float(flight.remaining) > .000001: return
+	pending.erase(flight)
+	var hit: Dictionary = flight.duplicate(true)
+	hit.erase("actor"); hit.erase("state")
+	hit.game_time = time; hit.mana_paid = 0; hit.damage = 0
+	hit.kind = "multi_miss"
+	if Actor.living(target) and target.state == flight.state:
+		hit.kind = "multi_hit"
+		hit.damage = target.state.damage(Multi.DAMAGE)
+	if generation == epoch: events.append(hit)
 func clear() -> void:
 	generation+=1;pending.clear();events.clear()
 func advance(dt:float,units:Array,time:float) -> void:
@@ -22,6 +53,10 @@ func _advance(dt:float,units:Array,time:float) -> void:
 	var epoch:int=generation
 	for flight in pending.duplicate():
 		flight.remaining=maxf(0,float(flight.remaining)-dt)
+		if flight.get("multi", false):
+			_advance_multi(flight,time,epoch)
+			if generation!=epoch:return
+			continue
 		if float(flight.remaining)>.000001:continue
 		# Remove before health callbacks: no second impact through reentry.
 		pending.erase(flight)
