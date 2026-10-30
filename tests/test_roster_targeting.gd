@@ -25,7 +25,7 @@ func tap(viewport: Viewport, at: Vector2) -> void:
 		var finger:=InputEventScreenTouch.new();finger.index=0;finger.pressed=pressed;finger.position=at;viewport.push_input(finger,true)
 		var mouse:=InputEventMouseButton.new();mouse.device=-1;mouse.position=at;mouse.global_position=at;mouse.button_index=MOUSE_BUTTON_LEFT;mouse.button_mask=MOUSE_BUTTON_MASK_LEFT if pressed else 0;mouse.pressed=pressed;viewport.push_input(mouse,true)
 func _ready() -> void:
-	check(Roster.SLOTS==[&"mako",&"anne",&"",&""] and TeamRoster.SLOTS==Roster.SLOTS,"logical and visible roster share one order")
+	check(Roster.SLOTS==[&"mako",&"anne",&"nassau",&""] and TeamRoster.SLOTS==Roster.SLOTS,"logical and visible roster share one order")
 	check(Roster.rank(&"mako")==0 and Roster.rank(&"anne")==1 and Roster.rank(&"")==-1 and Roster.rank(&"missing")==-1,"empty and absent slots are not actors")
 	check(Criteria.label(&"ally_roster")=="Allié" and Criteria.threshold(&"ally_roster")==0,"Allié has no threshold")
 	var view: Dictionary={"key":&"anne","source":row(10,1,5,0),"allies":[row(99,0,100,4)],"enemies":[row(2,0,100,.1)],"mana":60.0,"abilities":[&"basic",&"heal"],"cooldowns":{}}
@@ -64,12 +64,12 @@ func _ready() -> void:
 		check(ids(Criteria.candidates(pair[0],view))==pair[1],"all candidate lists preserve the criterion's complete ranking")
 	var world:=Node3D.new();add_child(world);var sim:=Simulation.new();add_child(sim);sim.configure(world);sim.orders_enabled=true;sim.rules=Orders.defaults();sim.reset()
 	var anne=sim.hero(&"anne");var mako=sim.hero(&"mako")
-	check(sim.heroes.map(func(actor):return actor.actor_key)==[&"anne",&"mako"] and anne.combat_id<mako.combat_id,"simulation creation order is unchanged")
+	check(sim.heroes.map(func(actor):return actor.actor_key)==[&"mako",&"anne",&"nassau"] and mako.combat_id<anne.combat_id,"simulation creation follows explicit team order")
 	check(anne.team_slot==1 and mako.team_slot==0,"runtime actor ranks follow roster rather than creation")
 	for actor in sim.heroes:
 		var snapshot: Dictionary=sim.snapshot(actor)
 		check(Criteria.choose(&"ally_roster",snapshot).id==mako.combat_id,"actual simulation resolves Mako first for either caster")
-		check(ids(Criteria.candidates(&"ally_roster",snapshot))==[mako.combat_id,anne.combat_id],"actual snapshot ranks both members")
+		check(ids(Criteria.candidates(&"ally_roster",snapshot))==[mako.combat_id,anne.combat_id,sim.hero(&"nassau").combat_id],"actual snapshot ranks all three members")
 	mako.place(Vector2(2,0));anne.place(Vector2(-2,0));mako.state.damage(30);anne.state.damage(100)
 	sim.rules.anne=[order("heal")];sim._plan(anne)
 	check(anne.desired_target==mako,"real heal chooses roster before lowest HP")
@@ -85,7 +85,7 @@ func _ready() -> void:
 	var store=Store.new(path);check(store.load_configuration()==OK and store.configuration==initial,"old criteria reload unchanged")
 	check(store.save_hero(&"anne",[order("heal")])==OK,"new criterion immediately persisted")
 	var saved: Dictionary=Codec.read(path)
-	check(saved.source_version==3 and saved.configuration.anne[0]==order("heal") and saved.configuration.mako==initial.mako,"schema v3 and other hero preserved")
+	check(saved.source_version==Codec.VERSION and saved.configuration.anne[0]==order("heal") and saved.configuration.mako==initial.mako,"schema v3 and other hero preserved")
 	check(saved.configuration.anne[0].keys().size()==3 and not saved.configuration.anne[0].has("team_slot"),"rank is runtime data not editable order data")
 	var largest: Array=[]
 	for i in range(100):largest.append(order("heal"))

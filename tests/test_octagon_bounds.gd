@@ -37,9 +37,9 @@ func _ready() -> void:
 	var safe:bool=true
 	for frame in range(600):mover.step(1.0/60);safe=safe and Bounds.contains_ground(mover.ground_position)
 	check(safe and mover.state==Mover.State.BLOCKED,"actual movement stops at octagonal edge without crossing it")
-	for slot in range(2):
+	for slot in range(4):
 		var at:Vector2=Schedule.hero_position(slot)
-		check(Bounds.contains_ground(at) and is_equal_approx(at.x+at.y,(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO),"hero sits on inset southern edge")
+		check(Bounds.contains_ground(at) and is_equal_approx(at.x+at.y,Schedule.hero_position(0).x+Schedule.hero_position(0).y),"four hero slots share a safe southern line")
 	var rng:=RandomNumberGenerator.new();rng.seed=421
 	for sample in range(100):
 		var occupied:Array[Vector2]=[]

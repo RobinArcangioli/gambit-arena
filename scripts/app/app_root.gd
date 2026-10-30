@@ -10,6 +10,11 @@ const Layout = preload("res://scripts/ui/hud_layout.gd")
 const HomeLighting = preload("res://scripts/presentation/home_lighting.gd")
 const Home = preload("res://assets/art/ui/home.png")
 const AppTheme = preload("res://resources/ui/night_gold.tres")
+const Composition=preload("res://scripts/party/team_composition.gd")
+const ConfigurationStore=preload("res://scripts/gambits/configuration_store.gd")
+@export var team_path:String="user://team_composition.json"
+var composition:Composition
+var configuration_error:Error=OK
 const ROUTES = [&"home", &"arena", &"team", &"hero", &"gambits"]
 @export var save_path: String = "user://party_rules_v2.json"
 @export var combat_settings_path: String = "user://combat_settings.cfg"
@@ -33,6 +38,9 @@ var safe_area_override := Rect2()
 
 func _ready() -> void:
 	theme = AppTheme
+	composition=Composition.new("" if save_path.is_empty() else team_path)
+	configuration_error=composition.load_or_create()
+	if configuration_error==OK:configuration_error=ConfigurationStore.new(save_path).load_configuration()
 	if get_tree().has_method("set_quit_on_go_back"):get_tree().set_quit_on_go_back(false)
 	background = TextureRect.new();background.texture = Home
 	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -43,6 +51,10 @@ func _ready() -> void:
 	home_page = Control.new();home_page.mouse_filter = Control.MOUSE_FILTER_IGNORE;add_child(home_page)
 	team_button = _button("Équipe");team_button.pressed.connect(open_team)
 	arena_button = _button("Mode Infini");arena_button.pressed.connect(open_arena)
+	if configuration_error!=OK:
+		var warning:=Label.new();warning.text="Configuration illisible ou migration impossible.\nLes sauvegardes ont été conservées."
+		warning.position=Vector2(24,120);warning.size=Vector2(480,100);warning.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		add_child(warning);arena_button.disabled=true;team_button.disabled=true
 	add_child(guard)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
@@ -69,7 +81,7 @@ func _layout() -> void:
 	arena_button.position = team_button.position+Vector2(0,76);arena_button.size = Vector2(width,60)
 
 func open_arena() -> void:
-	if guard.blocked or transitioning or route!=&"home":return
+	if guard.blocked or transitioning or route!=&"home" or configuration_error!=OK:return
 	transitioning = true
 	arena_button.disabled = true
 	guard.acknowledge_resume()
@@ -79,6 +91,7 @@ func open_arena() -> void:
 	combat.chooser = arena_choice.next
 	combat.rotation_chooser = arena_choice.next_excluding
 	combat.infinite_mode = true
+	combat.team_slots=composition.slots.duplicate()
 	combat.home_requested.connect(return_home)
 	add_child(combat)
 	home_page.hide();background.hide();route = &"arena"
@@ -106,8 +119,8 @@ func return_home() -> void:
 
 func _finish_transition() -> void:
 	transitioning = false
-	arena_button.disabled = guard.blocked
-	team_button.disabled = guard.blocked
+	arena_button.disabled = guard.blocked or configuration_error!=OK
+	team_button.disabled = guard.blocked or configuration_error!=OK
 
 func go_back() -> void:
 	if guard.blocked or transitioning:return
@@ -133,9 +146,9 @@ func _input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if guard == null:return
 	if guard.observe(what) and is_instance_valid(arena_button):
-		arena_button.disabled = guard.blocked
+		arena_button.disabled = guard.blocked or configuration_error!=OK
 		if home_lighting!=null:home_lighting.set_active(not guard.blocked and route==&"home")
-		team_button.disabled = guard.blocked
+		team_button.disabled = guard.blocked or configuration_error!=OK
 		if team_page != null:team_page.set_active(not guard.blocked and route==&"team")
 		if hero_page != null:hero_page.set_active(not guard.blocked and route==&"hero")
 		if gambits_page != null:gambits_page.set_active(not guard.blocked)
@@ -145,11 +158,12 @@ func _notification(what: int) -> void:
 		# The OS Home gesture remains available for putting it in the background.
 
 func open_team() -> void:
-	if guard.blocked or transitioning or route!=&"home":return
+	if guard.blocked or transitioning or route!=&"home" or configuration_error!=OK:return
 	transitioning = true
 	team_button.disabled = true
 	guard.acknowledge_resume()
 	team_page = TeamPage.instantiate()
+	team_page.team_slots=composition.slots.duplicate()
 	team_page.home_requested.connect(return_home)
 	team_page.hero_selected.connect(_select_team_hero)
 	add_child(team_page)

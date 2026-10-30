@@ -71,7 +71,7 @@ func _build_party_controls() -> void:
 		wave_counter=_mode_label(22);hud.add_child(wave_counter)
 		countdown=_mode_label(64);countdown.add_theme_constant_override("outline_size",6)
 		add_child(countdown);countdown.hide()
-	for id in [&"mako",&"anne",&"",&""]:
+	for id in team_slots:
 		var panel:=HeroPanel.new();panel.hero_id=id;panel.icon_style=icon_style;hud.add_child(panel);hero_panels.append(panel)
 
 func _build_party_overlays() -> void:

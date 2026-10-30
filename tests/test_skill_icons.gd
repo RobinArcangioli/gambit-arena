@@ -51,10 +51,10 @@ func _ready() -> void:
 	check(not panel.cast_icon.visible and panel.buff_row.visible,"cancel removes cast icon without removing active buff")
 	mako.buffs.advance(100);panel.show_actor(mako);await settle()
 	check(panel.buff_icons.is_empty() and not panel.buff_row.visible,"expired buffs disappear")
-	lab.cycle_spell();panel.show_actor(lab.simulation.hero(&"mako"))
-	check(panel.cast_icon.texture==Icons.texture(&"booster") and panel.cast_icon.visible,"Booster cast and active buff share same image")
-	lab.simulation.hero(&"mako").state.damage(100000);panel.show_actor(lab.simulation.hero(&"mako"))
-	check(not panel.cast_icon.visible and panel.buff_icons.is_empty(),"death clears cast and buff icons")
+	lab.cycle_spell();var booster_panel=lab.hero_panels[2];booster_panel.show_actor(lab.simulation.hero(&"nassau"))
+	check(booster_panel.cast_icon.texture==Icons.texture(&"booster") and booster_panel.cast_icon.visible,"Nassau Booster uses shared skill image")
+	lab.simulation.hero(&"nassau").state.damage(100000);booster_panel.show_actor(lab.simulation.hero(&"nassau"))
+	check(not booster_panel.cast_icon.visible and booster_panel.buff_icons.is_empty(),"death clears cast and buff icons")
 	lab.show_tab("Fiche");await settle()
 	var sheet=lab.page
 	for i in range(sheet.reference.skills.size()):

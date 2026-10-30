@@ -16,7 +16,8 @@ const Router = preload("res://scripts/ui/touch_scroll_router.gd")
 const Guard = preload("res://scripts/platform/application_guard.gd")
 const Picker = preload("res://scripts/presentation/arena_picker.gd")
 const Catalog = preload("res://scripts/presentation/arena_catalog.gd")
-const APPEARANCES = {&"anne": preload("res://resources/presentation/characters/anne.tres"), &"mako": preload("res://resources/presentation/characters/mako.tres"), &"skeleton": preload("res://resources/presentation/characters/skeleton_variant.tres")}
+const APPEARANCES = {&"anne": preload("res://resources/presentation/characters/anne.tres"), &"mako": preload("res://resources/presentation/characters/mako.tres"), &"nassau":preload("res://resources/presentation/characters/nassau.tres"), &"skeleton": preload("res://resources/presentation/characters/skeleton_variant.tres")}
+var team_slots:Array[StringName]=preload("res://scripts/party/party_roster.gd").SLOTS.duplicate()
 @export var characters_enabled: bool = true
 @export var action_animations_enabled: bool = true
 @export var save_path: String = "user://party_rules_v2.json"
@@ -70,6 +71,7 @@ func _ready() -> void:
 	add_child(simulation)
 	simulation.configure(world)
 	simulation.orders_enabled = orders_enabled
+	simulation.team_slots=team_slots.duplicate()
 	if orders_enabled:
 		simulation.rules = Orders.defaults()
 		var store := Store.new(save_path)

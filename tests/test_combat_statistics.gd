@@ -94,12 +94,13 @@ func _ready() -> void:
 	for unit in sim.enemies:unit.state.damage(999)
 	game._physics_process(.01)
 	for i in range(181):game._physics_process(1.0/60.0)
-	check(sim.wave_number==2 and sim.report.actors.size()==8 and old_ids.all(func(id):return not sim.report.actors.has(id)),"real new wave clears dead enemy rows")
+	check(sim.wave_number==2 and sim.report.actors.size()==9 and old_ids.all(func(id):return not sim.report.actors.has(id)),"real new wave clears dead enemy rows")
 	check(sim.report.actors[mako.combat_id].dealt==hero_damage and sim.report.recent.any(func(row):return "Squelette #1" in row.text),"hero totals and recent journal survive real wave")
 	for unit in sim.all_units():unit.mover.speed=0
-	mako.action.cancel();mako.action.cooldowns.clear();mako.action.mana=60
-	check(mako.action.request(&"booster",mako)>0,"real booster commitment accepted")
-	mako.action.advance(1.5);sim._collect_visual_events(sim.all_units())
+	var nassau=sim.hero(&"nassau");nassau.place(mako.mover.ground_position+Vector2(.8,0))
+	nassau.action.cancel();nassau.action.cooldowns.clear();nassau.action.mana=60
+	check(nassau.action.request(&"booster",mako)>0,"real Nassau booster commitment accepted")
+	nassau.action.advance(1.5);sim._collect_visual_events(sim.all_units())
 	check(mako.buffs.has(&"booster") and sim.report.actors[mako.combat_id].buffs.has("booster"),"actual buff state reaches journal adapter")
 	for tick in range(1801):game._physics_process(1.0/30.0)
 	check(not mako.buffs.has(&"booster") and sim.report.recent.filter(func(row):return row.kind=="buff_end" and "Mako" in row.text and "prend fin" in row.text).size()==1,"actual expiry emits exactly one journal line")
@@ -168,7 +169,7 @@ func _ready() -> void:
 		check(not menu.visible and game.paused and game.pause_layer.visible,"background closes stats and requires normal resume")
 		game.notification(NOTIFICATION_APPLICATION_RESUMED);game.notification(NOTIFICATION_APPLICATION_FOCUS_IN);await settle()
 		game._replay_combat();await settle()
-		check(game.simulation.report.actors.size()==8 and game.simulation.report.actors.values().all(func(row):return row.dealt==0 and row.received==0 and row.healed==0),"replay resets all statistics")
+		check(game.simulation.report.actors.size()==9 and game.simulation.report.actors.values().all(func(row):return row.dealt==0 and row.received==0 and row.healed==0),"replay resets all statistics")
 		check(game.simulation.report.recent.size()<=1000 and not game.simulation.report.recent.any(func(row):return "Ligne témoin" in row.text),"replay clears entire journal")
 		var pref_path:String=app.combat_settings_path
 		viewport.queue_free();await settle();

@@ -24,7 +24,7 @@ func _ready() -> void:
 	sim.infinite_mode=true; sim.orders_enabled=true; sim.rules={"mako":[],"anne":[]}; sim.reset()
 	var mako=sim.hero(&"mako");var anne=sim.hero(&"anne")
 	check(sim.wave_number==1 and sim.enemies.size()==6 and sim.wave.issued==6,"six enemies appear together at the initial wave")
-	check(sim.heroes.all(func(h):return Bounds.contains_ground(Vector2(h.position.x,h.position.z)) and near(h.position.x+h.position.z,(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO)),"heroes start at the screen-south corner with minimum physical margin")
+	check(sim.heroes.all(func(h):return Bounds.contains_ground(Vector2(h.position.x,h.position.z)) and Vector2(h.position.x,h.position.z)==Schedule.hero_position(h.team_slot)),"heroes start in their fixed southern slots")
 	check(sim.enemies.all(func(e):return e.position.x+e.position.z<=-(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO+1.10001),"enemies start in the three screen-north layers")
 	var rng:=RandomNumberGenerator.new();rng.seed=8192
 	var formations_ok:bool=true
@@ -64,7 +64,9 @@ func _ready() -> void:
 		kill_wave(sim);wait_wave(sim)
 		check(sim.wave_number==expected and sim.enemies.size()==6 and sim.result=="EN COURS","endless waves continue beyond the former three-wave victory")
 	check(sim._death_ids.size()<=2,"completed enemy lifetime bookkeeping stays bounded")
-	kill_wave(sim);mako.state.damage(100000);anne.state.damage(100000);sim.advance(1.0/30)
+	kill_wave(sim)
+	for unit in sim.heroes:unit.state.damage(100000)
+	sim.advance(1.0/30)
 	check(sim.result=="DEFAITE" and sim.clock.stopped,"hero defeat terminates the endless run during countdown")
 	var wave_number:int=sim.wave_number
 	for i in range(100):sim.advance(1.0/30)

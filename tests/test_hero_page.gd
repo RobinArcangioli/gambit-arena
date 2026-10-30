@@ -12,7 +12,7 @@ func settle() -> void:
 	await get_tree().process_frame;await get_tree().process_frame
 func _ready() -> void:
 	check(Reference.read(&"unknown").is_empty(),"unknown identity has no fallback hero")
-	for id in [&"mako",&"anne"]:
+	for id in Roster.PROFILES:
 		var data: Dictionary = Reference.read(id);var profile = Roster.PROFILES[id]
 		check(data.id==id and data.name==profile.display_name,"identity comes from profile")
 		check(data.health==profile.max_health and data.mana==profile.mana_capacity,"maximum resources come from profile")
@@ -22,19 +22,19 @@ func _ready() -> void:
 			var skill: Dictionary = data.skills[i];var key: StringName = profile.abilities[i]
 			check(skill.id==key and skill.cost==Executor.cost(key) and skill.duration==Executor.cast_duration(key) and skill.cooldown==Executor.cooldown(key) and skill.reach==Executor.skill_reach(key),"metadata follows current executor")
 		data.skills.clear();data.health=1
-		check(Reference.read(id).skills.size()==(3 if id==&"mako" else 2) and profile.max_health>1,"UI snapshot cannot mutate authored profile")
+		check(Reference.read(id).skills.size()==Roster.PROFILES[id].abilities.size() and profile.max_health>1,"UI snapshot cannot mutate authored profile")
 	var app = App.instantiate();app.save_path="";add_child(app);await settle()
 	app.open_arena();await settle()
 	for actor in app.combat.simulation.heroes:
 		actor.state.damage(60);actor.action.mana=0
 	app.return_home();await settle();app.open_team();await settle()
 	app._select_team_hero(&"unknown");check(app.route==&"team" and app.hero_page==null,"invalid id cannot open a sheet")
-	for id in [&"mako",&"anne"]:
+	for id in Roster.PROFILES:
 		var team=app.team_page
 		team._select(id);await settle();var page=app.hero_page
 		check(app.route==&"hero" and app.combat==null and page.hero_id==id and page.title.text==Roster.caption(id),"correct sheet without combat")
 		check(page.reference.health==Roster.PROFILES[id].max_health and page.health_bar.value==page.health_bar.max_value and page.mana_bar.value==60,"abandoned injuries and mana are not shown")
-		check(page.skill_panels.size()==(3 if id==&"mako" else 2) and not page.gambits_button.disabled,"owned skills and enabled Gambits button")
+		check(page.skill_panels.size()==Roster.PROFILES[id].abilities.size() and not page.gambits_button.disabled,"owned skills and enabled Gambits button")
 		check(not team.visible and not team.active and team.portraits.all(func(p):return not p.active and p.viewport_3d.render_target_update_mode==SubViewport.UPDATE_DISABLED),"team worlds stop behind sheet")
 		app.notification(NOTIFICATION_APPLICATION_FOCUS_OUT);app.notification(NOTIFICATION_APPLICATION_PAUSED)
 		check(not page.active and page.back_button.disabled,"background blocks page input")
@@ -47,7 +47,7 @@ func _ready() -> void:
 	for cycle in range(12):
 		app.team_page._select(&"mako" if cycle%2==0 else &"anne");await settle()
 		app.return_team();await settle()
-		check(app.hero_page==null and app.combat==null and app.team_page.portraits.size()==2,"repeated visits leave no sheet or combat")
+		check(app.hero_page==null and app.combat==null and app.team_page.portraits.size()==3,"repeated visits leave no sheet or combat")
 	app.team_page._select(&"anne");await settle();await get_tree().create_timer(.2).timeout
 	app.notification(NOTIFICATION_WM_GO_BACK_REQUEST);await settle()
 	check(app.route==&"team","Android Back returns exactly one level")

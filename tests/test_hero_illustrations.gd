@@ -14,7 +14,7 @@ func _ready() -> void:
   var viewport:=SubViewport.new();viewport.size=resolution;add_child(viewport)
   var app=App.instantiate();app.save_path="";app.combat_settings_path="";viewport.add_child(app);await settle()
   app.open_team();await settle();var page=app.team_page
-  check(page.illustrations.size()==2 and page.portraits.size()==2,"two artworks and exactly two idle models")
+  check(page.illustrations.size()==3 and page.portraits.size()==3,"two artworks and exactly two idle models")
   for i in range(2):
    var artwork:Rect2=page.illustrations[i].get_global_rect();var idle:Rect2=page.idle_frames[i].get_global_rect()
    check(artwork.intersects(idle) and idle.end.x>artwork.end.x and idle.end.y>artwork.end.y,"idle frame overlaps and extends beyond both image edges")
@@ -39,7 +39,7 @@ func _ready() -> void:
    check(panel.portrait.close_up and panel.portrait.size==Vector2(42,76),"battle portrait uses a fixed close-up gutter")
    check(panel.get_global_rect().encloses(panel.portrait.get_global_rect()),"portrait fits combat panel")
    check(panel.buff_tray.position.y>panel.bars.position.y+2*(panel.bars.bar_height+panel.bars.bar_gap)+panel.bars.bar_height,"buff row is below all three bars")
-  check(game.hero_panels[2].portrait==null and game.hero_panels[3].portrait==null,"empty slots have no artwork or 3D viewport")
+  check(game.hero_panels[3].portrait==null,"empty slots have no artwork or 3D viewport")
   viewport.queue_free();await settle()
  check(int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))==0,"no orphan portrait worlds")
  var label:=Label.new();label.text="%d controles, %d echecs"%[checks,failures];add_child(label);print(label.text)

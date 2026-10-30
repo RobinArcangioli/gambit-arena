@@ -16,8 +16,10 @@ func advance(dt: float) -> bool:
 	if remaining > 0.000001: return false
 	reset(); return true
 static func hero_position(slot:int) -> Vector2:
-	var south:float=(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO
-	return Vector2((south-.6)*.5,(south+.6)*.5) if slot==0 else Vector2((south+.6)*.5,(south-.6)*.5)
+	var south:float=(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO-.35
+	# Constant depth and four screen-left-to-right places; holes are never compacted.
+	var lateral:float=(clampi(slot,0,3)-1.5)*1.1*Bounds.ROOT_TWO
+	return Vector2((south+lateral)*.5,(south-lateral)*.5)
 static func formation(occupied:Array[Vector2]) -> Array[Vector2]:
 	var north:float=-(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO
 	var spacing:float=1.1;var pool:Array[Vector2]=[]

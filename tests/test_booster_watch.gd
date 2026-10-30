@@ -90,8 +90,8 @@ func test_actual_combat() -> void:
 	for enabled in [true,false]:
 		var app=ActualLab.instantiate();add_child(app);app.set_process(false);app.set_physics_process(false);app.action_animations_enabled=enabled;await settle()
 		for i in range(94):app._physics_process(1.0/60)
-		var mako=app.simulation.hero(&"mako");var anne=app.simulation.hero(&"anne")
-		check(mako.buffs.has(&"booster") and mako.action.spent==20 and not anne.buffs.has(&"booster"),"visual toggle never changes first buff or payment")
+		var nassau=app.simulation.hero(&"nassau");var anne=app.simulation.hero(&"anne")
+		check(nassau.buffs.has(&"booster") and nassau.action.spent==20 and not anne.buffs.has(&"booster"),"visual toggle never changes first buff or payment")
 		check(app.action_presenter.booster.played==(1 if enabled else 0),"optional watches respond only to real first success")
 		if enabled:
 			var view=app.action_presenter.booster.effects[0].view;var age:float=view.age
@@ -103,7 +103,7 @@ func test_actual_combat() -> void:
 			app._resume_combat();app._physics_process(1.0/60)
 			var empty_events: Array[Dictionary] = []
 			app.action_presenter.enabled=false;app.action_presenter.present(app.simulation.all_units(),empty_events,0,app.simulation.run_id)
-			check(app.action_presenter.booster.effects.is_empty() and mako.buffs.has(&"booster"),"disabling art removes watch without removing logical buff")
+			check(app.action_presenter.booster.effects.is_empty() and nassau.buffs.has(&"booster"),"disabling art removes watch without removing logical buff")
 		app.queue_free();await settle()
 	var app=ActualLab.instantiate();add_child(app);app.set_process(false);app.set_physics_process(false);await settle()
 	for i in range(188):app._physics_process(1.0/60)
@@ -114,16 +114,16 @@ func test_actual_combat() -> void:
 	app.queue_free();await settle()
 	for reason in ["death","range","mana","duplicate"]:
 		app=ActualLab.instantiate();add_child(app);app.set_process(false);app.set_physics_process(false);await settle()
-		app.simulation.rules.mako=[]
-		var mako=app.simulation.hero(&"mako");var target=app.simulation.hero(&"anne")
-		mako.action.request(&"booster",target)
+		app.simulation.rules.nassau=[]
+		var nassau=app.simulation.hero(&"nassau");var target=app.simulation.hero(&"anne")
+		nassau.action.request(&"booster",target)
 		match reason:
 			"death":target.state.damage(10000)
-			"range":target.place(Vector2(-2.5,2.5));mako.place(Vector2(2.5,-2.5))
-			"mana":mako.action.mana=0;mako.mana_regeneration=0
+			"range":target.place(Vector2(-2.5,2.5));nassau.place(Vector2(2.5,-2.5))
+			"mana":nassau.action.mana=0;nassau.mana_regeneration=0
 			"duplicate":target.buffs.apply(Catalog.definition(&"booster"))
 		for i in range(130):app._physics_process(1.0/60)
-		check(app.action_presenter.booster.played==0 and mako.action.spent==0,"cancelled or duplicate cast has no watch or debit: "+reason)
+		check(app.action_presenter.booster.played==0 and nassau.action.spent==0,"cancelled or duplicate cast has no watch or debit: "+reason)
 		app.queue_free();await settle()
 func test_art_lab() -> void:
 	var lab=ArtLab.instantiate();add_child(lab);lab.set_process(false);lab.set_physics_process(false);await settle()

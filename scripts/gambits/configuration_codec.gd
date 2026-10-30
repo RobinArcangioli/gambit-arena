@@ -2,7 +2,7 @@ extends RefCounted
 ## Versioned value codec. Reading never writes or modifies a legacy source.
 const Orders = preload("res://scripts/gambits/orders.gd")
 const Legacy = preload("res://scripts/party/party_rules.gd")
-const VERSION: int = 3
+const VERSION: int = 4
 const MAX_BYTES: int = 262144
 static func decode(text: String) -> Dictionary:
 	if text.to_utf8_buffer().size()>MAX_BYTES:return {"error":ERR_INVALID_DATA}
@@ -12,6 +12,7 @@ static func decode(text: String) -> Dictionary:
 	if not data is Dictionary or data.size()!=2 or not data.has_all(["version","heroes"]):return {"error":ERR_INVALID_DATA}
 	if data.version==VERSION and Orders.valid_configuration(data.heroes):
 		return {"error":OK,"configuration":data.heroes.duplicate(true),"source_version":VERSION,"notes":[]}
+	if data.version==3:return upgrade_three(data.heroes)
 	if data.version!=2:return {"error":ERR_INVALID_DATA}
 	var heroes = data.heroes
 	if not heroes is Dictionary:return {"error":ERR_INVALID_DATA}
@@ -42,7 +43,31 @@ static func migrate(legacy: Dictionary) -> Dictionary:
 				order.enabled = false
 				notes.append({"hero":hero,"index":index,"kind":"needs_review","from":previous.duplicate(true),"criterion":order.criterion})
 			config[hero].append(order)
-	return {"error":OK,"configuration":config,"source_version":2,"notes":notes}
+	var upgraded:Dictionary=upgrade_three(config)
+	if upgraded.error!=OK:return upgraded
+	upgraded.source_version=2;upgraded.notes=notes+upgraded.notes
+	return upgraded
+
+static func upgrade_three(previous:Variant) -> Dictionary:
+	if not previous is Dictionary or previous.size()!=2 or not previous.has_all(["anne","mako"]):return {"error":ERR_INVALID_DATA}
+	for id in ["anne","mako"]:
+		if not previous[id] is Array or previous[id].size()>Orders.MAX_ORDERS:return {"error":ERR_INVALID_DATA}
+		for row in previous[id]:
+			var valid:bool=Orders.valid_order(row,StringName(id))
+			if id=="mako" and row is Dictionary and row.get("skill")=="booster":
+				var probe:Dictionary=row.duplicate(true);probe.skill="lightning"
+				valid=Orders.valid_order(probe,&"mako")
+			if not valid:return {"error":ERR_INVALID_DATA}
+	var config:Dictionary={"anne":previous.anne.duplicate(true),"mako":[],"nassau":[]}
+	for row in previous.mako:
+		if row.skill=="booster":config.nassau.append(row.duplicate(true))
+		else:config.mako.append(row.duplicate(true))
+	var notes:Array=[]
+	if config.nassau.is_empty():config.nassau=Orders.defaults().nassau
+	else:
+		notes.append({"hero":"nassau","index":0,"kind":"booster_transferred"})
+		if config.nassau.size()<Orders.MAX_ORDERS:config.nassau.append(Orders.create())
+	return {"error":OK,"configuration":config,"source_version":3,"notes":notes}
 static func read(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):return {"error":ERR_FILE_NOT_FOUND}
 	var file := FileAccess.open(path,FileAccess.READ)

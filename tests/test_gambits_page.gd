@@ -35,7 +35,7 @@ func _ready() -> void:
 	var token: int=editor.tokens[0]
 	tap(editor.controls[0].enabled);await settle()
 	check(not editor.rows[0].enabled and read(path).anne==editor.rows,"raw touch plus emulated mouse saves exactly one toggle")
-	check(FileAccess.get_file_as_bytes(path+".v2.bak")==original and Codec.read(path).source_version==3,"first change backs up original and writes v3")
+	check(FileAccess.get_file_as_bytes(path+".v2.bak")==original and Codec.read(path).source_version==Codec.VERSION,"first change backs up original and writes v3")
 	tap(editor.controls[0].criterion);await settle()
 	check(editor.popup_open(),"touch opens criterion dropdown")
 	editor.close_popup();editor.change(token,"criterion","enemy_far");await settle()

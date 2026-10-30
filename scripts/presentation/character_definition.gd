@@ -5,6 +5,7 @@ extends Resource
 @export var model: PackedScene
 @export var model_scale: float = 0.65
 @export var model_offset: Vector3 = Vector3.ZERO
+@export var team_idle_vertical_bias: float = 0.10
 @export var forward_rotation: float = 0.0
 @export var idle_clip: StringName
 @export var move_clip: StringName

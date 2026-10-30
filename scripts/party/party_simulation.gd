@@ -8,6 +8,7 @@ const Executor = preload("res://scripts/party/party_executor.gd")
 const Clock = preload("res://scripts/core/game_clock.gd")
 const Orders = preload("res://scripts/gambits/orders.gd")
 var orders_enabled: bool = false
+var team_slots:Array[StringName]=Roster.SLOTS.duplicate()
 const Rules = preload("res://scripts/party/party_rules.gd")
 const Crowd = preload("res://scripts/crowd/ground_crowd.gd")
 const Pattern = preload("res://scripts/enemies/enemy_director.gd")
@@ -66,10 +67,15 @@ func reset() -> void:
 	feedback = ""
 	infinite.reset()
 	wave.reset(InfiniteSchedule.SIZE if infinite_mode else total_per_wave, InfiniteSchedule.SIZE if infinite_mode else max_alive)
-	for profile in [ANNE, MAKO]:
+	var profiles:Array=[]
+	if orders_enabled:
+		for key in team_slots:
+			if Roster.PROFILES.has(key):profiles.append(Roster.PROFILES[key])
+	else:profiles=[ANNE,MAKO]
+	for profile in profiles:
 		var unit := Unit.new()
 		unit.configure_party(profile)
-		unit.team_slot = Roster.rank(profile.actor_key)
+		unit.team_slot = team_slots.find(profile.actor_key)
 		unit.action.clock = clock
 		unit.action.unrestricted_targets = orders_enabled
 		unit.state.died.connect(_record_death.bind(unit))
@@ -245,7 +251,7 @@ func _plan(unit: Unit) -> void:
 			return
 	var opposite: Array[Unit] = enemies if unit.team == 0 else living_heroes()
 	if unit.team == 0:
-		var choice: Dictionary = Orders.evaluate(rules[String(unit.actor_key)], snapshot(unit)) if orders_enabled else Rules.evaluate(rules[String(unit.actor_key)], snapshot(unit))
+		var choice: Dictionary = Orders.evaluate(rules.get(String(unit.actor_key),[]), snapshot(unit)) if orders_enabled else Rules.evaluate(rules.get(String(unit.actor_key),[]), snapshot(unit))
 		if choice.is_empty(): return
 		unit.desired_skill = choice.skill
 		unit.desired_target = _find(choice.target_id)

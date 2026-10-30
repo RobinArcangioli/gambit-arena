@@ -31,7 +31,7 @@ func _ready() -> void:
 		tap(viewport,page.portraits[1].get_global_rect().get_center());await settle()
 		check(selected==[&"mako",&"anne"] and app.selected_hero_id==&"anne","touch on Anne emits no duplicate mouse selection")
 		app.return_team();await settle()
-		tap(viewport,page.cards[2].get_global_rect().get_center());tap(viewport,page.cards[3].get_global_rect().get_center());await settle()
+		tap(viewport,page.cards[3].get_global_rect().get_center());await settle()
 		check(selected.size()==2,"empty cells ignore taps")
 		tap(viewport,page.back_button.get_global_rect().get_center());await settle()
 		check(app.route==&"home" and app.team_page==null,"return button releases the Team scene")

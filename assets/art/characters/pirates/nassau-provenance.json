@@ -1,0 +1,6 @@
+{
+  "date": "2026-10-30",
+  "model": {"source": "Pirate kit-glb/Pirate Captain.glb", "asset": "assets/art/characters/pirates/nassau.glb", "sha256": "688b0db0487dadaa6dbbf9e5613793aa9c1280902255212bd51bc46ff17f695d"},
+  "illustration": {"source": "Nassau_540x960.png", "asset": "assets/art/portraits/illustrations/nassau.png", "sha256": "0820c77ee7370e317eb417deb0280e15c969d3c423f24b04ee5e043547e73cdb"},
+  "note": "User-supplied assets copied byte for byte; embedded atlas, existing Pirate kit provenance/license applies to model."
+}

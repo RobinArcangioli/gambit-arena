@@ -50,6 +50,7 @@ func _migration_text() -> String:
 	for note in store.migration_notes:
 		if note.hero!=String(hero_id):continue
 		if note.kind=="threshold_lowered":notes.append("Ordre %d : ancien seuil %d %% → %d %%." % [note.index+1,note.from.threshold,Criteria.threshold(note.criterion)])
+		elif note.kind=="booster_transferred":notes.append("Les ordres Booster de Mako ont été transférés vers Nassau.")
 		else:notes.append("Ordre %d désactivé : choisissez un critère de ciblage." % (note.index+1))
 	return "\n".join(notes)
 func _token() -> int:

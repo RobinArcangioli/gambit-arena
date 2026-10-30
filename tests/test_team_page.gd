@@ -18,10 +18,10 @@ func _ready() -> void:
 	app.open_team();app.open_team();await settle()
 	var page=app.team_page;page.set_process(false)
 	check(app.route==&"team" and app.combat==null and count_simulations(app)==0,"team and its models never create a combat")
-	check(page.cards.size()==4 and page.portraits.size()==2 and page.find_children('*','SubViewport',true,false).size()==2,"four slots but only two rendering contexts")
+	check(page.cards.size()==4 and page.portraits.size()==3 and page.find_children('*','SubViewport',true,false).size()==3,"four slots and three rendering contexts")
 	check(page.names[0].text=='Mako' and page.names[1].text=='Anne',"presentation order is Mako then Anne")
-	check(page.cards[2].disabled and page.cards[3].disabled and page.names[2].text=='Vide' and page.names[3].text=='Vide',"empty slots stay inactive")
-	check(page.cards[2].find_children('*','SubViewport',true,false).is_empty() and page.cards[3].find_children('*','SubViewport',true,false).is_empty(),"no hidden model or viewport under empty slots")
+	check(not page.cards[2].disabled and page.cards[3].disabled and page.names[2].text=='Nassau' and page.names[3].text=='Vide',"Nassau occupies third slot and empty stays inactive")
+	check(page.cards[3].find_children('*','SubViewport',true,false).is_empty(),"no hidden model or viewport under empty slot")
 	var emitted: Array[StringName]=[]
 	app.hero_selected.connect(func(id):emitted.append(id))
 	page.cards[0].pressed.emit();await settle();app.return_team();await settle()
@@ -57,7 +57,7 @@ func _ready() -> void:
 		app.return_home();await settle()
 		check(app.team_page==null and count_simulations(app)==0,"twenty team visits leave no active preview or simulation")
 	app.open_arena();await settle()
-	check(app.combat.simulation.heroes[0].actor_key==&"anne" and app.combat.simulation.heroes[1].actor_key==&"mako","card order never changes solver order")
+	check(app.combat.simulation.heroes.map(func(h):return h.actor_key)==[&"mako",&"anne",&"nassau"],"combat uses roster order")
 	app.return_home();await settle()
 	app.open_team();await settle()
 	await get_tree().create_timer(0.2).timeout

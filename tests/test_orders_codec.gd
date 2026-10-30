@@ -31,7 +31,7 @@ func _ready() -> void:
 	result=Codec.migrate(legacy)
 	check(not result.configuration.anne[0].enabled and not result.configuration.mako[0].enabled and result.notes.size()==2,"unrepresentable old rules disabled with notes")
 	check(result.configuration.anne[0].skill=="heal" and result.configuration.mako[0].skill=="lightning","disabled migration preserves capacity and position")
-	for invalid in ["broken","{}",JSON.stringify({"version":4,"heroes":Orders.defaults()}),JSON.stringify({"version":3,"heroes":{"mako":[]}})]:check(Codec.decode(invalid).error!=OK,"invalid input rejected without fallback")
+	for invalid in ["broken","{}",JSON.stringify({"version":99,"heroes":Orders.defaults()}),JSON.stringify({"version":3,"heroes":{"mako":[]}})]:check(Codec.decode(invalid).error!=OK,"invalid input rejected without fallback")
 	check(Codec.decode(" ".repeat(Codec.MAX_BYTES+1)).error==ERR_INVALID_DATA,"oversized input rejected")
 	var path: String="user://gambits001-codec.json";remove(path);remove(path+".v2.bak")
 	var store=Store.new(path)
@@ -43,7 +43,7 @@ func _ready() -> void:
 	var external: Dictionary=Codec.read(path).configuration;external.anne=[];Codec.save(path,external)
 	check(store.save_hero(&"mako",[])==OK and Codec.read(path).configuration.anne.is_empty(),"write reloads and preserves newer other hero changes")
 	var fresh=Store.new(path);check(fresh.load_configuration()==OK and fresh.configuration.mako.is_empty(),"new store reloads empty lists")
-	var largest: Dictionary={"anne":[],"mako":[]}
+	var largest: Dictionary={"anne":[],"mako":[],"nassau":[]}
 	for i in range(100):largest.anne.append(Orders.create());largest.mako.append(Orders.create())
 	check(Codec.save(path,largest)==OK and Codec.read(path).configuration==largest and FileAccess.get_file_as_bytes(path).size()<Codec.MAX_BYTES,"two hundred orders round-trip within size limit")
 	largest.mako.append(Orders.create());var saved: String=FileAccess.get_file_as_string(path)
@@ -52,7 +52,7 @@ func _ready() -> void:
 	store=Store.new(path)
 	check(store.load_configuration()==OK and store.configuration.anne[0].criterion=="ally_hp_lt_70" and FileAccess.get_file_as_string(path)==original and not FileAccess.file_exists(path+".v2.bak"),"reading migrates only in memory")
 	var edited: Array=store.configuration.anne.duplicate(true);edited[0].criterion="self"
-	check(store.save_hero(&"anne",edited)==OK and FileAccess.get_file_as_string(path+".v2.bak")==original and Codec.read(path).source_version==3,"first change protects original bytes and writes v3")
+	check(store.save_hero(&"anne",edited)==OK and FileAccess.get_file_as_string(path+".v2.bak")==original and Codec.read(path).source_version==Codec.VERSION,"first change protects original bytes and writes v3")
 	edited[0].enabled=false
 	check(store.save_hero(&"anne",edited)==OK and FileAccess.get_file_as_string(path+".v2.bak")==original,"later change preserves original backup")
 	write(path,original);write(path+".v2.bak","other backup")

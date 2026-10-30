@@ -1,3 +1,36 @@
+# TEAM-001 validée — 30 octobre 2026
+
+Nassau rejoint Mako et Anne : 160 PV, 60 PM, attaque 14, défense 4, vitesse 1,2,
+régénération 5 PM/s. Booster et ses gambits sont transférés depuis Mako ; Mako garde
+Attaque/Foudre. Composition initiale Mako, Anne, Nassau, Vide, transmise aux cartes,
+panneaux, ciblage Allié et quatre positions fixes au bas de l’octogone.
+Les cartes occupées conservent leur style précédent ; seul le cadre de la case vide
+est harmonisé. Nassau descend légèrement dans sa miniature Idle sans changement de taille.
+Migration v3 → v4 avec copie .v3.bak, 100 lignes préservées et sauvegarde atomique.
+72 scènes / 5 344 contrôles réussis ; 87 contrôles ciblés après centrage final.
+Version Android 83 validée sur Galaxy A16 : « Oui, étape validée ».
+Clôture documentaire uniquement : code, ressources et APK identiques à la recette.
+Commit local et sauvegarde complète restaurée/vérifiée ; aucun nouveau test ni relevé FPS.
+APK `team-001-debug.apk`, SHA-256
+`b6f7670d04f043072c897be5c1275f89cb1ea940ffd83a1d9a8055747f88e9ea`.
+Détails : `docs/steps/TEAM-001.md`. Au prochain GO : TEAM-002,
+appui long et échange des cartes. Aucun push automatique.
+Les états précédents ci-dessous sont historiques.
+
+# Roadmap proposée — Nassau et ordre de l’équipe — 30 octobre 2026
+
+TEAM-001 : intégrer Nassau, transférer Booster et ses gambits depuis Mako,
+généraliser la composition de quatre cases et aligner les départs sur quatre
+positions fixes au bas de l’arène. Illustration 2D, cadre Idle, fiche, gambits,
+panneaux et cartes vides au style harmonisé. Composition initiale Mako/Anne/Nassau/Vide.
+Nassau : 160 PV, 60 PM, attaque 14, défense 4, vitesse 1,2, régénération 5 PM/s.
+TEAM-002 : échanges persistants par appui long et glisser-déposer, y compris avec
+une case vide ; même ordre pour formation, panneaux et ciblage Allié.
+Les choix de conception ci-dessus sont confirmés. Implémentation non commencée.
+Chaque étape attend sa validation Godot/Android et sa clôture avant la suivante.
+Détails : [Nassau et ordre de l’équipe](docs/nassau-team-roadmap.md).
+UI-005 et STEP-029/030 viennent ensuite. Les états suivants sont historiques.
+
 # MATERIALS-001 validée — 30 octobre 2026
 
 Le propriétaire confirme sur Galaxy A16 : « Oui, étape validée » pour le profil

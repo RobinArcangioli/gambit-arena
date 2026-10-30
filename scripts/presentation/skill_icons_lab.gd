@@ -44,7 +44,8 @@ func _snapshot() -> void:
 	mako.action.mana=42;anne.action.mana=38
 	mako.buffs.apply(BuffCatalog.definition(&"booster"));mako.buffs.advance(15.0)
 	anne.action.request(&"heal",anne);anne.action.elapsed=.45
-	mako.action.request(&"booster" if show_booster else &"lightning",anne if show_booster else simulation.enemies[3]);mako.action.elapsed=.7
+	var caster=simulation.hero(&"nassau") if show_booster else mako
+	caster.action.request(&"booster" if show_booster else &"lightning",anne if show_booster else simulation.enemies[3]);caster.action.elapsed=.7
 	super._physics_process(0);_present()
 func cycle_spell() -> void:
 	if paused or application_guard.blocked:return
@@ -68,7 +69,7 @@ func show_tab(tab: String) -> void:
 		if tab=="Gambits":page.save_path=save_path;page.hero_requested.connect(show_tab.bind("Combat"))
 		else:page.team_requested.connect(show_tab.bind("Combat"));page.gambits_requested.connect(show_tab.bind("Gambits"))
 		add_child(page);move_child(page,lab_panel.get_index())
-	context_button.text="Sort Mako" if tab=="Combat" else "Mako ↔ Anne"
+	context_button.text="Foudre / Booster" if tab=="Combat" else "Mako ↔ Anne"
 	_refresh_caption();_update_layout()
 	if tab=="Fiche":call_deferred("_scroll_skills")
 func _update_layout() -> void:

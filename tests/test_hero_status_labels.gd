@@ -13,7 +13,7 @@ func run() -> void:
 	var panel=lab.hero_panels[0];var mako=lab.simulation.hero(&"mako")
 	verify(panel.health_text.text=="130 / 180","PV actuels et maximums")
 	verify(panel.mana_text.text=="36 / 60","mana actuelle et maximum")
-	verify(panel.cast_text.text=="Booster : 0,8s" and panel.cast_text.visible,"nom et temps restant")
+	verify(panel.cast_text.text=="Foudre : 0,8s" and panel.cast_text.visible,"nom et temps restant")
 	verify(panel.health_text.get_theme_color("font_color")==Color.WHITE and panel.mana_text.get_theme_color("font_color")==Color.WHITE and panel.cast_text.get_theme_color("font_color")==Color.WHITE,"trois textes blancs")
 	verify(panel.bars.segments==10,"dix segments dans les panneaux")
 	for bar in lab.overhead.values():verify(bar.segments==0 and is_equal_approx(bar.bar_width,29.4),"barres monde inchangées")

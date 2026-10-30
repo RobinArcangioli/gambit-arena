@@ -32,7 +32,7 @@ func _snapshot() -> void:
 	action_presenter.reset_run(simulation.run_id)
 	var mako=simulation.hero(&"mako");var anne=simulation.hero(&"anne")
 	mako.state.damage(50);anne.state.damage(70);mako.action.mana=36;anne.action.mana=27
-	mako.action.request(&"booster",anne);mako.action.elapsed=0.75
+	mako.action.request(&"lightning",anne);mako.action.elapsed=1.25
 	anne.action.request(&"heal",anne);anne.action.elapsed=0.45
 	for at in [Vector2(1.8,1.4),Vector2(-1.8,-1.4)]:simulation.add_enemy(at)
 	for enemy_unit in simulation.enemies:

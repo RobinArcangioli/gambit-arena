@@ -17,6 +17,9 @@ var names: Array[Label] = []
 var portraits: Array[Portrait] = []
 var illustrations:Array[Illustration]=[]
 var idle_frames:Array[PanelContainer]=[]
+var team_slots:Array[StringName]=Roster.SLOTS.duplicate()
+var slot_views:Dictionary={}
+var empty_frames:Dictionary={}
 var active: bool = true
 var discard_next_step: bool = true
 var visual_time: float = 0
@@ -33,23 +36,22 @@ func _ready() -> void:
 	back_button.pressed.connect(func():
 		if active:home_requested.emit())
 	title = _label("Équipe",28)
-	for id in Roster.SLOTS:
+	for slot in range(team_slots.size()):
+		var id:StringName=team_slots[slot]
 		var card := Button.new();card.toggle_mode = false
 		card.focus_mode = Control.FOCUS_ALL if id!=&"" else Control.FOCUS_NONE
 		card.disabled = id==&""
 		content.add_child(card);cards.append(card)
-		# Inherit the common palette; adapt only the opacity for broad portrait cards.
+		# The illustration owns the thin rectangular frame, as in the approved cards.
+		# Never add a second rounded Button panel behind or around it.
 		for state in ["normal","hover","pressed","focus","disabled"]:
-			var style := card.get_theme_stylebox(state).duplicate() as StyleBoxFlat
-			style.bg_color.a = 0.45 if id==&"" else 0.76
-			card.add_theme_stylebox_override(state,style)
+			card.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 		var name_label := Label.new();name_label.text = Roster.caption(id)
 		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		name_label.add_theme_font_size_override("font_size",22)
 		name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		card.add_child(name_label);names.append(name_label)
 		if id!=&"":
-			for state in ["normal","hover","pressed","focus"]:card.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 			var illustration:=Illustration.new();illustration.hero_id=id
 			card.add_child(illustration);illustrations.append(illustration)
 			var frame:=PanelContainer.new();frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -60,10 +62,17 @@ func _ready() -> void:
 			var window:=Control.new();window.mouse_filter=Control.MOUSE_FILTER_IGNORE;window.clip_contents=true;frame.add_child(window)
 			var portrait := Portrait.new();portrait.definition = Roster.APPEARANCES[id]
 			portrait.ground_radius = Body.RADIUS;window.add_child(portrait);portraits.append(portrait)
+			slot_views[slot]={"illustration":illustration,"frame":frame,"portrait":portrait}
 			card.move_child(name_label,-1)
 			var name_paint:=StyleBoxFlat.new();name_paint.bg_color=Color("10182fcf");name_paint.set_corner_radius_all(4)
 			name_label.add_theme_stylebox_override("normal",name_paint);name_label.add_theme_color_override("font_color",Color("ffd16a"))
 			card.pressed.connect(_select.bind(id))
+		else:
+			var empty:=PanelContainer.new();empty.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			var paint:=StyleBoxFlat.new();paint.bg_color=Color("10182fcf")
+			paint.border_color=Color("a68349");paint.set_border_width_all(1)
+			empty.add_theme_stylebox_override("panel",paint);card.add_child(empty)
+			card.move_child(name_label,-1);empty_frames[slot]=empty
 	get_viewport().size_changed.connect(_layout)
 	_layout();set_active(active)
 
@@ -91,17 +100,21 @@ func _layout() -> void:
 	for i in range(4):
 		cards[i].position = Vector2(24+(i%2)*(width+gap),top+int(i/2.0)*(height+gap))
 		cards[i].size = Vector2(width,height)
-		if i<2:
-			illustrations[i].position=Vector2.ZERO;illustrations[i].size=Vector2(width-12,height-12)
+		if slot_views.has(i):
+			var illustration:Control=slot_views[i].illustration
+			var idle_frame:Control=slot_views[i].frame
+			var portrait:Portrait=slot_views[i].portrait
+			illustration.position=Vector2.ZERO;illustration.size=Vector2(width-12,height-12)
 			names[i].position=Vector2(10,10);names[i].size=Vector2(width-32,32)
 			var original_size:=Vector2(clampf(width*.4,64,96),clampf(height*.36,88,132))
 			var idle_size:Vector2=(original_size*Vector2(.74,.72)).ceil()
-			idle_frames[i].position=Vector2(width,height)-idle_size;idle_frames[i].size=idle_size
+			idle_frame.position=Vector2(width,height)-idle_size;idle_frame.size=idle_size
 			# Crop the former viewport, preserving its projection and on-screen model size.
-			portraits[i].size=original_size-Vector2.ONE*6
-			portraits[i].position=(idle_size-Vector2.ONE*4-portraits[i].size)*.5-Vector2(0,original_size.y*.1)
+			portrait.size=original_size-Vector2.ONE*6
+			portrait.position=(idle_size-Vector2.ONE*4-portrait.size)*.5-Vector2(0,original_size.y*portrait.definition.team_idle_vertical_bias)
 		else:
-			names[i].position = Vector2(10,(height-40)*0.5);names[i].size = Vector2(width-20,40)
+			empty_frames[i].position=Vector2.ZERO;empty_frames[i].size=Vector2(width-12,height-12)
+			names[i].position = Vector2(10,(height-12-40)*0.5);names[i].size = Vector2(width-32,40)
 
 func set_active(enabled: bool) -> void:
 	if active != enabled:discard_next_step = true
@@ -109,7 +122,7 @@ func set_active(enabled: bool) -> void:
 	if enabled:
 		for card in cards:card.release_focus()
 	for portrait in portraits:portrait.set_active(enabled)
-	for i in range(cards.size()):cards[i].disabled = not enabled or Roster.SLOTS[i]==&""
+	for i in range(cards.size()):cards[i].disabled = not enabled or team_slots[i]==&""
 	if back_button != null:back_button.disabled = not enabled
 
 func _process(delta: float) -> void:

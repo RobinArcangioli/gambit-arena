@@ -68,7 +68,7 @@ func _ready() -> void:
 	await settle()
 	get_viewport().notify_mouse_entered()
 	tap(app.hero_buttons[1].get_global_rect().get_center())
-	check(app.selected_hero == &"mako" and app.skill_buttons.size() == 3, "real touch and mouse copy select Mako once")
+	check(app.selected_hero == &"mako" and app.skill_buttons.size() == 2, "real touch and mouse copy select Mako once")
 	check("Foudre" in app.skill_buttons[1].text and not "Speciale" in app.status.text, "active HUD names owned skills without secondary special")
 	app.simulation.add_enemy(Vector2(2, 0))
 	await settle()

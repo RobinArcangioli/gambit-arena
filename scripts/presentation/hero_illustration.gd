@@ -2,10 +2,11 @@ extends Control
 ## Replaceable UI-only artwork and focal crops; never owns an actor or animation clock.
 const TEXTURES = {
  &"anne":preload("res://assets/art/portraits/illustrations/anne.png"),
- &"mako":preload("res://assets/art/portraits/illustrations/mako.png")}
-const FOCAL_POINTS = {&"anne":Vector2(.50,.18), &"mako":Vector2(.49,.50)}
-const COMBAT_FOCAL_POINTS = {&"anne":Vector2(.50,.18), &"mako":Vector2(.49,.40)}
-const COMBAT_ZOOM = {&"anne":2.5, &"mako":2.6}
+ &"mako":preload("res://assets/art/portraits/illustrations/mako.png"),
+ &"nassau":preload("res://assets/art/portraits/illustrations/nassau.png")}
+const FOCAL_POINTS = {&"anne":Vector2(.50,.18), &"mako":Vector2(.49,.50), &"nassau":Vector2(.49,.22)}
+const COMBAT_FOCAL_POINTS = {&"anne":Vector2(.50,.18), &"mako":Vector2(.49,.40), &"nassau":Vector2(.49,.20)}
+const COMBAT_ZOOM = {&"anne":2.5, &"mako":2.6, &"nassau":2.5}
 var hero_id:StringName
 var close_up:bool=false
 var source_rect:=Rect2()

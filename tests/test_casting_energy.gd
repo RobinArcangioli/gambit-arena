@@ -17,6 +17,8 @@ func _ready() -> void:
 	presenter.present(units,events,0,sim.run_id)
 	check(presenter.casting_effects.is_empty(),"no idle mana art")
 	for skill in [&"lightning",&"booster"]:
+		hero=sim.hero(&"nassau" if skill==&"booster" else &"mako")
+		hero.place(Vector2.ZERO)
 		hero.action.cancel();hero.action.cooldowns.clear()
 		check(hero.action.request(skill,anne)>0,"real cast accepted")
 		var mana: float = hero.action.mana
@@ -36,6 +38,7 @@ func _ready() -> void:
 		check(presenter.casting_effects[hero.combat_id]==effect and effect.age>age,"reuse nodes and advance accepted time")
 		hero.action.cancel();presenter.present(units,events,0,sim.run_id)
 		check(presenter.casting_effects.is_empty() and not hero.visual.energy_active,"cancel removes rim and particles immediately")
+	hero=sim.hero(&"mako")
 	hero.action.request(&"lightning",anne)
 	presenter.present(units,events,0,sim.run_id)
 	hero.action.resolved=true

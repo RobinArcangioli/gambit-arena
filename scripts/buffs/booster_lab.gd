@@ -8,6 +8,8 @@ var journal: Array[String] = []
 var lab_buttons: Array[Button] = []
 
 func _ready() -> void:
+	# Two-actor timing fixture; the product roster is tested separately with all three.
+	team_slots=[&"nassau",&"anne",&"",&""]
 	save_path = "user://buffs002_isolated_lab.json"
 	super._ready()
 	lab_panel = PanelContainer.new();add_child(lab_panel)
@@ -38,7 +40,7 @@ func restart_lab() -> void:
 
 func empty_mana() -> void:
 	if paused or application_guard.blocked:return
-	simulation.hero(&"mako").action.mana = 0
+	simulation.hero(&"nassau").action.mana = 0
 
 func add_dummy_enemy() -> void:
 	if paused or application_guard.blocked:return
@@ -48,8 +50,8 @@ func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 	for event in simulation.events:
 		if event.kind == "buff_applied":
-			var target_name: String = "Mako" if event.target_id == simulation.hero(&"mako").combat_id else "Anne"
-			journal.append("%.2f s · Mako → %s" % [event.game_time,target_name])
+			var target_name: String = "Nassau" if event.target_id == simulation.hero(&"nassau").combat_id else "Anne"
+			journal.append("%.2f s · Nassau → %s" % [event.game_time,target_name])
 			if journal.size() > 4:journal.pop_front()
 
 func _process(delta: float) -> void:
@@ -58,7 +60,7 @@ func _process(delta: float) -> void:
 func _refresh_lab() -> void:
 	if readings == null or not ready_ui:return
 	var text: String = "Combat %.2f s" % simulation.clock.elapsed
-	for key in [&"mako",&"anne"]:
+	for key in [&"nassau",&"anne"]:
 		var unit = simulation.hero(key)
 		text += "\n%s ×%.2f · Booster %.1f s · mana %.1f" % [unit.display_name,unit.buffs.multiplier(),unit.buffs.remaining(BuffCatalog.BOOSTER),unit.action.mana]
 	text += "\nApplications :\n" + ("En attente…" if journal.is_empty() else "\n".join(journal))

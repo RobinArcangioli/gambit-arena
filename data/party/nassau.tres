@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/party/party_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+actor_key = &"nassau"
+display_name = "Nassau"
+team = 0
+max_health = 160
+attack = 14
+defense = 4
+move_speed = 1.2
+mana_capacity = 60
+mana_regeneration = 5.0
+abilities = Array[StringName]([&"basic", &"booster"])

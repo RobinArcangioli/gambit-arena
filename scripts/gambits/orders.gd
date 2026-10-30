@@ -3,13 +3,13 @@ extends RefCounted
 const BuffCatalog = preload("res://scripts/buffs/buff_catalog.gd")
 const Criteria = preload("res://scripts/gambits/target_criteria.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
-const PROFILES = {&"anne":preload("res://data/party/anne.tres"),&"mako":preload("res://data/party/mako.tres")}
+const PROFILES = preload("res://scripts/party/party_roster.gd").PROFILES
 const MAX_ORDERS: int = 100
 static func create() -> Dictionary:return {"enabled":true,"criterion":"enemy_near","skill":"basic"}
 static func defaults() -> Dictionary:
 	var result: Dictionary = {}
 	for hero in PROFILES:
-		result[String(hero)] = [{"enabled":true,"criterion":"ally_hp_lt_50" if hero==&"anne" else "enemy_near","skill":"heal" if hero==&"anne" else "lightning"},create(),{"enabled":false,"criterion":"enemy_near","skill":"basic"}]
+		result[String(hero)] = [{"enabled":true,"criterion":"ally_roster" if hero==&"nassau" else "ally_hp_lt_50" if hero==&"anne" else "enemy_near","skill":"booster" if hero==&"nassau" else "heal" if hero==&"anne" else "lightning"},create(),{"enabled":false,"criterion":"enemy_near","skill":"basic"}]
 	return result
 static func valid_order(order: Variant, hero: StringName) -> bool:
 	return PROFILES.has(hero) and order is Dictionary and order.size()==3 and order.has_all(["enabled","criterion","skill"]) and typeof(order.enabled)==TYPE_BOOL and typeof(order.criterion)==TYPE_STRING and Criteria.has(order.criterion) and typeof(order.skill)==TYPE_STRING and StringName(order.skill) in PROFILES[hero].abilities
@@ -19,7 +19,10 @@ static func valid_rows(rows: Variant, hero: StringName) -> bool:
 		if not valid_order(row,hero):return false
 	return true
 static func valid_configuration(config: Variant) -> bool:
-	return config is Dictionary and config.size()==2 and config.has_all(["anne","mako"]) and valid_rows(config.anne,&"anne") and valid_rows(config.mako,&"mako")
+	if not config is Dictionary or config.size()!=PROFILES.size():return false
+	for id in PROFILES:
+		if not config.has(String(id)) or not valid_rows(config[String(id)],id):return false
+	return true
 static func evaluate(rows: Array, view: Dictionary) -> Dictionary:
 	if rows.size()>MAX_ORDERS:return {}
 	var mana: float = view.get("mana",0.0)
