@@ -15,7 +15,7 @@ func settle() -> void:await get_tree().process_frame;await get_tree().process_fr
 func fixture() -> void:
 	if sim!=null:sim.queue_free();world.queue_free();await settle()
 	world=Node3D.new();add_child(world);sim=Sim.new();add_child(sim);sim.configure(world)
-	sim.orders_enabled=true;sim.infinite_mode=true;sim.report.enabled=true;sim.rules=Orders.defaults();sim.reset()
+	sim.orders_enabled=true;sim.infinite_mode=true;sim.infinite_wave_size=6;sim.report.enabled=true;sim.rules=Orders.defaults();sim.reset()
 	sim.rules.mako=[];sim.rules.nassau=[]
 	sim.hero(&"anne").place(Vector2(-2,0));sim.hero(&"mako").place(Vector2(0,.6));sim.hero(&"nassau").place(Vector2(-2,-1))
 	var positions:Array=[Vector2(-.85,0),Vector2.ZERO,Vector2(.85,0),Vector2(2.5,0),Vector2(2.5,1),Vector2(3.5,-1)]

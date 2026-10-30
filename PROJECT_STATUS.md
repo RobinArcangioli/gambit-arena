@@ -1,3 +1,17 @@
+# MODE-INFINI-002 validée — 31 octobre 2026
+
+Le mode Infini passe à dix ennemis par vague, dès la première et pour toutes les
+suivantes. Formation préférée : deux rangées de cinq au nord, gabarits et marges
+conservés. Délai de 3 s, états des héros et rotation d’arène toutes les 10 vagues
+conservés. Journal et statistiques reflètent la nouvelle population.
+82 scènes / 6 102 contrôles consolidés réussis ; placement GPU et Android vérifiés.
+APK v95 validé par le propriétaire : « Oui, étape validée ».
+Équipe, gambits, style et réglages conservés par empreinte des quatre fichiers.
+Clôture documentaire, code et APK validés inchangés. Commit local et sauvegarde
+complète restaurée/vérifiée ; aucun push automatique. Fichiers output/ préexistants
+conservés. Suite : UI-005 après nouveau GO. Détails : docs/steps/MODE-INFINI-002.md.
+Les états ci-dessous sont historiques.
+
 # CHAIN-001 validée — 31 octobre 2026
 
 Chaîne d’éclairs pour Nassau : 30 PM, cast 2 s, recharge 4 s, portée 4,

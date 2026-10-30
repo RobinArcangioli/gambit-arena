@@ -19,6 +19,8 @@ const Bounds = preload("res://scripts/arena/arena_bounds.gd")
 const Wave = preload("res://scripts/waves/wave_schedule.gd")
 const InfiniteSchedule = preload("res://scripts/waves/infinite_schedule.gd")
 var infinite_mode: bool = false
+# Product default; isolated skill fixtures may request a smaller fixed population.
+var infinite_wave_size: int = InfiniteSchedule.SIZE
 var infinite := InfiniteSchedule.new()
 const ANNE = preload("res://data/party/anne.tres")
 const MAKO = preload("res://data/party/mako.tres")
@@ -69,7 +71,7 @@ func reset() -> void:
 	wave_number = 1
 	feedback = ""
 	infinite.reset()
-	wave.reset(InfiniteSchedule.SIZE if infinite_mode else total_per_wave, InfiniteSchedule.SIZE if infinite_mode else max_alive)
+	wave.reset(infinite_wave_size if infinite_mode else total_per_wave, infinite_wave_size if infinite_mode else max_alive)
 	var profiles:Array=[]
 	if orders_enabled:
 		for key in team_slots:
@@ -185,7 +187,7 @@ func advance(delta: float, paused: bool = false) -> void:
 			report.system(clock.elapsed,"Vague %d terminée. Prochaine vague dans 3 s."%wave_number)
 		elif infinite.waiting and infinite.advance(dt):
 			wave_number += 1
-			wave.reset(InfiniteSchedule.SIZE, InfiniteSchedule.SIZE)
+			wave.reset(infinite_wave_size, infinite_wave_size)
 			_spawn_infinite_wave()
 			# Completed enemy lifetimes must not accumulate in an endless run.
 			var keep: Dictionary = {}
@@ -459,12 +461,12 @@ func _collect_visual_events(units: Array[Unit]) -> void:
 	_pending_deaths.clear()
 
 func _spawn_infinite_wave() -> void:
-	report.begin_wave(wave_number,clock.elapsed)
+	report.begin_wave(wave_number,clock.elapsed,infinite_wave_size)
 	var occupied: Array[Vector2] = []
 	for unit in all_units():
 		if Executor.living(unit): occupied.append(unit.mover.ground_position)
-	var positions: Array[Vector2] = InfiniteSchedule.formation(occupied)
-	assert(positions.size() == InfiniteSchedule.SIZE, "Infinite wave needs six free north slots")
+	var positions: Array[Vector2] = InfiniteSchedule.formation(occupied,infinite_wave_size)
+	assert(positions.size() == infinite_wave_size, "Infinite wave needs enough free north slots")
 	for at in positions:
 		var accepted: bool = add_enemy(at)
 		assert(accepted, "Prevalidated infinite formation must spawn atomically")

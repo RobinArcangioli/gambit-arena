@@ -1,5 +1,6 @@
 extends RefCounted
 ## Read-only combat facts. No actor references, gameplay callbacks or rendering resources.
+const InfiniteSchedule=preload("res://scripts/waves/infinite_schedule.gd")
 const CAPACITY:int=1000
 const SKILLS: Dictionary = {"basic":"Attaque","heal":"Soin","lightning":"Foudre","booster":"Booster","meteor":"Météore","ice_bolts":"Traits de glace","chain_lightning":"Chaîne d’éclairs"}
 var enabled: bool = false
@@ -16,7 +17,7 @@ func begin(id: int) -> void:
 	run_id=id;actors.clear();recent.clear();peaks=[1,1,1];entries=0;revision+=1;log_revision+=1;wave=-1
 	if enabled:system(0.0,"Début du combat.")
 
-func begin_wave(number:int,time:float) -> void:
+func begin_wave(number:int,time:float,enemy_count:int=InfiniteSchedule.SIZE) -> void:
 	if not enabled or wave==number:return
 	wave=number
 	for id in actors.keys():
@@ -25,7 +26,7 @@ func begin_wave(number:int,time:float) -> void:
 	for row in actors.values():
 		peaks[0]=maxi(peaks[0],row.dealt);peaks[1]=maxi(peaks[1],row.received);peaks[2]=maxi(peaks[2],row.healed)
 	revision+=1
-	system(time,"Vague %d : six ennemis arrivent."%number)
+	system(time,"Vague %d : %d ennemis arrivent."%[number,enemy_count])
 
 func register_actor(id: int, caption: String, team: int, slot: int, health: int, mana: int, time: float) -> void:
 	if not enabled or actors.has(id):return

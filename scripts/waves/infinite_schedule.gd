@@ -1,7 +1,7 @@
 extends RefCounted
 ## Combat-time intermission and camera-relative north formation; no art or scene ownership.
 const Bounds=preload("res://scripts/arena/arena_bounds.gd")
-const SIZE: int = 6
+const SIZE: int = 10
 const DELAY: float = 3.0
 var waiting: bool = false
 var remaining: float = 0.0
@@ -20,12 +20,12 @@ static func hero_position(slot:int) -> Vector2:
 	# Constant depth and four screen-left-to-right places; holes are never compacted.
 	var lateral:float=(clampi(slot,0,3)-1.5)*1.1*Bounds.ROOT_TWO
 	return Vector2((south+lateral)*.5,(south-lateral)*.5)
-static func formation(occupied:Array[Vector2]) -> Array[Vector2]:
+static func formation(occupied:Array[Vector2],amount:int=SIZE) -> Array[Vector2]:
 	var north:float=-(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO
 	var spacing:float=1.1;var pool:Array[Vector2]=[]
-	# Prefer two centered rows of three; complete the northern half for occupied arrivals.
+	# Prefer two centered rows of five; complete the northern half for occupied arrivals.
 	for row in range(2):
-		for column in [0,-1,1]:pool.append(Vector2((north+row*spacing+column*spacing)*.5,(north+row*spacing-column*spacing)*.5))
+		for column in [0,-1,1,-2,2]:pool.append(Vector2((north+row*spacing+column*spacing)*.5,(north+row*spacing-column*spacing)*.5))
 	for row in range(ceili(-north/spacing)):
 		for magnitude in range(ceili(-north/spacing)+1):
 			for sign_value in ([1] if magnitude==0 else [-1,1]):
@@ -38,5 +38,5 @@ static func formation(occupied:Array[Vector2]) -> Array[Vector2]:
 		for other in occupied:
 			if at.distance_to(other)<.71:free=false;break
 		if free:result.append(at)
-		if result.size()==SIZE:return result
+		if result.size()==amount:return result
 	return []

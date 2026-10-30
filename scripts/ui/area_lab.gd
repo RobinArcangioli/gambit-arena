@@ -5,7 +5,7 @@ var laboratory_time:float=0
 var changed:bool=false
 var info:Label
 func _ready() -> void:
-	save_path="";settings_path="";infinite_mode=true;super._ready()
+	simulation.infinite_wave_size=6;save_path="";settings_path="";infinite_mode=true;super._ready()
 	get_window().title="Gambit Arena · AOE-001 · Météore / cible au sol"
 	var row:=HBoxContainer.new();row.position=Vector2(16,16);row.z_index=40;add_child(row)
 	for i in range(3):

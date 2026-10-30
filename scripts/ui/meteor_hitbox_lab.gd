@@ -7,7 +7,7 @@ var changed:bool=false
 var info:Label
 var disks:Array[Node3D]=[]
 func _ready() -> void:
-	save_path="";settings_path="";infinite_mode=true
+	simulation.infinite_wave_size=6;save_path="";settings_path="";infinite_mode=true
 	chooser=func():return &"colisee_solaire"
 	super._ready()
 	get_window().title="Gambit Arena · Météore · Chevauchement des disques"

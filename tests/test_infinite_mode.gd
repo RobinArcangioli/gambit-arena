@@ -23,7 +23,7 @@ func _ready() -> void:
 	var sim := Sim.new(); world.add_child(sim); sim.configure(world)
 	sim.infinite_mode=true; sim.orders_enabled=true; sim.rules={"mako":[],"anne":[]}; sim.reset()
 	var mako=sim.hero(&"mako");var anne=sim.hero(&"anne")
-	check(sim.wave_number==1 and sim.enemies.size()==6 and sim.wave.issued==6,"six enemies appear together at the initial wave")
+	check(sim.wave_number==1 and sim.enemies.size()==10 and sim.wave.issued==10,"ten enemies appear together at the initial wave")
 	check(sim.heroes.all(func(h):return Bounds.contains_ground(Vector2(h.position.x,h.position.z)) and Vector2(h.position.x,h.position.z)==Schedule.hero_position(h.team_slot)),"heroes start in their fixed southern slots")
 	check(sim.enemies.all(func(e):return e.position.x+e.position.z<=-(Bounds.HALF_EXTENT-Bounds.ACTOR_MARGIN)*Bounds.ROOT_TWO+1.10001),"enemies start in the three screen-north layers")
 	var rng:=RandomNumberGenerator.new();rng.seed=8192
@@ -31,16 +31,16 @@ func _ready() -> void:
 	for sample in range(100):
 		var occupied:Array[Vector2]=[Vector2(rng.randf_range(-2.65,2.65),rng.randf_range(-2.65,2.65)),Vector2(rng.randf_range(-2.65,2.65),rng.randf_range(-2.65,2.65))]
 		var group:Array[Vector2]=Schedule.formation(occupied)
-		formations_ok=formations_ok and group.size()==6
+		formations_ok=formations_ok and group.size()==10
 		for p in group:
 			formations_ok=formations_ok and Bounds.contains_ground(p) and p.x+p.y<=0.00001
 			for q in occupied: formations_ok=formations_ok and p.distance_to(q)>=0.71
 			for q in group:
 				if q!=p: formations_ok=formations_ok and p.distance_to(q)>=0.71
-	check(formations_ok,"six safe north slots remain available even when heroes occupy the spawn area")
-	# No new arrivals while any of the six enemies is still alive.
+	check(formations_ok,"ten safe north slots remain available even when heroes occupy the spawn area")
+	# No new arrivals while any of the ten enemies is still alive.
 	for e in sim.enemies: e.abilities.clear();e.mover.speed=0
-	for i in range(5): sim.enemies[i].state.damage(100000)
+	for i in range(Schedule.SIZE-1): sim.enemies[i].state.damage(100000)
 	sim.advance(1.0/60)
 	for i in range(120):sim.advance(1.0/30)
 	check(sim.enemies.size()==1 and sim.wave_number==1 and not sim.infinite.waiting,"no partial replacement before the final enemy dies")
@@ -56,13 +56,13 @@ func _ready() -> void:
 	for i in range(89):sim.advance(1.0/30)
 	check(sim.enemies.is_empty() and sim.wave_number==1 and sim.infinite.remaining>0,"no early spawn before three accepted seconds")
 	sim.advance(1.0/30)
-	check(sim.wave_number==2 and sim.enemies.size()==6 and not sim.infinite.waiting,"exactly six enemies appear when three seconds elapse")
+	check(sim.wave_number==2 and sim.enemies.size()==10 and not sim.infinite.waiting,"exactly ten enemies appear when three seconds elapse")
 	check(sim.hero(&"mako")==mako and sim.hero(&"anne")==anne and sim.run_id==run,"wave transition preserves actor identity and run")
 	check(mako.state.health==hp and [mako.position,anne.position]==positions,"health and positions are not reset")
 	check(near(mako.action.mana,mana+15) and near(mako.buffs.remaining(&"booster"),buff_left-3) and mako.action.remaining(&"lightning")==0,"mana regeneration buff lifetime and personal cooldown continue through intermission")
 	for expected in range(3,26):
 		kill_wave(sim);wait_wave(sim)
-		check(sim.wave_number==expected and sim.enemies.size()==6 and sim.result=="EN COURS","endless waves continue beyond the former three-wave victory")
+		check(sim.wave_number==expected and sim.enemies.size()==10 and sim.result=="EN COURS","endless waves continue beyond the former three-wave victory")
 	check(sim._death_ids.size()<=2,"completed enemy lifetime bookkeeping stays bounded")
 	kill_wave(sim)
 	for unit in sim.heroes:unit.state.damage(100000)
@@ -72,7 +72,7 @@ func _ready() -> void:
 	for i in range(100):sim.advance(1.0/30)
 	check(sim.wave_number==wave_number and sim.enemies.is_empty(),"no wave appears after defeat")
 	sim.reset()
-	check(sim.wave_number==1 and sim.enemies.size()==6 and not sim.infinite.waiting and sim.hero(&"mako").state.health==180,"replay restores a fresh wave one")
+	check(sim.wave_number==1 and sim.enemies.size()==10 and not sim.infinite.waiting and sim.hero(&"mako").state.health==180,"replay restores a fresh wave one")
 	sim.clear();world.queue_free();await settle()
 	# Actual product routing, layout, art-only rotation, pause, replay and abandonment.
 	for resolution in [Vector2i(540,960),Vector2i(360,640)]:
@@ -82,7 +82,8 @@ func _ready() -> void:
 		app.open_arena();await settle()
 		var page=app.combat;page.set_process(false);page.set_physics_process(false)
 		page.simulation.rules={"mako":[],"anne":[]}
-		check(page.infinite_mode and page.simulation.infinite_mode and page.simulation.enemies.size()==6,"product route enables infinite mode while legacy labs stay separate")
+		check(page.infinite_mode and page.simulation.infinite_mode and page.simulation.enemies.size()==10,"product route enables infinite mode while legacy labs stay separate")
+		check(page.simulation.report.recent.any(func(row):return "10 ennemis arrivent" in row.text),"journal announces actual ten-enemy wave")
 		check(page.wave_counter.text=="Vague 1" and page.header_surface.get_global_rect().encloses(page.wave_counter.get_global_rect()),"wave counter belongs to centered header")
 		mako=page.simulation.hero(&"mako");mako.state.damage(20);mako.action.mana=21;mako.buffs.apply(Buffs.definition(&"booster"))
 		var state=mako.state;var buffs=mako.buffs;var at:Vector3=mako.position;var initial:StringName=page.chosen_arena;var draws:int=app.arena_choice.draws
@@ -106,7 +107,7 @@ func _ready() -> void:
 		page.simulation._finish("DEFAITE");page._present()
 		check(page.wave_counter.text=="Vague 21","defeat cannot add a prefix or suffix to wave caption")
 		page._toggle_pause();page._replay_combat();await settle()
-		check(page.simulation.wave_number==1 and page.simulation.enemies.size()==6 and not page.countdown.visible,"product Replay restarts mode and countdown")
+		check(page.simulation.wave_number==1 and page.simulation.enemies.size()==10 and not page.countdown.visible,"product Replay restarts mode and countdown")
 		page._toggle_pause();page._ask_abandon();page._confirm_abandon();await settle()
 		check(app.route==&"home" and app.combat==null,"confirmed abandonment returns to Home and destroys infinite combat")
 		viewport.queue_free();await settle()

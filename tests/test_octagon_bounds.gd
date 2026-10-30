@@ -44,13 +44,13 @@ func _ready() -> void:
 	for sample in range(100):
 		var occupied:Array[Vector2]=[]
 		for actor in range(2):occupied.append(Bounds.clamp_ground(Vector2(rng.randf_range(-5,5),rng.randf_range(-5,5))))
-		var group:Array[Vector2]=Schedule.formation(occupied);var valid:bool=group.size()==6
+		var group:Array[Vector2]=Schedule.formation(occupied);var valid:bool=group.size()==10
 		for point in group:
 			valid=valid and Bounds.contains_ground(point) and point.x+point.y<0
 			for other in occupied:valid=valid and point.distance_to(other)>=.71
 			for other in group:
 				if other!=point:valid=valid and point.distance_to(other)>=.71
-		check(valid,"six free northern arrivals in shared octagon %d"%sample)
+		check(valid,"ten free northern arrivals in shared octagon %d"%sample)
 	target.queue_free();await get_tree().process_frame
 	check(int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))==0,"bounds and routes retain no actor nodes")
 	var label:=Label.new();label.text="%d controles, %d echecs"%[checks,failures];add_child(label);print(label.text)
