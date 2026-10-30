@@ -1,3 +1,18 @@
+# LOGO-001 validée — 30 octobre 2026
+
+Logo Beherit retenu pour l’icône et le démarrage uniquement, accueil conservé.
+Version carrée classique et version ronde adaptée aux masques Android ; sources PNG
+archivées sans retouche. Fond de lancement noir pur, y compris la couche système
+Android, corrigé après le retour du propriétaire. Aucun délai artificiel ajouté.
+81 contrôles de navigation réussis ; import, aperçu GPU, ressources APK et captures
+Android vérifiés. APK v92 validé : « Oui, LOGO-001 validée ».
+Gambits, équipe, réglages et préférence de style conservés, vérifiés par empreinte.
+Clôture documentaire uniquement : code et APK identiques à la recette validée.
+Commit local et sauvegarde complète restaurée/vérifiée ; aucun push automatique.
+Les fichiers non suivis préexistants dans output/ restent intacts.
+Prochain GO : UI-005. Détails : docs/steps/LOGO-001.md.
+Les états ci-dessous sont historiques.
+
 # STYLE-002 validée — 30 octobre 2026
 
 Choix Godot : **C — Rouge et noir**, appliqué à Berserk dans l’arène et hors combat.

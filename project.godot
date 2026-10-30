@@ -13,7 +13,11 @@ config_version=5
 config/name="Gambit Arena"
 run/main_scene="res://scenes/app/app_root.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://assets/art/branding/launcher_192.png"
+boot_splash/image="res://assets/art/branding/boot_logo_320.png"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/stretch_mode=0
+boot_splash/use_filter=true
 
 [display]
 
