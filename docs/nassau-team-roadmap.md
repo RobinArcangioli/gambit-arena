@@ -1,7 +1,8 @@
 # Nassau et ordre de l’équipe — roadmap en deux étapes
 
-Statut : TEAM-001 validée sur Android le 30 octobre 2026 ; TEAM-002 non commencée,
-en attente du prochain GO.
+Statut : TEAM-001 clôturée au commit 89c6543f31dfe7a39cd71f3ea0d42d0e1273bf05 ;
+TEAM-002 validée sur Galaxy A16 le 30 octobre 2026. Le GO ajoute le cyan des barres de sorts,
+sans modifier la préparation dorée et la récupération argentée de l’attaque.
 Base : MATERIALS-001 clôturée, commit 7493296cce1f589096012ff6ad5e761497638a1a.
 Date : 30 octobre 2026.
 

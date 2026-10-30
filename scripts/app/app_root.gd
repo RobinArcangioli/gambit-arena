@@ -135,6 +135,7 @@ func go_back() -> void:
 	elif hero_page != null:
 		return_team()
 	elif team_page != null:
+		if team_page.cancel_drag():return
 		return_home()
 	elif combat != null:
 		combat.handle_back()
@@ -166,10 +167,20 @@ func open_team() -> void:
 	team_page.team_slots=composition.slots.duplicate()
 	team_page.home_requested.connect(return_home)
 	team_page.hero_selected.connect(_select_team_hero)
+	team_page.swap_requested.connect(_swap_team_slots)
 	add_child(team_page)
 	home_page.hide();background.hide();route = &"team"
 	home_lighting.set_active(false)
 	call_deferred("_finish_transition")
+
+func _swap_team_slots(from_slot:int,to_slot:int) -> void:
+	if guard.blocked or transitioning or route!=&"team" or team_page==null:return
+	if from_slot<0 or from_slot>=4 or to_slot<0 or to_slot>=4 or from_slot==to_slot:return
+	var updated:Array[StringName]=composition.slots.duplicate()
+	var former:StringName=updated[from_slot];updated[from_slot]=updated[to_slot];updated[to_slot]=former
+	if composition.save_slots(updated)!=OK:
+		team_page.show_save_error();return
+	team_page.apply_slots(composition.slots)
 
 func _select_team_hero(id: StringName) -> void:
 	if guard.blocked or transitioning or route!=&"team" or not team_page.Roster.PROFILES.has(id):return

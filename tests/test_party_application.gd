@@ -87,7 +87,7 @@ func _ready() -> void:
 	var mako_bar = app.overhead[mako.combat_id]
 	check(anne_bar.casting and mako_bar.casting, "both spell bars visible while casting")
 	check(is_equal_approx(anne_bar.cast_ratio, anne.action.cast_progress()) and is_equal_approx(mako_bar.cast_ratio, mako.action.cast_progress()), "bars use executor progress, not wall time")
-	check(anne_bar.health_color.r > anne_bar.health_color.b and anne_bar.mana_color.b > anne_bar.mana_color.r and anne_bar.cast_color.r > 0.8 and anne_bar.cast_color.g > 0.5, "red health, blue mana, gold cast palette")
+	check(anne_bar.health_color.r > anne_bar.health_color.b and anne_bar.mana_color.b > anne_bar.mana_color.r and anne_bar.cast_color==Color("8befff"), "red health, blue mana, light cyan spell cast palette")
 	check(anne_bar.mouse_filter == Control.MOUSE_FILTER_IGNORE, "overhead bars cannot capture touch")
 	check(app.overhead.size() == 3, "each hero and enemy has bars")
 	app.paused = true

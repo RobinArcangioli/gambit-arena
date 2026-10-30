@@ -49,7 +49,7 @@ func _ready() -> void:
   var elapsed:float=actor.action.elapsed;actor.action.advance(4,true);game._present()
   check(actor.action.elapsed==elapsed and is_equal_approx(panel.bars.attack_ratio,.13),"pause freezes progress")
   actor.action.cancel();actor.buffs.clear();actor.action.request(&"lightning",target);game._present()
-  check(panel.bars.casting and not panel.bars.attacking and not panel.bars.attack_marker.visible and panel.cast_icon.visible,"spell cast keeps original gold bar and skill icon")
+  check(panel.bars.casting and not panel.bars.attacking and not panel.bars.attack_marker.visible and panel.cast_icon.visible and panel.bars.cast_color==Color("8befff"),"spell cast uses light cyan bar and skill icon")
   var enemy=game.simulation.enemies[3];enemy.place(actor.mover.ground_position+Vector2(.8,0));enemy.action.cancel();enemy.action.request(&"basic",actor);game._present()
   var enemy_bar=game.overhead[enemy.combat_id]
   check(enemy_bar.attacking and not enemy_bar.mana_visible and enemy_bar.attack_marker.visible,"mana-free enemy receives same attack bar")

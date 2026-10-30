@@ -20,7 +20,7 @@ func _ready() -> void:
 	check(app.route==&"team" and app.combat==null and count_simulations(app)==0,"team and its models never create a combat")
 	check(page.cards.size()==4 and page.portraits.size()==3 and page.find_children('*','SubViewport',true,false).size()==3,"four slots and three rendering contexts")
 	check(page.names[0].text=='Mako' and page.names[1].text=='Anne',"presentation order is Mako then Anne")
-	check(not page.cards[2].disabled and page.cards[3].disabled and page.names[2].text=='Nassau' and page.names[3].text=='Vide',"Nassau occupies third slot and empty stays inactive")
+	check(not page.cards[2].disabled and not page.cards[3].disabled and page.names[2].text=='Nassau' and page.names[3].text=='Vide',"Nassau occupies third slot and empty permits reordering")
 	check(page.cards[3].find_children('*','SubViewport',true,false).is_empty(),"no hidden model or viewport under empty slot")
 	var emitted: Array[StringName]=[]
 	app.hero_selected.connect(func(id):emitted.append(id))

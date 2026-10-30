@@ -17,7 +17,8 @@ uniform bool mana_visible = true;
 uniform bool selected = false;
 uniform vec4 health_color : source_color = vec4(1.0,0.27,0.27,1.0);
 uniform vec4 mana_color : source_color = vec4(0.22,0.62,1.0,1.0);
-uniform vec4 cast_color : source_color = vec4(1.0,0.82,0.29,1.0);
+uniform vec4 cast_color : source_color = vec4(0.5451,0.9373,1.0,1.0);
+uniform vec4 preparation_color : source_color = vec4(1.0,0.8235,0.2902,1.0);
 uniform vec4 track_color : source_color = vec4(0.025,0.05,0.09,0.38);
 varying vec2 local_position;
 void vertex() { local_position = VERTEX; }
@@ -38,7 +39,7 @@ void fragment() {
 		if ((i==1 && !mana_visible) || (i==2 && !casting && !attacking)) { continue; }
 		vec4 row = vec4(0.0);
 		vec4 tint = i==0 ? health_color : (i==1 ? mana_color : cast_color);
-		if (i==2 && attacking && local_position.x>(attack_split-.5)*bar_width) { tint=recovery_color; }
+		if (i==2 && attacking) { tint=local_position.x>(attack_split-.5)*bar_width ? recovery_color : preparation_color; }
 		int visible_row = i - ((i==2 && !mana_visible) ? 1 : 0);
 		vec2 center = vec2(0.0,float(visible_row)*(bar_height+bar_gap)+bar_height*0.5);
 		float d = rounded_box(local_position-center,vec2(bar_width,bar_height)*0.5);

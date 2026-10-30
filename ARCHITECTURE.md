@@ -1,3 +1,24 @@
+# TEAM-002 validée — 30 octobre 2026
+
+Appui long de 450 ms sur une carte, puis dépôt sur une autre pour échanger les deux
+emplacements, y compris avec Vide. Clic bref : fiche du héros. Aperçu 2D léger et
+contour or uniquement pendant le geste ; style, cadrages et tailles Idle conservés.
+Chaque échange est sauvegardé immédiatement. Formation, panneaux et ciblage Allié
+utilisent ce nouvel ordre au prochain combat ; les gambits restent liés aux héros.
+Glissement précoce, relâchement hors carte, retour Android, redimensionnement,
+deuxième doigt et perte de focus annulent sans clic résiduel. Échec d’écriture :
+ancien ordre conservé avec un message bref.
+Les barres de sorts sont cyan clair (#8befff), dans les panneaux et au-dessus
+des personnages. La préparation dorée et la récupération argentée de l’attaque
+restent inchangées, avec leur épée.
+73 scènes / 5 444 contrôles réussis, dont 97 dédiés aux gestes et à la persistance.
+Godot GPU vérifié ; APK 0.1.0-team002 (84) validé sur Galaxy A16 : « Oui, étape validée ».
+Laboratoire : scenes/debug/team_reorder_lab.tscn ; détails : docs/steps/TEAM-002.md.
+Clôture documentaire uniquement : code, ressources et APK identiques à la recette.
+Commit local et sauvegarde complète restaurée/vérifiée. Aucun nouveau test ni relevé FPS.
+Prochain GO : UI-005, qualification intégrée, puis STEP-029/030. Aucun push automatique.
+Les états précédents ci-dessous sont historiques.
+
 # TEAM-001 validée — 30 octobre 2026
 
 Nassau rejoint Mako et Anne : 160 PV, 60 PM, attaque 14, défense 4, vitesse 1,2,

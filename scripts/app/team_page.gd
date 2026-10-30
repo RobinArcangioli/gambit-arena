@@ -1,6 +1,12 @@
 extends Control
 signal home_requested
 signal hero_selected(hero_id: StringName)
+signal swap_requested(from_slot:int,to_slot:int)
+const Drag=preload("res://scripts/ui/team_drag.gd")
+var gesture:=Drag.new()
+var drag_preview:Control
+var drop_outline:Panel
+var feedback:Label
 const Roster = preload("res://scripts/app/team_roster.gd")
 const Illustration = preload("res://scripts/presentation/hero_illustration.gd")
 const Portrait = preload("res://scripts/presentation/hero_portrait.gd")
@@ -36,11 +42,21 @@ func _ready() -> void:
 	back_button.pressed.connect(func():
 		if active:home_requested.emit())
 	title = _label("Équipe",28)
+	feedback=_label("",15);feedback.modulate=Color("ffd16a");feedback.hide()
+	_build_cards()
+	drop_outline=Panel.new();drop_outline.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var outline:=StyleBoxFlat.new();outline.bg_color=Color(0,0,0,0)
+	outline.border_color=Color("ffd16a");outline.set_border_width_all(2)
+	drop_outline.add_theme_stylebox_override("panel",outline);drop_outline.z_index=21
+	content.add_child(drop_outline);drop_outline.hide()
+	get_viewport().size_changed.connect(_layout)
+	_layout();set_active(active)
+
+func _build_cards() -> void:
 	for slot in range(team_slots.size()):
 		var id:StringName=team_slots[slot]
 		var card := Button.new();card.toggle_mode = false
 		card.focus_mode = Control.FOCUS_ALL if id!=&"" else Control.FOCUS_NONE
-		card.disabled = id==&""
 		content.add_child(card);cards.append(card)
 		# The illustration owns the thin rectangular frame, as in the approved cards.
 		# Never add a second rounded Button panel behind or around it.
@@ -73,19 +89,108 @@ func _ready() -> void:
 			paint.border_color=Color("a68349");paint.set_border_width_all(1)
 			empty.add_theme_stylebox_override("panel",paint);card.add_child(empty)
 			card.move_child(name_label,-1);empty_frames[slot]=empty
-	get_viewport().size_changed.connect(_layout)
-	_layout();set_active(active)
+
+func apply_slots(value:Array) -> void:
+	if not Roster.Roster.valid_slots(value):return
+	cancel_drag()
+	for card in cards:
+		content.remove_child(card);card.queue_free()
+	cards.clear();names.clear();portraits.clear();illustrations.clear();idle_frames.clear()
+	slot_views.clear();empty_frames.clear();team_slots.assign(value)
+	_build_cards();_layout();set_active(active)
+	feedback.hide()
+
+func show_save_error() -> void:
+	feedback.text="Échange non enregistré. Réessaie.";feedback.show()
+
+func slot_at(at:Vector2) -> int:
+	for i in range(cards.size()):
+		if cards[i].get_global_rect().has_point(at):return i
+	return -1
+
+func cancel_drag() -> bool:
+	var captured:bool=gesture.cancel()
+	if is_instance_valid(drag_preview):drag_preview.queue_free()
+	drag_preview=null
+	if drop_outline!=null:drop_outline.hide()
+	return captured
+
+func _input(event:InputEvent) -> void:
+	if not active or not is_visible_in_tree():return
+	var at:=Vector2.ZERO
+	var identity:int=-2
+	var press:bool=false
+	var release:bool=false
+	var motion:bool=false
+	if event is InputEventScreenTouch:
+		at=event.position;identity=event.index;press=event.pressed;release=not press
+		if event.canceled:cancel_drag();get_viewport().set_input_as_handled();return
+	elif event is InputEventScreenDrag:
+		at=event.position;identity=event.index;motion=true
+	elif event is InputEventMouseButton or event is InputEventMouseMotion:
+		at=event.position
+		# Touch is handled directly; its emulated mouse copy must never activate a card.
+		if event.device==InputEvent.DEVICE_ID_EMULATION:
+			if gesture.source>=0 or slot_at(at)>=0:get_viewport().set_input_as_handled()
+			return
+		identity=-1
+		if event is InputEventMouseButton:
+			if event.button_index!=MOUSE_BUTTON_LEFT:return
+			press=event.pressed;release=not press
+		else:motion=true
+	else:return
+	var slot:int=slot_at(at)
+	if press:
+		if gesture.source>=0:
+			cancel_drag();get_viewport().set_input_as_handled();return
+		if slot<0:return
+		feedback.hide();gesture.begin(slot,at,identity)
+	elif gesture.source>=0:
+		if identity!=gesture.pointer:
+			get_viewport().set_input_as_handled();return
+		if motion:
+			gesture.move(at,identity);_update_drag_visual()
+		elif release:
+			gesture.move(at,identity)
+			var result:Dictionary=gesture.finish(slot,identity)
+			cancel_drag()
+			if result.has("from"):swap_requested.emit(result.from,result.to)
+			elif result.has("click"):_select(team_slots[result.click])
+	else:
+		if slot<0:return
+	get_viewport().set_input_as_handled()
+
+func _update_drag_visual() -> void:
+	if not gesture.dragging:return
+	if drag_preview==null:
+		if team_slots[gesture.source]!=&"":
+			var image:=Illustration.new();image.hero_id=team_slots[gesture.source];drag_preview=image
+		else:
+			var empty:=Label.new();empty.text="Vide";empty.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+			empty.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;empty.add_theme_color_override("font_color",Color("ffd16a"))
+			var paint:=StyleBoxFlat.new();paint.bg_color=Color("10182fcf");paint.border_color=Color("a68349");paint.set_border_width_all(1)
+			empty.add_theme_stylebox_override("normal",paint);drag_preview=empty
+		drag_preview.mouse_filter=Control.MOUSE_FILTER_IGNORE;drag_preview.z_index=22
+		drag_preview.modulate.a=.82;content.add_child(drag_preview)
+		drag_preview.size=cards[gesture.source].size*.42
+	drag_preview.global_position=gesture.position-drag_preview.size*.5
+	var destination:int=slot_at(gesture.position)
+	drop_outline.visible=destination>=0 and destination!=gesture.source
+	if drop_outline.visible:
+		drop_outline.global_position=cards[destination].global_position
+		drop_outline.size=cards[destination].size-Vector2(12,12)
 
 func _label(text: String, font_size: int) -> Label:
 	var label := Label.new();label.text = text;label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_theme_font_size_override("font_size",font_size);content.add_child(label);return label
 
 func _select(id: StringName) -> void:
-	if not active or not Roster.PROFILES.has(id):return
+	if not active or gesture.source>=0 or not Roster.PROFILES.has(id):return
 	hero_selected.emit(id)
 
 func _layout() -> void:
 	if background == null:return
+	cancel_drag()
 	var view: Rect2 = get_viewport_rect();background.size = view.size
 	var candidate: Rect2 = safe_area_override
 	if not candidate.has_area() and OS.get_name()=="Android":candidate = get_viewport().get_screen_transform().affine_inverse()*Rect2(DisplayServer.get_display_safe_area())
@@ -93,6 +198,7 @@ func _layout() -> void:
 	content.position = safe.position;content.size = safe.size
 	back_button.position = Vector2(16,16);back_button.size = Vector2(116,48)
 	title.position = Vector2(148,20);title.size = Vector2(safe.size.x-164,44)
+	feedback.position=Vector2(24,70);feedback.size=Vector2(safe.size.x-48,24)
 	var gap: float = 14
 	var width: float = (safe.size.x-48-gap)*0.5
 	var height: float = minf(340,(safe.size.y-180-gap)*0.5)
@@ -117,17 +223,19 @@ func _layout() -> void:
 			names[i].position = Vector2(10,(height-12-40)*0.5);names[i].size = Vector2(width-32,40)
 
 func set_active(enabled: bool) -> void:
+	if not enabled:cancel_drag()
 	if active != enabled:discard_next_step = true
 	active = enabled
 	if enabled:
 		for card in cards:card.release_focus()
 	for portrait in portraits:portrait.set_active(enabled)
-	for i in range(cards.size()):cards[i].disabled = not enabled or team_slots[i]==&""
+	for card in cards:card.disabled = not enabled
 	if back_button != null:back_button.disabled = not enabled
 
 func _process(delta: float) -> void:
 	if not active or not is_visible_in_tree() or not is_finite(delta) or delta<=0:return
 	if discard_next_step:discard_next_step=false;return
+	gesture.advance(delta);_update_drag_visual()
 	var dt: float = minf(delta,1.0/30.0)
 	visual_time += dt
 	for portrait in portraits:portrait.advance_visual(dt)

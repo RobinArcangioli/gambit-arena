@@ -8,7 +8,7 @@ extends Resource
 @export_range(0.0, 0.5) var glow_strength: float = 0.22
 @export var health_color: Color = Color("ff4545")
 @export var mana_color: Color = Color("399fff")
-@export var cast_color: Color = Color("ffd24a")
+@export var cast_color: Color = Color("8befff")
 @export var track_color: Color = Color(0.025,0.05,0.09,0.38)
 
 @export var panel_segments: int = 10
