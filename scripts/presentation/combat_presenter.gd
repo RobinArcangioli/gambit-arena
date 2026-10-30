@@ -6,6 +6,8 @@ var area_zones:Dictionary={}
 var area_zones_enabled:bool=true
 const Lightning = preload("res://scripts/presentation/lightning_presenter.gd")
 const Booster = preload("res://scripts/presentation/booster_presenter.gd")
+const Meteor=preload("res://scripts/presentation/meteor_presenter.gd")
+var meteor:=Meteor.new()
 var booster := Booster.new()
 var lightning := Lightning.new()
 const CastingEnergy = preload("res://scripts/presentation/casting_energy.gd")
@@ -33,6 +35,7 @@ var reactions_played: int = 0
 var deaths_played: int = 0
 
 func _init() -> void:
+	meteor.name="MeteorPresentation";add_child(meteor)
 	lightning.name = "LightningPresentation"
 	add_child(lightning)
 	booster.name = "BoosterPresentation"
@@ -44,6 +47,7 @@ func reset_run(id: int) -> void:
 	_clear_area_zones()
 	lightning.reset_run(id)
 	booster.reset_run(id)
+	meteor.reset_run(id)
 	for ghost in ghosts: _release_ghost(ghost)
 	ghosts.clear()
 	_clear_heals()
@@ -75,6 +79,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 	_advance_damage_texts(dt)
 	lightning.advance_visual(bindings, dt)
 	booster.advance_visual(bindings, dt)
+	meteor.advance_visual(dt)
 	# Advance previously existing visuals first. New impacts/deaths begin at this tick's end.
 	for ghost in ghosts.duplicate():
 		var personal_dt: float = dt * float(ghost.get("time_scale", 1.0))
@@ -108,6 +113,10 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 		_clear_area_zones()
 		lightning.clear_visuals()
 		booster.clear_visuals()
+		meteor.clear_visuals()
+	if terminal:
+		for key in meteor.effects.keys():
+			if not meteor.effects[key].exploding:meteor._release(key)
 	for actor_id in bindings.keys():
 		if not current.has(actor_id): bindings.erase(actor_id)
 
@@ -123,9 +132,10 @@ func consume(event: Dictionary) -> void:
 	var sequence: int = int(event.get("sequence", 0))
 	if sequence <= int(_sequences.get(source_id, 0)): return
 	_sequences[source_id] = sequence
-	if kind in ["cancel","resolve","end"] and bool(event.get("ground_target",false)):_release_area_zone(source_id)
+	if kind in ["cancel","resolve","end","area_launch"] and bool(event.get("ground_target",false)):_release_area_zone(source_id)
 	lightning.consume(event)
 	booster.consume(event)
+	meteor.consume(event)
 	if kind == "resolve" and event.get("skill", "") == "heal" and int(event.get("healing", 0)) > 0:
 		_heal(event)
 	if kind in ["resolve","area_hit"] and int(event.get("damage", 0)) > 0:

@@ -1,3 +1,21 @@
+# AOE-002 validée — 30 octobre 2026
+
+GO reçu pour Météore : 3 s d’incantation, puis 1 s de chute, puis 1 s d’explosion.
+40 PM et recharge de 4 s engagés au lancement ; les ennemis actuellement dans le
+disque fixe de rayon 1,4 subissent chacun 40 PV au début de l’explosion, sans défense.
+La chute suit le temps de combat, sans accélération Booster ; pause respectée.
+L’effet lancé survit à la mort d’Anne, mais pas à la fin du combat ni à son reset.
+Icône fournie intégrée ; traînée rouge/rose profond, explosion procédurale et fondu
+commun. Profil C « Intense » choisi dans Godot (remplace le choix B initial).
+Le cercle de préparation reste optionnel via « Afficher zone AOE ».
+76 scènes / 5 752 contrôles réussis ; captures GPU vérifiées. Dernières retouches
+artistiques vérifiées dans Godot et banc Météore ciblé. Android v86 validé :
+« Oui, AOE-002 validée ». Jeu normal et laboratoire séparé installés sur Galaxy A16.
+Gambits, équipe et réglages conservés, vérifiés par empreinte avant/après installation.
+Clôture documentaire uniquement, code et APK identiques à la recette validée.
+Commit local et sauvegarde vérifiée ; aucun push automatique. Prochain GO : UI-005.
+Détails : docs/steps/AOE-002.md. Les états suivants sont historiques.
+
 # AOE-001 validée — 30 octobre 2026
 
 Anne possède Attaque, Soin et Météore. Météore : 40 PM, 40 PV retirés par ennemi

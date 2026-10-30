@@ -64,7 +64,9 @@ func consume(event: Dictionary) -> void:
 	if kind=="start":
 		var duration:float=_cast_seconds(source,float(event.get("windup",0)),time)
 		_line(time,"cast" if skill!="basic" else "attack","%s : %s %s (%s s)."%[pair,"incante" if skill!="basic" else "prépare",spell,_decimal(duration)],"82bcff" if skill!="basic" else "fff2d4")
-	elif kind in ["resolve","area_hit"]:
+	elif kind=="area_launch":
+		_line(time,"spell","%s : lance %s · %d PM."%[pair,spell,int(event.get("mana_paid",0))],"ff749e")
+	elif kind in ["resolve","area_hit","area_impact"]:
 		var damage:int=int(event.get("damage",0));var healing:int=int(event.get("healing",0))
 		actors[source].dealt+=damage;actors[source].healed+=healing
 		if actors.has(target):actors[target].received+=damage
@@ -73,7 +75,7 @@ func consume(event: Dictionary) -> void:
 		revision+=1
 		var paid:int=int(event.get("mana_paid",0));var suffix:String=" · %d PM"%paid if paid>0 else ""
 		var outcome:String=event.get("outcome","")
-		if kind=="resolve" and event.has("area_count"):
+		if kind=="area_impact":
 			_line(time,"spell","%s : %s, %d ennemi(s) touché(s), %d dégâts%s."%[pair,spell,int(event.area_count),int(event.area_total),suffix],"ffd16a");return
 		var result:String="%d dégâts"%damage if damage>0 else "+%d PV"%healing if healing>0 else "effet appliqué" if outcome=="booster" else "cible hors de portée" if outcome=="hors portee" else "PV déjà pleins" if outcome=="PV pleins" else "PM insuffisants" if outcome=="mana insuffisante" else "buff déjà actif" if outcome=="buff deja actif" else "sans effet"
 		_line(time,"heal" if healing>0 else "damage" if damage>0 else "spell","%s : %s, %s%s."%[pair,spell,result,suffix],"b8ffcc" if healing>0 else "ffd16a" if damage>0 else "82bcff")

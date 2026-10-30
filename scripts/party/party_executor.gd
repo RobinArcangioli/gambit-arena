@@ -4,6 +4,9 @@ const BuffCatalog = preload("res://scripts/buffs/buff_catalog.gd")
 const BuffState = preload("res://scripts/buffs/buff_state.gd")
 const Clock = preload("res://scripts/core/game_clock.gd")
 const Area=preload("res://scripts/skills/area_skills.gd")
+const Projectiles=preload("res://scripts/skills/area_projectiles.gd")
+var projectiles:=Projectiles.new()
+var external_projectiles:bool=false
 var area_targets:Callable
 var ground_point:=Vector2.ZERO
 var _ground_cast:bool=false
@@ -115,6 +118,9 @@ func _reject(reason: String) -> int:
 	return 0
 
 func advance(dt: float, paused: bool = false, personal_dt: float = -1.0) -> void:
+	if not external_projectiles and not paused and clock!=null and clock.permits_gameplay() and area_targets.is_valid():
+		projectiles.advance(dt,area_targets.call(),clock.elapsed)
+		for event in projectiles.take_events():_record_visual(event)
 	if retired or paused or clock == null or not clock.permits_gameplay() or not is_finite(dt) or dt <= 0.0:
 		return
 	if not living(actor) or (_bound_state != null and actor.state != _bound_state):
@@ -222,27 +228,14 @@ func _try_area_impact(expected_id:int) -> bool:
 	resolved=true;phase="RECUPERATION"
 	if not _participants_valid():cancel();return false
 	var values:Dictionary=_visual_values("resolve")
-	var paid:int=0;var affected:int=0
-	if mana+.000001<cost(last_skill):outcome="mana insuffisante"
-	else:
-		# Commit once before any health callback. A ground spell may legitimately miss.
-		paid=cost(last_skill);mana=maxf(0,mana-paid);spent+=paid
-		cooldowns[last_skill]=cooldown(last_skill);outcome="impact"
-		var radius:float=Area.radius(last_skill)
-		var victims:Array=[]
-		for target in area_targets.call():
-			if living(target) and target.team!=actor.team and ground_point.distance_squared_to(Vector2(target.position.x,target.position.z))<=radius*radius+.000001:
-				victims.append({"actor":target,"state":target.state})
-		for victim in victims:
-			if retired or not _effects_allowed() or not living(actor) or actor.state!=_source_state:break
-			var target=victim.actor
-			if not living(target) or target.state!=victim.state:continue
-			var event:Dictionary=_visual_values("area_hit")
-			event.target_id=target.combat_id;event.target_position=target.position;event.target_team=target.team
-			event.damage=target.state.damage(int(Area.DEFINITIONS[last_skill].damage))
-			applied_damage+=int(event.damage);affected+=1;_record_visual(event)
-	values.outcome=outcome;values.mana_paid=paid;values.mana_after=mana
-	values.area_total=applied_damage;values.area_count=affected
+	if mana+.000001<cost(last_skill):
+		outcome="mana insuffisante";values.outcome=outcome;_record_visual(values);return true
+	# Payment and cooldown at release; victims are chosen by the combat queue at impact.
+	var paid:int=cost(last_skill)
+	mana=maxf(0,mana-paid);spent+=paid;cooldowns[last_skill]=cooldown(last_skill);outcome="lancement"
+	values.kind="area_launch";values.outcome=outcome;values.mana_paid=paid;values.mana_after=mana
+	values.flight_duration=float(Area.DEFINITIONS[last_skill].flight)
+	projectiles.launch(values,actor.team)
 	_record_visual(values);return true
 
 func cancel() -> void:

@@ -2,6 +2,9 @@ extends Node
 ## Party coordinator: no artistic resources and no UI callbacks during a tick.
 const CombatReport = preload("res://scripts/party/combat_report.gd")
 var report := CombatReport.new()
+const Projectiles=preload("res://scripts/skills/area_projectiles.gd")
+var projectiles:=Projectiles.new()
+var _event_sequences:Dictionary={}
 const Roster = preload("res://scripts/party/party_roster.gd")
 const Unit = preload("res://scripts/party/party_unit.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
@@ -78,6 +81,7 @@ func reset() -> void:
 		unit.team_slot = team_slots.find(profile.actor_key)
 		unit.action.clock = clock
 		unit.action.area_targets=all_units
+		unit.action.projectiles=projectiles;unit.action.external_projectiles=true
 		unit.action.unrestricted_targets = orders_enabled
 		unit.state.died.connect(_record_death.bind(unit))
 		unit.name = profile.display_name
@@ -115,6 +119,7 @@ func add_enemy(at: Vector2) -> bool:
 	unit.name = "Skeleton%d" % (spawned + 1)
 	unit.action.clock = clock
 	unit.action.area_targets=all_units
+	unit.action.projectiles=projectiles;unit.action.external_projectiles=true
 	unit.action.unrestricted_targets = orders_enabled
 	unit.state.died.connect(_record_death.bind(unit))
 	world.add_child(unit)
@@ -157,6 +162,11 @@ func advance(delta: float, paused: bool = false) -> void:
 			unit.advance_time(dt)
 			for buff_id in previous:
 				if not unit.buffs.has(buff_id):report.expire(unit.combat_id,String(buff_id),clock.elapsed-dt+float(previous[buff_id].remaining))
+	# Released spells use normal combat time, even when their caster has died.
+	projectiles.advance(dt,all_units(),clock.elapsed)
+	for event in projectiles.take_events():
+		if event.kind=="area_impact" and int(event.area_total)>0:hits+=1
+		_append_visual_event(event)
 	# Stable order: Anne, Mako, then enemy creation order. Dead actors never retaliate.
 	for unit in all_units():
 		if not Executor.living(unit): continue
@@ -182,6 +192,10 @@ func advance(delta: float, paused: bool = false) -> void:
 			for unit in heroes:
 				if _death_ids.has(unit.combat_id): keep[unit.combat_id] = true
 			_death_ids = keep
+			var live_ids:Array=[]
+			for unit in all_units():live_ids.append(unit.combat_id)
+			for actor_id in _event_sequences.keys():
+				if actor_id not in live_ids:_event_sequences.erase(actor_id)
 	elif wave.issued >= wave.total and enemies.is_empty():
 		if wave_number >= wave_count:
 			_finish("VICTOIRE")
@@ -378,6 +392,7 @@ func _finish(outcome: String) -> void:
 	result = outcome
 	terminal_count += 1
 	clock.stopped = true
+	projectiles.clear()
 	for unit in all_units():
 		unit.action.retire()
 		unit.pending.clear()
@@ -403,12 +418,14 @@ func clear() -> void:
 	navigation_cursor = 0
 	navigation_searches_last_tick = 0
 	clock.stopped = true
+	projectiles.clear()
 	for unit in all_units(): _dispose(unit)
 	heroes.clear()
 	enemies.clear()
 	_events.clear()
 	_pending_deaths.clear()
 	_death_ids.clear()
+	_event_sequences.clear()
 
 func _exit_tree() -> void:
 	clear()
@@ -424,6 +441,9 @@ func _record_death(unit: Unit) -> void:
 
 func _append_visual_event(values: Dictionary) -> void:
 	if _events.size() >= MAX_VISUAL_EVENTS: _events.pop_front()
+	var source_id:int=int(values.get("source_id",0))
+	_event_sequences[source_id]=int(_event_sequences.get(source_id,0))+1
+	values["sequence"]=_event_sequences[source_id]
 	values["run_id"] = run_id
 	report.consume(values)
 	values.make_read_only()

@@ -1,7 +1,7 @@
 # Compétences de zone — roadmap
 
 Base : TEAM-002 clôturée, commit 842124021a8feb3528181d94a22290115d2c9d10.
-AOE-001 validée sur Galaxy A16 le 30 octobre 2026. AOE-002 attend le prochain GO.
+AOE-001 validée sur Galaxy A16 le 30 octobre 2026. AOE-002 validée sur Galaxy A16 : profil C Intense.
 
 ## AOE-001 — Mécanique et ciblage au sol
 
@@ -39,13 +39,16 @@ ni le ciblage, ni le rayon, ni les dégâts. Aucune zone pour les sorts monocibl
 
 ## AOE-002 — Présentation finale de Météore
 
-Non commencée. Générer le météore entièrement dans Godot : roche facettée, matière
-mate et incandescente, traînée, chute depuis le haut et impact circulaire avec particules.
-Ressources et adaptateur de présentation indépendants de la simulation. L’effet reçoit
-le point fixe et les événements de cast/résolution/annulation ; il ne calcule ni cibles
-ni dégâts et ne décide pas du moment de paiement. Synchroniser l’impact visible avec
-l’impact logique, réutiliser le fondu commun, borner les instances et nettoyer aux resets.
-Affiner l’icône et conserver l’indicateur de zone optionnel demandé. Proposer le rendu dans Godot,
-puis vérifier lisibilité, pause/reprise et charge sur Galaxy A16 avant validation.
+Validée. Icône PNG fournie intégrée. Après les 3 s d’incantation, paiement et
+recharge au lancement, chute rouge/rose profond pendant 1 s, puis explosion de 1 s.
+Les victimes sont calculées et les dégâts appliqués au début de l’explosion.
+La file logique de projectiles est détenue par le combat, indépendante du lanceur
+et des vues. Centre figé dès l’incantation ; aucun nouveau ciblage pendant la chute.
+Chute en temps normal de combat, pause respectée ; reset/fin du combat annulent
+les projectiles restants. Une fois lancé, le météore survit à la mort de son lanceur.
+L’explosion reçoit un fait d’impact, jamais l’autorité d’appliquer des dégâts.
+Roche, traînée, halo, anneaux et fragments entièrement procéduraux ; fondu commun.
+C Intense retenu dans Godot après correction du choix initial B. Android v86 validé :
+« Oui, AOE-002 validée ». Clôture documentaire sans modification de code ou APK.
 
 Après les deux étapes : UI-005, puis STEP-029 et STEP-030.

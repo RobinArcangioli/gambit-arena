@@ -21,6 +21,9 @@ func fixture() -> void:
 	var positions:Array=[Vector2(-.85,0),Vector2.ZERO,Vector2(.85,0),Vector2(2.5,0),Vector2(2.5,1),Vector2(3.5,-1)]
 	for i in range(6):sim.enemies[i].place(positions[i])
 func order(skill:String="meteor",criterion:String="enemy_group_3") -> Dictionary:return {"enabled":true,"criterion":criterion,"skill":skill}
+func impact() -> void:
+	sim.projectiles.advance(1,sim.all_units(),sim.clock.elapsed+1)
+	for event in sim.projectiles.take_events():sim._append_visual_event(event)
 func _ready() -> void:
 	await fixture();var anne=sim.hero(&"anne");var action=anne.action
 	check(action.cost(&"meteor")==40 and action.cast_duration(&"meteor")==3 and action.cooldown(&"meteor")==4 and action.skill_reach(&"meteor")==4,"Meteor metadata and universal spell range")
@@ -45,21 +48,24 @@ func _ready() -> void:
 	check(action.casting() and action.spent==0 and action.mana==60 and action.remaining(&"meteor")==0,"no mana paid or cooldown running during cast")
 	check(not action.try_impact(id+1),"wrong action ID cannot resolve")
 	action.advance(.01,false,.01)
+	check(action.spent==40 and action.mana==20 and action.remaining(&"meteor")==4,"one debit and full cooldown begin at release")
+	check(sim.enemies[0].state.health==60,"release does not damage before flight")
+	sim._collect_visual_events(sim.all_units());impact()
 	check(sim.enemies.slice(0,3).all(func(e):return e.state.health==20),"exactly forty PV removed including high-defense target")
 	check(sim.enemies.slice(3).all(func(e):return e.state.health==60) and sim.hero(&"mako").state.health==hero_health,"outside enemies and allied heroes untouched")
 	check(action.spent==40 and action.mana==20 and action.remaining(&"meteor")==4,"one debit and full cooldown begin at release")
-	check(action.applied_damage==120 and not action.try_impact(id),"single latched impact sums actual damage and cannot repeat")
+	check(sim.report.actors[anne.combat_id].dealt==120 and not action.try_impact(id),"single latched impact sums actual damage and cannot repeat")
 	sim._collect_visual_events(sim.all_units())
 	check(sim.report.actors[anne.combat_id].dealt==120 and sim.report.actors[sim.enemies[0].combat_id].received==40,"MVP statistics count per-target actual losses once")
-	check(sim.events.filter(func(e):return e.kind=="area_hit").size()==3 and sim.events.filter(func(e):return e.kind=="resolve" and e.skill=="meteor").size()==1,"per-target facts plus one payment summary")
+	check(sim.events.filter(func(e):return e.kind=="area_hit").size()==3 and sim.events.filter(func(e):return e.kind=="area_launch" and e.skill=="meteor").size()==1,"per-target facts plus one payment summary")
 	check(sim.report.recent.any(func(e):return "Météore" in e.text and "Zone" in e.text and "40 PM" in e.text),"player journal identifies ground spell and one cost")
 	action.advance(1,false,1);check(action.remaining(&"meteor")==3,"cooldown advances after release in personal time")
 	await fixture();anne=sim.hero(&"anne");action=anne.action
 	sim.enemies[0].state.damage(53)
 	var repeated:Array=[]
 	sim.enemies[0].state.died.connect(func():repeated.append(anne.action.try_impact(anne.action.action_id)))
-	action.request_ground(&"meteor",Vector2.ZERO);action.advance(3,false,3);sim._collect_visual_events(sim.all_units())
-	check(not sim.enemies[0].state.alive and action.applied_damage==87,"lethal overkill counts actual PV and does not cancel remaining victims")
+	action.request_ground(&"meteor",Vector2.ZERO);action.advance(3,false,3);sim._collect_visual_events(sim.all_units());impact()
+	check(not sim.enemies[0].state.alive and sim.report.actors[anne.combat_id].dealt==87,"lethal overkill counts actual PV and does not cancel remaining victims")
 	check(repeated==[false] and action.spent==40 and sim.report.actors[anne.combat_id].dealt==87,"reentrant death callback cannot repeat payment or impacts")
 	await fixture();anne=sim.hero(&"anne");action=anne.action
 	action.request_ground(&"meteor",Vector2.ZERO);action.advance(1,false,1)
@@ -67,7 +73,7 @@ func _ready() -> void:
 	sim.enemies[3].place(Vector2.ZERO);anne.state.damage(100)
 	sim.rules.anne=[order("heal","ally_hp_lt_50"),order()];sim._plan(anne)
 	check(action.casting() and action.last_skill==&"meteor" and action.ground_point==Vector2.ZERO,"higher-priority heal cannot interrupt begun cast or move its point")
-	action.advance(2,false,2)
+	action.advance(2,false,2);sim._collect_visual_events(sim.all_units());impact()
 	check(sim.enemies[3].state.health==20 and sim.enemies.slice(0,3).all(func(e):return e.state.health==60),"impact uses current occupants, not original selection")
 	await fixture();anne=sim.hero(&"anne");action=anne.action
 	action.request_ground(&"meteor",Vector2.ZERO)
@@ -130,7 +136,7 @@ func _ready() -> void:
 		check(anne.action.casting() and presenter.area_zones.is_empty(),"single-target spells never create AOE circles")
 		viewport.queue_free();await settle()
 	var lab=load("res://scenes/debug/area_lab.tscn").instantiate();add_child(lab);lab.set_physics_process(false);await settle()
-	for tick in range(180):lab._physics_process(1.0/30)
+	for tick in range(240):lab._physics_process(1.0/30)
 	check(lab.simulation.hero(&"anne").action.spent>=40 and lab.simulation.enemies.any(func(e):return e.state.health<200),"real laboratory resolves Meteor against high-defense enemies")
 	lab.select_scenario(1)
 	for tick in range(40):lab._physics_process(1.0/30)
