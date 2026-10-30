@@ -13,13 +13,14 @@ func fixture() -> Dictionary:
 func order(criterion: String, skill: String="basic") -> Dictionary:
 	return {"enabled":true,"criterion":criterion,"skill":skill}
 func _ready() -> void:
-	check(Criteria.IDS.size()==11 and Criteria.label(&"self")=="Soi-même","eleven named catalogue entries")
+	check(Criteria.IDS.size()==12 and Criteria.label(&"self")=="Soi-même","twelve named catalogue entries including area group")
 	for hero in [&"anne",&"mako"]:
 		for id in Criteria.IDS:
 			for skill in Orders.PROFILES[hero].abilities:
 				check(Orders.valid_order(order(String(id),String(skill)),hero),"all criterion/capability pairs allowed")
 	var expected: Dictionary={&"self":1,&"ally_roster":1,&"ally_hp_lt_90":2,&"ally_hp_lt_70":2,&"ally_hp_lt_50":2,&"ally_hp_lt_30":2,&"ally_hp_lt_10":-1,&"enemy_hp_max":4,&"enemy_hp_min":3,&"enemy_near":3,&"enemy_far":4}
 	var view: Dictionary=fixture()
+	expected[&"enemy_group_3"]=-1 # Group selection requires the paired AOE radius.
 	for id in Criteria.IDS:
 		var selected: Dictionary=Criteria.choose(id,view)
 		check(selected.get("id",-1)==expected[id],"criterion resolves exact fixture target by stable ID")

@@ -2,8 +2,9 @@ extends RefCounted
 ## Read-only adapter: profiles and executor metadata, never runtime actor state.
 const Roster = preload("res://scripts/app/team_roster.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
-const TITLES = {&"basic": "Attaque", &"heal": "Soin", &"lightning": "Foudre", &"booster": "Booster"}
+const TITLES = {&"basic": "Attaque", &"heal": "Soin", &"lightning": "Foudre", &"booster": "Booster",&"meteor":"Météore"}
 const DESCRIPTIONS = {
+	&"meteor":"Retire 40 PV à chaque ennemi dans un rayon de 1,4 autour du point fixé au début de l’incantation, sans réduction par la défense. Aucun dégât aux alliés. Recharge à partir du lancement effectif.",
 	&"basic": "Attaque la cible au corps à corps.",
 	&"heal": "Rend des PV à la cible choisie.",
 	&"lightning": "Frappe la cible choisie avec la foudre.",

@@ -9,4 +9,4 @@ max_health = 140
 attack = 12
 defense = 3
 move_speed = 1.2
-abilities = Array[StringName]([&"basic", &"heal"])
+abilities = Array[StringName]([&"basic", &"heal", &"meteor"])

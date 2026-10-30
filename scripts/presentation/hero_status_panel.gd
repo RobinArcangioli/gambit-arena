@@ -92,7 +92,7 @@ func show_actor(actor) -> void:
 		var attack_seconds:float=remaining_cast_seconds(phase_left,actor.buffs.snapshot())
 		cast_text.text="%s : %ss"%["Récup." if actor.action.resolved else "Attaque",("%.1f"%(ceilf(attack_seconds*10-0.000001)/10)).replace(".",",")]
 	elif cast_text.visible:
-		var names:Dictionary={&"heal":"Soin",&"lightning":"Foudre",&"booster":"Booster"}
+		var names:Dictionary={&"heal":"Soin",&"lightning":"Foudre",&"booster":"Booster",&"meteor":"Météore"}
 		var local_left:float=maxf(0,actor.action.cast_duration(actor.action.last_skill)-actor.action.elapsed)
 		var seconds:float=remaining_cast_seconds(local_left,actor.buffs.snapshot())
 		cast_text.text="%s : %ss"%[names.get(actor.action.last_skill,String(actor.action.last_skill)),("%.1f"%(ceilf(seconds*10-0.000001)/10)).replace(".",",")]

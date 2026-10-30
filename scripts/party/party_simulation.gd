@@ -77,6 +77,7 @@ func reset() -> void:
 		unit.configure_party(profile)
 		unit.team_slot = team_slots.find(profile.actor_key)
 		unit.action.clock = clock
+		unit.action.area_targets=all_units
 		unit.action.unrestricted_targets = orders_enabled
 		unit.state.died.connect(_record_death.bind(unit))
 		unit.name = profile.display_name
@@ -113,6 +114,7 @@ func add_enemy(at: Vector2) -> bool:
 	unit.team_slot = spawned
 	unit.name = "Skeleton%d" % (spawned + 1)
 	unit.action.clock = clock
+	unit.action.area_targets=all_units
 	unit.action.unrestricted_targets = orders_enabled
 	unit.state.died.connect(_record_death.bind(unit))
 	world.add_child(unit)
@@ -190,6 +192,15 @@ func advance(delta: float, paused: bool = false) -> void:
 		if Executor.living(unit): _plan(unit)
 	_move(dt, true)
 	for unit in all_units():
+		if Executor.living(unit) and not unit.action.active and unit.ground_intention:
+			# Movement may change the best group. Re-evaluate ALL priorities before commitment.
+			_plan(unit)
+			if unit.ground_intention and unit.mover.ground_position.distance_to(unit.desired_point)<=Executor.SPELL_REACH+.000001:
+				var area_id:int=unit.action.request_ground(unit.desired_skill,unit.desired_point)
+				if area_id>0:
+					var toward:Vector2=unit.desired_point-unit.mover.ground_position
+					if toward.length_squared()>.000001:unit.mover.facing=toward.normalized()
+			if unit.ground_intention:continue
 		if not Executor.living(unit) or unit.action.active or not Executor.living(unit.desired_target): continue
 		if Executor.distance_between(unit, unit.desired_target) > Executor.skill_reach(unit.desired_skill): continue
 		var id: int = unit.action.request(unit.desired_skill, unit.desired_target)
@@ -218,7 +229,7 @@ func snapshot(unit: Unit) -> Dictionary:
 		if other == unit or not Executor.living(other): continue
 		if other.team == unit.team: allies.append(_row(other))
 		else: foes.append(_row(other))
-	return {"key": unit.actor_key, "source": _row(unit), "allies": allies, "enemies": foes, "mana": unit.action.mana, "cooldowns": unit.action.cooldowns.duplicate(), "abilities": unit.abilities.duplicate()}
+	return {"area_preferred":unit.area_preferred.duplicate(),"key": unit.actor_key, "source": _row(unit), "allies": allies, "enemies": foes, "mana": unit.action.mana, "cooldowns": unit.action.cooldowns.duplicate(), "abilities": unit.abilities.duplicate()}
 
 func _find(id: int) -> Unit:
 	for unit in all_units():
@@ -254,6 +265,10 @@ func _plan(unit: Unit) -> void:
 		var choice: Dictionary = Orders.evaluate(rules.get(String(unit.actor_key),[]), snapshot(unit)) if orders_enabled else Rules.evaluate(rules.get(String(unit.actor_key),[]), snapshot(unit))
 		if choice.is_empty(): return
 		unit.desired_skill = choice.skill
+		if choice.has("target_point"):
+			unit.ground_intention=true;unit.desired_point=choice.target_point
+			unit.area_preferred=choice.target_ids.duplicate();return
+		unit.area_preferred.clear()
 		unit.desired_target = _find(choice.target_id)
 	else:
 		unit.desired_skill = &"basic"
@@ -314,8 +329,9 @@ func _move(dt: float, time_prepared: bool = false) -> void:
 		unit.mover.velocity = Vector2.ZERO
 		unit.navigation.tick(dt)
 		var reach: float = Executor.skill_reach(unit.desired_skill)
-		var valid: bool = Executor.living(unit.desired_target)
-		var hold: bool = unit.action.active or (valid and Executor.distance_between(unit, unit.desired_target) <= reach)
+		var valid: bool = unit.ground_intention or Executor.living(unit.desired_target)
+		var destination:Vector2=unit.desired_point if unit.ground_intention else Vector2(unit.desired_target.position.x,unit.desired_target.position.z) if valid else start
+		var hold: bool = unit.action.active or (valid and start.distance_to(destination) <= reach)
 		if hold:
 			unit.navigation.hold()
 		elif not valid:
@@ -323,16 +339,19 @@ func _move(dt: float, time_prepared: bool = false) -> void:
 		elif navigation_enabled:
 			var obstacles: Array[Vector2] = points.duplicate()
 			obstacles.remove_at(index)
-			var destination := Vector2(unit.desired_target.position.x, unit.desired_target.position.z)
 			var before_searches: int = unit.navigation.searches
-			requests[index] = unit.navigation.request(start, destination, unit.desired_target.combat_id,
+			requests[index] = unit.navigation.request(start, destination, -2 if unit.ground_intention else unit.desired_target.combat_id,
 				reach, unit.mover.speed, unit.personal_delta, obstacles, navigation_searches_last_tick < MAX_NAV_SEARCHES_PER_TICK)
 			navigation_searches_last_tick += unit.navigation.searches - before_searches
 		else:
-			unit.mover.stopping_distance = maxf(0.1, reach - 0.2)
-			unit.mover.step(unit.personal_delta)
-			requests[index] = unit.mover.ground_position - start
-			unit.mover.ground_position = start
+			if unit.ground_intention:
+				var offset:Vector2=destination-start
+				requests[index]=offset.normalized()*minf(unit.mover.speed*unit.personal_delta,maxf(0,offset.length()-maxf(.1,reach-.2)))
+			else:
+				unit.mover.stopping_distance = maxf(0.1, reach - 0.2)
+				unit.mover.step(unit.personal_delta)
+				requests[index] = unit.mover.ground_position - start
+				unit.mover.ground_position = start
 	if not units.is_empty(): navigation_cursor = (navigation_cursor + 1) % units.size()
 	var positions: Array[Vector2] = Crowd.solve(points, requests, corrections, dt, movement_limits)
 	for i in range(units.size()):
@@ -341,8 +360,8 @@ func _move(dt: float, time_prepared: bool = false) -> void:
 		unit.navigation.observe(points[i], positions[i], requests[i], dt)
 		unit.mover.ground_position = positions[i]
 		unit.mover.velocity = movement / dt
-		if Executor.living(unit.desired_target):
-			var destination := Vector2(unit.desired_target.position.x, unit.desired_target.position.z)
+		if unit.ground_intention or Executor.living(unit.desired_target):
+			var destination:Vector2=unit.desired_point if unit.ground_intention else Vector2(unit.desired_target.position.x,unit.desired_target.position.z)
 			unit.mover.distance_to_target = positions[i].distance_to(destination)
 			if unit.action.active or unit.mover.distance_to_target <= Executor.skill_reach(unit.desired_skill):
 				unit.mover.state = unit.Mover.State.ARRIVED

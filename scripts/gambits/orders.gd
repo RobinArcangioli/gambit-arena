@@ -3,6 +3,8 @@ extends RefCounted
 const BuffCatalog = preload("res://scripts/buffs/buff_catalog.gd")
 const Criteria = preload("res://scripts/gambits/target_criteria.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
+const Area=preload("res://scripts/skills/area_skills.gd")
+const Targeting=preload("res://scripts/gambits/area_targeting.gd")
 const PROFILES = preload("res://scripts/party/party_roster.gd").PROFILES
 const MAX_ORDERS: int = 100
 static func create() -> Dictionary:return {"enabled":true,"criterion":"enemy_near","skill":"basic"}
@@ -26,11 +28,21 @@ static func valid_configuration(config: Variant) -> bool:
 static func evaluate(rows: Array, view: Dictionary) -> Dictionary:
 	if rows.size()>MAX_ORDERS:return {}
 	var mana: float = view.get("mana",0.0)
+	var area_choices:Dictionary={}
 	if not is_finite(mana):return {}
 	for index in range(rows.size()):
 		var order = rows[index]
 		if not valid_order(order,view.get("key",&"")) or not order.enabled or StringName(order.skill) not in view.get("abilities",[]):continue
 		if mana+0.000001<Executor.cost(order.skill) or float(view.get("cooldowns",{}).get(order.skill,0.0))>0.0:continue
+		if order.criterion=="enemy_group_3":
+			var radius:float=Area.radius(order.skill)
+			if radius<=0:continue
+			if not area_choices.has(radius):
+				var living:Array=view.get("enemies",[]).filter(func(row):return Criteria.living(row))
+				area_choices[radius]=Targeting.solve(living,radius,view.source.position,view.get("area_preferred",[]))
+			var area:Dictionary=area_choices[radius]
+			if area.is_empty() or area.count<3:continue
+			return {"skill":order.skill,"target_point":area.center,"target_ids":area.ids,"rule_index":index,"criterion":order.criterion}
 		var ranked: Array[Dictionary] = Criteria.candidates(order.criterion,view)
 		# Buff eligibility filters candidates without changing their criterion ranking.
 		if BuffCatalog.is_buff(order.skill):
@@ -39,5 +51,6 @@ static func evaluate(rows: Array, view: Dictionary) -> Dictionary:
 		var target: Dictionary = ranked[0]
 		# Heal keeps its existing first-candidate semantics; only buffs filter above.
 		if order.skill=="heal" and target.health>=target.max_health:continue
+		if Area.has(order.skill):return {"skill":order.skill,"target_point":target.position,"target_ids":[target.id],"rule_index":index,"criterion":order.criterion}
 		return {"skill":order.skill,"target_id":target.id,"rule_index":index,"criterion":order.criterion}
 	return {}

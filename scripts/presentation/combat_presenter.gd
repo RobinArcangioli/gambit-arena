@@ -1,6 +1,9 @@
 extends Node3D
 ## One-way adapter. Bindings own presentation values/views, never ActorState or executors.
 const View = preload("res://scripts/presentation/character_view.gd")
+const AreaZone=preload("res://scripts/presentation/area_zone.gd")
+var area_zones:Dictionary={}
+var area_zones_enabled:bool=true
 const Lightning = preload("res://scripts/presentation/lightning_presenter.gd")
 const Booster = preload("res://scripts/presentation/booster_presenter.gd")
 var booster := Booster.new()
@@ -38,6 +41,7 @@ func _init() -> void:
 func reset_run(id: int) -> void:
 	if run_id == id: return
 	_clear_casting()
+	_clear_area_zones()
 	lightning.reset_run(id)
 	booster.reset_run(id)
 	for ghost in ghosts: _release_ghost(ghost)
@@ -59,11 +63,13 @@ func capture(units: Array, id: int) -> void:
 			"transform": unit.visual.global_transform if is_instance_valid(unit.visual) else unit.global_transform,
 			"definition": unit.appearance, "position": unit.position, "facing": unit.mover.facing,
 			"team": unit.team, "time_scale": unit.buffs.multiplier(), "alive": unit.state.alive, "casting": unit.action.casting(), "action_id": unit.action.action_id,
+			"area_radius":unit.action.area_radius(),"ground_point":unit.action.ground_point,
 			"skill": String(unit.action.last_skill), "elapsed": unit.action.elapsed, "windup": unit.action._windup()}
 
 func present(units: Array, values: Array[Dictionary], dt: float, id: int, terminal: bool = false) -> void:
 	reset_run(id)
 	capture(units, id)
+	_sync_area_zones()
 	_sync_casting(units, dt, terminal)
 	_advance_heals(dt)
 	_advance_damage_texts(dt)
@@ -99,6 +105,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 		ghosts.clear()
 		_clear_heals()
 		_clear_damage_texts()
+		_clear_area_zones()
 		lightning.clear_visuals()
 		booster.clear_visuals()
 	for actor_id in bindings.keys():
@@ -116,11 +123,12 @@ func consume(event: Dictionary) -> void:
 	var sequence: int = int(event.get("sequence", 0))
 	if sequence <= int(_sequences.get(source_id, 0)): return
 	_sequences[source_id] = sequence
+	if kind in ["cancel","resolve","end"] and bool(event.get("ground_target",false)):_release_area_zone(source_id)
 	lightning.consume(event)
 	booster.consume(event)
 	if kind == "resolve" and event.get("skill", "") == "heal" and int(event.get("healing", 0)) > 0:
 		_heal(event)
-	if kind == "resolve" and int(event.get("damage", 0)) > 0:
+	if kind in ["resolve","area_hit"] and int(event.get("damage", 0)) > 0:
 		_damage_text(event)
 		var target_id: int = int(event.get("target_id", 0))
 		if _dead_ids.has(target_id) or not bindings.has(target_id): return
@@ -130,6 +138,7 @@ func consume(event: Dictionary) -> void:
 			reactions_played += 1
 
 func _death(actor_id: int, time_scale: float = 1.0) -> void:
+	_release_area_zone(actor_id)
 	if _dead_ids.has(actor_id): return
 	_dead_ids[actor_id] = true
 	for effect in heal_effects.duplicate():
@@ -280,3 +289,25 @@ func _release_damage_text(effect:Dictionary) -> void:
 	damage_texts.erase(effect)
 func _clear_damage_texts() -> void:
 	for effect in damage_texts.duplicate():_release_damage_text(effect)
+
+func set_area_visibility(value:bool) -> void:
+	area_zones_enabled=value;_sync_area_zones()
+func _sync_area_zones() -> void:
+	var retained:Dictionary={}
+	if enabled and area_zones_enabled:
+		for actor_id in bindings:
+			var values:Dictionary=bindings[actor_id]
+			if not values.alive or not values.casting or float(values.area_radius)<=0:continue
+			retained[actor_id]=true
+			if not area_zones.has(actor_id):
+				var zone:=AreaZone.new();add_child(zone);area_zones[actor_id]=zone
+			var zone:AreaZone=area_zones[actor_id]
+			zone.set_radius(float(values.area_radius))
+			var point:Vector2=values.ground_point;zone.position=Vector3(point.x,.035,point.y)
+	for actor_id in area_zones.keys():
+		if not retained.has(actor_id):_release_area_zone(actor_id)
+func _release_area_zone(actor_id:int) -> void:
+	if not area_zones.has(actor_id):return
+	var zone:Node3D=area_zones[actor_id];zone.hide();remove_child(zone);zone.queue_free();area_zones.erase(actor_id)
+func _clear_area_zones() -> void:
+	for actor_id in area_zones.keys():_release_area_zone(actor_id)

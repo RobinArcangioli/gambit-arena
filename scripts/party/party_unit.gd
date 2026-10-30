@@ -44,6 +44,9 @@ var gait: float = 0.0
 var offensive_focus
 var focus_state
 var desired_target
+var desired_point:=Vector2.ZERO
+var ground_intention:bool=false
+var area_preferred:Array=[]
 var desired_skill: StringName
 var pending: Dictionary = {}
 
@@ -80,6 +83,7 @@ func present() -> void:
 	pose(gait, mover.velocity.length_squared() > 0.000001 and not action.active, mover.facing)
 
 func clear_intention() -> void:
+	ground_intention=false
 	desired_target = null
 	desired_skill = &""
 	mover.clear_target()

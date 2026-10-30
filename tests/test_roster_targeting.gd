@@ -95,7 +95,7 @@ func _ready() -> void:
 	var viewport:=SubViewport.new();viewport.size=Vector2i(540,960);add_child(viewport)
 	var page=Page.instantiate();page.hero_id=&"anne";page.save_path=path;viewport.add_child(page);await settle();viewport.notify_mouse_entered()
 	var editor=page.editor
-	check(editor.controls[0].criterion.item_count==11 and editor.controls[0].criterion.text=="Allié","new criterion visible in real editor")
+	check(editor.controls[0].criterion.item_count==12 and editor.controls[0].criterion.text=="Allié","catalogue including group criterion visible in real editor")
 	tap(viewport,editor.controls[0].criterion.get_global_rect().get_center());await settle()
 	check(editor.popup_open() and editor.controls[0].criterion.get_popup().get_item_text(Criteria.IDS.find(&"ally_roster"))=="Allié","touch opens menu containing exact label")
 	editor.close_popup();editor.change(editor.tokens[0],"criterion","enemy_far");await settle()

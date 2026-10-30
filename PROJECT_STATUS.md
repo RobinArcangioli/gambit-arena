@@ -1,3 +1,27 @@
+# AOE-001 validée — 30 octobre 2026
+
+Anne possède Attaque, Soin et Météore. Météore : 40 PM, 40 PV retirés par ennemi
+sans réduction de défense, incantation 3 s, recharge 4 s à partir du lancement
+effectif, rayon 1,4 et portée universelle des sorts de 4 unités.
+Le critère « Groupe de 3 ou plus » maximise exactement le nombre d’ennemis couvrables
+avec le rayon de la capacité associée, puis centre le groupe par son disque minimum.
+Pendant l’approche, tous les gambits restent prioritaires dans leur ordre normal.
+Le point est verrouillé au début du cast ; les victimes sont celles présentes à
+l’impact, sans nouvelle optimisation. Une zone vidée coûte quand même les 40 PM.
+Aucun dégât aux alliés, aucune dépendance à la vie d’un ennemi ciblé.
+75 scènes / 5 733 contrôles réussis, dont 195 géométriques et 68 de mécanique/laboratoire.
+Godot GPU vérifié. Jeu normal et laboratoire séparé v85 validés sur Galaxy A16 :
+« Oui, AOE-001 validée ». Le laboratoire ne lit ni n’écrit les sauvegardes du jeu normal.
+Les gambits existants ne sont pas modifiés.
+Icône vectorielle fonctionnelle et effets d’incantation existants ; effet Météore final
+réservé à AOE-002. Le cercle or d’incantation est conservé en production avec la case
+« Afficher zone AOE », activée par défaut et mémorisée dans les réglages de combat.
+Détails : docs/steps/AOE-001.md et docs/aoe-roadmap.md.
+Clôture documentaire uniquement : code, ressources et deux APK identiques à la recette.
+Commit local et sauvegarde complète restaurée/vérifiée. Aucun nouveau test ni relevé FPS.
+Prochain GO : AOE-002 ; puis UI-005 et STEP-029/030. Aucun push automatique.
+Les états suivants sont historiques.
+
 # TEAM-002 validée — 30 octobre 2026
 
 Appui long de 450 ms sur une carte, puis dépôt sur une autre pour échanger les deux

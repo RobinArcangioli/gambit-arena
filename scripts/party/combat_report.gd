@@ -1,7 +1,7 @@
 extends RefCounted
 ## Read-only combat facts. No actor references, gameplay callbacks or rendering resources.
 const CAPACITY:int=1000
-const SKILLS: Dictionary = {"basic":"Attaque","heal":"Soin","lightning":"Foudre","booster":"Booster"}
+const SKILLS: Dictionary = {"basic":"Attaque","heal":"Soin","lightning":"Foudre","booster":"Booster","meteor":"Météore"}
 var enabled: bool = false
 var log_revision:int=0
 var wave:int=-1
@@ -58,10 +58,13 @@ func consume(event: Dictionary) -> void:
 	actors[source].sequence=sequence
 	var skill:String=event.get("skill","");var spell:String=SKILLS.get(skill,skill)
 	var pair:String="%s → %s"%[name_of(source),name_of(target)]
+	if bool(event.get("ground_target",false)) and kind!="area_hit":
+		var point:Vector3=event.get("target_position",Vector3.ZERO)
+		pair="%s → Zone (%.1f ; %.1f)"%[name_of(source),point.x,point.z]
 	if kind=="start":
 		var duration:float=_cast_seconds(source,float(event.get("windup",0)),time)
 		_line(time,"cast" if skill!="basic" else "attack","%s : %s %s (%s s)."%[pair,"incante" if skill!="basic" else "prépare",spell,_decimal(duration)],"82bcff" if skill!="basic" else "fff2d4")
-	elif kind=="resolve":
+	elif kind in ["resolve","area_hit"]:
 		var damage:int=int(event.get("damage",0));var healing:int=int(event.get("healing",0))
 		actors[source].dealt+=damage;actors[source].healed+=healing
 		if actors.has(target):actors[target].received+=damage
@@ -70,6 +73,8 @@ func consume(event: Dictionary) -> void:
 		revision+=1
 		var paid:int=int(event.get("mana_paid",0));var suffix:String=" · %d PM"%paid if paid>0 else ""
 		var outcome:String=event.get("outcome","")
+		if kind=="resolve" and event.has("area_count"):
+			_line(time,"spell","%s : %s, %d ennemi(s) touché(s), %d dégâts%s."%[pair,spell,int(event.area_count),int(event.area_total),suffix],"ffd16a");return
 		var result:String="%d dégâts"%damage if damage>0 else "+%d PV"%healing if healing>0 else "effet appliqué" if outcome=="booster" else "cible hors de portée" if outcome=="hors portee" else "PV déjà pleins" if outcome=="PV pleins" else "PM insuffisants" if outcome=="mana insuffisante" else "buff déjà actif" if outcome=="buff deja actif" else "sans effet"
 		_line(time,"heal" if healing>0 else "damage" if damage>0 else "spell","%s : %s, %s%s."%[pair,spell,result,suffix],"b8ffcc" if healing>0 else "ffd16a" if damage>0 else "82bcff")
 	elif kind=="buff_applied":

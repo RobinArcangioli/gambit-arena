@@ -34,7 +34,7 @@ func _ready() -> void:
 	var orphans:int=int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
 	check(Executor.cost(&"booster")==20 and near(Executor.cast_duration(&"booster"),1.5) and near(Executor.cooldown(&"booster"),0) and near(Executor.skill_reach(&"booster"),4),"Booster cost cast recharge reach match approved values")
 	check(Catalog.definition(&"booster").is_read_only() and Catalog.definition(&"unknown").is_empty(),"buff definition is shared immutable metadata")
-	check(Orders.PROFILES[&"nassau"].abilities==[&"basic",&"booster"] and Orders.PROFILES[&"anne"].abilities==[&"basic",&"heal"] and not &"booster" in Orders.PROFILES[&"mako"].abilities,"Nassau owns Booster; Mako retains lightning")
+	check(Orders.PROFILES[&"nassau"].abilities==[&"basic",&"booster"] and Orders.PROFILES[&"anne"].abilities==[&"basic",&"heal",&"meteor"] and not &"booster" in Orders.PROFILES[&"mako"].abilities,"Nassau owns Booster; Anne adds Meteor and Mako retains lightning")
 	for criterion in Criteria.IDS:
 		check(Orders.valid_order(order(String(criterion)),&"nassau") and not Orders.valid_order(order(String(criterion)),&"anne"),"every criterion can be paired with Nassau's buff")
 	var reference:Dictionary=Reference.read(&"nassau");var buff:Dictionary=reference.skills[1]
