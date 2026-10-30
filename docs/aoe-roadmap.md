@@ -52,3 +52,16 @@ C Intense retenu dans Godot après correction du choix initial B. Android v86 va
 « Oui, AOE-002 validée ». Clôture documentaire sans modification de code ou APK.
 
 Après les deux étapes : UI-005, puis STEP-029 et STEP-030.
+
+## AOE-002-FIX1 — Refonte et annulation de zone vide
+
+Validée sur Galaxy A16 : « Oui, AOE-002-FIX1 validée ».
+Choix Godot : Flash compact, Rouge accentué puis C Avec braises.
+Roche et flammes rouges avec fins filets rose profond ; impact blanc en demi-sphère,
+volutes rouges, onde enflammée et braises. Chute 0,77 s (vitesse +30 %), explosion 1 s.
+Contrôle toutes les 0,5 s de temps de combat pendant le cast uniquement : zéro ennemi
+vivant dans le disque fixe → annulation sans PM ni recharge, puis gambits réévalués.
+Après lancement, aucun contrôle d’annulation pour zone vide. Le ciblage et les dégâts
+restent indépendants de l’art. Deux APK v87 installés et validés ; préférences conservées.
+Clôture documentaire sans changement de code ni d’APK, commit local et sauvegarde vérifiée.
+UI-005 reste l’étape suivante après clôture de ce correctif.

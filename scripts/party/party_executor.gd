@@ -10,6 +10,8 @@ var external_projectiles:bool=false
 var area_targets:Callable
 var ground_point:=Vector2.ZERO
 var _ground_cast:bool=false
+var _ground_check_time:float=0.0
+const GROUND_CHECK_INTERVAL:float=0.5
 const SPELL_REACH: float = 4.0
 const HEAL_CAST: float = 1.5
 const LIGHTNING_CAST: float = 2.0
@@ -104,6 +106,7 @@ func request_ground(skill:StringName,point:Vector2) -> int:
 	if Vector2(actor.position.x,actor.position.z).distance_to(point)>skill_reach(skill)+.000001:return _reject("hors portee")
 	_disconnect_lifecycle();_next_id+=1;action_id=_next_id
 	_source=actor;_source_state=actor.state;_target=null;_target_state=null;_attack=actor.state.attack
+	_ground_check_time=0
 	_ground_cast=true;ground_point=point;last_skill=skill;_bound_state=actor.state;_target_buffs=null
 	active=true;elapsed=0;resolved=false;applied_damage=0;applied_healing=0;applied_buff=&""
 	phase="PREPARATION";outcome="en attente";accepted+=1
@@ -134,9 +137,24 @@ func advance(dt: float, paused: bool = false, personal_dt: float = -1.0) -> void
 		var left: float = maxf(0.0, cooldowns[skill] - local_dt)
 		cooldowns[skill] = 0.0 if left < 0.000001 else left
 	mana = minf(actor.mana_capacity, mana + actor.mana_regeneration * dt)
+	# Fixed combat-time checks, independent of Booster and the personal cast clock.
+	if casting() and _ground_cast:
+		var cast_step:float=minf(dt,dt*maxf(0,_windup()-elapsed)/maxf(.000001,local_dt))
+		_ground_check_time+=cast_step
+		if _ground_check_time+.000001>=GROUND_CHECK_INTERVAL:
+			_ground_check_time=maxf(0,_ground_check_time-GROUND_CHECK_INTERVAL*floori((_ground_check_time+.000001)/GROUND_CHECK_INTERVAL))
+			if not _ground_has_enemy():
+				outcome="zone vide";cancel();return
 	var was_active: bool = active
 	super.advance(local_dt)
 	if was_active and not active and phase == "TERMINEE": _record_visual(_visual_values("end"))
+
+func _ground_has_enemy() -> bool:
+	if not area_targets.is_valid():return false
+	var radius:float=Area.radius(last_skill)
+	for target in area_targets.call():
+		if living(target) and target.team!=actor.team and ground_point.distance_squared_to(Vector2(target.position.x,target.position.z))<=radius*radius+.000001:return true
+	return false
 
 func _valid_pair(source: StatsActor, target: StatsActor) -> bool:
 	if unrestricted_targets:return true

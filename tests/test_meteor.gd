@@ -12,8 +12,8 @@ func _ready() -> void:
 	var view=art.effects.values()[0]
 	art.advance_visual(.5);var position:Vector3=view.rock.position
 	art.advance_visual(0);check(view.rock.position==position,"visual pause freezes flight")
-	sim.projectiles.advance(.999,sim.all_units(),1)
-	check(sim.enemies[0].state.health==60 and sim.projectiles.events.is_empty(),"no impact before one second of flight")
+	sim.projectiles.advance(1.0/1.3-.001,sim.all_units(),1)
+	check(sim.enemies[0].state.health==60 and sim.projectiles.events.is_empty(),"no impact before thirty-percent faster flight ends")
 	for i in range(3):sim.enemies[i].place(Vector2(-3,i))
 	sim.enemies[3].place(Vector2.ZERO)
 	anne.state.damage(10000)
@@ -35,7 +35,7 @@ func _ready() -> void:
 	sim.clock.paused=true;sim.advance(1);check(sim.projectiles.pending[0].remaining==remaining,"clock pause freezes projectile")
 	sim.clock.paused=false;anne.buffs.apply(Buffs.definition(&"booster"))
 	sim.advance(1.0/30)
-	check(is_equal_approx(sim.projectiles.pending[0].remaining,1-1.0/30),"Booster does not accelerate an already released meteor")
+	check(is_equal_approx(sim.projectiles.pending[0].remaining,1.0/1.3-1.0/30),"Booster does not accelerate an already released meteor")
 	sim.reset();check(sim.projectiles.pending.is_empty(),"new combat clears all released projectiles")
 	await fixture();anne=sim.hero(&"anne");action=anne.action
 	action.request_ground(&"meteor",Vector2.ZERO);action.advance(3,false,3)

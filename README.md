@@ -1,3 +1,20 @@
+# AOE-002-FIX1 validée — 30 octobre 2026
+
+Godot : Flash compact + Rouge accentué + C Avec braises retenus.
+Météore : roche irrégulière, flammes rouges et filets rose profond pendant la chute ;
+demi-sphère blanche atténuée, volutes rouges, onde enflammée et braises à l’impact.
+Chute accélérée de 30 % : environ 0,77 s ; explosion toujours 1 s.
+Pendant l’incantation uniquement, contrôle toutes les 0,5 s de temps de combat :
+si aucun ennemi vivant dans la zone fixe, annulation sans PM ni recharge et reprise
+des gambits. Après lancement, le météore reste engagé et frappe les présents à l’impact.
+77 scènes / 5 773 contrôles consolidés ; 108 contrôles finaux relancés avec succès.
+Captures GPU vérifiées. Deux APK v87 installés et validés sur Galaxy A16 :
+« Oui, AOE-002-FIX1 validée ». Gambits, équipe et réglages conservés, vérifiés par empreinte.
+Clôture documentaire uniquement, code et APK identiques à la recette validée.
+Commit local et sauvegarde complète restaurée/vérifiée ; aucun push automatique.
+Prochain GO : UI-005. Détails : docs/steps/AOE-002-FIX1.md.
+Les états ci-dessous sont historiques.
+
 # AOE-002 validée — 30 octobre 2026
 
 GO reçu pour Météore : 3 s d’incantation, puis 1 s de chute, puis 1 s d’explosion.

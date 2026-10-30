@@ -80,7 +80,7 @@ func _ready() -> void:
 	for enemy_unit in sim.enemies.slice(0,3):enemy_unit.state.damage(10000)
 	sim._prune();check(action.casting(),"death and removal of original enemies never invalidate a ground target")
 	action.advance(3,false,3)
-	check(action.applied_damage==0 and action.spent==40 and action.remaining(&"meteor")==4,"empty zone still releases and pays once")
+	check(not action.active and action.spent==0 and action.remaining(&"meteor")==0,"empty cast zone cancels without mana or cooldown")
 	await fixture();anne=sim.hero(&"anne");action=anne.action
 	action.request_ground(&"meteor",Vector2.ZERO);anne.state.damage(10000)
 	check(not action.active and action.spent==0 and action.remaining(&"meteor")==0,"caster death cancels unpaid cast without cooldown")

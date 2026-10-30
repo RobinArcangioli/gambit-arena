@@ -20,7 +20,7 @@ with tempfile.TemporaryDirectory(prefix='gambit-area-export-') as folder:
     config.write_text(re.sub(r'^run/main_scene="[^"]*"$', 'run/main_scene="res://scenes/debug/meteor_lab.tscn"', config.read_text(), flags=re.MULTILINE))
     preset = project / 'export_presets.cfg'
     settings = preset.read_text()
-    for key, value in {'version/name': '0.1.0-aoe002-lab', 'package/unique_name': 'org.gambitarena.prototype.aoelab', 'package/name': 'Gambit Arena AOE'}.items():
+    for key, value in {'version/name': '0.1.0-aoe002-fix1-lab', 'package/unique_name': 'org.gambitarena.prototype.aoelab', 'package/name': 'Gambit Arena AOE'}.items():
         settings = re.sub(r'^' + re.escape(key) + r'="[^"]*"$', key + '="' + value + '"', settings, flags=re.MULTILINE)
     preset.write_text(settings)
     subprocess.run([args.godot, '--headless', '--path', str(project), '--editor', '--import', '--quit'], check=True)

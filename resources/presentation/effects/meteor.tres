@@ -2,4 +2,9 @@
 [ext_resource type="Script" path="res://scripts/presentation/meteor_definition.gd" id="1"]
 [resource]
 script = ExtResource("1")
-strength = 1.35
+strength = 1.0
+explosion_variant = 0
+explosion_accent_opacity = 0.90
+compact_dome_opacity = 0.78
+explosion_accent_width = 1.50
+impact_fire_style = 2

@@ -86,7 +86,7 @@ func consume(event: Dictionary) -> void:
 	elif kind=="cancel":
 		var preparing:bool=bool(event.get("was_preparing",true))
 		if skill=="basic" and not preparing:return
-		var reason:String="lanceur vaincu" if not event.get("source_alive",true) else "cible vaincue ou perdue" if not event.get("target_alive",true) else "action interrompue"
+		var reason:String="zone vide" if event.get("outcome","")=="zone vide" else "lanceur vaincu" if not event.get("source_alive",true) else "cible vaincue ou perdue" if not event.get("target_alive",true) else "action interrompue"
 		_line(time,"cancel","%s : %s — %s (%s)."%[pair,spell,"annulation" if preparing else "récupération interrompue",reason],"e6ab82")
 	elif kind=="end" and skill!="basic":_line(time,"end","%s : récupération de %s terminée."%[name_of(source),spell],"a6b5cb")
 
