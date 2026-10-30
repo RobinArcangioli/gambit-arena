@@ -1,0 +1,9 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/presentation/home_lighting_profile.gd" id="1"]
+[resource]
+script = ExtResource("1")
+candles = PackedVector2Array(65, 382, 81, 400, 20, 542, 35, 540, 63, 563, 27, 744, 51, 754, 142, 906, 181, 944, 216, 1069)
+braziers = PackedVector2Array()
+candle_radius = Vector2(24, 36)
+candle_color = Color(1, 0.42, 0.10, 1)
+candle_strength = 0.20

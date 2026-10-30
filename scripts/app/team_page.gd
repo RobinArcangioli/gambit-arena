@@ -14,6 +14,7 @@ const Body = preload("res://scripts/crowd/ground_crowd.gd")
 const Layout = preload("res://scripts/ui/hud_layout.gd")
 const Art = preload("res://assets/art/ui/team.png")
 const ThemeResource = preload("res://resources/ui/night_gold.tres")
+var appearance:Resource=preload("res://resources/ui/styles/arcane.tres")
 var background: TextureRect
 var content: Control
 var back_button: Button
@@ -32,8 +33,8 @@ var visual_time: float = 0
 var safe_area_override := Rect2()
 
 func _ready() -> void:
-	theme = ThemeResource
-	background = TextureRect.new();background.texture = Art
+	theme = appearance.palette
+	background = TextureRect.new();background.texture = appearance.page_background
 	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE;add_child(background)
@@ -42,11 +43,11 @@ func _ready() -> void:
 	back_button.pressed.connect(func():
 		if active:home_requested.emit())
 	title = _label("Équipe",28)
-	feedback=_label("",15);feedback.modulate=Color("ffd16a");feedback.hide()
+	feedback=_label("",15);feedback.modulate=appearance.accent;feedback.hide()
 	_build_cards()
 	drop_outline=Panel.new();drop_outline.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var outline:=StyleBoxFlat.new();outline.bg_color=Color(0,0,0,0)
-	outline.border_color=Color("ffd16a");outline.set_border_width_all(2)
+	outline.border_color=appearance.accent;outline.set_border_width_all(2)
 	drop_outline.add_theme_stylebox_override("panel",outline);drop_outline.z_index=21
 	content.add_child(drop_outline);drop_outline.hide()
 	get_viewport().size_changed.connect(_layout)
@@ -68,10 +69,10 @@ func _build_cards() -> void:
 		name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		card.add_child(name_label);names.append(name_label)
 		if id!=&"":
-			var illustration:=Illustration.new();illustration.hero_id=id
+			var illustration:=Illustration.new();illustration.hero_id=id;illustration.frame_color=appearance.frame_color
 			card.add_child(illustration);illustrations.append(illustration)
 			var frame:=PanelContainer.new();frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
-			var paint:=StyleBoxFlat.new();paint.bg_color=Color("10182fed");paint.border_color=Color("a68349")
+			var paint:=StyleBoxFlat.new();paint.bg_color=appearance.idle_background;paint.border_color=appearance.frame_color
 			paint.set_border_width_all(1);paint.set_corner_radius_all(6);paint.set_content_margin_all(2)
 			paint.shadow_color=Color(0,0,0,.45);paint.shadow_size=4
 			frame.add_theme_stylebox_override("panel",paint);card.add_child(frame);idle_frames.append(frame)
@@ -80,13 +81,13 @@ func _build_cards() -> void:
 			portrait.ground_radius = Body.RADIUS;window.add_child(portrait);portraits.append(portrait)
 			slot_views[slot]={"illustration":illustration,"frame":frame,"portrait":portrait}
 			card.move_child(name_label,-1)
-			var name_paint:=StyleBoxFlat.new();name_paint.bg_color=Color("10182fcf");name_paint.set_corner_radius_all(4)
-			name_label.add_theme_stylebox_override("normal",name_paint);name_label.add_theme_color_override("font_color",Color("ffd16a"))
+			var name_paint:=StyleBoxFlat.new();name_paint.bg_color=appearance.label_background;name_paint.set_corner_radius_all(4)
+			name_label.add_theme_stylebox_override("normal",name_paint);name_label.add_theme_color_override("font_color",appearance.accent)
 			card.pressed.connect(_select.bind(id))
 		else:
 			var empty:=PanelContainer.new();empty.mouse_filter=Control.MOUSE_FILTER_IGNORE
-			var paint:=StyleBoxFlat.new();paint.bg_color=Color("10182fcf")
-			paint.border_color=Color("a68349");paint.set_border_width_all(1)
+			var paint:=StyleBoxFlat.new();paint.bg_color=appearance.label_background
+			paint.border_color=appearance.frame_color;paint.set_border_width_all(1)
 			empty.add_theme_stylebox_override("panel",paint);card.add_child(empty)
 			card.move_child(name_label,-1);empty_frames[slot]=empty
 
@@ -164,11 +165,11 @@ func _update_drag_visual() -> void:
 	if not gesture.dragging:return
 	if drag_preview==null:
 		if team_slots[gesture.source]!=&"":
-			var image:=Illustration.new();image.hero_id=team_slots[gesture.source];drag_preview=image
+			var image:=Illustration.new();image.hero_id=team_slots[gesture.source];image.frame_color=appearance.frame_color;drag_preview=image
 		else:
 			var empty:=Label.new();empty.text="Vide";empty.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-			empty.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;empty.add_theme_color_override("font_color",Color("ffd16a"))
-			var paint:=StyleBoxFlat.new();paint.bg_color=Color("10182fcf");paint.border_color=Color("a68349");paint.set_border_width_all(1)
+			empty.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;empty.add_theme_color_override("font_color",appearance.accent)
+			var paint:=StyleBoxFlat.new();paint.bg_color=appearance.label_background;paint.border_color=appearance.frame_color;paint.set_border_width_all(1)
 			empty.add_theme_stylebox_override("normal",paint);drag_preview=empty
 		drag_preview.mouse_filter=Control.MOUSE_FILTER_IGNORE;drag_preview.z_index=22
 		drag_preview.modulate.a=.82;content.add_child(drag_preview)

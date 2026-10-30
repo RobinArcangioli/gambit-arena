@@ -5,6 +5,7 @@ const Store = preload("res://scripts/gambits/configuration_store.gd")
 const Orders = preload("res://scripts/gambits/orders.gd")
 const Criteria = preload("res://scripts/gambits/target_criteria.gd")
 const SkillIcons = preload("res://scripts/presentation/skill_icons.gd")
+var style_accent:Color=Color("d9aa4c")
 var icon_style: Resource = SkillIcons.DEFAULT_STYLE
 const Icon = preload("res://scripts/gambits/order_icon.gd")
 const Palette = preload("res://scripts/app/app_theme.gd")
@@ -56,7 +57,7 @@ func _migration_text() -> String:
 func _token() -> int:
 	sequence+=1;return sequence
 func _icon(parent: Node, symbol: String, hint: String, callback: Callable) -> Button:
-	var button := Icon.new();button.symbol = symbol;button.tooltip_text = hint
+	var button := Icon.new();button.symbol = symbol;button.ink_color=style_accent;button.tooltip_text = hint
 	button.custom_minimum_size = Vector2(32 if get_viewport_rect().size.x<450 else 40,48);button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	button.pressed.connect(callback);parent.add_child(button);return button
 func _picker(parent: Node, hint: String) -> OptionButton:
@@ -150,3 +151,8 @@ func set_active(value: bool) -> void:
 		controls[i].up.disabled = not active or not readable or i==0
 		controls[i].down.disabled = not active or not readable or i==rows.size()-1
 	if add_button!=null:add_button.disabled = not active or not readable or rows.size()>=Orders.MAX_ORDERS
+
+func apply_palette(base:Theme,accent:Color,panel_color:Color) -> void:
+	close_popup();style_accent=accent;theme=Palette.editor_theme(base,accent,panel_color)
+	for fields in controls:
+		for key in ["enabled","up","down","delete"]:fields[key].ink_color=accent;fields[key].queue_redraw()

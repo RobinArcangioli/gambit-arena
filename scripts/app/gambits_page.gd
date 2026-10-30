@@ -5,6 +5,7 @@ var save_path: String = "user://party_rules_v2.json"
 var editor: Editor
 func _ready() -> void:
 	super._ready()
+	editor.apply_palette(appearance.palette,appearance.editor_accent,appearance.editor_background)
 	theme = editor.theme
 	back_button.text = "‹ Fiche"
 	title.text = "Gambits · "+reference.get("name","")

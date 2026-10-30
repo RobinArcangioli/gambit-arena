@@ -1,10 +1,11 @@
 extends Button
 ## Vector icons keep chevrons, check and trash legible on every Android font.
+var ink_color:Color=Color("d9aa4c")
 var symbol: String
 var enabled_order: bool = true
 func _draw() -> void:
 	var c := size * 0.5
-	var ink := Color("d9aa4c")
+	var ink:Color=ink_color
 	if disabled:ink.a = 0.35
 	match symbol:
 		"up", "down":

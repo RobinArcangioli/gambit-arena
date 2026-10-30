@@ -8,6 +8,7 @@ const Router = preload("res://scripts/ui/touch_scroll_router.gd")
 const Layout = preload("res://scripts/ui/hud_layout.gd")
 const Art = preload("res://assets/art/ui/team.png")
 const Palette = preload("res://resources/ui/night_gold.tres")
+var appearance:Resource=preload("res://resources/ui/styles/arcane.tres")
 var hero_id: StringName
 var reference: Dictionary
 var active: bool = true
@@ -25,9 +26,9 @@ var touch_router := Router.new()
 var safe_area_override := Rect2()
 
 func _ready() -> void:
-	theme = Palette
+	theme = appearance.palette
 	reference = Reference.read(hero_id)
-	background = TextureRect.new();background.texture = Art
+	background = TextureRect.new();background.texture = appearance.page_background
 	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE;add_child(background)
@@ -69,7 +70,7 @@ func _bar(parent: Node, maximum: int, color: Color) -> ProgressBar:
 	var fill := StyleBoxFlat.new();fill.bg_color = color
 	fill.corner_radius_top_left = 4;fill.corner_radius_top_right = 4
 	fill.corner_radius_bottom_left = 4;fill.corner_radius_bottom_right = 4
-	var base := fill.duplicate() as StyleBoxFlat;base.bg_color = Color(0.03,0.05,0.1,0.9)
+	var base := fill.duplicate() as StyleBoxFlat;base.bg_color = appearance.bar_background
 	bar.add_theme_stylebox_override("fill",fill);bar.add_theme_stylebox_override("background",base)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE;parent.add_child(bar);return bar
 

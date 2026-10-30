@@ -11,8 +11,7 @@ var radii: Array[Vector2] = []
 var strengths: Array[float] = []
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE;clip_contents = true
-	for point in profile.candles:_add_light(point,profile.candle_radius,profile.candle_color,profile.candle_strength)
-	for point in profile.braziers:_add_light(point,profile.brazier_radius,profile.brazier_color,profile.brazier_strength)
+	_build_lights()
 	resized.connect(_layout)
 	_layout();_animate();set_active(active)
 func _add_light(anchor: Vector2, radius: Vector2, color: Color, strength: float) -> void:
@@ -41,3 +40,14 @@ func _process(delta: float) -> void:
 	_animate()
 func set_active(value: bool) -> void:
 	active = value;set_process(value)
+
+func _build_lights() -> void:
+	for point in profile.candles:_add_light(point,profile.candle_radius,profile.candle_color,profile.candle_strength)
+	for point in profile.braziers:_add_light(point,profile.brazier_radius,profile.brazier_color,profile.brazier_strength)
+func apply_profile(value:Profile) -> void:
+	if profile==value:return
+	profile=value
+	if not is_node_ready():return
+	for light in lights:remove_child(light);light.queue_free()
+	lights.clear();anchors.clear();radii.clear();strengths.clear()
+	_build_lights();_layout();_animate()

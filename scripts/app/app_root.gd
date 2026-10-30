@@ -10,6 +10,15 @@ const Layout = preload("res://scripts/ui/hud_layout.gd")
 const HomeLighting = preload("res://scripts/presentation/home_lighting.gd")
 const Home = preload("res://assets/art/ui/home.png")
 const AppTheme = preload("res://resources/ui/night_gold.tres")
+const Styles=preload("res://scripts/presentation/interface_styles.gd")
+const AppearancePreferences=preload("res://scripts/app/appearance_preferences.gd")
+@export var appearance_path:String="user://appearance.cfg"
+var appearance_preferences:AppearancePreferences
+var interface_style:Resource=Styles.get_style(&"arcane")
+var style_button:Button
+var style_status:Label
+var switch_icon:Texture2D=preload("res://assets/ui/appearance_crystal.svg")
+signal appearance_changed(style_id:StringName)
 const Composition=preload("res://scripts/party/team_composition.gd")
 const ConfigurationStore=preload("res://scripts/gambits/configuration_store.gd")
 @export var team_path:String="user://team_composition.json"
@@ -38,19 +47,29 @@ var safe_area_override := Rect2()
 
 func _ready() -> void:
 	theme = AppTheme
+	appearance_preferences=AppearancePreferences.new("" if save_path.is_empty() else appearance_path)
+	var appearance_load:Error=appearance_preferences.load_preferences()
+	interface_style=Styles.get_style(appearance_preferences.style_id)
 	composition=Composition.new("" if save_path.is_empty() else team_path)
 	configuration_error=composition.load_or_create()
 	if configuration_error==OK:configuration_error=ConfigurationStore.new(save_path).load_configuration()
 	if get_tree().has_method("set_quit_on_go_back"):get_tree().set_quit_on_go_back(false)
-	background = TextureRect.new();background.texture = Home
+	background = TextureRect.new();background.texture = interface_style.home_background
 	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
-	home_lighting = HomeLighting.new();background.add_child(home_lighting)
+	home_lighting = HomeLighting.new();home_lighting.profile=interface_style.home_lights;background.add_child(home_lighting)
 	home_page = Control.new();home_page.mouse_filter = Control.MOUSE_FILTER_IGNORE;add_child(home_page)
 	team_button = _button("Équipe");team_button.pressed.connect(open_team)
 	arena_button = _button("Mode Infini");arena_button.pressed.connect(open_arena)
+	style_button=_button("");style_button.custom_minimum_size=Vector2(48,48)
+	for state in ["normal","hover","pressed","focus","disabled"]:style_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
+	style_button.pressed.connect(toggle_interface_style)
+	style_status=Label.new();style_status.add_theme_font_size_override("font_size",13)
+	style_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;style_status.mouse_filter=Control.MOUSE_FILTER_IGNORE;home_page.add_child(style_status);style_status.hide()
+	_apply_interface_style()
+	if appearance_load!=OK:style_status.text="Style non chargé. Arcane affiché.";style_status.show()
 	if configuration_error!=OK:
 		var warning:=Label.new();warning.text="Configuration illisible ou migration impossible.\nLes sauvegardes ont été conservées."
 		warning.position=Vector2(24,120);warning.size=Vector2(480,100);warning.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
@@ -79,6 +98,8 @@ func _layout() -> void:
 	var top: float = minf(safe.size.y*0.76,safe.size.y-156)
 	team_button.position = Vector2((safe.size.x-width)*0.5,top);team_button.size = Vector2(width,60)
 	arena_button.position = team_button.position+Vector2(0,76);arena_button.size = Vector2(width,60)
+	style_button.position=Vector2(safe.size.x-64,16);style_button.size=Vector2(48,48)
+	style_status.position=Vector2(16,72);style_status.size=Vector2(safe.size.x-32,44)
 
 func open_arena() -> void:
 	if guard.blocked or transitioning or route!=&"home" or configuration_error!=OK:return
@@ -121,6 +142,7 @@ func _finish_transition() -> void:
 	transitioning = false
 	arena_button.disabled = guard.blocked or configuration_error!=OK
 	team_button.disabled = guard.blocked or configuration_error!=OK
+	style_button.disabled=guard.blocked or transitioning or route!=&"home"
 
 func go_back() -> void:
 	if guard.blocked or transitioning:return
@@ -150,6 +172,7 @@ func _notification(what: int) -> void:
 		arena_button.disabled = guard.blocked or configuration_error!=OK
 		if home_lighting!=null:home_lighting.set_active(not guard.blocked and route==&"home")
 		team_button.disabled = guard.blocked or configuration_error!=OK
+		if style_button!=null:style_button.disabled=guard.blocked or transitioning or route!=&"home"
 		if team_page != null:team_page.set_active(not guard.blocked and route==&"team")
 		if hero_page != null:hero_page.set_active(not guard.blocked and route==&"hero")
 		if gambits_page != null:gambits_page.set_active(not guard.blocked)
@@ -163,7 +186,7 @@ func open_team() -> void:
 	transitioning = true
 	team_button.disabled = true
 	guard.acknowledge_resume()
-	team_page = TeamPage.instantiate()
+	team_page = TeamPage.instantiate();team_page.appearance=interface_style
 	team_page.team_slots=composition.slots.duplicate()
 	team_page.home_requested.connect(return_home)
 	team_page.hero_selected.connect(_select_team_hero)
@@ -187,7 +210,7 @@ func _select_team_hero(id: StringName) -> void:
 	selected_hero_id = id
 	transitioning = true
 	team_page.set_active(false);team_page.hide()
-	hero_page = HeroPage.instantiate();hero_page.hero_id = id
+	hero_page = HeroPage.instantiate();hero_page.appearance=interface_style;hero_page.hero_id = id
 	hero_page.team_requested.connect(return_team);hero_page.gambits_requested.connect(open_gambits);add_child(hero_page)
 	route = &"hero"
 	hero_selected.emit(id)
@@ -204,7 +227,7 @@ func open_gambits() -> void:
 	if guard.blocked or transitioning or route!=&"hero":return
 	transitioning = true
 	hero_page.set_active(false);hero_page.hide()
-	gambits_page = GambitsPage.instantiate();gambits_page.hero_id = selected_hero_id;gambits_page.save_path = save_path
+	gambits_page = GambitsPage.instantiate();gambits_page.appearance=interface_style;gambits_page.hero_id = selected_hero_id;gambits_page.save_path = save_path
 	gambits_page.hero_requested.connect(return_hero);add_child(gambits_page);route = &"gambits"
 	call_deferred("_finish_transition")
 
@@ -214,3 +237,23 @@ func return_hero() -> void:
 	gambits_page.set_active(false);remove_child(gambits_page);gambits_page.queue_free();gambits_page = null
 	hero_page.show();hero_page.set_active(true);route = &"hero"
 	call_deferred("_finish_transition")
+
+func toggle_interface_style() -> void:
+	if guard.blocked or transitioning or route!=&"home":return
+	var next:StringName=&"berserk" if appearance_preferences.style_id==&"arcane" else &"arcane"
+	if appearance_preferences.save_style(next)!=OK:
+		style_status.text="Style non enregistré. Réessaie.";style_status.show();return
+	interface_style=Styles.get_style(next);_apply_interface_style()
+func _apply_interface_style() -> void:
+	background.texture=interface_style.home_background
+	home_page.theme=interface_style.palette
+	home_lighting.apply_profile(interface_style.home_lights)
+	style_button.icon=switch_icon
+	style_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	style_button.tooltip_text="Passer au style "+("Berserk" if interface_style.id==&"arcane" else "Arcane")
+	for state in ["normal","hover","focus","pressed"]:style_button.add_theme_color_override("icon_"+state+"_color",interface_style.icon_tint)
+	style_button.add_theme_color_override("icon_disabled_color",Color(interface_style.icon_tint,0.4))
+	style_status.hide();appearance_changed.emit(interface_style.id)
+func set_switch_icon(value:Texture2D) -> void:
+	switch_icon=value
+	if style_button!=null:style_button.icon=value

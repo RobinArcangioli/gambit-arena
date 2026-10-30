@@ -11,3 +11,10 @@ Originaux : /home/arkhane/Gambit_Arena_Home.png et
 
 Les métadonnées .png.import sont gérées par Godot. Les images servent à la présentation,
 pas aux collisions, à la navigation ou aux caractéristiques des personnages.
+
+## Styles hors combat — STYLE-001
+
+Les fonds Berserk `styles/berserk_home.png` et `styles/berserk_team.png` sont les
+illustrations fournies par le propriétaire le 30 octobre 2026 (Accueil et Balcony).
+Copies exactes des PNG sources 941 × 1672, sans retouche ; ne pas substituer ces fonds
+aux arènes. Palette et éclairage associés dans les ressources de présentation.

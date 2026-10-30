@@ -1,3 +1,17 @@
+# STYLE-001 validée — 30 octobre 2026
+
+Styles Arcane/Berserk hors combat : fonds fournis et palette noir/bordeaux/rouge.
+Choix Godot : **B — Cristal / braise** pour le bouton en haut à droite de l’accueil.
+Bascule immédiate, choix mémorisé indépendamment ; accueil, équipe, fiche et gambits,
+listes déroulantes comprises. Combat conservant sa palette Arcane.
+80 scènes / 5 939 contrôles consolidés réussis ; captures GPU vérifiées.
+APK v90 installé sur Galaxy A16 et validé : « Oui, STYLE-001 validée ».
+Gambits, équipe et réglages conservés, vérifiés par empreinte avant/après installation.
+Clôture documentaire uniquement : code et APK identiques à la recette validée.
+Commit local et sauvegarde complète restaurée/vérifiée ; aucun push automatique.
+Prochain GO : UI-005. Détails : docs/steps/STYLE-001.md.
+Les états ci-dessous sont historiques.
+
 # GAMBITS-001 validée — 27 octobre 2026
 
 Le propriétaire confirme « Step validée. » pour le nouveau modèle et son laboratoire
