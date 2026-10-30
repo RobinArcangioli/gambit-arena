@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/ui/arena_hud_style.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ui/combat_menu_lines.svg" id="2"]
+[resource]
+script = ExtResource("1")
+menu_icon = ExtResource("2")
+separator = 1
+backdrop = Color(0.0627451, 0.0941176, 0.184314, 0.721569)

@@ -26,8 +26,8 @@ func _ready() -> void:
 		check(game.combat_settings.hero_bars and game.combat_settings.enemy_bars,"new installation defaults")
 		check(game.settings_button.text.is_empty() and game.settings_button.icon!=null,"settings button is gear only")
 		check(game.settings_button.get_theme_stylebox("normal") is StyleBoxEmpty and game.settings_button.get_theme_stylebox("focus") is StyleBoxEmpty,"gear has no background or border")
-		check(game.combat_rect.encloses(game.settings_button.get_global_rect()),"settings button in central combat area")
-		check(game.settings_button.get_global_rect().position.y>game.pause_button.get_global_rect().end.y,"settings below global Pause")
+		check(game.header_surface.get_global_rect().encloses(game.settings_button.get_global_rect()),"settings button belongs to shared header")
+		check(game.settings_button.get_global_rect().position.y==game.pause_button.get_global_rect().position.y and game.settings_button.get_global_rect().end.x<=game.pause_button.get_global_rect().position.x,"settings and Menu share row with Menu on right")
 		check(not game.combat_settings.grid and not game.floor_canvas.show_grid,"grid defaults hidden")
 		var run_id:int=game.simulation.run_id
 		var clock:float=game.simulation.clock.elapsed

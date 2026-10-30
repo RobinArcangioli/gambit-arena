@@ -83,13 +83,13 @@ func _ready() -> void:
 		var page=app.combat;page.set_process(false);page.set_physics_process(false)
 		page.simulation.rules={"mako":[],"anne":[]}
 		check(page.infinite_mode and page.simulation.infinite_mode and page.simulation.enemies.size()==6,"product route enables infinite mode while legacy labs stay separate")
-		check(page.wave_counter.text=="Vague 1" and page.wave_counter.get_rect().end.y<=page.hero_panels[0].position.y,"wave counter sits just above bottom grid")
+		check(page.wave_counter.text=="Vague 1" and page.header_surface.get_global_rect().encloses(page.wave_counter.get_global_rect()),"wave counter belongs to centered header")
 		mako=page.simulation.hero(&"mako");mako.state.damage(20);mako.action.mana=21;mako.buffs.apply(Buffs.definition(&"booster"))
 		var state=mako.state;var buffs=mako.buffs;var at:Vector3=mako.position;var initial:StringName=page.chosen_arena;var draws:int=app.arena_choice.draws
 		page.simulation.wave_number=10;page._present()
 		check(page.chosen_arena==initial and app.arena_choice.draws==draws,"same arena is retained through wave ten")
 		kill_wave(page.simulation);page._present();await settle()
-		check(page.countdown.visible and page.countdown.text=="3" and page.countdown.get_global_rect().end.y<page.wave_counter.get_global_rect().position.y,"gold countdown is visible in arena below wave counter")
+		check(page.countdown.visible and page.countdown.text=="3" and page.countdown.get_global_rect().position.y>page.wave_counter.get_global_rect().end.y,"gold countdown is visible in arena below wave counter")
 		check(page.countdown.get_theme_color("font_color")==Color("ffd16a") and page.countdown.get_theme_color("font_outline_color")==Color("173a70"),"countdown respects gold and blue palette")
 		page._toggle_pause();var left:float=page.simulation.infinite.remaining
 		page._physics_process(3);check(page.simulation.infinite.remaining==left,"product pause freezes wave countdown")

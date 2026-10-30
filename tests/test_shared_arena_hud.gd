@@ -1,0 +1,47 @@
+extends "res://tests/test_arena_hud.gd"
+func _ready() -> void:
+	for resolution in [Vector2i(540,960),Vector2i(540,1170),Vector2i(360,640)]:
+		var viewport:=SubViewport.new();viewport.size=resolution;add_child(viewport)
+		var app=App.instantiate();app.save_path="";app.combat_settings_path="";viewport.add_child(app);await settle();viewport.notify_mouse_entered()
+		app.open_arena();await settle();var game=app.combat
+		game.set_physics_process(false);game.set_process(false)
+		game.safe_area_override=Rect2(8,24,resolution.x-16,resolution.y-44);game._update_layout();await settle()
+		var header:Rect2=game.header_surface.get_global_rect();var footer:Rect2=game.hero_surface.get_global_rect()
+		check(game.safe_area_override.encloses(header) and game.safe_area_override.encloses(footer),"shared surfaces respect safe area at %s"%resolution)
+		check(game.header_surface.profile.backdrop==game.hero_surface.profile.backdrop and game.hud_style.backdrop.a<1,"same transparent midnight backdrop in header and hero area")
+		check(game.header_surface.mouse_filter==Control.MOUSE_FILTER_IGNORE and game.hero_surface.mouse_filter==Control.MOUSE_FILTER_IGNORE,"backgrounds do not intercept touches")
+		check(game.hero_panels.all(func(panel):return footer.encloses(panel.get_global_rect())),"one backdrop encloses all four equal hero slots")
+		for panel in game.hero_panels:
+			var style:StyleBoxFlat=panel.get_theme_stylebox("panel")
+			check(style.bg_color.a==0 and style.get_border_width(SIDE_LEFT)==0 and style.shadow_size==0,"individual hero window removed including empty slot")
+		var row:Array=[game.statistics_button,game.journal_button,game.settings_button,game.pause_button]
+		check(row.all(func(button):return header.encloses(button.get_global_rect()) and button.size.x>=48 and button.size.y>=48),"four accessible buttons fit common header")
+		check(row.all(func(button):return is_equal_approx(button.get_global_rect().get_center().y,header.get_center().y)),"all buttons share one horizontal row")
+		check(game.settings_button.get_global_rect().end.x<=game.pause_button.get_global_rect().position.x,"Menu sits immediately right of settings")
+		check(game.pause_button.text.is_empty() and game.pause_button.icon!=null and game.pause_button.tooltip_text=="Menu","Menu has icon and accessible name without text")
+		check(game.pause_button.get_theme_stylebox("normal") is StyleBoxEmpty,"Menu icon has no individual frame")
+		check(is_equal_approx(game.wave_counter.get_global_rect().get_center().x,header.get_center().x),"wave caption is truly centered independent of button groups")
+		check(game.wave_counter.get_global_rect().position.x>=game.journal_button.get_global_rect().end.x and game.wave_counter.get_global_rect().end.x<=game.settings_button.get_global_rect().position.x,"wave caption stays between left and right buttons")
+		tap(viewport,game.pause_button);await settle()
+		check(game.paused and game.pause_layer.visible and game.pause_title.text=="Menu","new icon opens the existing game menu through touch")
+		tap(viewport,game.resume_button);await settle()
+		check(not game.paused and not game.pause_layer.visible,"menu Resume keeps existing behavior")
+		tap(viewport,game.statistics_button);await settle()
+		check(game.statistics_menu.visible and game.wave_counter.visible and game.statistics_menu.get_global_rect().position.y>=header.end.y,"stats open below centered wave header")
+		game.handle_back();await settle()
+		tap(viewport,game.journal_button);await settle()
+		check(game.statistics_menu.visible and game.statistics_menu.journal_mode,"journal remains accessible beside stats")
+		game.handle_back();await settle()
+		tap(viewport,game.settings_button);await settle()
+		check(game.settings_menu.visible and not game.paused,"settings remain accessible beside Menu without pausing")
+		game.handle_back();await settle()
+		viewport.queue_free();await settle()
+	var lab=load("res://scenes/debug/arena_hud_lab.tscn").instantiate();add_child(lab);await settle()
+	var before:Array=[lab.simulation.run_id,lab.simulation.clock.elapsed,lab.simulation.hero(&"mako").state.health,lab.simulation.hero(&"anne").action.mana]
+	for i in range(3):
+		lab.choose_menu(i);lab.choose_separator(2-i)
+		check(lab.pause_button.icon==lab.MENU_ICONS[i] and lab.hero_surface.profile.separator==2-i,"independent graphic choices apply immediately")
+	check(before==[lab.simulation.run_id,lab.simulation.clock.elapsed,lab.simulation.hero(&"mako").state.health,lab.simulation.hero(&"anne").action.mana],"graphic preview choices do not reset or advance combat")
+	lab.queue_free();await settle()
+	check(int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))==0,"no orphan shared backgrounds or portraits")
+	var label:=Label.new();label.text="%d controles, %d echecs"%[checks,failures];add_child(label);print(label.text)

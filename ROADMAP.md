@@ -1,3 +1,20 @@
+# HUD-001 validée — 30 octobre 2026
+
+Choix Godot : icône Menu A Trois traits ; séparateur B Losange central or.
+Bandeau commun bleu nuit transparent sans bordure : statistiques et journal à gauche,
+Vague N centré, réglages puis Menu à droite. Le compteur reste visible pendant les rapports.
+Les quatre héros partagent le même fond bleu nuit transparent, sans cadres individuels,
+avec de fins filets fondus et un losange or central dans les espaces de séparation.
+Portraits, barres, buffs et ordre de l’équipe conservés. Menu garde Reprendre, Rejouer,
+Abandonner avec confirmation et les protections de pause/reprise existantes.
+79 scènes / 5 906 contrôles consolidés réussis, dont 65 dédiés au nouveau HUD.
+Captures GPU vérifiées. APK v89 installé et validé sur Galaxy A16 :
+« Oui, HUD-001 validée ». Gambits, équipe et réglages conservés, vérifiés par empreinte.
+Clôture documentaire uniquement, code et APK identiques à la recette validée.
+Commit local et sauvegarde complète restaurée/vérifiée ; aucun push automatique.
+Prochain GO : UI-005. Détails : docs/steps/HUD-001.md.
+Les états suivants sont historiques.
+
 # AOE-002-FIX2 validée — 30 octobre 2026
 
 Météore touche désormais tout ennemi vivant dont le disque logique au sol chevauche

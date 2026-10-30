@@ -28,7 +28,7 @@ func _ready() -> void:
 		app.notification(NOTIFICATION_APPLICATION_FOCUS_IN);app.open_arena();await settle()
 		var game=app.combat;game.set_physics_process(false);game.set_process(false)
 		check(buttons(game)==[game.pause_button,game.settings_button,game.statistics_button,game.journal_button],"Pause and combat settings are visible in the arena")
-		check(game.hud.get_child_count()==9 and game.hero_panels.size()==4,"Pause, four passive hero panels and infinite wave counter in HUD")
+		check(game.hud.get_child_count()==11 and game.hero_panels.size()==4,"Menu, shared surfaces, four passive hero panels and wave counter in HUD")
 		check(game.hero_panels.map(func(panel):return panel.hero_id)==[&"mako",&"anne",&"nassau",&""],"Mako Anne and two empty slots in 2x2 order")
 		check(game.hero_panels.all(func(panel):return panel.mouse_filter==Control.MOUSE_FILTER_IGNORE),"panels do not select heroes")
 		check(game.skill_buttons.is_empty() and game.hero_buttons.is_empty() and game.toolbar.is_empty() and game.footer_scroll==null and game.arena_picker==null,"old commands are not built")

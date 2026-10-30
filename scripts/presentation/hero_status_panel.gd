@@ -9,6 +9,7 @@ var buff_tray: Control
 var buff_row: HBoxContainer
 var buff_icons: Dictionary = {}
 const Bars = preload("res://scripts/presentation/overhead_bars.gd")
+var shared_surface:bool=false
 var hero_id: StringName
 var caption: Label
 var bars: Bars
@@ -20,6 +21,9 @@ func _ready() -> void:
 	var style := get_theme_stylebox("normal","Button").duplicate() as StyleBoxFlat
 	style.bg_color.a=0.72 if hero_id!=&"" else 0.38;style.set_corner_radius_all(8)
 	style.border_color=Color("a68349") if hero_id!=&"" else Color("605a4c")
+	if shared_surface:
+		style.bg_color=Color.TRANSPARENT;style.set_border_width_all(0);style.set_corner_radius_all(0)
+		style.shadow_size=0;style.shadow_color=Color.TRANSPARENT
 	add_theme_stylebox_override("panel",style)
 	var content:=Control.new();content.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(content)
 	caption=Label.new();caption.text=String(hero_id).capitalize() if hero_id!=&"" else "Vide"
@@ -47,7 +51,7 @@ func _layout() -> void:
 	if caption==null:return
 	if hero_id==&"":
 		caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		caption.position=Vector2(0,14);caption.size=Vector2(maxf(1,size.x-28),28)
+		caption.position=Vector2(0,maxf(0,(size.y-16-28)*.5));caption.size=Vector2(maxf(1,size.x-28),28)
 		return
 	caption.position=Vector2(50,-6);caption.size=Vector2(maxf(1,size.x-80),23)
 	bars.bar_width=maxf(25,size.x-83);bars.position=Vector2(50+bars.bar_width*.5,32)

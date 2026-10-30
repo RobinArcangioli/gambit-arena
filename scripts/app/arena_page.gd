@@ -3,6 +3,10 @@ extends "res://scripts/party/party_application.gd"
 signal home_requested
 const CombatSettings = preload("res://scripts/app/combat_settings.gd")
 const StatisticsMenu=preload("res://scripts/ui/combat_statistics_menu.gd")
+const SharedSurface=preload("res://scripts/ui/arena_shared_surface.gd")
+var hud_style:Resource=preload("res://resources/ui/arena_hud.tres")
+var header_surface:SharedSurface
+var hero_surface:SharedSurface
 var statistics_button:Button
 var journal_button:Button
 var statistics_menu:Control
@@ -52,11 +56,15 @@ func _ready() -> void:
 	_apply_text_preferences()
 	# These inherited laboratory decorations are never part of the product HUD.
 	for child in hud.get_children():
-		if child!=pause_button and child!=wave_counter and child!=settings_button and child!=statistics_button and child!=journal_button and not child is HeroPanel:
+		if child!=header_surface and child!=hero_surface and child!=pause_button and child!=wave_counter and child!=settings_button and child!=statistics_button and child!=journal_button and not child is HeroPanel:
 			hud.remove_child(child);child.queue_free()
 	_update_layout();_present()
 
 func _build_party_controls() -> void:
+	header_surface=SharedSurface.new();header_surface.profile=hud_style;hud.add_child(header_surface);hud.move_child(header_surface,0)
+	hero_surface=SharedSurface.new();hero_surface.profile=hud_style;hero_surface.separators=true;hud.add_child(hero_surface);hud.move_child(hero_surface,0)
+	pause_button.text="";pause_button.icon=hud_style.menu_icon;pause_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;pause_button.tooltip_text="Menu"
+	for state in ["normal","hover","pressed","focus","disabled"]:pause_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 	settings_button=_button(hud,"",_open_settings)
 	settings_button.icon=preload("res://assets/ui/combat_settings_gear.svg");settings_button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	settings_button.tooltip_text="Réglages de combat"
@@ -73,7 +81,7 @@ func _build_party_controls() -> void:
 		countdown=_mode_label(64);countdown.add_theme_constant_override("outline_size",6)
 		add_child(countdown);countdown.hide()
 	for id in team_slots:
-		var panel:=HeroPanel.new();panel.hero_id=id;panel.icon_style=icon_style;hud.add_child(panel);hero_panels.append(panel)
+		var panel:=HeroPanel.new();panel.hero_id=id;panel.shared_surface=true;panel.icon_style=icon_style;hud.add_child(panel);hero_panels.append(panel)
 
 func _build_party_overlays() -> void:
 	pause_layer=Control.new();pause_layer.mouse_filter=Control.MOUSE_FILTER_STOP;add_child(pause_layer)
@@ -179,7 +187,7 @@ func _unlock_actions() -> void:
 	_update_buttons()
 func _refresh_pause_menu() -> void:
 	if pause_title==null:return
-	pause_title.text="Abandonner le combat ?" if confirming_abandon else "Défaite" if infinite_mode and simulation.result=="DEFAITE" else "Pause"
+	pause_title.text="Abandonner le combat ?" if confirming_abandon else "Défaite" if infinite_mode and simulation.result=="DEFAITE" else "Menu"
 	pause_title.add_theme_font_size_override("font_size",19 if confirming_abandon else 22)
 	abandon_message.visible=confirming_abandon
 	for button in [resume_button,replay_button,abandon_button]:button.visible=not confirming_abandon
@@ -191,11 +199,11 @@ func _update_buttons() -> void:
 	if not is_inside_tree():return
 	if not ready_ui:
 		super._update_buttons();return
-	pause_button.text="Pause";pause_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
+	pause_button.text="";pause_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
 	if settings_button!=null:settings_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
 	if settings_menu!=null:settings_menu.set_blocked(application_guard.blocked or action_pending or exit_requested)
 	if journal_button!=null:journal_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
-	if wave_counter!=null:wave_counter.visible=statistics_menu==null or not statistics_menu.visible
+	if wave_counter!=null:wave_counter.visible=true
 	if statistics_button!=null:statistics_button.disabled=application_guard.blocked or (pause_layer!=null and pause_layer.visible) or action_pending or exit_requested
 	if statistics_menu!=null:statistics_menu.set_blocked(application_guard.blocked or action_pending or exit_requested)
 	simulation.clock.paused=paused;_refresh_pause_menu()
@@ -226,26 +234,29 @@ func _update_layout() -> void:
 	$Backdrop.size=view.size;hud.position=safe_rect.position;hud.size=safe_rect.size
 	render_box.position=Vector2.ZERO;render_box.size=view.size;floor_canvas.position=Vector2.ZERO
 	bars_layer.position=Vector2.ZERO;bars_layer.size=view.size;bars_layer.clip_contents=true
-	pause_button.position=Vector2(safe_rect.size.x-116,12);pause_button.size=Vector2(104,48)
-	pause_button.add_theme_font_size_override("font_size",16)
+	header_surface.position=Vector2(12,12);header_surface.size=Vector2(safe_rect.size.x-24,56)
+	pause_button.position=header_surface.position+Vector2(header_surface.size.x-48,4);pause_button.size=Vector2(48,48)
 	var width: float=(safe_rect.size.x-32)*0.5
 	var grid_top:float=safe_rect.size.y-12-(2*icon_style.panel_height+8)
 	combat_rect=Rect2(safe_rect.position+Vector2(12,72),Vector2(safe_rect.size.x-24,maxf(110,grid_top-120)))
-	settings_button.position=combat_rect.position-safe_rect.position+Vector2(combat_rect.size.x-48,8)
+	settings_button.position=header_surface.position+Vector2(header_surface.size.x-96,4)
 	settings_button.size=Vector2(48,48)
-	statistics_button.position=combat_rect.position-safe_rect.position+Vector2(0,8);statistics_button.size=Vector2(48,48)
+	statistics_button.position=header_surface.position+Vector2(0,4);statistics_button.size=Vector2(48,48)
 	journal_button.position=statistics_button.position+Vector2(48,0);journal_button.size=Vector2(48,48)
 	if statistics_menu!=null:
-		statistics_menu.position=Vector2(combat_rect.position.x,combat_rect.position.y+60)
+		statistics_menu.position=safe_rect.position+header_surface.position+Vector2(0,header_surface.size.y+8)
 		statistics_menu.size=Vector2(combat_rect.size.x,maxf(160,safe_rect.position.y+grid_top-12-statistics_menu.position.y))
 	if settings_menu!=null:
-		settings_menu.position=Vector2(combat_rect.end.x-minf(304,combat_rect.size.x-16)-8,combat_rect.position.y+60)
+		settings_menu.position=Vector2(combat_rect.end.x-minf(304,combat_rect.size.x-16)-8,safe_rect.position.y+header_surface.position.y+header_surface.size.y+8)
 		settings_menu.size=Vector2(minf(304,combat_rect.size.x-16),minf(settings_menu.preferred_height(),combat_rect.size.y-68))
+	hero_surface.position=Vector2(12,grid_top);hero_surface.size=Vector2(safe_rect.size.x-24,2*icon_style.panel_height+8)
 	for i in range(hero_panels.size()):
 		hero_panels[i].position=Vector2(12+(i%2)*(width+8),grid_top+int(i/2.0)*(icon_style.panel_height+8))
 		hero_panels[i].size=Vector2(width,icon_style.panel_height)
 	if wave_counter!=null:
-		wave_counter.position=Vector2(12,grid_top-36);wave_counter.size=Vector2(safe_rect.size.x-24,28)
+		wave_counter.position=header_surface.position+Vector2(96,0);wave_counter.size=Vector2(maxf(1,header_surface.size.x-192),header_surface.size.y)
+		wave_counter.add_theme_font_size_override("font_size",20 if wave_counter.size.x<160 else 24)
+		wave_counter.clip_text=true
 	if pause_layer!=null:
 		pause_layer.position=Vector2.ZERO;pause_layer.size=view.size
 		var card_size:=Vector2(minf(292,safe_rect.size.x-32),250)
@@ -378,3 +389,9 @@ func _change_area_settings(value:bool) -> void:
 	var result:Error=combat_settings.save_preferences()
 	settings_menu.status.text="Enregistrement indisponible" if result!=OK else ""
 	settings_menu.status.visible=result!=OK
+
+func apply_hud_style(profile:Resource) -> void:
+	hud_style=profile
+	if header_surface!=null:header_surface.apply_style(profile)
+	if hero_surface!=null:hero_surface.apply_style(profile)
+	if pause_button!=null:pause_button.icon=profile.menu_icon

@@ -111,7 +111,7 @@ func _ready() -> void:
 		app=App.instantiate();app.save_path="";app.combat_settings_path="user://statistics001-%d.cfg"%resolution.x
 		viewport.add_child(app);await settle();viewport.notify_mouse_entered();app.open_arena();await settle()
 		game=app.combat;game.set_process(false);game.set_physics_process(false)
-		check(game.statistics_button.get_global_rect().position.x-game.safe_rect.position.x==game.safe_rect.end.x-game.settings_button.get_global_rect().end.x,"symmetric left and right buttons")
+		check(game.statistics_button.get_global_rect().position.x-game.safe_rect.position.x==game.safe_rect.end.x-game.pause_button.get_global_rect().end.x,"symmetric outer stats and Menu margins")
 		tap(viewport,game.statistics_button);await settle()
 		var menu=game.statistics_menu
 		check(menu.visible and not game.paused,"actual touch opens statistics without pausing")
@@ -120,7 +120,7 @@ func _ready() -> void:
 		tap(viewport,game.journal_button);await settle()
 		check(menu.journal_mode and menu.journal_panel.visible and not menu.stats_panel.visible and game._touch_scrollers().size()==1,"journal replaces statistics from its own button")
 		check(game.safe_rect.encloses(menu.stats_panel.get_global_rect()) and game.safe_rect.encloses(menu.journal_panel.get_global_rect()),"both views fit portrait safe area")
-		check(menu.get_global_rect().end.y<game.hero_panels[0].get_global_rect().position.y and menu.get_global_rect().end.y>game.wave_counter.get_global_rect().position.y,"views cover wave counter and stop above hero panels")
+		check(menu.get_global_rect().end.y<game.hero_panels[0].get_global_rect().position.y and menu.get_global_rect().position.y>=game.header_surface.get_global_rect().end.y,"views stay below header and stop above hero panels")
 		check(is_equal_approx(menu.get_global_rect().position.x,game.hero_panels[0].get_global_rect().position.x) and is_equal_approx(menu.get_global_rect().end.x,game.hero_panels[1].get_global_rect().end.x),"report borders align with hero panel borders")
 		check(is_equal_approx(game.hero_panels[0].get_global_rect().position.y-menu.get_global_rect().end.y,12.0),"report bottom leaves twelve pixels above hero panels")
 		check(menu.journal_panel.size.x==menu.size.x and menu.find_children("*","Button",true,false).size()==2,"journal uses entire width without a chevron")
@@ -152,7 +152,7 @@ func _ready() -> void:
 		check(not menu.journal_mode and menu.stats_panel.visible and not menu.journal_panel.visible and game._touch_scrollers().size()==2,"statistics button opens two independent columns")
 		check(menu.stats_panel.size.x==menu.size.x and menu.hero_scroll.size.x==menu.enemy_scroll.size.x,"statistics use full width with equal columns")
 		check(menu.hero_list.entries.all(func(row):return row.team==0) and menu.enemy_list.entries.all(func(row):return row.team==1),"heroes and enemies remain in their own columns")
-		check(not game.wave_counter.visible,"wave counter hidden beneath report overlay")
+		check(game.wave_counter.visible,"centered header wave counter stays visible above report overlay")
 		for i in range(45):game.simulation.report.register_actor(100000+i,"Squelette #%d"%i,1,i,60,0,0)
 		menu.refresh(true);await settle()
 		var at:Vector2=menu.enemy_scroll.get_global_rect().get_center()
