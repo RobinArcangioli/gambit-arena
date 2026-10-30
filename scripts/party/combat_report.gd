@@ -1,7 +1,7 @@
 extends RefCounted
 ## Read-only combat facts. No actor references, gameplay callbacks or rendering resources.
 const CAPACITY:int=1000
-const SKILLS: Dictionary = {"basic":"Attaque","heal":"Soin","lightning":"Foudre","booster":"Booster","meteor":"Météore","ice_bolts":"Traits de glace"}
+const SKILLS: Dictionary = {"basic":"Attaque","heal":"Soin","lightning":"Foudre","booster":"Booster","meteor":"Météore","ice_bolts":"Traits de glace","chain_lightning":"Chaîne d’éclairs"}
 var enabled: bool = false
 var log_revision:int=0
 var wave:int=-1
@@ -64,9 +64,9 @@ func consume(event: Dictionary) -> void:
 	if kind=="start":
 		var duration:float=_cast_seconds(source,float(event.get("windup",0)),time)
 		_line(time,"cast" if skill!="basic" else "attack","%s : %s %s (%s s)."%[pair,"incante" if skill!="basic" else "prépare",spell,_decimal(duration)],"82bcff" if skill!="basic" else "fff2d4")
-	elif kind in ["area_launch","multi_launch"]:
+	elif kind in ["area_launch","multi_launch","chain_launch"]:
 		_line(time,"spell","%s : lance %s · %d PM."%[pair,spell,int(event.get("mana_paid",0))],"ff749e")
-	elif kind in ["resolve","area_hit","area_impact","multi_hit","multi_miss"]:
+	elif kind in ["resolve","area_hit","area_impact","multi_hit","multi_miss","chain_hit"]:
 		var damage:int=int(event.get("damage",0));var healing:int=int(event.get("healing",0))
 		actors[source].dealt+=damage;actors[source].healed+=healing
 		if actors.has(target):actors[target].received+=damage
@@ -77,8 +77,10 @@ func consume(event: Dictionary) -> void:
 		var outcome:String=event.get("outcome","")
 		if kind=="area_impact":
 			_line(time,"spell","%s : %s, %d ennemi(s) touché(s), %d dégâts%s."%[pair,spell,int(event.area_count),int(event.area_total),suffix],"ffd16a");return
-		var result:String="%d dégâts"%damage if damage>0 else "+%d PV"%healing if healing>0 else "effet appliqué" if outcome=="booster" else "cible hors de portée" if outcome=="hors portee" else "PV déjà pleins" if outcome=="PV pleins" else "PM insuffisants" if outcome=="mana insuffisante" else "buff déjà actif" if outcome=="buff deja actif" else "projectile sans effet : cible vaincue ou perdue" if kind=="multi_miss" else "sans effet"
+		var result:String="%d dégâts · rebond %d/3"%[damage,int(event.bounce_index)] if kind=="chain_hit" and int(event.bounce_index)>0 else "%d dégâts"%damage if damage>0 else "+%d PV"%healing if healing>0 else "effet appliqué" if outcome=="booster" else "cible hors de portée" if outcome=="hors portee" else "PV déjà pleins" if outcome=="PV pleins" else "PM insuffisants" if outcome=="mana insuffisante" else "buff déjà actif" if outcome=="buff deja actif" else "projectile sans effet : cible vaincue ou perdue" if kind=="multi_miss" else "sans effet"
 		_line(time,"heal" if healing>0 else "damage" if damage>0 else "spell","%s : %s, %s%s."%[pair,spell,result,suffix],"b8ffcc" if healing>0 else "ffd16a" if damage>0 else "82bcff")
+	elif kind=="chain_end":
+		_line(time,"spell","%s : %s terminée · %d impact(s)%s."%[name_of(source),spell,int(event.get("chain_count",0))," · aucune cible à portée" if event.get("outcome","")=="aucune cible" else ""],"ff749e")
 	elif kind=="buff_applied":
 		var buff_id:String=event.get("buff_id",skill)
 		if actors.has(target):actors[target].buffs[buff_id]={"expires":time+float(event.get("buff_duration",0)),"rate":float(event.get("time_multiplier",1))}

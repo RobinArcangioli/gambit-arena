@@ -1,3 +1,21 @@
+# CHAIN-001 validée — 31 octobre 2026
+
+Chaîne d’éclairs pour Nassau : 30 PM, cast 2 s, recharge 4 s, portée 4,
+portée de rebond 2,5 ; quatre victimes distinctes maximum, dégâts fixes
+30 / 24 / 19 / 15. Le seuil « 3 ennemis ou plus » compte les vivants puis vise
+le plus proche, sans contrainte de voisinage. Chaque rebond cherche sa cible
+au dernier moment ; approche interruptible et annulations gratuites.
+Choix Godot **C — Foudre déchaînée**, visuels à leur vitesse d’origine,
+pauses entre rebonds réduites à 0,1 s pour la fluidité. Confirmé sur Galaxy A16 :
+« Oui, CHAIN-001 validée », APK v94. Icône fournie et art entièrement procédural.
+82 scènes / 6 096 contrôles consolidés réussis, dont 66 pour la chaîne.
+Nouveau gambit ajouté après Booster chez Nassau ; autres ordres, équipe,
+style et réglages conservés. Clôture documentaire, code/APK validés inchangés.
+Commit local et sauvegarde complète restaurée/vérifiée, aucun push automatique.
+Les fichiers non suivis préexistants dans output/ restent intacts.
+Suite : UI-005 après un nouveau GO. Détails : docs/steps/CHAIN-001.md.
+Les états ci-dessous sont historiques.
+
 # MULTI-001 validée — 30 octobre 2026
 
 Traits de glace pour Mako : 20 PM, 30 dégâts fixes par victime, cast 1,5 s,

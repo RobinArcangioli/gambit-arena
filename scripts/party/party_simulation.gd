@@ -215,7 +215,7 @@ func advance(delta: float, paused: bool = false) -> void:
 					var toward:Vector2=unit.desired_point-unit.mover.ground_position
 					if toward.length_squared()>.000001:unit.mover.facing=toward.normalized()
 			if unit.ground_intention:continue
-		if Executor.living(unit) and not unit.action.active and Executor.Multi.has(unit.desired_skill): _plan(unit)
+		if Executor.living(unit) and not unit.action.active and (Executor.Multi.has(unit.desired_skill) or Executor.Chain.has(unit.desired_skill)): _plan(unit)
 		if not Executor.living(unit) or unit.action.active or not Executor.living(unit.desired_target): continue
 		if Executor.distance_between(unit, unit.desired_target) > Executor.skill_reach(unit.desired_skill): continue
 		var id: int = unit.action.request(unit.desired_skill, unit.desired_target)
@@ -441,6 +441,7 @@ func _record_death(unit: Unit) -> void:
 		"time_scale": unit.death_time_scale})
 
 func _append_visual_event(values: Dictionary) -> void:
+	if values.get("kind","")=="chain_hit" and int(values.get("damage",0))>0:hits+=1
 	if _events.size() >= MAX_VISUAL_EVENTS: _events.pop_front()
 	var source_id:int=int(values.get("source_id",0))
 	_event_sequences[source_id]=int(_event_sequences.get(source_id,0))+1

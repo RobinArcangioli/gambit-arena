@@ -29,7 +29,7 @@ func _ready() -> void:
 	check(action.cost(&"meteor")==40 and action.cast_duration(&"meteor")==3 and action.cooldown(&"meteor")==4 and action.skill_reach(&"meteor")==4,"Meteor metadata and universal spell range")
 	check(not sim.hero(&"mako").action.available(&"meteor"),"Meteor belongs to Anne")
 	check(Orders.evaluate([order(),Orders.create()],sim.snapshot(anne)).has("target_point"),"group criterion produces detached ground intention")
-	check(Orders.evaluate([order("basic"),Orders.create()],sim.snapshot(anne)).rule_index==1,"group with non-AOE capability skips")
+	check(Orders.evaluate([order("basic"),Orders.create()],sim.snapshot(anne)).rule_index==0,"single-target capability uses global population guard")
 	action.mana=39
 	check(Orders.evaluate([order(),Orders.create()],sim.snapshot(anne)).rule_index==1,"insufficient mana skips before spatial selection")
 	action.mana=60;action.cooldowns.meteor=1

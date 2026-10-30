@@ -34,7 +34,7 @@ func _ready() -> void:
 	var orphans:int=int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
 	check(Executor.cost(&"booster")==20 and near(Executor.cast_duration(&"booster"),1.5) and near(Executor.cooldown(&"booster"),0) and near(Executor.skill_reach(&"booster"),4),"Booster cost cast recharge reach match approved values")
 	check(Catalog.definition(&"booster").is_read_only() and Catalog.definition(&"unknown").is_empty(),"buff definition is shared immutable metadata")
-	check(Orders.PROFILES[&"nassau"].abilities==[&"basic",&"booster"] and Orders.PROFILES[&"anne"].abilities==[&"basic",&"heal",&"meteor"] and not &"booster" in Orders.PROFILES[&"mako"].abilities,"Nassau owns Booster; Anne adds Meteor and Mako retains lightning")
+	check(Orders.PROFILES[&"nassau"].abilities==[&"basic",&"booster",&"chain_lightning"] and Orders.PROFILES[&"anne"].abilities==[&"basic",&"heal",&"meteor"] and not &"booster" in Orders.PROFILES[&"mako"].abilities,"Nassau owns Booster; Anne adds Meteor and Mako retains lightning")
 	for criterion in Criteria.IDS:
 		check(Orders.valid_order(order(String(criterion)),&"nassau") and not Orders.valid_order(order(String(criterion)),&"anne"),"every criterion can be paired with Nassau's buff")
 	var reference:Dictionary=Reference.read(&"nassau");var buff:Dictionary=reference.skills[1]
@@ -142,7 +142,7 @@ func test_targeting_and_store() -> void:
 	var store=Store.new(path);check(store.load_configuration()==OK,"configuration store loads new ability")
 	var viewport:=SubViewport.new();viewport.size=Vector2i(540,960);add_child(viewport)
 	var page=Page.instantiate();page.hero_id=&"nassau";page.save_path=path;viewport.add_child(page);await settle()
-	check(page.editor.controls[0].skill.text=="Booster" and page.editor.controls[0].skill.item_count==2,"real editor lists Nassau abilities")
+	check(page.editor.controls[0].skill.text=="Booster" and page.editor.controls[0].skill.item_count==3,"real editor lists Nassau abilities")
 	page.editor.change(page.editor.tokens[0],"criterion","enemy_far");await settle()
 	check(Codec.read(path).configuration.nassau[0]==order("enemy_far") and Codec.read(path).configuration.anne==config.anne,"Booster autosave preserves other hero")
 	viewport.queue_free();await settle()

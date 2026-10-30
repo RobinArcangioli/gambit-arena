@@ -13,6 +13,7 @@ static func defaults() -> Dictionary:
 	var result: Dictionary = {}
 	for hero in PROFILES:
 		result[String(hero)] = [{"enabled":true,"criterion":"ally_roster" if hero==&"nassau" else "ally_hp_lt_50" if hero==&"anne" else "enemy_near","skill":"booster" if hero==&"nassau" else "heal" if hero==&"anne" else "lightning"},create(),{"enabled":false,"criterion":"enemy_near","skill":"basic"}]
+	result.nassau.insert(1,{"enabled":true,"criterion":"enemy_group_3","skill":"chain_lightning"})
 	result.mako.insert(0,{"enabled":true,"criterion":"enemy_group_2","skill":"ice_bolts"})
 	return result
 static func valid_order(order: Variant, hero: StringName) -> bool:
@@ -37,6 +38,9 @@ static func evaluate(rows: Array, view: Dictionary) -> Dictionary:
 		if not valid_order(order,view.get("key",&"")) or not order.enabled or StringName(order.skill) not in view.get("abilities",[]):continue
 		if mana+0.000001<Executor.cost(order.skill) or float(view.get("cooldowns",{}).get(order.skill,0.0))>0.0:continue
 		var minimum: int = Criteria.group_minimum(order.criterion)
+		if minimum>0:
+			var population: Array=view.get("enemies",[]).filter(func(row):return Criteria.living(row))
+			if population.size()<minimum:continue
 		if minimum > 0 and Multi.has(order.skill):
 			var enemies: Array = view.get("enemies", []).filter(func(row): return Criteria.living(row))
 			if enemies.size() < minimum: continue
@@ -49,16 +53,15 @@ static func evaluate(rows: Array, view: Dictionary) -> Dictionary:
 				if count >= required:
 					return {"skill":order.skill,"target_id":candidate.id,"rule_index":index,"criterion":order.criterion}
 			continue
-		if minimum > 0:
+		if minimum > 0 and Area.has(order.skill):
 			var radius:float=Area.radius(order.skill)
-			if radius<=0:continue
 			if not area_choices.has(radius):
 				var living:Array=view.get("enemies",[]).filter(func(row):return Criteria.living(row))
 				area_choices[radius]=Targeting.solve(living,Area.coverage_radius(radius),view.source.position,view.get("area_preferred",[]))
 			var area:Dictionary=area_choices[radius]
 			if area.is_empty() or area.count<minimum:continue
 			return {"skill":order.skill,"target_point":area.center,"target_ids":area.ids,"rule_index":index,"criterion":order.criterion}
-		var ranked: Array[Dictionary] = Criteria.candidates(order.criterion,view)
+		var ranked: Array[Dictionary] = Criteria.candidates(&"enemy_near" if minimum>0 else StringName(order.criterion),view)
 		# Buff eligibility filters candidates without changing their criterion ranking.
 		if BuffCatalog.is_buff(order.skill):
 			ranked = ranked.filter(func(candidate): return BuffCatalog.eligible(order.skill, candidate.get("buffs", {})))

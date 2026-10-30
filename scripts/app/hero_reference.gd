@@ -2,8 +2,9 @@ extends RefCounted
 ## Read-only adapter: profiles and executor metadata, never runtime actor state.
 const Roster = preload("res://scripts/app/team_roster.gd")
 const Executor = preload("res://scripts/party/party_executor.gd")
-const TITLES = {&"basic": "Attaque", &"heal": "Soin", &"lightning": "Foudre", &"booster": "Booster",&"meteor":"Météore", &"ice_bolts":"Traits de glace"}
+const TITLES = {&"basic": "Attaque", &"heal": "Soin", &"lightning": "Foudre", &"booster": "Booster",&"meteor":"Météore", &"ice_bolts":"Traits de glace", &"chain_lightning":"Chaîne d’éclairs"}
 const DESCRIPTIONS = {
+	&"chain_lightning":"Un éclair rouge frappe la cible, puis rebondit jusqu’à trois fois : 30, 24, 19 puis 15 dégâts fixes, sans réduction par la défense. Chaque ennemi est touché une seule fois. À chaque rebond, vise le plus proche ennemi vivant à 2,5 unités maximum, toutes les 0,1 s.",
 	&"ice_bolts":"Trois traits de glace infligent chacun 30 dégâts fixes à une victime distincte. Cible principale à 4 unités ; jusqu’à deux cibles supplémentaires à 2,5 unités de celle-ci. Dégâts à l’impact, sans réduction par la défense. Aucun remplacement d’une victime morte en vol.",
 	&"meteor":"Retire 40 PV à chaque ennemi dont le disque au sol touche le rayon de 1,4 autour du point fixé au début de l’incantation, sans réduction par la défense. Aucun dégât aux alliés. Impact environ 0,77 s après le lancement. Incantation annulée si la zone est vide lors d’un contrôle toutes les 0,5 s. Recharge à partir du lancement effectif.",
 	&"basic": "Attaque la cible au corps à corps.",

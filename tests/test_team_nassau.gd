@@ -19,7 +19,7 @@ func write(path:String,value:String) -> void:
 func remove(path:String) -> void:
 	if FileAccess.file_exists(path):DirAccess.remove_absolute(path)
 func _ready() -> void:
-	check(not &"booster" in Roster.PROFILES[&"mako"].abilities and Roster.PROFILES[&"nassau"].abilities==[&"basic",&"booster"],"Booster belongs exclusively to Nassau among current heroes")
+	check(not &"booster" in Roster.PROFILES[&"mako"].abilities and Roster.PROFILES[&"nassau"].abilities==[&"basic",&"booster",&"chain_lightning"],"Booster belongs exclusively to Nassau among current heroes")
 	var original:Dictionary={"anne":[Orders.create()],"mako":[{"enabled":false,"criterion":"self","skill":"booster"},Orders.create(),{"enabled":true,"criterion":"ally_roster","skill":"booster"}]}
 	var path:String="user://team001-migration.json";remove(path);remove(path+".v3.bak")
 	var bytes:String=JSON.stringify({"version":3,"heroes":original});write(path,bytes)

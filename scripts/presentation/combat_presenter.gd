@@ -6,6 +6,8 @@ var area_zones:Dictionary={}
 var area_zones_enabled:bool=true
 const Lightning = preload("res://scripts/presentation/lightning_presenter.gd")
 const Booster = preload("res://scripts/presentation/booster_presenter.gd")
+const Chain=preload("res://scripts/presentation/chain_lightning_presenter.gd")
+var chain:=Chain.new()
 const Ice=preload("res://scripts/presentation/ice_bolts_presenter.gd")
 var ice:=Ice.new()
 const Meteor=preload("res://scripts/presentation/meteor_presenter.gd")
@@ -37,6 +39,7 @@ var reactions_played: int = 0
 var deaths_played: int = 0
 
 func _init() -> void:
+	chain.name="ChainPresentation";add_child(chain)
 	ice.name="IcePresentation";add_child(ice)
 	meteor.name="MeteorPresentation";add_child(meteor)
 	lightning.name = "LightningPresentation"
@@ -52,6 +55,7 @@ func reset_run(id: int) -> void:
 	booster.reset_run(id)
 	meteor.reset_run(id)
 	ice.reset_run(id)
+	chain.reset_run(id)
 	for ghost in ghosts: _release_ghost(ghost)
 	ghosts.clear()
 	_clear_heals()
@@ -85,6 +89,7 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 	booster.advance_visual(bindings, dt)
 	meteor.advance_visual(dt)
 	ice.advance_visual(bindings,dt)
+	chain.advance_visual(dt)
 	# Advance previously existing visuals first. New impacts/deaths begin at this tick's end.
 	for ghost in ghosts.duplicate():
 		var personal_dt: float = dt * float(ghost.get("time_scale", 1.0))
@@ -120,8 +125,10 @@ func present(units: Array, values: Array[Dictionary], dt: float, id: int, termin
 		booster.clear_visuals()
 		meteor.clear_visuals()
 		ice.clear_visuals()
+		chain.clear_visuals()
 	if terminal:
 		ice.clear_visuals()
+		chain.clear_visuals()
 		for key in meteor.effects.keys():
 			if not meteor.effects[key].exploding:meteor._release(key)
 	for actor_id in bindings.keys():
@@ -144,9 +151,10 @@ func consume(event: Dictionary) -> void:
 	booster.consume(event)
 	meteor.consume(event)
 	ice.consume(event)
+	chain.consume(event)
 	if kind == "resolve" and event.get("skill", "") == "heal" and int(event.get("healing", 0)) > 0:
 		_heal(event)
-	if kind in ["resolve","area_hit","multi_hit"] and int(event.get("damage", 0)) > 0:
+	if kind in ["resolve","area_hit","multi_hit","chain_hit"] and int(event.get("damage", 0)) > 0:
 		_damage_text(event)
 		var target_id: int = int(event.get("target_id", 0))
 		if _dead_ids.has(target_id) or not bindings.has(target_id): return

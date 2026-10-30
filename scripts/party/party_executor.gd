@@ -3,6 +3,7 @@ extends "res://scripts/combat/attack_action.gd"
 const BuffCatalog = preload("res://scripts/buffs/buff_catalog.gd")
 const BuffState = preload("res://scripts/buffs/buff_state.gd")
 const Clock = preload("res://scripts/core/game_clock.gd")
+const Chain=preload("res://scripts/skills/chain_skills.gd")
 const Multi=preload("res://scripts/skills/multi_skills.gd")
 const Area=preload("res://scripts/skills/area_skills.gd")
 const Projectiles=preload("res://scripts/skills/area_projectiles.gd")
@@ -41,19 +42,22 @@ func _init(owner_actor = null) -> void:
 	actor = owner_actor
 
 static func cost(skill: StringName) -> int:
+	if Chain.has(skill):return 30
 	if Multi.has(skill):return 20
 	if Area.has(skill):return Area.DEFINITIONS[skill].cost
 	return 20 if skill in [&"heal", &"booster"] else 30 if skill == &"lightning" else 0
 
 static func cast_duration(skill: StringName) -> float:
+	if Chain.has(skill):return 2.0
 	if Multi.has(skill):return 1.5
 	if Area.has(skill):return Area.DEFINITIONS[skill].cast
 	return BOOSTER_CAST if skill == &"booster" else HEAL_CAST if skill == &"heal" else LIGHTNING_CAST if skill == &"lightning" else WINDUP
 
 static func skill_reach(skill: StringName) -> float:
-	return SPELL_REACH if skill in [&"heal", &"lightning", &"booster"] or Area.has(skill) or Multi.has(skill) else REACH
+	return SPELL_REACH if skill in [&"heal", &"lightning", &"booster"] or Area.has(skill) or Multi.has(skill) or Chain.has(skill) else REACH
 
 static func cooldown(skill: StringName) -> float:
+	if Chain.has(skill):return 4.0
 	if Multi.has(skill):return 3.0
 	if Area.has(skill):return Area.DEFINITIONS[skill].cooldown
 	return 4.0 if skill == &"heal" else 6.0 if skill == &"lightning" else 0.0
@@ -74,7 +78,7 @@ func request(skill: StringName, target) -> int:
 	if _bound_state != null and actor.state != _bound_state:
 		retire()
 		return _reject("etat remplace")
-	if skill not in [&"basic", &"heal", &"lightning", &"booster", &"ice_bolts"] or skill not in actor.abilities:
+	if skill not in [&"basic", &"heal", &"lightning", &"booster", &"ice_bolts", &"chain_lightning"] or skill not in actor.abilities:
 		return _reject("competence indisponible")
 	if active: return _reject("occupe")
 	if not available(skill): return _reject("mana / delai")
@@ -96,7 +100,7 @@ func request(skill: StringName, target) -> int:
 	applied_healing = 0
 	applied_buff = &""
 	_target_buffs = target.get("buffs") if BuffCatalog.is_buff(skill) else null
-	cooldowns[skill] = 0.0 if Multi.has(skill) else cooldown(skill)
+	cooldowns[skill] = 0.0 if Multi.has(skill) or Chain.has(skill) else cooldown(skill)
 	_record_visual(_visual_values("start"))
 	return id
 
@@ -149,7 +153,7 @@ func advance(dt: float, paused: bool = false, personal_dt: float = -1.0) -> void
 			_ground_check_time=maxf(0,_ground_check_time-GROUND_CHECK_INTERVAL*floori((_ground_check_time+.000001)/GROUND_CHECK_INTERVAL))
 			if not _ground_has_enemy():
 				outcome="zone vide";cancel();return
-	if casting() and Multi.has(last_skill) and living(_target) and distance_between(actor, _target) > SPELL_REACH + .000001:
+	if casting() and (Multi.has(last_skill) or Chain.has(last_skill)) and living(_target) and distance_between(actor, _target) > SPELL_REACH + .000001:
 		outcome = "hors portee"; cancel(); return
 	var was_active: bool = active
 	super.advance(local_dt)
@@ -172,7 +176,7 @@ func _valid_pair(source: StatsActor, target: StatsActor) -> bool:
 
 func _participants_valid() -> bool:
 	if _ground_cast:return living(_source) and _source.state==_source_state
-	return (not Multi.has(last_skill) or (living(_target) and distance_between(actor, _target) <= SPELL_REACH + .000001)) and super._participants_valid() and _valid_pair(_source, _target) and (not BuffCatalog.is_buff(last_skill) or _target.get("buffs") == _target_buffs)
+	return (not (Multi.has(last_skill) or Chain.has(last_skill)) or (living(_target) and distance_between(actor, _target) <= SPELL_REACH + .000001)) and super._participants_valid() and _valid_pair(_source, _target) and (not BuffCatalog.is_buff(last_skill) or _target.get("buffs") == _target_buffs)
 
 func _apply_effect() -> int:
 	# AttackAction already latched this impact and revalidated participants and reach.
@@ -212,7 +216,7 @@ func _reach() -> float:
 	return skill_reach(_engaging if _engaging != &"" else last_skill)
 
 func casting() -> bool:
-	return active and not resolved and (last_skill in [&"heal", &"lightning", &"booster"] or Area.has(last_skill) or Multi.has(last_skill))
+	return active and not resolved and (last_skill in [&"heal", &"lightning", &"booster"] or Area.has(last_skill) or Multi.has(last_skill) or Chain.has(last_skill))
 
 func area_radius() -> float:return Area.radius(last_skill) if _ground_cast else 0.0
 
@@ -231,6 +235,7 @@ func _on_source_lost() -> void:
 
 func try_impact(expected_id: int) -> bool:
 	if _ground_cast:return _try_area_impact(expected_id)
+	if Chain.has(last_skill):return _try_chain_impact(expected_id)
 	var pending: bool = not resolved
 	var values: Dictionary = _visual_values("resolve")
 	var spent_before:int=spent
@@ -254,6 +259,20 @@ func try_impact(expected_id: int) -> bool:
 			applied["time_multiplier"] = BuffCatalog.BOOSTER_RATE
 			_record_visual(applied)
 	return success
+
+func _try_chain_impact(expected_id: int) -> bool:
+	if not _effects_allowed() or not active or resolved or expected_id!=action_id or elapsed<_windup():return false
+	if not _participants_valid():
+		outcome="hors portee" if living(_target) else "cible perdue";cancel();return false
+	resolved=true;phase="RECUPERATION"
+	if mana+.000001<cost(last_skill):
+		outcome="mana insuffisante";_record_visual(_visual_values("resolve"));return true
+	var paid: int=cost(last_skill)
+	mana=maxf(0,mana-paid);spent+=paid;cooldowns[last_skill]=cooldown(last_skill);outcome="lancement"
+	var values: Dictionary=_visual_values("chain_launch")
+	values.mana_paid=paid;values.mana_after=mana
+	for fact in projectiles.chains.release(values,_target,actor.team):_record_visual(fact)
+	return true
 
 func _try_area_impact(expected_id:int) -> bool:
 	if not _effects_allowed() or not active or resolved or expected_id!=action_id or elapsed<_windup():return false

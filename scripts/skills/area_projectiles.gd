@@ -1,5 +1,7 @@
 extends RefCounted
 ## Combat-owned released spells. No presentation resources or caster lifetime dependency.
+const ChainQueue=preload("res://scripts/skills/chain_projectiles.gd")
+var chains:=ChainQueue.new()
 const Actor=preload("res://scripts/combat/attack_action.gd")
 const Multi=preload("res://scripts/skills/multi_skills.gd")
 const Area=preload("res://scripts/skills/area_skills.gd")
@@ -43,7 +45,7 @@ func _advance_multi(flight: Dictionary, time: float, epoch: int) -> void:
 		hit.damage = target.state.damage(Multi.DAMAGE)
 	if generation == epoch: events.append(hit)
 func clear() -> void:
-	generation+=1;pending.clear();events.clear()
+	generation+=1;pending.clear();events.clear();chains.clear()
 func advance(dt:float,units:Array,time:float) -> void:
 	if _advancing or not is_finite(dt) or dt<=0:return
 	_advancing=true
@@ -51,6 +53,9 @@ func advance(dt:float,units:Array,time:float) -> void:
 	_advancing=false
 func _advance(dt:float,units:Array,time:float) -> void:
 	var epoch:int=generation
+	chains.advance(dt,units,time)
+	if generation!=epoch:return
+	events.append_array(chains.take_events())
 	for flight in pending.duplicate():
 		flight.remaining=maxf(0,float(flight.remaining)-dt)
 		if flight.get("multi", false):

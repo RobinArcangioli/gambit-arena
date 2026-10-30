@@ -11,4 +11,4 @@ defense = 4
 move_speed = 1.2
 mana_capacity = 60
 mana_regeneration = 5.0
-abilities = Array[StringName]([&"basic", &"booster"])
+abilities = Array[StringName]([&"basic", &"booster", &"chain_lightning"])
