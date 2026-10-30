@@ -103,7 +103,7 @@ func _ready() -> void:
 	sim.advance(1.0/30);check(action.last_skill==&"heal" and action.casting(),"priority heal actually begins instead of Meteor")
 	action.advance(1.9,false,1.9);sim._plan(anne)
 	check(anne.ground_intention and anne.desired_skill==&"meteor","Meteor reconsidered after urgent action when group still qualifies")
-	for i in range(3):sim.enemies[i].place([Vector2(3,0),Vector2(0,3),Vector2(0,-3)][i])
+	for i in range(6):sim.enemies[i].place(Vector2.from_angle(TAU*float(i)/6.0)*3.6)
 	sim._plan(anne);check(not anne.ground_intention and anne.desired_skill==&"basic","dissolved group stops approach and falls through to next order")
 	sim.queue_free();world.queue_free();await settle();sim=null
 	for resolution in [Vector2i(540,960),Vector2i(540,1170),Vector2i(360,640)]:

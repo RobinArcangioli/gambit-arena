@@ -39,7 +39,7 @@ static func evaluate(rows: Array, view: Dictionary) -> Dictionary:
 			if radius<=0:continue
 			if not area_choices.has(radius):
 				var living:Array=view.get("enemies",[]).filter(func(row):return Criteria.living(row))
-				area_choices[radius]=Targeting.solve(living,radius,view.source.position,view.get("area_preferred",[]))
+				area_choices[radius]=Targeting.solve(living,Area.coverage_radius(radius),view.source.position,view.get("area_preferred",[]))
 			var area:Dictionary=area_choices[radius]
 			if area.is_empty() or area.count<3:continue
 			return {"skill":order.skill,"target_point":area.center,"target_ids":area.ids,"rule_index":index,"criterion":order.criterion}

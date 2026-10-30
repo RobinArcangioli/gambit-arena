@@ -65,3 +65,14 @@ Après lancement, aucun contrôle d’annulation pour zone vide. Le ciblage et l
 restent indépendants de l’art. Deux APK v87 installés et validés ; préférences conservées.
 Clôture documentaire sans changement de code ni d’APK, commit local et sauvegarde vérifiée.
 UI-005 reste l’étape suivante après clôture de ce correctif.
+
+## AOE-002-FIX2 — Chevauchement des gabarits
+
+Validée sur Galaxy A16 : « Oui, AOE-002-FIX2 validée ».
+Impact, contrôle de zone vide et optimisation du groupe utilisent
+l’intersection entre l’AOE et le disque physique de l’ennemi. Contact compris :
+1,4 + 0,35 = 1,75 entre centres pour Météore. Le cercle AOE reste à 1,4 et l’art
+est conservé. 78 scènes / 5 841 contrôles consolidés, captures GPU vérifiées.
+Laboratoire de bordure distinct ; deux APK v88 installés et validés. Préférences
+conservées. Clôture documentaire, commit local et sauvegarde complète vérifiée.
+UI-005 reste l’étape suivante après clôture de ce correctif.

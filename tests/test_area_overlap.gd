@@ -1,0 +1,57 @@
+extends "res://tests/test_area_gameplay.gd"
+const Area=preload("res://scripts/skills/area_skills.gd")
+const GroundBody=preload("res://scripts/crowd/ground_crowd.gd")
+func positions(values:Array) -> void:
+	for i in range(values.size()):sim.enemies[i].place(values[i])
+func _ready() -> void:
+	check(is_equal_approx(Area.radius(&"meteor"),1.4) and is_equal_approx(GroundBody.RADIUS,.35),"AOE and physical footprints retain their original sizes")
+	for i in range(16):
+		var direction:=Vector2.from_angle(TAU*float(i)/16)
+		check(Area.overlaps(Vector2.ZERO,direction*1.6,1.4),"partial ground overlap hits in direction %d"%i)
+		check(Area.overlaps(Vector2.ZERO,direction*1.75,1.4),"closed disk tangency hits in direction %d"%i)
+		check(not Area.overlaps(Vector2.ZERO,direction*1.751,1.4),"separated disk misses in direction %d"%i)
+	await fixture()
+	var anne=sim.hero(&"anne");var action=anne.action
+	positions([Vector2(1.6,0),Vector2(-1.6,0),Vector2(0,-1.75),Vector2(0,1.751),Vector2(2.4,0),Vector2(1.2,1.2)])
+	var allied_health:int=sim.hero(&"mako").state.health
+	action.request_ground(&"meteor",Vector2.ZERO);action.advance(3,false,3)
+	check(action.spent==40 and sim.enemies.all(func(e):return e.state.health==60),"release pays once and no damage precedes impact")
+	sim._collect_visual_events(sim.all_units());impact()
+	for index in [0,1,2,5]:check(sim.enemies[index].state.health==20,"border overlap target %d takes forty actual PV"%index)
+	check(sim.enemies[3].state.health==60 and sim.enemies[4].state.health==60,"outside footprints remain untouched")
+	check(sim.hero(&"mako").state.health==allied_health,"overlap never bypasses enemy-only filter")
+	check(sim.report.actors[anne.combat_id].dealt==160,"statistics count all four overlapping bodies exactly once")
+	check(sim.events.filter(func(e):return e.kind=="area_hit").size()==4 and sim.events.filter(func(e):return e.kind=="area_impact")[0].area_count==4,"four hits and matching impact summary")
+	impact();check(sim.report.actors[anne.combat_id].dealt==160 and action.spent==40,"repeated queue advance cannot repeat damage or payment")
+	await fixture();anne=sim.hero(&"anne");action=anne.action
+	for target in sim.enemies:target.place(Vector2(3,2))
+	sim.enemies[0].place(Vector2(1.6,0));action.request_ground(&"meteor",Vector2.ZERO)
+	action.advance(.5,false,.5)
+	check(action.casting() and action.spent==0,"partial overlap keeps incantation valid at half-second check")
+	sim.enemies[0].place(Vector2(1.751,0));action.advance(.5,false,.5)
+	check(not action.active and action.spent==0 and action.remaining(&"meteor")==0,"truly empty disk cancels without payment or cooldown")
+	await fixture();anne=sim.hero(&"anne");action=anne.action
+	positions([Vector2(1.6,0),Vector2(-1.6,0),Vector2(0,-1.75),Vector2(0,1.751),Vector2(2.4,0),Vector2(1.2,1.2)])
+	action.request_ground(&"meteor",Vector2.ZERO);action.advance(3,false,3)
+	sim.enemies[0].place(Vector2(1.751,0));sim.enemies[3].place(Vector2(0,1.6))
+	sim._collect_visual_events(sim.all_units());impact()
+	check(sim.enemies[0].state.health==60 and sim.enemies[3].state.health==20,"overlap is evaluated on actual impact positions after flight")
+	await fixture();anne=sim.hero(&"anne");action=anne.action
+	positions([Vector2(-1.75,0),Vector2.ZERO,Vector2(1.75,0)])
+	for i in range(3,6):sim.enemies[i].state.damage(10000)
+	sim._prune()
+	var choice:Dictionary=Orders.evaluate([order()],sim.snapshot(anne))
+	check(not choice.is_empty() and choice.target_ids.size()==3 and choice.target_point.distance_to(Vector2.ZERO)<.00001,"group criterion includes three tangent footprints beyond old point coverage")
+	action.request_ground(&"meteor",choice.target_point);action.advance(3,false,3);sim._collect_visual_events(sim.all_units());impact()
+	check(sim.report.actors[anne.combat_id].dealt==120,"optimized group and impact use the same physical disk overlap rule")
+	check(action.area_radius()==1.4 and action.ground_point==Vector2.ZERO,"logical AOE radius and fixed center remain unchanged")
+	sim.queue_free();world.queue_free();await settle();sim=null
+	var lab=load("res://scenes/debug/meteor_hitbox_lab.tscn").instantiate();add_child(lab);lab.set_physics_process(false);await settle()
+	for tick in range(135):lab._physics_process(1.0/30)
+	check(lab.simulation.enemies.slice(0,3).all(func(e):return e.state.health==20) and lab.simulation.enemies[3].state.health==60,"native lab reproduces three edge hits and outside miss")
+	lab.select_scenario(2)
+	for tick in range(135):lab._physics_process(1.0/30)
+	check(lab.simulation.enemies[0].state.health==20,"exact tangency lab scenario reaches real impact without cast cancellation")
+	lab.queue_free();await settle()
+	check(int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))==0,"no orphan units or footprint indicators")
+	var label:=Label.new();label.text="%d controles, %d echecs"%[checks,failures];add_child(label);print(label.text)

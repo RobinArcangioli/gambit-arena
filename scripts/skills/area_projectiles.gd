@@ -32,7 +32,7 @@ func _advance(dt:float,units:Array,time:float) -> void:
 		var radius:float=impact.area_radius
 		var victims:Array=[]
 		for unit in units:
-			if Actor.living(unit) and unit.team!=flight.source_team and Vector2(unit.position.x-center.x,unit.position.z-center.z).length_squared()<=radius*radius+.000001:
+			if Actor.living(unit) and unit.team!=flight.source_team and Area.overlaps(Vector2(center.x,center.z),Vector2(unit.position.x,unit.position.z),radius):
 				victims.append({"actor":unit,"state":unit.state})
 		for victim in victims:
 			if generation!=epoch:return

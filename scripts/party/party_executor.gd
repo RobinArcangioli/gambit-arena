@@ -153,7 +153,7 @@ func _ground_has_enemy() -> bool:
 	if not area_targets.is_valid():return false
 	var radius:float=Area.radius(last_skill)
 	for target in area_targets.call():
-		if living(target) and target.team!=actor.team and ground_point.distance_squared_to(Vector2(target.position.x,target.position.z))<=radius*radius+.000001:return true
+		if living(target) and target.team!=actor.team and Area.overlaps(ground_point,Vector2(target.position.x,target.position.z),radius):return true
 	return false
 
 func _valid_pair(source: StatsActor, target: StatsActor) -> bool:

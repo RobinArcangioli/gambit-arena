@@ -1,0 +1,9 @@
+[gd_scene load_steps=5 format=3]
+[ext_resource type="PackedScene" path="res://scenes/arena/arena.tscn" id="2"]
+[ext_resource type="Theme" path="res://resources/ui/night_gold.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/presentation/arenas/colisee_solaire.tres" id="4"]
+[ext_resource type="Script" path="res://scripts/ui/meteor_hitbox_lab.gd" id="1"]
+[node name="MeteorHitboxLab" instance=ExtResource("2")]
+script = ExtResource("1")
+theme = ExtResource("3")
+arena_definition = ExtResource("4")

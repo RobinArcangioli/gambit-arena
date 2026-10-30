@@ -1,3 +1,19 @@
+# AOE-002-FIX2 validée — 30 octobre 2026
+
+Météore touche désormais tout ennemi vivant dont le disque logique au sol chevauche
+le disque AOE, contact exact compris. Rayon AOE inchangé : 1,4 ; rayon des acteurs :
+0,35. La distance maximale entre centres pour être touché est donc 1,75.
+Le ciblage de groupe, les contrôles de zone vide et l’impact partagent cette règle.
+Point verrouillé et victimes calculées au début de l’explosion, alliés exclus.
+Aucun changement de l’animation validée, du coût, des dégâts ou des durées.
+78 scènes / 5 841 contrôles consolidés, dont 68 de régression sur le chevauchement.
+Captures GPU vérifiées ; deux APK v88 installés et validés sur Galaxy A16 :
+« Oui, AOE-002-FIX2 validée ». Gambits, équipe et réglages conservés.
+Clôture documentaire uniquement, code et APK identiques à la recette validée.
+Commit local et sauvegarde restaurée/vérifiée ; aucun push automatique. Prochain GO : UI-005.
+Détails : docs/steps/AOE-002-FIX2.md.
+Les états suivants sont historiques.
+
 # AOE-002-FIX1 validée — 30 octobre 2026
 
 Godot : Flash compact + Rouge accentué + C Avec braises retenus.
